@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Giorgio Bianchini</Authors>
+    <Company>University of Bristol</Company>
+    <Description>A library to produce vector graphics (including text) without too many dependencies. Extensible to support multiple output formats. This is the base package, and does not provide any output formats. For more information, see https://github.com/arklumpus/VectSharp</Description>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="StandardFonts\D050000L.ttf" />
+    <None Remove="StandardFonts\NimbusMono-Bold.ttf" />
+    <None Remove="StandardFonts\NimbusMono-BoldOblique.ttf" />
+    <None Remove="StandardFonts\NimbusMono-Oblique.ttf" />
+    <None Remove="StandardFonts\NimbusMono-Regular.ttf" />
+    <None Remove="StandardFonts\NimbusRomNo9L-Med.ttf" />
+    <None Remove="StandardFonts\NimbusRomNo9L-MedIta.ttf" />
+    <None Remove="StandardFonts\NimbusRomNo9L-Reg.ttf" />
+    <None Remove="StandardFonts\NimbusRomNo9L-RegIta.ttf" />
+    <None Remove="StandardFonts\NimbusSanL-Bol.ttf" />
+    <None Remove="StandardFonts\NimbusSanL-BolIta.ttf" />
+    <None Remove="StandardFonts\NimbusSanL-Reg.ttf" />
+    <None Remove="StandardFonts\NimbusSanL-RegIta.ttf" />
+    <None Remove="StandardFonts\StandardSymbolsPS.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="StandardFonts\D050000L.ttf" />
+    <EmbeddedResource Include="StandardFonts\NimbusMono-Bold.ttf" />
+    <EmbeddedResource Include="StandardFonts\NimbusMono-BoldOblique.ttf" />
+    <EmbeddedResource Include="StandardFonts\NimbusMono-Oblique.ttf" />
+    <EmbeddedResource Include="StandardFonts\NimbusMono-Regular.ttf" />
+    <EmbeddedResource Include="StandardFonts\NimbusRomNo9L-Med.ttf" />
+    <EmbeddedResource Include="StandardFonts\NimbusRomNo9L-MedIta.ttf" />
+    <EmbeddedResource Include="StandardFonts\NimbusRomNo9L-Reg.ttf" />
+    <EmbeddedResource Include="StandardFonts\NimbusRomNo9L-RegIta.ttf" />
+    <EmbeddedResource Include="StandardFonts\NimbusSanL-Bol.ttf" />
+    <EmbeddedResource Include="StandardFonts\NimbusSanL-BolIta.ttf" />
+    <EmbeddedResource Include="StandardFonts\NimbusSanL-Reg.ttf" />
+    <EmbeddedResource Include="StandardFonts\NimbusSanL-RegIta.ttf" />
+    <EmbeddedResource Include="StandardFonts\StandardSymbolsPS.ttf" />
+  </ItemGroup>
+
+</Project>
