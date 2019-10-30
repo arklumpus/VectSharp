@@ -41,7 +41,7 @@ using VectSharp.Canvas;
 //...
 Avalonia.Controls.Canvas can = doc.Pages.Last().PaintToCanvas();
 ``` 
-The public classes and methods are fully documented, and you can find a (much) more detailed code example in [https://github.com/arklumpus/VectSharp/blob/master/VectSharp.Demo/MainWindow.xaml.cs](https://github.com/arklumpus/VectSharp/blob/master/VectSharp.Demo/MainWindow.xaml.cs).
+The public classes and methods are fully documented, and you can find a (much) more detailed code example in [https://github.com/arklumpus/VectSharp/blob/master/VectSharp.Demo/MainWindow.xaml.cs](MainWindow.xaml.cs).
 
 ## Creating new output layers
 
@@ -59,7 +59,7 @@ To be able to compile VectSharp from source, you will need to install the [.NET 
 
 You can use [Microsoft Visual Studio](https://visualstudio.microsoft.com/it/vs/) to compile the program. The following instructions will cover compiling VectSharp from the command line, instead.
 
-First of all, you will need to download the VectSharp source code: [VectSharp.tar.gz](https://github.com/arklumpus/VectSharp/archive/v1.0.0.tar.gz) and extract it somewhere.
+First of all, you will need to download the VectSharp source code: [VectSharp.tar.gz](https://github.com/arklumpus/VectSharp/archive/v1.0.2.tar.gz) and extract it somewhere.
 
 ### Windows
 Open a command-line window in the folder where you have extracted the source code, and type:
