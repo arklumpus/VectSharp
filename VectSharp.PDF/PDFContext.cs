@@ -698,7 +698,7 @@ namespace VectSharp.PDF
                     long length = compressedStream.Length;
 
                     objectPositions.Add(position);
-                    currObject = objectNum.ToString() + " 0 obj\n<< /Length " + length.ToString() + " /Length1 " + length.ToString();
+                    currObject = objectNum.ToString() + " 0 obj\n<< /Length " + length.ToString() + " /Length1 " + subsettedFont.FontStream.Length.ToString();
 
                     if (compressStreams)
                     {
@@ -1290,8 +1290,6 @@ namespace VectSharp.PDF
             uint checksum = Adler32(contentStream);
 
             compressedStream.Write(new byte[] { (byte)((checksum >> 24) & 255), (byte)((checksum >> 16) & 255), (byte)((checksum >> 8) & 255), (byte)(checksum & 255) }, 0, 4);
-
-            contentStream.Dispose();
 
             compressedStream.Seek(0, SeekOrigin.Begin);
 
