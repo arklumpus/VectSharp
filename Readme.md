@@ -41,7 +41,7 @@ using VectSharp.Canvas;
 //...
 Avalonia.Controls.Canvas can = doc.Pages.Last().PaintToCanvas();
 ``` 
-The public classes and methods are fully documented, and you can find a (much) more detailed code example in [https://github.com/arklumpus/VectSharp/blob/master/VectSharp.Demo/MainWindow.xaml.cs](MainWindow.xaml.cs).
+The public classes and methods are fully documented, and you can find a (much) more detailed code example in [MainWindow.xaml.cs](https://github.com/arklumpus/VectSharp/blob/master/VectSharp.Demo/MainWindow.xaml.cs).
 
 ## Creating new output layers
 
