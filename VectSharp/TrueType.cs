@@ -194,7 +194,7 @@ namespace VectSharp
             return StreamFontCache[fontStream];
         }
 
-        private TrueTypeFile(string fileName) : this(new FileStream(fileName, FileMode.Open))
+        private TrueTypeFile(string fileName) : this(new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
         {
 
         }
