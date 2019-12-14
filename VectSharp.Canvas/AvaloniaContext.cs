@@ -55,9 +55,34 @@ namespace VectSharp.Canvas
 
         public TextBaselines TextBaseline { get; set; }
 
+        private void PathText(string text, double x, double y)
+        {
+            GraphicsPath textPath = new GraphicsPath().AddText(x, y, text, Font, TextBaseline);
+
+            for (int j = 0; j < textPath.Segments.Count; j++)
+            {
+                switch (textPath.Segments[j].Type)
+                {
+                    case VectSharp.SegmentType.Move:
+                        this.MoveTo(textPath.Segments[j].Point.X, textPath.Segments[j].Point.Y);
+                        break;
+                    case VectSharp.SegmentType.Line:
+                        this.LineTo(textPath.Segments[j].Point.X, textPath.Segments[j].Point.Y);
+                        break;
+                    case VectSharp.SegmentType.CubicBezier:
+                        this.CubicBezierTo(textPath.Segments[j].Points[0].X, textPath.Segments[j].Points[0].Y, textPath.Segments[j].Points[1].X, textPath.Segments[j].Points[1].Y, textPath.Segments[j].Points[2].X, textPath.Segments[j].Points[2].Y);
+                        break;
+                    case VectSharp.SegmentType.Close:
+                        this.Close();
+                        break;
+                }
+            }
+        }
+
         public void StrokeText(string text, double x, double y)
         {
-            FillText(text, x, y);
+            PathText(text, x, y);
+            Stroke();
         }
 
         public void FillText(string text, double x, double y)
