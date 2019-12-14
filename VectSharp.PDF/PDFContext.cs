@@ -593,7 +593,10 @@ namespace VectSharp.PDF
         /// <param name="compressStreams">Indicates whether the streams in the PDF file should be compressed.</param>
         public static void SaveAsPDF(this Document document, string fileName, bool subsetFonts = true, bool compressStreams = true)
         {
-            document.SaveAsPDF(new FileStream(fileName, FileMode.Create), subsetFonts, compressStreams);
+            using (FileStream stream = new FileStream(fileName, FileMode.Create))
+            {
+                document.SaveAsPDF(stream, subsetFonts, compressStreams);
+            }
         }
 
         /// <summary>
