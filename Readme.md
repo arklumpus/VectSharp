@@ -4,15 +4,15 @@
 ## Introduction
 **VectSharp** is a library to create vector graphics (including text) in C#, without too many dependencies.
 
-It includes an abstract layer on top of which output layers can be written. Currently, there are two available output layers: **VectSharp.PDF** produces PDF documents, while **VectSharp.Canvas** produces an `Avalonia.Controls.Canvas` object ([https://avaloniaui.net/api/Avalonia.Controls/Canvas/](https://avaloniaui.net/api/Avalonia.Controls/Canvas/)) containing the rendered graphics objects.
+It includes an abstract layer on top of which output layers can be written. Currently, there are three available output layers: **VectSharp.PDF** produces PDF documents, **VectSharp.Canvas** produces an `Avalonia.Controls.Canvas` object ([https://avaloniaui.net/api/Avalonia.Controls/Canvas/](https://avaloniaui.net/api/Avalonia.Controls/Canvas/)) containing the rendered graphics objects, and **VectSharp.Raster** produces raster images in PNG format.
 
 VectSharp is written using .NET Core, and is available for Mac, Windows and Linux. It is released under a GPLv3 license. It includes 14 standard fonts, also released under a GPL license.
 
 ## Installing VectSharp
-To include VectSharp in your project, you will need one of the output layer NuGet packages: [VectSharp.PDF](https://www.nuget.org/packages/VectSharp.PDF/) or [VectSharp.Canvas](https://www.nuget.org/packages/VectSharp.Canvas/).
+To include VectSharp in your project, you will need one of the output layer NuGet packages: [VectSharp.PDF](https://www.nuget.org/packages/VectSharp.PDF/), [VectSharp.Canvas](https://www.nuget.org/packages/VectSharp.Canvas/) or [VectSharp.Raster](https://www.nuget.org/packages/VectSharp.Raster/).
 
 ## Usage
-In general, working with VectSharp involves: creating a `Document`, adding `Page`s, drawing to the `Page`s' `Graphics` objects and, finally, exporting them to a PDF document or `Canvas`.
+In general, working with VectSharp involves: creating a `Document`, adding `Page`s, drawing to the `Page`s' `Graphics` objects and, finally, exporting them to a PDF document, `Canvas` or PNG image.
 
 * Create a `Document`:
 ```Csharp
@@ -41,6 +41,12 @@ using VectSharp.Canvas;
 //...
 Avalonia.Controls.Canvas can = doc.Pages.Last().PaintToCanvas();
 ``` 
+* Save as a PNG image:
+```Csharp
+using VectSharp.Raster;
+//...
+doc.Pages.Last().SaveAsPNG(@"Sample.png");
+``` 
 The public classes and methods are fully documented, and you can find a (much) more detailed code example in [MainWindow.xaml.cs](https://github.com/arklumpus/VectSharp/blob/master/VectSharp.Demo/MainWindow.xaml.cs).
 
 ## Creating new output layers
@@ -59,7 +65,7 @@ To be able to compile VectSharp from source, you will need to install the [.NET 
 
 You can use [Microsoft Visual Studio](https://visualstudio.microsoft.com/it/vs/) to compile the program. The following instructions will cover compiling VectSharp from the command line, instead.
 
-First of all, you will need to download the VectSharp source code: [VectSharp.tar.gz](https://github.com/arklumpus/VectSharp/archive/v1.0.2.tar.gz) and extract it somewhere.
+First of all, you will need to download the VectSharp source code: [VectSharp.tar.gz](https://github.com/arklumpus/VectSharp/archive/v1.1.0.tar.gz) and extract it somewhere.
 
 ### Windows
 Open a command-line window in the folder where you have extracted the source code, and type:
