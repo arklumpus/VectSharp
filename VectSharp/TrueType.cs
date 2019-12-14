@@ -782,6 +782,8 @@ namespace VectSharp
                     return new CompositeGlyph(sr, numOfContours);
                 }
             }
+
+            public abstract TrueTypePoint[][] GetGlyphPath(double size, int emSize, Glyph[] glyphCollection);
         }
 
         internal class EmptyGlyph : Glyph
@@ -794,6 +796,11 @@ namespace VectSharp
             public override Glyph Clone()
             {
                 return new EmptyGlyph();
+            }
+
+            public override TrueTypePoint[][] GetGlyphPath(double size, int emSize, Glyph[] glyphCollection)
+            {
+                return new TrueTypePoint[0][];
             }
         }
         internal class CompositeGlyph : Glyph
@@ -964,6 +971,211 @@ namespace VectSharp
                     return ms.ToArray();
                 }
             }
+
+            public override TrueTypePoint[][] GetGlyphPath(double size, int emSize, Glyph[] glyphCollection)
+            {
+                List<short> argument1 = new List<short>();
+                List<short> argument2 = new List<short>();
+
+                for (int i = 0; i < this.Argument1.Length; i++)
+                {
+                    if (this.Argument1[i].Length == 1)
+                    {
+                        argument1.Add(this.Argument1[i][0]);
+                    }
+                    else if (this.Argument1[i].Length == 2)
+                    {
+                        argument1.Add((short)((this.Argument1[i][0] << 8) + this.Argument1[i][1]));
+                    }
+                }
+
+                for (int i = 0; i < this.Argument2.Length; i++)
+                {
+                    if (this.Argument2[i].Length == 1)
+                    {
+                        argument2.Add(this.Argument2[i][0]);
+                    }
+                    else if (this.Argument2[i].Length == 2)
+                    {
+                        argument2.Add((short)((this.Argument2[i][0] << 8) + this.Argument2[i][1]));
+                    }
+                }
+
+                List<double[]> transformationOption = new List<double[]>();
+
+                for (int i = 0; i < this.TransformationOption.Length; i++)
+                {
+                    if (this.TransformationOption[i].Length == 0)
+                    {
+                        transformationOption.Add(new double[] { });
+                    }
+                    else if (this.TransformationOption[i].Length == 2)
+                    {
+                        double val = (double)((this.TransformationOption[i][0] << 8) + this.TransformationOption[i][1]) / (1 << 14);
+                        transformationOption.Add(new double[] { val });
+                    }
+                    else if (this.TransformationOption[i].Length == 4)
+                    {
+                        double val1 = (double)((this.TransformationOption[i][0] << 8) + this.TransformationOption[i][1]) / (1 << 14);
+                        double val2 = (double)((this.TransformationOption[i][2] << 8) + this.TransformationOption[i][3]) / (1 << 14);
+                        transformationOption.Add(new double[] { val1, val2 });
+                    }
+                    else if (this.TransformationOption[i].Length == 8)
+                    {
+                        double val1 = (double)((this.TransformationOption[i][0] << 8) + this.TransformationOption[i][1]) / (1 << 14);
+                        double val2 = (double)((this.TransformationOption[i][2] << 8) + this.TransformationOption[i][3]) / (1 << 14);
+                        double val3 = (double)((this.TransformationOption[i][4] << 8) + this.TransformationOption[i][5]) / (1 << 14);
+                        double val4 = (double)((this.TransformationOption[i][6] << 8) + this.TransformationOption[i][7]) / (1 << 14);
+                        transformationOption.Add(new double[] { val1, val2, val3, val4 });
+                    }
+                }
+
+                List<TrueTypePoint[]> tbr = new List<TrueTypePoint[]>();
+
+
+                for (int i = 0; i < this.GlyphIndex.Length; i++)
+                {
+                    TrueTypePoint[][] componentContours = glyphCollection[this.GlyphIndex[i]].GetGlyphPath(size, emSize, glyphCollection);
+
+                    double[,] transformMatrix = new double[,] { { 1, 0 }, { 0, 1 } };
+
+                    if ((Flags[i] & 0x0008) != 0)
+                    {
+                        transformMatrix[0, 0] = transformationOption[i][0];
+                        transformMatrix[1, 1] = transformationOption[i][0];
+                    }
+                    else if ((Flags[i] & 0x0040) != 0)
+                    {
+                        transformMatrix[0, 0] = transformationOption[i][0];
+                        transformMatrix[1, 1] = transformationOption[i][1];
+                    }
+                    else if ((Flags[i] & 0x0080) != 0)
+                    {
+                        transformMatrix[0, 0] = transformationOption[i][0];
+                        transformMatrix[0, 1] = transformationOption[i][1];
+                        transformMatrix[1, 0] = transformationOption[i][2];
+                        transformMatrix[1, 1] = transformationOption[i][3];
+                    }
+
+                    double deltaX = 0;
+                    double deltaY = 0;
+
+                    if ((Flags[i] & 0x0002) != 0)
+                    {
+                        deltaX = argument1[i] * size / emSize;
+                        deltaY = argument2[i] * size / emSize;
+
+                        if ((Flags[i] & 0x0800) != 0 && (Flags[i] & 0x1000) == 0)
+                        {
+                            deltaX *= Magnitude(Multiply(transformMatrix, new double[] { 1, 0 }));
+                            deltaY *= Magnitude(Multiply(transformMatrix, new double[] { 0, 1 }));
+                        }
+                    }
+                    else
+                    {
+                        TrueTypePoint reference = GetNthElementWhere(tbr, argument1[i], el => el.IsDefinedPoint);
+                        TrueTypePoint destination = GetNthElementWhere(componentContours, argument2[i], el => el.IsDefinedPoint);
+
+                        deltaX = reference.X - destination.X;
+                        deltaY = reference.Y - destination.Y;
+
+                        //Note: this would be the sensible behaviour (i.e. make sure that reference and destination coincide after the transform), but apparently it is not the correct one.
+                        /*double[] transfDestination = Multiply(transformMatrix, new double[] { destination.X, destination.Y });
+
+                        deltaX = reference.X - transfDestination[0];
+                        deltaY = reference.Y - transfDestination[1];*/
+                    }
+
+                    for (int j = 0; j < componentContours.Length; j++)
+                    {
+                        for (int k = 0; k < componentContours[j].Length; k++)
+                        {
+                            double[] transformed = Multiply(transformMatrix, new double[] { componentContours[j][k].X, componentContours[j][k].Y });
+
+                            componentContours[j][k] = new TrueTypePoint(transformed[0] + deltaX, transformed[1] + deltaY, componentContours[j][k].IsOnCurve, componentContours[j][k].IsDefinedPoint);
+                        }
+                    }
+
+                    tbr.AddRange(componentContours);
+                }
+
+                return tbr.ToArray();
+            }
+        }
+
+        private static double Magnitude(double[] vector)
+        {
+            double tbr = 0;
+
+            for (int i = 0; i < vector.Length; i++)
+            {
+                tbr += vector[i] * vector[i];
+            }
+
+            return Math.Sqrt(tbr);
+        }
+
+        private static double[] Multiply(double[,] matrix, double[] vector)
+        {
+            double[] tbr = new double[2];
+
+            tbr[0] = matrix[0, 0] * vector[0] + matrix[0, 1] * vector[1];
+            tbr[1] = matrix[1, 0] * vector[0] + matrix[1, 1] * vector[1];
+
+            return tbr;
+        }
+
+        private static T GetNthElementWhere<T>(IEnumerable<IEnumerable<T>> array, int n, Func<T, bool> condition)
+        {
+            int index = 0;
+
+            foreach (IEnumerable<T> arr1 in array)
+            {
+                foreach (T el in arr1)
+                {
+                    if (condition(el))
+                    {
+                        if (index == n)
+                        {
+                            return el;
+                        }
+                        index++;
+                    }
+                }
+            }
+
+            throw new IndexOutOfRangeException();
+        }
+
+        /// <summary>
+        /// Represents a point in a TrueType path description.
+        /// </summary>
+        public struct TrueTypePoint
+        {
+            /// <summary>
+            /// The horizontal coordinate of the point.
+            /// </summary>
+            public double X;
+
+            /// <summary>
+            /// The vertical coordinate of the point.
+            /// </summary>
+            public double Y;
+
+            /// <summary>
+            /// Whether the point is a point on the curve, or a control point of a quadratic Bezier curve.
+            /// </summary>
+            public bool IsOnCurve;
+
+            internal bool IsDefinedPoint;
+
+            internal TrueTypePoint(double x, double y, bool onCurve, bool isDefinedPoint)
+            {
+                this.X = x;
+                this.Y = y;
+                this.IsOnCurve = onCurve;
+                this.IsDefinedPoint = isDefinedPoint;
+            }
         }
 
         internal class SimpleGlyph : Glyph
@@ -1125,6 +1337,167 @@ namespace VectSharp
 
                     return ms.ToArray();
                 }
+            }
+
+            public override TrueTypePoint[][] GetGlyphPath(double size, int emSize, Glyph[] glyphCollection)
+            {
+                List<TrueTypePoint[]> contours = new List<TrueTypePoint[]>();
+
+                List<TrueTypePoint> currentContour = new List<TrueTypePoint>();
+
+
+                List<byte> logicalFlags = new List<byte>();
+
+                int totalPoints = this.EndPtsOfContours[this.NumberOfContours - 1] + 1;
+
+                int countedPoints = 0;
+
+                int index = 0;
+
+                while (countedPoints < totalPoints)
+                {
+                    logicalFlags.Add(this.Flags[index]);
+                    index++;
+                    countedPoints++;
+                    if ((logicalFlags.Last() & 0x08) != 0)
+                    {
+                        byte repeats = this.Flags[index];
+                        index++;
+                        for (int i = 0; i < repeats; i++)
+                        {
+                            logicalFlags.Add(logicalFlags.Last());
+                            countedPoints++;
+                        }
+                    }
+                }
+
+                List<short> xCoordinates = new List<short>();
+
+                index = 0;
+
+                for (int i = 0; i < totalPoints; i++)
+                {
+                    bool isByte = (logicalFlags[i] & 0x02) != 0;
+
+                    if (isByte)
+                    {
+                        if ((logicalFlags[i] & 0x10) != 0)
+                        {
+                            xCoordinates.Add(this.XCoordinates[index]);
+                        }
+                        else
+                        {
+                            xCoordinates.Add((short)(-this.XCoordinates[index]));
+                        }
+
+                        index++;
+                    }
+                    else if ((logicalFlags[i] & 0x10) == 0)
+                    {
+                        xCoordinates.Add((short)((this.XCoordinates[index] << 8) + this.XCoordinates[index + 1]));
+                        index += 2;
+                    }
+                    else
+                    {
+                        xCoordinates.Add(0);
+                    }
+                }
+
+                List<short> yCoordinates = new List<short>();
+
+                index = 0;
+
+                for (int i = 0; i < totalPoints; i++)
+                {
+                    bool isByte = (logicalFlags[i] & 0x04) != 0;
+
+                    if (isByte)
+                    {
+                        if ((logicalFlags[i] & 0x20) != 0)
+                        {
+                            yCoordinates.Add(this.YCoordinates[index]);
+                        }
+                        else
+                        {
+                            yCoordinates.Add((short)(-this.YCoordinates[index]));
+                        }
+                        index++;
+                    }
+                    else if ((logicalFlags[i] & 0x20) == 0)
+                    {
+                        yCoordinates.Add((short)((this.YCoordinates[index] << 8) + this.YCoordinates[index + 1]));
+                        index += 2;
+                    }
+                    else
+                    {
+                        yCoordinates.Add(0);
+                    }
+                }
+
+                int[] previousPoint = new int[2] { 0, 0 };
+
+                for (int i = 0; i < totalPoints; i++)
+                {
+                    int absoluteX = xCoordinates[i] + previousPoint[0];
+                    int absoluteY = yCoordinates[i] + previousPoint[1];
+
+                    previousPoint[0] = absoluteX;
+                    previousPoint[1] = absoluteY;
+
+                    bool onCurve = (logicalFlags[i] & 0x01) != 0;
+
+                    if (onCurve)
+                    {
+                        currentContour.Add(new TrueTypePoint(size * absoluteX / emSize, size * absoluteY / emSize, onCurve, true));
+                    }
+                    else
+                    {
+                        if (currentContour.Count > 0)
+                        {
+                            if (currentContour.Last().IsOnCurve)
+                            {
+                                currentContour.Add(new TrueTypePoint(size * absoluteX / emSize, size * absoluteY / emSize, onCurve, true));
+                            }
+                            else
+                            {
+                                double newX = size * absoluteX / emSize;
+                                double newY = size * absoluteY / emSize;
+
+                                currentContour.Add(new TrueTypePoint((newX + currentContour.Last().X) * 0.5, (newY + currentContour.Last().Y) * 0.5, true, false));
+                                currentContour.Add(new TrueTypePoint(newX, newY, onCurve, true));
+                            }
+                        }
+                        else
+                        {
+                            currentContour.Add(new TrueTypePoint(size * absoluteX / emSize, size * absoluteY / emSize, onCurve, true));
+                        }
+                    }
+
+                    if (this.EndPtsOfContours.Contains((ushort)i))
+                    {
+                        if (!currentContour[0].IsOnCurve)
+                        {
+                            if (currentContour.Last().IsOnCurve)
+                            {
+                                currentContour.Insert(0, new TrueTypePoint(currentContour.Last().X, currentContour.Last().Y, currentContour.Last().IsOnCurve, false));
+                            }
+                            else
+                            {
+                                currentContour.Insert(0, new TrueTypePoint((currentContour[0].X + currentContour.Last().X) * 0.5, (currentContour[0].Y + currentContour.Last().Y) * 0.5, true, false));
+                            }
+                        }
+
+                        if (!currentContour.Last().IsOnCurve)
+                        {
+                            currentContour.Add(new TrueTypePoint(currentContour[0].X, currentContour[0].Y, currentContour[0].IsOnCurve, false));
+                        }
+
+                        contours.Add(currentContour.ToArray());
+                        currentContour = new List<TrueTypePoint>();
+                    }
+                }
+
+                return contours.ToArray();
             }
         }
 
@@ -1420,6 +1793,28 @@ namespace VectSharp
             {
                 return new LongHorFixed(((TrueTypeHmtxTable)this.Tables["hmtx"]).HMetrics.Last().AdvanceWidth, ((TrueTypeHmtxTable)this.Tables["hmtx"]).LeftSideBearing[glyphIndex - ((TrueTypeHmtxTable)this.Tables["hmtx"]).HMetrics.Length]);
             }
+        }
+
+        /// <summary>
+        /// Get the path that describes the shape of a glyph.
+        /// </summary>
+        /// <param name="glyphIndex">The index of the glyph whose path is sought.</param>
+        /// <param name="size">The font size to be used for the font coordinates.</param>
+        /// <returns>An array of contours, each of which is itself an array of TrueType points.</returns>
+        public TrueTypePoint[][] GetGlyphPath(int glyphIndex, double size)
+        {
+            return ((TrueTypeGlyfTable)this.Tables["glyf"]).Glyphs[glyphIndex].GetGlyphPath(size, ((TrueTypeHeadTable)this.Tables["head"]).UnitsPerEm, ((TrueTypeGlyfTable)this.Tables["glyf"]).Glyphs);
+        }
+
+        /// <summary>
+        /// Get the path that describes the shape of a glyph.
+        /// </summary>
+        /// <param name="glyph">The glyph whose path is sought.</param>
+        /// <param name="size">The font size to be used for the font coordinates.</param>
+        /// <returns>An array of contours, each of which is itself an array of TrueType points.</returns>
+        public TrueTypePoint[][] GetGlyphPath(char glyph, double size)
+        {
+            return ((TrueTypeGlyfTable)this.Tables["glyf"]).Glyphs[GetGlyphIndex(glyph)].GetGlyphPath(size, ((TrueTypeHeadTable)this.Tables["head"]).UnitsPerEm, ((TrueTypeGlyfTable)this.Tables["glyf"]).Glyphs);
         }
 
         /// <summary>

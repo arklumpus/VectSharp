@@ -455,7 +455,7 @@ namespace VectSharp
     /// </summary>
     public class FontFamily
     {
-        private static Dictionary<string, Stream> manifestResources = new Dictionary<string, Stream>();
+        private static readonly Dictionary<string, Stream> manifestResources = new Dictionary<string, Stream>();
 
         private static Stream GetManifestResourceStream(string name)
         {
@@ -654,16 +654,34 @@ namespace VectSharp
             Height = height;
         }
     }
-    internal enum SegmentType
+
+    /// <summary>
+    /// Types of <see cref="Segment"/>.
+    /// </summary>
+    public enum SegmentType
     {
         Move, Line, CubicBezier, Arc, Close
     }
 
-    internal abstract class Segment
+    /// <summary>
+    /// Represents a segment as part of a <see cref="GraphicsPath"/>.
+    /// </summary>
+    public abstract class Segment
     {
+
+        /// <summary>
+        /// The type of the <see cref="Segment"/>.
+        /// </summary>
         public abstract SegmentType Type { get; }
+
+        /// <summary>
+        /// The points used to define the <see cref="Segment"/>.
+        /// </summary>
         public Point[] Points { get; protected set; }
 
+        /// <summary>
+        /// The end point of the <see cref="Segment"/>.
+        /// </summary>
         public virtual Point Point
         {
             get
@@ -672,6 +690,9 @@ namespace VectSharp
             }
         }
 
+        /// <summary>
+        /// Creates a copy of the <see cref="Segment"/>.
+        /// </summary>
         public abstract Segment Clone();
     }
 
@@ -1592,7 +1613,10 @@ namespace VectSharp
     /// </summary>
     public class GraphicsPath
     {
-        internal List<Segment> Segments { get; set; } = new List<Segment>();
+        /// <summary>
+        /// The segments that make up the path.
+        /// </summary>
+        public List<Segment> Segments { get; set; } = new List<Segment>();
 
 
         /// <summary>
@@ -1725,6 +1749,93 @@ namespace VectSharp
         public GraphicsPath Close()
         {
             Segments.Add(new CloseSegment());
+            return this;
+        }
+
+        /// <summary>
+        /// Add the contour of a text string to the current path.
+        /// </summary>
+        /// <param name="originX">The horizontal coordinate of the text origin.</param>
+        /// <param name="originY">The vertical coordinate of the text origin. See <paramref name="textBaseline"/>.</param>
+        /// <param name="text">The string to draw.</param>
+        /// <param name="font">The font with which to draw the text.</param>
+        /// <param name="textBaseline">The text baseline (determines what <paramref name="originY"/> represents).</param>
+        public GraphicsPath AddText(double originX, double originY, string text, Font font, TextBaselines textBaseline = TextBaselines.Top)
+        {
+            return AddText(new Point(originX, originY), text, font, textBaseline);
+        }
+
+        /// <summary>
+        /// Add the contour of a text string to the current path.
+        /// </summary>
+        /// <param name="origin">The text origin. See <paramref name="textBaseline"/>.</param>
+        /// <param name="text">The string to draw.</param>
+        /// <param name="font">The font with which to draw the text.</param>
+        /// <param name="textBaseline">The text baseline (determines what the vertical component of <paramref name="origin"/> represents).</param>
+        public GraphicsPath AddText(Point origin, string text, Font font, TextBaselines textBaseline = TextBaselines.Top)
+        {
+            Font.DetailedFontMetrics metrics = font.MeasureTextAdvanced(text);
+
+            Point baselineOrigin = origin;
+
+            switch (textBaseline)
+            {
+                case TextBaselines.Baseline:
+                    baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y);
+                    break;
+                case TextBaselines.Top:
+                    baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y + metrics.Top);
+                    break;
+                case TextBaselines.Bottom:
+                    baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y + metrics.Bottom);
+                    break;
+                case TextBaselines.Middle:
+                    baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y + (metrics.Top - metrics.Bottom) * 0.5 + metrics.Bottom);
+                    break;
+            }
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                char c = text[i];
+
+                TrueTypeFile.TrueTypePoint[][] glyphPaths = font.FontFamily.TrueTypeFile.GetGlyphPath(c, font.FontSize);
+
+                for (int j = 0; j < glyphPaths.Length; j++)
+                {
+                    for (int k = 0; k < glyphPaths[j].Length; k++)
+                    {
+                        if (k == 0)
+                        {
+                            this.MoveTo(glyphPaths[j][k].X + baselineOrigin.X, - glyphPaths[j][k].Y + baselineOrigin.Y);
+                        }
+                        else
+                        {
+                            if (glyphPaths[j][k].IsOnCurve)
+                            {
+                                this.LineTo(glyphPaths[j][k].X + baselineOrigin.X, -glyphPaths[j][k].Y + baselineOrigin.Y);
+                            }
+                            else
+                            {
+                                Point startPoint = this.Segments.Last().Point;
+                                Point quadCtrl = new Point(glyphPaths[j][k].X + baselineOrigin.X, -glyphPaths[j][k].Y + baselineOrigin.Y);
+                                Point endPoint = new Point(glyphPaths[j][k + 1].X + baselineOrigin.X, -glyphPaths[j][k + 1].Y + baselineOrigin.Y);
+                                
+
+                                Point ctrl1 = new Point(startPoint.X / 3 + 2 * quadCtrl.X / 3, startPoint.Y / 3 + 2 * quadCtrl.Y / 3);
+                                Point ctrl2 = new Point(endPoint.X / 3 + 2 * quadCtrl.X / 3, endPoint.Y / 3 + 2 * quadCtrl.Y / 3);
+
+                                this.CubicBezierTo(ctrl1, ctrl2, endPoint);
+
+                                k++;
+                            }
+                        }
+                    }
+
+                    this.Close();
+                }
+
+                baselineOrigin.X += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+            }
             return this;
         }
     }
