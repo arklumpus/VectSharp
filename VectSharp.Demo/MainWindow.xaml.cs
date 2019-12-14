@@ -8,6 +8,7 @@ using System.Linq;
 using VectSharp;
 using VectSharp.Canvas;
 using VectSharp.PDF;
+using VectSharp.Raster;
 
 namespace VectSharp.Demo
 {
@@ -128,7 +129,7 @@ namespace VectSharp.Demo
             gpr.Save();
 
             //Translate
-            gpr.Translate(2000, 800);
+            gpr.Translate(2000, 1000);
 
             //Scale
             gpr.Scale(5, 5);
@@ -273,6 +274,16 @@ namespace VectSharp.Demo
             gpr.FillPath(new GraphicsPath().Arc(3475, 2300, 150, 0, 2 * Math.PI), Colour.FromRgba((byte)0, (byte)162, (byte)232, (byte)85));
 
 
+            //Text fill vs stroke
+            gpr.FillText(1925, 1450, "Fill", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBoldOblique), 150), Colour.FromRgb(203, 245, 216));
+            gpr.StrokeText(2325, 1450, "Stroke", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBoldOblique), 150), Colour.FromRgb(34, 177, 76), lineWidth: 6, lineJoin: LineJoins.Round);
+
+            //Text can be also added to a graphics path.
+            GraphicsPath textPath = new GraphicsPath().AddText(1925, 1650, "Fill & stroke", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBoldOblique), 150));
+            gpr.FillPath(textPath, Colour.FromRgb(203, 245, 216));
+            gpr.StrokePath(textPath, Colour.FromRgb(34, 177, 76), lineWidth: 6, lineJoin: LineJoins.Round);
+
+
             //Interactivity sample (Avalonia only)
             //Fill rectangle
             gpr.FillRectangle(3100, 1550, 600, 200, Colour.FromRgb(220, 220, 220), tag: "ClickMeRectangle");
@@ -316,6 +327,9 @@ namespace VectSharp.Demo
                 }) },
             };
 
+            //Save the image as a PNG file
+            doc.Pages.Last().SaveAsPNG(@"Sample.png");
+
             //Transfer the page onto an Avalonia Canvas object
             this.FindControl<Viewbox>("mainViewBox").Child = doc.Pages.Last().PaintToCanvas(taggedActions);
 
@@ -327,7 +341,6 @@ namespace VectSharp.Demo
 
             //Create a PDF document
             doc.SaveAsPDF(@"Sample.pdf");
-
         }
 
         private void InitializeComponent()
