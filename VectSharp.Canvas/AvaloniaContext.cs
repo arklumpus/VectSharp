@@ -372,20 +372,15 @@ namespace VectSharp.Canvas
             switch (LineCap)
             {
                 case LineCaps.Butt:
-                    pth.StrokeStartLineCap = PenLineCap.Flat;
-                    pth.StrokeEndLineCap = PenLineCap.Flat;
+                    pth.StrokeLineCap = PenLineCap.Flat;
                     break;
                 case LineCaps.Round:
-                    pth.StrokeStartLineCap = PenLineCap.Round;
-                    pth.StrokeEndLineCap = PenLineCap.Round;
+                    pth.StrokeLineCap = PenLineCap.Round;
                     break;
                 case LineCaps.Square:
-                    pth.StrokeStartLineCap = PenLineCap.Square;
-                    pth.StrokeEndLineCap = PenLineCap.Square;
+                    pth.StrokeLineCap = PenLineCap.Square;
                     break;
             }
-
-            pth.StrokeDashCap = pth.StrokeStartLineCap;
 
             switch (LineJoin)
             {
