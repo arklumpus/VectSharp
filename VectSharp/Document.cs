@@ -38,11 +38,11 @@ namespace VectSharp
         /// Height of the page.
         /// </summary>
         public double Height { get; set; }
-        
+
         /// <summary>
         /// Graphics surface of the page.
         /// </summary>
-        public Graphics Graphics { get; set; } = new Graphics();
+        public Graphics Graphics { get; set; }
         
         /// <summary>
         /// Create a new page.
@@ -53,6 +53,21 @@ namespace VectSharp
         {
             this.Width = width;
             this.Height = height;
+
+            this.Graphics = new Graphics();
+            this.Graphics.Translate(0, 0);
+        }
+
+        /// <summary>
+        /// Translate and resize the <see cref="Page"/> so that it displays the rectangle defined by <paramref name="topLeft"/> and <paramref name="size"/>.
+        /// </summary>
+        /// <param name="topLeft">The top left corner of the area to include in the page.</param>
+        /// <param name="size">The size of the area to include in the page.</param>
+        public void Crop(Point topLeft, Size size)
+        {
+            this.Graphics.Actions[0] = new TransformAction(new Point(-topLeft.X, -topLeft.Y));
+            this.Width = size.Width;
+            this.Height = size.Height;
         }
     }
 }
