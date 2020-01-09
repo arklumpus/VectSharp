@@ -297,7 +297,7 @@ namespace VectSharp.Demo
             //Dictionary associating each tag to the action to perform on the object (Avalonia only)
             Dictionary<string, Delegate> taggedActions = new Dictionary<string, Delegate>()
             {
-                {"ClickMeText", new Action<TextBlock>(block => { block.IsHitTestVisible = false; }) },
+                {"ClickMeText", new Action<Path>(block => { block.IsHitTestVisible = false; }) },
                 {"ClickMeRectangle", new Action<Path>(path =>
                 {
                     path.Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand);
