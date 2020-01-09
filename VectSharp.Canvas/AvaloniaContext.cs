@@ -43,7 +43,7 @@ namespace VectSharp.Canvas
 
         public void Translate(double x, double y)
         {
-            Avalonia.Controls.Canvas newCanvas = new Avalonia.Controls.Canvas() { Width = Width, Height = Height };
+            Avalonia.Controls.Canvas newCanvas = new Avalonia.Controls.Canvas() { Width = Width - x, Height = Height - y };
             newCanvas.Margin = new Avalonia.Thickness(x, y, 0, 0);
             currentCanvas.Children.Add(newCanvas);
             currentCanvas = newCanvas;
