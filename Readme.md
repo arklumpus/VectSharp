@@ -65,7 +65,7 @@ To be able to compile VectSharp from source, you will need to install the [.NET 
 
 You can use [Microsoft Visual Studio](https://visualstudio.microsoft.com/it/vs/) to compile the program. The following instructions will cover compiling VectSharp from the command line, instead.
 
-First of all, you will need to download the VectSharp source code: [VectSharp.tar.gz](https://github.com/arklumpus/VectSharp/archive/v1.1.0.tar.gz) and extract it somewhere.
+First of all, you will need to download the VectSharp source code: [VectSharp.tar.gz](https://github.com/arklumpus/VectSharp/archive/v1.1.1.tar.gz) and extract it somewhere.
 
 ### Windows
 Open a command-line window in the folder where you have extracted the source code, and type:
