@@ -172,6 +172,8 @@ namespace VectSharp
             }
 
             FontStream.Seek(0, SeekOrigin.Begin);
+
+            BuildGlyphCache();
         }
 
         internal static TrueTypeFile CreateTrueTypeFile(string fileName)
@@ -412,6 +414,22 @@ namespace VectSharp
             }
 
             Tables.Add("glyf", new TrueTypeGlyfTable() { Glyphs = glyphs });
+
+            BuildGlyphCache();
+        }
+
+
+        private double[] GlyphWidthsCache = new double[256];
+        private VerticalMetrics[] VerticalMetricsCache = new VerticalMetrics[256];
+        private Bearings[] BearingsCache = new Bearings[256];
+        private void BuildGlyphCache()
+        {
+            for (int i = 0; i < 256; i++)
+            {
+                GlyphWidthsCache[i] = this.Get1000EmGlyphWidth(GetGlyphIndex((char)i));
+                VerticalMetricsCache[i] = this.Get1000EmGlyphVerticalMetrics(GetGlyphIndex((char)i));
+                BearingsCache[i] = this.Get1000EmGlyphBearings(GetGlyphIndex((char)i));
+            }
         }
 
         /// <summary>
@@ -1824,7 +1842,15 @@ namespace VectSharp
         /// <returns>The advance width of the glyph in thousandths of em unit.</returns>
         public double Get1000EmGlyphWidth(char glyph)
         {
-            return Get1000EmGlyphWidth(GetGlyphIndex(glyph));
+            int num = (int)glyph;
+            if (num < 256)
+            {
+                return GlyphWidthsCache[num];
+            }
+            else
+            {
+                return Get1000EmGlyphWidth(GetGlyphIndex(glyph));
+            }
         }
 
         /// <summary>
@@ -1937,7 +1963,16 @@ namespace VectSharp
         /// <returns>The left- and right- side bearings of the glyph in thousandths of em unit</returns>
         public Bearings Get1000EmGlyphBearings(char glyph)
         {
-            return Get1000EmGlyphBearings(GetGlyphIndex(glyph));
+            int num = (int)glyph;
+
+            if (num < 256)
+            {
+                return BearingsCache[num];
+            }
+            else
+            {
+                return Get1000EmGlyphBearings(GetGlyphIndex(glyph));
+            }
         }
 
         /// <summary>
@@ -1976,7 +2011,15 @@ namespace VectSharp
         /// <returns>The vertical metrics of a glyph, in thousandths of em unit.</returns>
         public VerticalMetrics Get1000EmGlyphVerticalMetrics(char glyph)
         {
-            return Get1000EmGlyphVerticalMetrics(GetGlyphIndex(glyph));
+            int num = (int)glyph;
+            if (num < 256)
+            {
+                return VerticalMetricsCache[num];
+            }
+            else
+            {
+                return Get1000EmGlyphVerticalMetrics(GetGlyphIndex(glyph));
+            }
         }
 
         internal interface ITrueTypeTable

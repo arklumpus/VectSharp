@@ -7,6 +7,78 @@ using System.Runtime.InteropServices;
 
 namespace VectSharp.Canvas
 {
+    internal static class MatrixUtils
+    {
+        public static Avalonia.Matrix ToAvaloniaMatrix(this double[,] matrix)
+        {
+            return new Avalonia.Matrix(matrix[0, 0], matrix[1, 0], matrix[0, 1], matrix[1, 1], matrix[0, 2], matrix[1, 2]);
+        }
+
+        public static double[] Multiply(double[,] matrix, double[] vector)
+        {
+            double[] tbr = new double[2];
+
+            tbr[0] = matrix[0, 0] * vector[0] + matrix[0, 1] * vector[1] + matrix[0, 2];
+            tbr[1] = matrix[1, 0] * vector[0] + matrix[1, 1] * vector[1] + matrix[1, 2];
+
+            return tbr;
+        }
+
+        public static double[,] Multiply(double[,] matrix1, double[,] matrix2)
+        {
+            double[,] tbr = new double[3, 3];
+
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    for (int k = 0; k < 3; k++)
+                    {
+                        tbr[i, j] += matrix1[i, k] * matrix2[k, j];
+                    }
+                }
+            }
+
+            return tbr;
+        }
+
+        public static double[,] Rotate(double[,] matrix, double angle)
+        {
+            double[,] rotationMatrix = new double[3, 3];
+            rotationMatrix[0, 0] = Math.Cos(angle);
+            rotationMatrix[0, 1] = -Math.Sin(angle);
+            rotationMatrix[1, 0] = Math.Sin(angle);
+            rotationMatrix[1, 1] = Math.Cos(angle);
+            rotationMatrix[2, 2] = 1;
+
+            return Multiply(matrix, rotationMatrix);
+        }
+
+        public static double[,] Translate(double[,] matrix, double x, double y)
+        {
+            double[,] translationMatrix = new double[3, 3];
+            translationMatrix[0, 0] = 1;
+            translationMatrix[0, 2] = x;
+            translationMatrix[1, 1] = 1;
+            translationMatrix[1, 2] = y;
+            translationMatrix[2, 2] = 1;
+
+            return Multiply(matrix, translationMatrix);
+        }
+
+        public static double[,] Scale(double[,] matrix, double scaleX, double scaleY)
+        {
+            double[,] scaleMatrix = new double[3, 3];
+            scaleMatrix[0, 0] = scaleX;
+            scaleMatrix[1, 1] = scaleY;
+            scaleMatrix[2, 2] = 1;
+
+            return Multiply(matrix, scaleMatrix);
+        }
+
+        public static double[,] Identity = new double[,] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
+    }
+
     internal class AvaloniaContext : IGraphicsContext
     {
         public Dictionary<string, Delegate> TaggedActions { get; set; } = new Dictionary<string, Delegate>();
@@ -20,33 +92,26 @@ namespace VectSharp.Canvas
             currentPath = new PathGeometry();
             currentFigure = new PathFigure() { IsClosed = false };
             figureInitialised = false;
-            mainParent = new Avalonia.Controls.Canvas() { Width = width, Height = height, ClipToBounds = true };
-            currentCanvas = new Avalonia.Controls.Canvas() { Width = width, Height = height };
-            mainParent.Children.Add(currentCanvas);
+            ControlItem = new Avalonia.Controls.Canvas() { Width = width, Height = height, ClipToBounds = true };
             removeTaggedActions = removeTaggedActionsAfterExecution;
+
+            _transform = new double[3, 3];
+
+            _transform[0, 0] = 1;
+            _transform[1, 1] = 1;
+            _transform[2, 2] = 1;
+
+            states = new Stack<double[,]>();
         }
 
-        public Avalonia.Controls.Canvas ControlItem
-        {
-            get
-            {
-                return mainParent;
-            }
-        }
+        public Avalonia.Controls.Canvas ControlItem { get; }
 
-        private Avalonia.Controls.Canvas mainParent;
-
-        private Avalonia.Controls.Canvas currentCanvas;
-
-        public double Width { get { return mainParent.Width; } }
-        public double Height { get { return mainParent.Height; } }
+        public double Width { get { return ControlItem.Width; } }
+        public double Height { get { return ControlItem.Height; } }
 
         public void Translate(double x, double y)
         {
-            Avalonia.Controls.Canvas newCanvas = new Avalonia.Controls.Canvas() { Width = Width - x, Height = Height - y };
-            newCanvas.Margin = new Avalonia.Thickness(x, y, 0, 0);
-            currentCanvas.Children.Add(newCanvas);
-            currentCanvas = newCanvas;
+            _transform = MatrixUtils.Translate(_transform, x, y);
 
             currentPath = new PathGeometry();
             currentFigure = new PathFigure() { IsClosed = false };
@@ -87,79 +152,94 @@ namespace VectSharp.Canvas
 
         public void FillText(string text, double x, double y)
         {
-            Grid grd = new Grid() { Height = 2 * Font.FontSize };
             TextBlock blk = new TextBlock() { ClipToBounds = false, Text = text, Foreground = new SolidColorBrush(Color.FromArgb(FillAlpha, (byte)(FillStyle.R * 255), (byte)(FillStyle.G * 255), (byte)(FillStyle.B * 255))), FontFamily = Avalonia.Media.FontFamily.Parse(FontFamily), FontSize = Font.FontSize, FontStyle = (Font.FontFamily.IsOblique ? FontStyle.Oblique : Font.FontFamily.IsItalic ? FontStyle.Italic : FontStyle.Normal), FontWeight = (Font.FontFamily.IsBold ? FontWeight.Bold : FontWeight.Regular) };
 
             double top = y;
             double left = x;
 
-            Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
+            double[,] currTransform = null;
+
+            if (Font.FontFamily.TrueTypeFile != null)
+            {
+                currTransform = MatrixUtils.Translate(_transform, x, y);
+            }
 
             if (TextBaseline == TextBaselines.Top)
             {
-                grd.Margin = new Avalonia.Thickness(left, top, 0, 0);
+                Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
                 blk.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top;
 
                 if (Font.FontFamily.TrueTypeFile != null)
                 {
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
-                        blk.Margin = new Avalonia.Thickness(-metrics.LeftSideBearing, metrics.Top - Font.YMax, -metrics.RightSideBearing, 0);
+                    {                        
+                        currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.YMax);
                     }
                     else
                     {
-                        blk.Margin = new Avalonia.Thickness(-metrics.LeftSideBearing, metrics.Top - Font.Ascent, -metrics.RightSideBearing, 0);
+                        currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.Ascent);
                     }
                 }
             }
             else if (TextBaseline == TextBaselines.Middle)
             {
-                grd.Margin = new Avalonia.Thickness(left, top - Font.FontSize, 0, 0);
+                Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
+
                 blk.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top;
 
                 if (Font.FontFamily.TrueTypeFile != null)
                 {
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
-                        blk.Margin = new Avalonia.Thickness(-metrics.LeftSideBearing, metrics.Top / 2 + metrics.Bottom / 2 - Font.YMax + Font.FontSize, -metrics.RightSideBearing, 0);
+                        currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.YMax);
                     }
                     else
                     {
-                        blk.Margin = new Avalonia.Thickness(-metrics.LeftSideBearing, metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent + Font.FontSize, -metrics.RightSideBearing, 0);
+                        currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
                     }
                 }
             }
             else if (TextBaseline == TextBaselines.Baseline)
             {
-                grd.Margin = new Avalonia.Thickness(left, top - Font.FontSize, 0, 0);
+                double lsb = Font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(text[0]).LeftSideBearing * Font.FontSize / 1000;
+
                 blk.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top;
 
                 if (Font.FontFamily.TrueTypeFile != null)
                 {
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
-                        blk.Margin = new Avalonia.Thickness(-metrics.LeftSideBearing, -Font.YMax + Font.FontSize, -metrics.RightSideBearing, 0);
+                        currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.YMax);
                     }
                     else
                     {
-                        blk.Margin = new Avalonia.Thickness(-metrics.LeftSideBearing, -Font.Ascent + Font.FontSize, -metrics.RightSideBearing, 0);
+                        currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.Ascent);
                     }
                 }
             }
             else if (TextBaseline == TextBaselines.Bottom)
             {
-                grd.Margin = new Avalonia.Thickness(left, top - 2 * Font.FontSize, 0, 0);
+                Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
+
                 blk.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Bottom;
 
                 if (Font.FontFamily.TrueTypeFile != null)
                 {
-                    blk.Margin = new Avalonia.Thickness(-metrics.LeftSideBearing, 0, -metrics.RightSideBearing, Font.YMin - metrics.Bottom);
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    {
+                        currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.YMax + metrics.Bottom);
+                    }
+                    else
+                    {
+                        currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.Ascent + metrics.Bottom);
+                    }
                 }
             }
 
-            grd.Children.Add(blk);
+            blk.RenderTransform = new MatrixTransform(currTransform.ToAvaloniaMatrix());
+            blk.RenderTransformOrigin = new Avalonia.RelativePoint(0, 0, Avalonia.RelativeUnit.Absolute);
 
-            currentCanvas.Children.Add(grd);
+            ControlItem.Children.Add(blk);
 
             if (!string.IsNullOrEmpty(Tag))
             {
@@ -214,11 +294,7 @@ namespace VectSharp.Canvas
 
         public void Rotate(double angle)
         {
-            Avalonia.Controls.Canvas newCanvas = new Avalonia.Controls.Canvas() { Width = Width, Height = Height };
-            newCanvas.RenderTransformOrigin = new Avalonia.RelativePoint(0, 0, Avalonia.RelativeUnit.Absolute);
-            newCanvas.RenderTransform = new RotateTransform(angle * 180 / Math.PI);
-            currentCanvas.Children.Add(newCanvas);
-            currentCanvas = newCanvas;
+            _transform = MatrixUtils.Rotate(_transform, angle);
 
             currentPath = new PathGeometry();
             currentFigure = new PathFigure() { IsClosed = false };
@@ -227,27 +303,25 @@ namespace VectSharp.Canvas
 
         public void Scale(double x, double y)
         {
-            Avalonia.Controls.Canvas newCanvas = new Avalonia.Controls.Canvas() { Width = Width, Height = Height };
-            newCanvas.RenderTransformOrigin = new Avalonia.RelativePoint(0, 0, Avalonia.RelativeUnit.Absolute);
-            newCanvas.RenderTransform = new ScaleTransform(x, y);
-            currentCanvas.Children.Add(newCanvas);
-            currentCanvas = newCanvas;
+            _transform = MatrixUtils.Scale(_transform, x, y);
 
             currentPath = new PathGeometry();
             currentFigure = new PathFigure() { IsClosed = false };
             figureInitialised = false;
         }
 
-        private Stack<Avalonia.Controls.Canvas> states = new Stack<Avalonia.Controls.Canvas>();
+        private double[,] _transform;
+
+        private readonly Stack<double[,]> states;
 
         public void Save()
         {
-            states.Push(currentCanvas);
+            states.Push((double[,])_transform.Clone());
         }
 
         public void Restore()
         {
-            currentCanvas = states.Pop();
+            _transform = states.Pop();
         }
 
         public double LineWidth { get; set; }
@@ -397,7 +471,10 @@ namespace VectSharp.Canvas
 
             pth.Data = currentPath;
 
-            currentCanvas.Children.Add(pth);
+            pth.RenderTransform = new MatrixTransform(_transform.ToAvaloniaMatrix());
+            pth.RenderTransformOrigin = new Avalonia.RelativePoint(0, 0, Avalonia.RelativeUnit.Absolute);
+
+            ControlItem.Children.Add(pth);
 
             currentPath = new PathGeometry();
             currentFigure = new PathFigure() { IsClosed = false };
@@ -428,7 +505,10 @@ namespace VectSharp.Canvas
 
             pth.Data = currentPath;
 
-            currentCanvas.Children.Add(pth);
+            pth.RenderTransform = new MatrixTransform(_transform.ToAvaloniaMatrix());
+            pth.RenderTransformOrigin = new Avalonia.RelativePoint(0, 0, Avalonia.RelativeUnit.Absolute);
+
+            ControlItem.Children.Add(pth);
 
             currentPath = new PathGeometry();
             currentFigure = new PathFigure() { IsClosed = false };

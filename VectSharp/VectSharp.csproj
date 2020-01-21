@@ -5,9 +5,9 @@
     <Authors>Giorgio Bianchini</Authors>
     <Company>University of Bristol</Company>
     <Description>A library to produce vector graphics (including text) without too many dependencies. Extensible to support multiple output formats. This is the base package, and does not provide any output formats. For more information, see https://github.com/arklumpus/VectSharp</Description>
-    <Version>1.1.1</Version>
-    <AssemblyVersion>1.1.1.0</AssemblyVersion>
-    <FileVersion>1.1.1.0</FileVersion>
+    <Version>1.1.2</Version>
+    <AssemblyVersion>1.1.2.0</AssemblyVersion>
+    <FileVersion>1.1.2.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
