@@ -1760,6 +1760,7 @@ namespace VectSharp
         /// <param name="text">The string to draw.</param>
         /// <param name="font">The font with which to draw the text.</param>
         /// <param name="textBaseline">The text baseline (determines what <paramref name="originY"/> represents).</param>
+        /// /// <returns>The <see cref="GraphicsPath"/>, to allow for chained calls.</returns>
         public GraphicsPath AddText(double originX, double originY, string text, Font font, TextBaselines textBaseline = TextBaselines.Top)
         {
             return AddText(new Point(originX, originY), text, font, textBaseline);
@@ -1772,6 +1773,7 @@ namespace VectSharp
         /// <param name="text">The string to draw.</param>
         /// <param name="font">The font with which to draw the text.</param>
         /// <param name="textBaseline">The text baseline (determines what the vertical component of <paramref name="origin"/> represents).</param>
+        /// <returns>The <see cref="GraphicsPath"/>, to allow for chained calls.</returns>
         public GraphicsPath AddText(Point origin, string text, Font font, TextBaselines textBaseline = TextBaselines.Top)
         {
             Font.DetailedFontMetrics metrics = font.MeasureTextAdvanced(text);
@@ -1806,7 +1808,7 @@ namespace VectSharp
                     {
                         if (k == 0)
                         {
-                            this.MoveTo(glyphPaths[j][k].X + baselineOrigin.X, - glyphPaths[j][k].Y + baselineOrigin.Y);
+                            this.MoveTo(glyphPaths[j][k].X + baselineOrigin.X, -glyphPaths[j][k].Y + baselineOrigin.Y);
                         }
                         else
                         {
@@ -1819,7 +1821,7 @@ namespace VectSharp
                                 Point startPoint = this.Segments.Last().Point;
                                 Point quadCtrl = new Point(glyphPaths[j][k].X + baselineOrigin.X, -glyphPaths[j][k].Y + baselineOrigin.Y);
                                 Point endPoint = new Point(glyphPaths[j][k + 1].X + baselineOrigin.X, -glyphPaths[j][k + 1].Y + baselineOrigin.Y);
-                                
+
 
                                 Point ctrl1 = new Point(startPoint.X / 3 + 2 * quadCtrl.X / 3, startPoint.Y / 3 + 2 * quadCtrl.Y / 3);
                                 Point ctrl2 = new Point(endPoint.X / 3 + 2 * quadCtrl.X / 3, endPoint.Y / 3 + 2 * quadCtrl.Y / 3);
@@ -1838,6 +1840,39 @@ namespace VectSharp
             }
             return this;
         }
+
+        /// <summary>
+        /// Adds a smooth spline composed of cubic bezier segments that pass through the specified points.
+        /// </summary>
+        /// <param name="points">The points through which the spline should pass.</param>
+        /// <returns>The <see cref="GraphicsPath"/>, to allow for chained calls.</returns>
+        public GraphicsPath AddSmoothSpline(params Point[] points)
+        {
+            if (points.Length == 0)
+            {
+                return this;
+            }
+            else if (points.Length == 1)
+            {
+                return this.MoveTo(points[0]);
+            }
+            else if (points.Length == 2)
+            {
+                return this.MoveTo(points[0]).LineTo(points[1]);
+            }
+
+            Point[] smoothedSpline = SmoothSpline.SmoothSplines(points);
+
+            this.MoveTo(smoothedSpline[0]);
+
+            for (int i = 1; i < smoothedSpline.Length; i += 3)
+            {
+                this.CubicBezierTo(smoothedSpline[i], smoothedSpline[i + 1], smoothedSpline[i + 2]);
+            }
+
+            return this;
+        }
+
     }
 
 }
