@@ -1854,16 +1854,16 @@ namespace VectSharp
             }
             else if (points.Length == 1)
             {
-                return this.MoveTo(points[0]);
+                return this.LineTo(points[0]);
             }
             else if (points.Length == 2)
             {
-                return this.MoveTo(points[0]).LineTo(points[1]);
+                return this.LineTo(points[0]).LineTo(points[1]);
             }
 
             Point[] smoothedSpline = SmoothSpline.SmoothSplines(points);
 
-            this.MoveTo(smoothedSpline[0]);
+            this.LineTo(smoothedSpline[0]);
 
             for (int i = 1; i < smoothedSpline.Length; i += 3)
             {
