@@ -43,6 +43,11 @@ namespace VectSharp
         /// Graphics surface of the page.
         /// </summary>
         public Graphics Graphics { get; set; }
+
+        /// <summary>
+        /// Background colour of the page.
+        /// </summary>
+        public Colour Background { get; set; } = Colour.FromRgba(255, 255, 255, 0);
         
         /// <summary>
         /// Create a new page.

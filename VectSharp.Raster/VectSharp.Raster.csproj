@@ -7,6 +7,7 @@
     <Authors>Giorgio Bianchini</Authors>
     <Product>VectSharp</Product>
     <Company>University of Bristol</Company>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

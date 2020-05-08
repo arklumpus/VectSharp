@@ -291,7 +291,7 @@ namespace VectSharp.PDF
         private Colour _fillStyle;
         private LineDash _lineDash;
 
-        public PDFContext(double width, double height)
+        public PDFContext(double width, double height, Colour background)
         {
             this.Width = width;
             this.Height = height;
@@ -313,6 +313,12 @@ namespace VectSharp.PDF
 
             this.Translate(0, height);
             this.Scale(1, -1);
+
+            this.Rectangle(0, 0, width, height);
+            this.SetFillStyle(background);
+            this.Fill();
+
+            this.SetFillStyle(Colour.FromRgb(0, 0, 0));
         }
 
 
@@ -627,7 +633,7 @@ namespace VectSharp.PDF
 
             for (int i = 0; i < document.Pages.Count; i++)
             {
-                pageContexts[i] = new PDFContext(document.Pages[i].Width, document.Pages[i].Height);
+                pageContexts[i] = new PDFContext(document.Pages[i].Width, document.Pages[i].Height, document.Pages[i].Background);
                 document.Pages[i].Graphics.CopyToIGraphicsContext(pageContexts[i]);
             }
 

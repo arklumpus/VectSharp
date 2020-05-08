@@ -27,6 +27,9 @@ namespace VectSharp.Demo
             //Add a page to the document
             doc.Pages.Add(new Page(4000, 2600));
 
+            //Set the page's background
+            doc.Pages.Last().Background = Colour.FromRgba(35, 127, 255, 0.05);
+
             //Obtain the page's graphics object
             Graphics gpr = doc.Pages.Last().Graphics;
 

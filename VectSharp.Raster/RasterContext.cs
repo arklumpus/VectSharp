@@ -403,9 +403,27 @@ namespace VectSharp.Raster
 
     internal static class ImageFormats
     {
-        public static byte[,,] AllocateImage(int width, int height)
+        public static byte[,,] AllocateImage(int width, int height, Colour backgroundColour)
         {
-            return new byte[width, height, 4];
+            byte r = (byte)(backgroundColour.R * 255);
+            byte g = (byte)(backgroundColour.G * 255);
+            byte b = (byte)(backgroundColour.B * 255);
+            byte a = (byte)(backgroundColour.A * 255);
+
+            byte[,,] tbr = new byte[width, height, 4];
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    tbr[x, y, 0] = r;
+                    tbr[x, y, 1] = g;
+                    tbr[x, y, 2] = b;
+                    tbr[x, y, 3] = a;
+                }
+            }
+
+            return tbr;
         }
 
         public static void SavePNG(byte[,,] image, Stream fs)
@@ -977,7 +995,7 @@ namespace VectSharp.Raster
             RasterContext ctx = new RasterContext(page.Width, page.Height);
             page.Graphics.CopyToIGraphicsContext(ctx);
 
-            byte[,,] image = ImageFormats.AllocateImage((int)(ctx.Width * scale), (int)(ctx.Height * scale));
+            byte[,,] image = ImageFormats.AllocateImage((int)(ctx.Width * scale), (int)(ctx.Height * scale), page.Background);
 
             int width = image.GetLength(0);
             int height = image.GetLength(1);
