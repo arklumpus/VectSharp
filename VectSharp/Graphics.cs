@@ -775,19 +775,78 @@ namespace VectSharp
         {
             List<Segment> tbr = new List<Segment>();
 
-            if (EndAngle - StartAngle <= Math.PI / 2)
+            if (EndAngle > StartAngle)
             {
-                tbr.AddRange(GetBezierSegment(Points[0].X, Points[0].Y, Radius, StartAngle, EndAngle, true));
-            }
-            else
-            {
-                int count = (int)Math.Ceiling(2 * (EndAngle - StartAngle) / Math.PI);
-                double angle = StartAngle;
-
-                for (int i = 0; i < count; i++)
+                if (EndAngle - StartAngle <= Math.PI / 2)
                 {
-                    tbr.AddRange(GetBezierSegment(Points[0].X, Points[0].Y, Radius, angle, angle + (EndAngle - StartAngle) / count, i == 0));
-                    angle += (EndAngle - StartAngle) / count;
+                    tbr.AddRange(GetBezierSegment(Points[0].X, Points[0].Y, Radius, StartAngle, EndAngle, true));
+                }
+                else
+                {
+                    int count = (int)Math.Ceiling(2 * (EndAngle - StartAngle) / Math.PI);
+                    double angle = StartAngle;
+
+                    for (int i = 0; i < count; i++)
+                    {
+                        tbr.AddRange(GetBezierSegment(Points[0].X, Points[0].Y, Radius, angle, angle + (EndAngle - StartAngle) / count, i == 0));
+                        angle += (EndAngle - StartAngle) / count;
+                    }
+                }
+            }
+            else if (EndAngle < StartAngle)
+            {
+                Point startPoint = new Point(Points[0].X + Radius * Math.Cos(EndAngle), Points[0].Y + Radius * Math.Sin(EndAngle));
+                if (StartAngle - EndAngle <= Math.PI / 2)
+                {
+                    tbr.AddRange(GetBezierSegment(Points[0].X, Points[0].Y, Radius, EndAngle, StartAngle, true));
+                }
+                else
+                {
+                    int count = (int)Math.Ceiling(2 * (StartAngle - EndAngle) / Math.PI);
+                    double angle = EndAngle;
+
+                    for (int i = 0; i < count; i++)
+                    {
+                        tbr.AddRange(GetBezierSegment(Points[0].X, Points[0].Y, Radius, angle, angle + (StartAngle - EndAngle) / count, i == 0));
+                        angle += (StartAngle - EndAngle) / count;
+                    }
+                }
+
+                return ReverseSegments(tbr, startPoint).ToArray();
+            }
+
+            return tbr.ToArray();
+        }
+
+        private static Segment[] ReverseSegments(IReadOnlyList<Segment> originalSegments, Point startPoint)
+        {
+            List<Segment> tbr = new List<Segment>(originalSegments.Count);
+
+            for (int i = originalSegments.Count - 1; i >= 0; i--)
+            {
+                switch (originalSegments[i].Type)
+                {
+                    case SegmentType.Line:
+                        if (i > 0)
+                        {
+                            tbr.Add(new LineSegment(originalSegments[i - 1].Point));
+                        }
+                        else
+                        {
+                            tbr.Add(new LineSegment(startPoint));
+                        }
+                        break;
+                    case SegmentType.CubicBezier:
+                        CubicBezierSegment originalSegment = (CubicBezierSegment)originalSegments[i];
+                        if (i > 0)
+                        {
+                            tbr.Add(new CubicBezierSegment(originalSegment.Points[1], originalSegment.Points[0], originalSegments[i - 1].Point));
+                        }
+                        else
+                        {
+                            tbr.Add(new CubicBezierSegment(originalSegment.Points[1], originalSegment.Points[0], startPoint));
+                        }
+                        break;
                 }
             }
 
