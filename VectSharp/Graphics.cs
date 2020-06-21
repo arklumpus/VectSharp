@@ -1263,7 +1263,7 @@ namespace VectSharp
             if (position < preArc)
             {
                 Point arcStartPoint = new Point(this.Points[0].X + Math.Cos(StartAngle) * Radius, this.Points[0].Y + Math.Sin(StartAngle) * Radius);
-                Point tang = new Point(arcStartPoint.X - previousPoint.X, arcStartPoint.Y - previousPoint.Y).Normalize();
+                Point tang = new Point((arcStartPoint.X - previousPoint.X) * Math.Sign(EndAngle - StartAngle), (arcStartPoint.Y - previousPoint.Y) * Math.Sign(EndAngle - StartAngle)).Normalize();
 
                 if (tang.Modulus() > 0.001)
                 {
@@ -1281,11 +1281,11 @@ namespace VectSharp
                 if (relPos <= 1)
                 {
                     double angle = StartAngle * (1 - relPos) + EndAngle * relPos;
-                    return new Point(-Math.Sin(angle), Math.Cos(angle));
+                    return new Point(-Math.Sin(angle) * Math.Sign(EndAngle - StartAngle), Math.Cos(angle) * Math.Sign(EndAngle - StartAngle));
                 }
                 else
                 {
-                    return new Point(-Math.Sin(EndAngle), Math.Cos(EndAngle));
+                    return new Point(-Math.Sin(EndAngle) * Math.Sign(EndAngle - StartAngle), Math.Cos(EndAngle) * Math.Sign(EndAngle - StartAngle));
                 }
             }
 
