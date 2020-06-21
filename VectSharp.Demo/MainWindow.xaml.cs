@@ -254,7 +254,7 @@ namespace VectSharp.Demo
 
 
             //Transparency sample
-            
+
             //Checkerboard
             for (int x = 3150; x < 3650; x += 100)
             {
@@ -296,6 +296,11 @@ namespace VectSharp.Demo
 
             //Text
             gpr.FillText(3400 - gpr.MeasureText("Click me!", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBold), 80)).Width / 2, 1650, "Click me!", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBold), 80), Colour.FromRgb(0, 0, 0), textBaseline: TextBaselines.Middle, tag: "ClickMeText");
+
+            //Text along a path
+            GraphicsPath flowPath = new GraphicsPath().Arc(1550, 1100, 300, - 7 * Math.PI / 8, -Math.PI / 8);
+            gpr.StrokePath(flowPath, Colour.FromRgb(220, 220, 220), lineWidth: 10);
+            gpr.FillTextOnPath(flowPath, "Text on a path!", new Font(new VectSharp.FontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBold), 80), Colour.FromRgb(34, 177, 76), reference: 0.5, anchor: TextAnchors.Center, textBaseline: TextBaselines.Baseline);
 
             //Dictionary associating each tag to the action to perform on the object (Avalonia only)
             Dictionary<string, Delegate> taggedActions = new Dictionary<string, Delegate>()

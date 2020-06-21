@@ -14,6 +14,7 @@ namespace VectSharp
     }
 
     public enum TextBaselines { Top, Bottom, Middle, Baseline }
+    public enum TextAnchors { Left, Center, Right }
     public enum LineCaps { Butt = 0, Round = 1, Square = 2 }
     public enum LineJoins { Bevel = 2, Miter = 0, Round = 1 }
 
@@ -626,6 +627,25 @@ namespace VectSharp
             X = x;
             Y = y;
         }
+
+        /// <summary>
+        /// Computes the modulus of the vector represented by the <see cref="Point"/>.
+        /// </summary>
+        /// <returns>The modulus of the vector represented by the <see cref="Point"/>.</returns>
+        public double Modulus()
+        {
+            return Math.Sqrt(X * X + Y * Y);
+        }
+
+        /// <summary>
+        /// Normalises a <see cref="Point"/>.
+        /// </summary>
+        /// <returns>The normalised <see cref="Point"/>.</returns>
+        public Point Normalize()
+        {
+            double mod = Modulus();
+            return new Point(X / mod, Y / mod);
+        }
     }
 
     /// <summary>
@@ -694,6 +714,29 @@ namespace VectSharp
         /// Creates a copy of the <see cref="Segment"/>.
         /// </summary>
         public abstract Segment Clone();
+
+        /// <summary>
+        /// Computes the length of the <see cref="Segment"/>.
+        /// </summary>
+        /// <param name="previousPoint">The point from which the <see cref="Segment"/> starts (i.e. the endpoint of the previous <see cref="Segment"/>).</param>
+        /// <returns>The length of the segment.</returns>
+        public abstract double Measure(Point previousPoint);
+
+        /// <summary>
+        /// Gets the point on the <see cref="Segment"/> at the specified (relative) <paramref name="position"/>).
+        /// </summary>
+        /// <param name="previousPoint">The point from which the <see cref="Segment"/> starts (i.e. the endpoint of the previous <see cref="Segment"/>).</param>
+        /// <param name="position">The relative position on the <see cref="Segment"/> (0 is the start of the <see cref="Segment"/>, 1 is the end of the <see cref="Segment"/>).</param>
+        /// <returns>The point at the specified position.</returns>
+        public abstract Point GetPointAt(Point previousPoint, double position);
+
+        /// <summary>
+        /// Gets the tangent to the <see cref="Segment"/> at the specified (relative) <paramref name="position"/>).
+        /// </summary>
+        /// <param name="previousPoint">The point from which the <see cref="Segment"/> starts (i.e. the endpoint of the previous <see cref="Segment"/>).</param>
+        /// <param name="position">The relative position on the <see cref="Segment"/> (0 is the start of the <see cref="Segment"/>, 1 is the end of the <see cref="Segment"/>).</param>
+        /// <returns>The tangent to the point at the specified position.</returns>
+        public abstract Point GetTangentAt(Point previousPoint, double position);
     }
 
     internal class MoveSegment : Segment
@@ -713,6 +756,21 @@ namespace VectSharp
         public override Segment Clone()
         {
             return new MoveSegment(this.Point);
+        }
+
+        public override double Measure(Point previousPoint)
+        {
+            return 0;
+        }
+
+        public override Point GetPointAt(Point previousPoint, double position)
+        {
+            throw new InvalidOperationException();
+        }
+
+        public override Point GetTangentAt(Point previousPoint, double position)
+        {
+            throw new InvalidOperationException();
         }
     }
 
@@ -734,6 +792,28 @@ namespace VectSharp
         {
             return new LineSegment(this.Point);
         }
+
+        private double cachedLength = double.NaN;
+
+        public override double Measure(Point previousPoint)
+        {
+            if (double.IsNaN(cachedLength))
+            {
+                cachedLength = Math.Sqrt((this.Point.X - previousPoint.X) * (this.Point.X - previousPoint.X) + (this.Point.Y - previousPoint.Y) * (this.Point.Y - previousPoint.Y));
+            }
+
+            return cachedLength;
+        }
+
+        public override Point GetPointAt(Point previousPoint, double position)
+        {
+            return new Point(previousPoint.X * (1 - position) + this.Point.X * position, previousPoint.Y * (1 - position) + this.Point.Y * position);
+        }
+
+        public override Point GetTangentAt(Point previousPoint, double position)
+        {
+            return new Point(this.Point.X - previousPoint.X, this.Point.Y - previousPoint.Y).Normalize();
+        }
     }
 
     internal class CloseSegment : Segment
@@ -745,6 +825,21 @@ namespace VectSharp
         public override Segment Clone()
         {
             return new CloseSegment();
+        }
+
+        public override double Measure(Point previousPoint)
+        {
+            return 0;
+        }
+
+        public override Point GetPointAt(Point previousPoint, double position)
+        {
+            throw new InvalidOperationException();
+        }
+
+        public override Point GetTangentAt(Point previousPoint, double position)
+        {
+            throw new InvalidOperationException();
         }
     }
 
@@ -764,6 +859,174 @@ namespace VectSharp
         public override Segment Clone()
         {
             return new CubicBezierSegment(Points[0], Points[1], Points[2]);
+        }
+
+        private double cachedLength = double.NaN;
+        private int cachedSegments = -1;
+
+        public override double Measure(Point previousPoint)
+        {
+            if (double.IsNaN(cachedLength))
+            {
+                int segments = 16;
+                double prevLength = 0;
+                double currLength = Measure(previousPoint, segments);
+
+                while (currLength > 0.00001 && Math.Abs(currLength - prevLength) / currLength > 0.0001)
+                {
+                    segments *= 2;
+                    prevLength = currLength;
+                    currLength = Measure(previousPoint, segments);
+                }
+
+                cachedSegments = segments;
+
+                cachedLength = currLength;
+            }
+
+            return cachedLength;
+        }
+
+        private Point GetBezierPointAt(Point previousPoint, double position)
+        {
+            if (position <= 1 && position >= 0)
+            {
+                return new Point(
+                this.Points[2].X * position * position * position + 3 * this.Points[1].X * position * position * (1 - position) + 3 * this.Points[0].X * position * (1 - position) * (1 - position) + previousPoint.X * (1 - position) * (1 - position) * (1 - position),
+                this.Points[2].Y * position * position * position + 3 * this.Points[1].Y * position * position * (1 - position) + 3 * this.Points[0].Y * position * (1 - position) * (1 - position) + previousPoint.Y * (1 - position) * (1 - position) * (1 - position)
+                );
+            }
+            else if (position > 1)
+            {
+                Point tangent = GetBezierTangentAt(previousPoint, 1);
+
+                double excessLength = (position - 1) * this.Measure(previousPoint);
+
+                return new Point(this.Point.X + tangent.X * excessLength, this.Point.Y + tangent.Y * excessLength);
+            }
+            else
+            {
+                Point tangent = GetBezierTangentAt(previousPoint, 0);
+
+                return new Point(previousPoint.X + tangent.X * position * this.Measure(previousPoint), previousPoint.Y + tangent.Y * position * this.Measure(previousPoint));
+            }
+        }
+
+        public override Point GetPointAt(Point previousPoint, double position)
+        {
+            double t = GetTFromPosition(previousPoint, position);
+            return this.GetBezierPointAt(previousPoint, t);
+        }
+
+        public override Point GetTangentAt(Point previousPoint, double position)
+        {
+            double t = GetTFromPosition(previousPoint, position);
+            return this.GetBezierTangentAt(previousPoint, t);
+        }
+
+        private double Measure(Point startPoint, int segments)
+        {
+            double delta = 1.0 / segments;
+
+            double tbr = 0;
+
+            for (int i = 1; i < segments; i++)
+            {
+                Point p1 = GetBezierPointAt(startPoint, delta * (i - 1));
+                Point p2 = GetBezierPointAt(startPoint, delta * i);
+
+                tbr += Math.Sqrt((p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y));
+            }
+
+            return tbr;
+        }
+
+        private double Measure(Point startPoint, int segments, double maxT)
+        {
+            double delta = maxT / segments;
+
+            double tbr = 0;
+
+            for (int i = 1; i < segments; i++)
+            {
+                Point p1 = GetBezierPointAt(startPoint, delta * (i - 1));
+                Point p2 = GetBezierPointAt(startPoint, delta * i);
+
+                tbr += Math.Sqrt((p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y));
+            }
+
+            return tbr;
+        }
+
+        private Point GetBezierTangentAt(Point previousPoint, double position)
+        {
+            if (position <= 1 && position >= 0)
+            {
+                return new Point(
+                    3 * this.Points[2].X * position * position +
+                    3 * this.Points[1].X * position * (2 - 3 * position) +
+                    3 * this.Points[0].X * (3 * position * position - 4 * position + 1) +
+                    -3 * previousPoint.X * (1 - position) * (1 - position),
+
+                    3 * this.Points[2].Y * position * position +
+                    3 * this.Points[1].Y * position * (2 - 3 * position) +
+                    3 * this.Points[0].Y * (3 * position * position - 4 * position + 1) +
+                    -3 * previousPoint.Y * (1 - position) * (1 - position)).Normalize();
+            }
+            else if (position > 1)
+            {
+                return GetBezierTangentAt(previousPoint, 1);
+            }
+            else
+            {
+                return GetBezierTangentAt(previousPoint, 0);
+            }
+        }
+
+        private double GetTFromPosition(Point previousPoint, double position)
+        {
+            if (position <= 0 || position >= 1)
+            {
+                return position;
+            }
+            else
+            {
+                double length = this.Measure(previousPoint);
+
+                double lowerBound = 0;
+                double upperBound = 0.5;
+
+                double lowerPos = 0;
+                double upperPos = Measure(previousPoint, (int)Math.Ceiling(this.cachedSegments * upperBound), upperBound) / length;
+
+                if (upperPos < position)
+                {
+                    lowerBound = upperBound;
+                    lowerPos = upperPos;
+
+                    upperBound = 1;
+                    upperPos = 1;
+                }
+
+                while (Math.Min(upperPos - position, position - lowerPos) > 0.001)
+                {
+                    double mid = (lowerBound + upperBound) * 0.5;
+                    double midPos = Measure(previousPoint, (int)Math.Ceiling(this.cachedSegments * mid), mid) / length;
+
+                    if (midPos > position)
+                    {
+                        upperBound = mid;
+                        upperPos = midPos;
+                    }
+                    else
+                    {
+                        lowerBound = mid;
+                        lowerPos = midPos;
+                    }
+                }
+
+                return lowerBound + (position - lowerPos) / (upperPos - lowerPos) * (upperBound - lowerBound);
+            }
         }
     }
 
@@ -930,6 +1193,102 @@ namespace VectSharp
             {
                 return new Point(this.Points[0].X + Math.Cos(EndAngle) * Radius, this.Points[0].Y + Math.Sin(EndAngle) * Radius);
             }
+        }
+
+
+        private double cachedLength = double.NaN;
+
+        public override double Measure(Point previousPoint)
+        {
+            if (double.IsNaN(cachedLength))
+            {
+                Point arcStartPoint = new Point(this.Points[0].X + Math.Cos(StartAngle) * Radius, this.Points[0].Y + Math.Sin(StartAngle) * Radius);
+
+                cachedLength = Radius * Math.Abs(EndAngle - StartAngle) + Math.Sqrt((arcStartPoint.X - previousPoint.X) * (arcStartPoint.X - previousPoint.X) + (arcStartPoint.Y - previousPoint.Y) * (arcStartPoint.Y - previousPoint.Y));
+            }
+
+            return cachedLength;
+        }
+
+        public override Point GetPointAt(Point previousPoint, double position)
+        {
+            double totalLength = this.Measure(previousPoint);
+            double arcLength = Radius * Math.Abs(EndAngle - StartAngle);
+
+            double preArc = (totalLength - arcLength) / totalLength;
+
+            if (position < preArc)
+            {
+                if (position >= 0)
+                {
+                    double relPos = position / preArc;
+                    Point arcStartPoint = new Point(this.Points[0].X + Math.Cos(StartAngle) * Radius, this.Points[0].Y + Math.Sin(StartAngle) * Radius);
+
+                    return new Point(previousPoint.X * (1 - relPos) + arcStartPoint.X * relPos, previousPoint.Y * (1 - relPos) + arcStartPoint.Y * relPos);
+                }
+                else
+                {
+                    Point arcStartPoint = new Point(this.Points[0].X + Math.Cos(StartAngle) * Radius, this.Points[0].Y + Math.Sin(StartAngle) * Radius);
+                    Point tangent = GetTangentAt(previousPoint, 0);
+                    double excessLength = position * this.Measure(previousPoint);
+                    return new Point(arcStartPoint.X + tangent.X * excessLength, arcStartPoint.Y + tangent.Y * excessLength);
+                }
+            }
+            else
+            {
+                double relPos = position - preArc / (1 - preArc);
+
+                if (relPos <= 1)
+                {
+                    double angle = StartAngle * (1 - relPos) + EndAngle * relPos;
+                    return new Point(this.Points[0].X + Radius * Math.Cos(angle), this.Points[0].Y + Radius * Math.Sin(angle));
+                }
+                else
+                {
+                    Point arcEndPoint = this.Point;
+                    Point tangent = GetTangentAt(previousPoint, 1);
+                    double excessLength = (position - 1) * this.Measure(previousPoint);
+                    return new Point(arcEndPoint.X + tangent.X * excessLength, arcEndPoint.Y + tangent.Y * excessLength);
+                }
+            }
+        }
+
+        public override Point GetTangentAt(Point previousPoint, double position)
+        {
+            double totalLength = this.Measure(previousPoint);
+            double arcLength = Radius * Math.Abs(EndAngle - StartAngle);
+
+            double preArc = (totalLength - arcLength) / totalLength;
+
+            if (position < preArc)
+            {
+                Point arcStartPoint = new Point(this.Points[0].X + Math.Cos(StartAngle) * Radius, this.Points[0].Y + Math.Sin(StartAngle) * Radius);
+                Point tang = new Point(arcStartPoint.X - previousPoint.X, arcStartPoint.Y - previousPoint.Y).Normalize();
+
+                if (tang.Modulus() > 0.001)
+                {
+                    return tang.Normalize();
+                }
+                else
+                {
+                    return this.GetTangentAt(previousPoint, 0);
+                }
+            }
+            else
+            {
+                double relPos = position - preArc / (1 - preArc);
+
+                if (relPos <= 1)
+                {
+                    double angle = StartAngle * (1 - relPos) + EndAngle * relPos;
+                    return new Point(-Math.Sin(angle), Math.Cos(angle));
+                }
+                else
+                {
+                    return new Point(-Math.Sin(EndAngle), Math.Cos(EndAngle));
+                }
+            }
+
         }
     }
 
@@ -1301,14 +1660,14 @@ namespace VectSharp
         /// <param name="lineJoin">The line join to use to stroke the text.</param>
         /// <param name="lineDash">The line dash to use to stroke the text.</param>
         /// <param name="textBaseline">The text baseline (determines what the vertical component of <paramref name="origin"/> represents).</param>
-        /// <param name="tag">A tag to identify the filled text.</param>
+        /// <param name="tag">A tag to identify the stroked text.</param>
         public void StrokeText(Point origin, string text, Font font, Colour strokeColour, TextBaselines textBaseline = TextBaselines.Top, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
         {
             Actions.Add(new TextAction(origin, text, font, textBaseline, null, strokeColour, lineWidth, lineCap, lineJoin, lineDash ?? LineDash.SolidLine, tag));
         }
 
         /// <summary>
-        /// Fill a text string.
+        /// Stroke a text string.
         /// </summary>
         /// <param name="originX">The horizontal coordinate of the text origin.</param>
         /// <param name="originY">The vertical coordinate of the text origin. See <paramref name="textBaseline"/>.</param>
@@ -1320,11 +1679,223 @@ namespace VectSharp
         /// <param name="lineJoin">The line join to use to stroke the text.</param>
         /// <param name="lineDash">The line dash to use to stroke the text.</param>
         /// <param name="textBaseline">The text baseline (determines what <paramref name="originY"/> represents).</param>
-        /// <param name="tag">A tag to identify the filled text.</param>
+        /// <param name="tag">A tag to identify the stroked text.</param>
         public void StrokeText(double originX, double originY, string text, Font font, Colour strokeColour, TextBaselines textBaseline = TextBaselines.Top, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
         {
             Actions.Add(new TextAction(new Point(originX, originY), text, font, textBaseline, null, strokeColour, lineWidth, lineCap, lineJoin, lineDash ?? LineDash.SolidLine, tag));
         }
+
+        /// <summary>
+        /// Fill a text string along a <see cref="GraphicsPath"/>.
+        /// </summary>
+        /// <param name="path">The <see cref="GraphicsPath"/> along which the text will flow.</param>
+        /// <param name="text">The string to draw.</param>
+        /// <param name="font">The font with which to draw the text.</param>
+        /// <param name="fillColour">The colour to use to fill the text.</param>
+        /// <param name="reference">The (relative) starting point on the path starting from which the text should be drawn (0 is the start of the path, 1 is the end of the path).</param>
+        /// <param name="anchor">The anchor in the text string that will correspond to the point specified by the <paramref name="reference"/>.</param>
+        /// <param name="textBaseline">The text baseline (determines which the position of the text in relation to the <paramref name="path"/>.</param>
+        /// <param name="tag">A tag to identify the filled text.</param>
+        public void FillTextOnPath(GraphicsPath path, string text, Font font, Colour fillColour, double reference = 0, TextAnchors anchor = TextAnchors.Left, TextBaselines textBaseline = TextBaselines.Top, string tag = null)
+        {
+            double currDelta = 0;
+            double pathLength = path.MeasureLength();
+
+            Font.DetailedFontMetrics fullMetrics = font.MeasureTextAdvanced(text);
+
+            switch (anchor)
+            {
+                case TextAnchors.Left:
+                    break;
+                case TextAnchors.Center:
+                    currDelta = -fullMetrics.Width * 0.5 / pathLength;
+                    break;
+                case TextAnchors.Right:
+                    currDelta = -fullMetrics.Width / pathLength;
+                    break;
+            }
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                string c = text.Substring(i, 1);
+
+                Font.DetailedFontMetrics metrics = font.MeasureTextAdvanced(c);
+
+                Point origin = path.GetPointAtRelative(reference + currDelta);
+
+                Point tangent = path.GetTangentAtRelative(reference + currDelta + (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing) / pathLength * 0.5);
+
+                this.Save();
+
+                this.Translate(origin);
+                this.Rotate(Math.Atan2(tangent.Y, tangent.X));
+
+                switch (textBaseline)
+                {
+                    case TextBaselines.Top:
+                        if (i > 0)
+                        {
+                            this.FillText(new Point(metrics.LeftSideBearing, fullMetrics.Top), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag);
+                        }
+                        else
+                        {
+                            this.FillText(new Point(0, fullMetrics.Top), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag);
+                        }
+                        break;
+                    case TextBaselines.Baseline:
+                        if (i > 0)
+                        {
+                            this.FillText(new Point(metrics.LeftSideBearing, 0), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag);
+                        }
+                        else
+                        {
+                            this.FillText(new Point(0, 0), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag);
+                        }
+                        break;
+                    case TextBaselines.Bottom:
+                        if (i > 0)
+                        {
+                            this.FillText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag);
+                        }
+                        else
+                        {
+                            this.FillText(new Point(0, fullMetrics.Bottom), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag);
+                        }
+                        break;
+                    case TextBaselines.Middle:
+                        if (i > 0)
+                        {
+                            this.FillText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag);
+                        }
+                        else
+                        {
+                            this.FillText(new Point(0, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag);
+                        }
+                        break;
+                }
+
+                this.Restore();
+
+                if (i > 0)
+                {
+                    currDelta += (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing) / pathLength;
+                }
+                else
+                {
+                    currDelta += (metrics.Width + metrics.RightSideBearing) / pathLength;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Stroke a text string along a <see cref="GraphicsPath"/>.
+        /// </summary>
+        /// <param name="path">The <see cref="GraphicsPath"/> along which the text will flow.</param>
+        /// <param name="text">The string to draw.</param>
+        /// <param name="font">The font with which to draw the text.</param>
+        /// <param name="strokeColour">The colour with which to stroke the text.</param>
+        /// <param name="lineWidth">The width of the line with which the text is stroked.</param>
+        /// <param name="lineCap">The line cap to use to stroke the text.</param>
+        /// <param name="lineJoin">The line join to use to stroke the text.</param>
+        /// <param name="lineDash">The line dash to use to stroke the text.</param>
+        /// <param name="reference">The (relative) starting point on the path starting from which the text should be drawn (0 is the start of the path, 1 is the end of the path).</param>
+        /// <param name="anchor">The anchor in the text string that will correspond to the point specified by the <paramref name="reference"/>.</param>
+        /// <param name="textBaseline">The text baseline (determines which the position of the text in relation to the <paramref name="path"/>.</param>
+        /// <param name="tag">A tag to identify the stroked text.</param>
+        public void StrokeTextOnPath(GraphicsPath path, string text, Font font, Colour strokeColour, double reference = 0, TextAnchors anchor = TextAnchors.Left, TextBaselines textBaseline = TextBaselines.Top, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
+        {
+            double currDelta = 0;
+            double pathLength = path.MeasureLength();
+
+            Font.DetailedFontMetrics fullMetrics = font.MeasureTextAdvanced(text);
+
+            switch (anchor)
+            {
+                case TextAnchors.Left:
+                    break;
+                case TextAnchors.Center:
+                    currDelta = -fullMetrics.Width * 0.5 / pathLength;
+                    break;
+                case TextAnchors.Right:
+                    currDelta = -fullMetrics.Width / pathLength;
+                    break;
+            }
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                string c = text.Substring(i, 1);
+
+                Font.DetailedFontMetrics metrics = font.MeasureTextAdvanced(c);
+
+                Point origin = path.GetPointAtRelative(reference + currDelta);
+
+                Point tangent = path.GetTangentAtRelative(reference + currDelta + (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing) / pathLength * 0.5);
+
+                this.Save();
+
+                this.Translate(origin);
+                this.Rotate(Math.Atan2(tangent.Y, tangent.X));
+
+                switch (textBaseline)
+                {
+                    case TextBaselines.Top:
+                        if (i > 0)
+                        {
+                            this.StrokeText(new Point(metrics.LeftSideBearing, fullMetrics.Top), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                        }
+                        else
+                        {
+                            this.StrokeText(new Point(0, fullMetrics.Top), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                        }
+                        break;
+                    case TextBaselines.Baseline:
+                        if (i > 0)
+                        {
+                            this.StrokeText(new Point(metrics.LeftSideBearing, 0), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                        }
+                        else
+                        {
+                            this.StrokeText(new Point(0, 0), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                        }
+                        break;
+                    case TextBaselines.Bottom:
+                        if (i > 0)
+                        {
+                            this.StrokeText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                        }
+                        else
+                        {
+                            this.StrokeText(new Point(0, fullMetrics.Bottom), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                        }
+                        break;
+                    case TextBaselines.Middle:
+                        if (i > 0)
+                        {
+                            this.StrokeText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                        }
+                        else
+                        {
+                            this.StrokeText(new Point(0, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                        }
+                        break;
+                }
+
+                this.Restore();
+
+                if (i > 0)
+                {
+                    currDelta += (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing) / pathLength;
+                }
+                else
+                {
+                    currDelta += (metrics.Width + metrics.RightSideBearing) / pathLength;
+                }
+            }
+        }
+
+
+
+
 
         /// <summary>
         /// Measure a text string.
@@ -1901,6 +2472,122 @@ namespace VectSharp
         }
 
         /// <summary>
+        /// Add the contour of a text string flowing along a <see cref="GraphicsPath"/> to the current path.
+        /// </summary>
+        /// <param name="path">The <see cref="GraphicsPath"/> along which the text will flow.</param>
+        /// <param name="text">The string to draw.</param>
+        /// <param name="font">The font with which to draw the text.</param>
+        /// <param name="reference">The (relative) starting point on the path starting from which the text should be drawn (0 is the start of the path, 1 is the end of the path).</param>
+        /// <param name="anchor">The anchor in the text string that will correspond to the point specified by the <paramref name="reference"/>.</param>
+        /// <param name="textBaseline">The text baseline (determines which the position of the text in relation to the <paramref name="path"/>.</param>
+        public GraphicsPath AddTextOnPath(GraphicsPath path, string text, Font font, double reference = 0, TextAnchors anchor = TextAnchors.Left, TextBaselines textBaseline = TextBaselines.Top)
+        {
+            double currDelta = 0;
+            double pathLength = path.MeasureLength();
+
+            Font.DetailedFontMetrics fullMetrics = font.MeasureTextAdvanced(text);
+
+            switch (anchor)
+            {
+                case TextAnchors.Left:
+                    break;
+                case TextAnchors.Center:
+                    currDelta = -fullMetrics.Width * 0.5 / pathLength;
+                    break;
+                case TextAnchors.Right:
+                    currDelta = -fullMetrics.Width / pathLength;
+                    break;
+            }
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                string c = text.Substring(i, 1);
+
+                Font.DetailedFontMetrics metrics = font.MeasureTextAdvanced(c);
+
+                Point origin = path.GetPointAtRelative(reference + currDelta);
+
+                Point tangent = path.GetTangentAtRelative(reference + currDelta + (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing) / pathLength * 0.5);
+
+                GraphicsPath glyphPath = new GraphicsPath();
+
+                switch (textBaseline)
+                {
+                    case TextBaselines.Top:
+                        if (i > 0)
+                        {
+                            glyphPath.AddText(new Point(metrics.LeftSideBearing, fullMetrics.Top), c, font, textBaseline: TextBaselines.Baseline);
+                        }
+                        else
+                        {
+                            glyphPath.AddText(new Point(0, fullMetrics.Top), c, font, textBaseline: TextBaselines.Baseline);
+                        }
+                        break;
+                    case TextBaselines.Baseline:
+                        if (i > 0)
+                        {
+                            glyphPath.AddText(new Point(metrics.LeftSideBearing, 0), c, font, textBaseline: TextBaselines.Baseline);
+                        }
+                        else
+                        {
+                            glyphPath.AddText(new Point(0, 0), c, font, textBaseline: TextBaselines.Baseline);
+                        }
+                        break;
+                    case TextBaselines.Bottom:
+                        if (i > 0)
+                        {
+                            glyphPath.AddText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom), c, font, textBaseline: TextBaselines.Baseline);
+                        }
+                        else
+                        {
+                            glyphPath.AddText(new Point(0, fullMetrics.Bottom), c, font, textBaseline: TextBaselines.Baseline);
+                        }
+                        break;
+                    case TextBaselines.Middle:
+                        if (i > 0)
+                        {
+                            glyphPath.AddText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, textBaseline: TextBaselines.Baseline);
+                        }
+                        else
+                        {
+                            glyphPath.AddText(new Point(0, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, textBaseline: TextBaselines.Baseline);
+                        }
+                        break;
+                }
+
+                double angle = Math.Atan2(tangent.Y, tangent.X);
+
+                for (int j = 0; j < glyphPath.Segments.Count; j++)
+                {
+                    if (glyphPath.Segments[j].Points != null)
+                    {
+                        for (int k = 0; k < glyphPath.Segments[j].Points.Length; k++)
+                        {
+                            double newX = glyphPath.Segments[j].Points[k].X * Math.Cos(angle) - glyphPath.Segments[j].Points[k].Y * Math.Sin(angle) + origin.X;
+                            double newY = glyphPath.Segments[j].Points[k].X * Math.Sin(angle) + glyphPath.Segments[j].Points[k].Y * Math.Cos(angle) + origin.Y;
+
+                            glyphPath.Segments[j].Points[k] = new Point(newX, newY);
+                        }
+                    }
+
+                    this.Segments.Add(glyphPath.Segments[j]);
+                }
+
+                if (i > 0)
+                {
+                    currDelta += (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing) / pathLength;
+                }
+                else
+                {
+                    currDelta += (metrics.Width + metrics.RightSideBearing) / pathLength;
+                }
+            }
+
+            return this;
+        }
+
+
+        /// <summary>
         /// Adds a smooth spline composed of cubic bezier segments that pass through the specified points.
         /// </summary>
         /// <param name="points">The points through which the spline should pass.</param>
@@ -1932,6 +2619,694 @@ namespace VectSharp
             return this;
         }
 
+        private double cachedLength = double.NaN;
+
+        /// <summary>
+        /// Measures the length of the <see cref="GraphicsPath"/>.
+        /// </summary>
+        /// <returns>The length of the <see cref="GraphicsPath"/></returns>
+        public double MeasureLength()
+        {
+            if (double.IsNaN(cachedLength))
+            {
+                cachedLength = 0;
+                Point currPoint = new Point();
+                Point figureStartPoint = new Point();
+
+                for (int i = 0; i < this.Segments.Count; i++)
+                {
+                    switch (this.Segments[i].Type)
+                    {
+                        case SegmentType.Move:
+                            currPoint = this.Segments[i].Point;
+                            figureStartPoint = this.Segments[i].Point;
+                            break;
+                        case SegmentType.Line:
+                            if (i > 0)
+                            {
+                                cachedLength += this.Segments[i].Measure(currPoint);
+                                currPoint = this.Segments[i].Point;
+                            }
+                            else
+                            {
+                                currPoint = this.Segments[i].Point;
+                                figureStartPoint = this.Segments[i].Point;
+                            }
+                            break;
+                        case SegmentType.Arc:
+                            if (i > 0)
+                            {
+                                cachedLength += this.Segments[i].Measure(currPoint);
+                                currPoint = this.Segments[i].Point;
+                            }
+                            else
+                            {
+                                ArcSegment seg = (ArcSegment)this.Segments[i];
+                                figureStartPoint = new Point(seg.Points[0].X + Math.Cos(seg.StartAngle) * seg.Radius, seg.Points[0].Y + Math.Sin(seg.StartAngle) * seg.Radius);
+                                cachedLength += this.Segments[i].Measure(figureStartPoint);
+                                currPoint = this.Segments[i].Point;
+                            }
+                            break;
+                        case SegmentType.Close:
+                            cachedLength += Math.Sqrt((currPoint.X - figureStartPoint.X) * (currPoint.X - figureStartPoint.X) + (currPoint.Y - figureStartPoint.Y) * (currPoint.Y - figureStartPoint.Y));
+                            currPoint = figureStartPoint;
+                            break;
+                        case SegmentType.CubicBezier:
+                            if (i > 0)
+                            {
+                                cachedLength += this.Segments[i].Measure(currPoint);
+                                currPoint = this.Segments[i].Point;
+                            }
+                            else
+                            {
+                                currPoint = this.Segments[i].Points[0];
+                                figureStartPoint = this.Segments[i].Points[0];
+                                cachedLength += this.Segments[i].Measure(currPoint);
+                                currPoint = this.Segments[i].Point;
+                            }
+                            break;
+                    }
+                }
+            }
+
+            return cachedLength;
+        }
+
+        /// <summary>
+        /// Gets the point at the relative position specified on the <see cref="GraphicsPath"/>.
+        /// </summary>
+        /// <param name="position">The position on the <see cref="GraphicsPath"/> (0 is the start of the path, 1 is the end of the path).</param>
+        /// <returns>The point at the specified position.</returns>
+        public Point GetPointAtRelative(double position)
+        {
+            return GetPointAtAbsolute(position * this.MeasureLength());
+        }
+
+        /// <summary>
+        /// Gets the point at the absolute position specified on the <see cref="GraphicsPath"/>.
+        /// </summary>
+        /// <param name="length">The distance to the point from the start of the <see cref="GraphicsPath"/>.</param>
+        /// <returns>The point at the specified position.</returns>
+        public Point GetPointAtAbsolute(double length)
+        {
+            double pathLength = this.MeasureLength();
+
+            if (length >= 0 && length <= pathLength)
+            {
+                double currLen = 0;
+
+                Point currPoint = new Point();
+                Point figureStartPoint = new Point();
+
+                for (int i = 0; i < this.Segments.Count; i++)
+                {
+                    switch (this.Segments[i].Type)
+                    {
+                        case SegmentType.Move:
+                            currPoint = this.Segments[i].Point;
+                            figureStartPoint = this.Segments[i].Point;
+                            break;
+                        case SegmentType.Line:
+                            if (i > 0)
+                            {
+                                double segLength = this.Segments[i].Measure(currPoint);
+
+                                if (currLen + segLength < length)
+                                {
+                                    currLen += segLength;
+                                    currPoint = this.Segments[i].Point;
+                                }
+                                else
+                                {
+                                    double pos = (length - currLen) / segLength;
+                                    return this.Segments[i].GetPointAt(currPoint, pos);
+                                }
+                            }
+                            else
+                            {
+                                currPoint = this.Segments[i].Point;
+                                figureStartPoint = this.Segments[i].Point;
+                            }
+                            break;
+                        case SegmentType.Arc:
+                            if (i > 0)
+                            {
+                                double segLength = this.Segments[i].Measure(currPoint);
+
+                                if (currLen + segLength < length)
+                                {
+                                    currLen += segLength;
+                                    currPoint = this.Segments[i].Point;
+                                }
+                                else
+                                {
+                                    double pos = (length - currLen) / segLength;
+                                    return this.Segments[i].GetPointAt(currPoint, pos);
+                                }
+                            }
+                            else
+                            {
+                                ArcSegment seg = (ArcSegment)this.Segments[i];
+                                figureStartPoint = new Point(seg.Points[0].X + Math.Cos(seg.StartAngle) * seg.Radius, seg.Points[0].Y + Math.Sin(seg.StartAngle) * seg.Radius);
+                                currPoint = figureStartPoint;
+
+                                double segLength = this.Segments[i].Measure(currPoint);
+
+                                if (currLen + segLength < length)
+                                {
+                                    currLen += segLength;
+                                    currPoint = this.Segments[i].Point;
+                                }
+                                else
+                                {
+                                    double pos = (length - currLen) / segLength;
+                                    return this.Segments[i].GetPointAt(currPoint, pos);
+                                }
+                            }
+                            break;
+                        case SegmentType.Close:
+                            {
+                                double segLength = Math.Sqrt((currPoint.X - figureStartPoint.X) * (currPoint.X - figureStartPoint.X) + (currPoint.Y - figureStartPoint.Y) * (currPoint.Y - figureStartPoint.Y));
+
+                                if (currLen + segLength < length)
+                                {
+                                    currLen += segLength;
+                                    currPoint = this.Segments[i].Point;
+                                }
+                                else
+                                {
+                                    double pos = (length - currLen) / segLength;
+                                    return new Point(currPoint.X * (1 - pos) + figureStartPoint.X * pos, currPoint.Y * (1 - pos) + figureStartPoint.Y * pos);
+                                }
+                            }
+                            break;
+                        case SegmentType.CubicBezier:
+                            if (i > 0)
+                            {
+                                double segLength = this.Segments[i].Measure(currPoint);
+
+                                if (currLen + segLength < length)
+                                {
+                                    currLen += segLength;
+                                    currPoint = this.Segments[i].Point;
+                                }
+                                else
+                                {
+                                    double pos = (length - currLen) / segLength;
+                                    return this.Segments[i].GetPointAt(currPoint, pos);
+                                }
+                            }
+                            else
+                            {
+                                currPoint = this.Segments[i].Points[0];
+                                figureStartPoint = this.Segments[i].Points[0];
+                                double segLength = this.Segments[i].Measure(currPoint);
+
+                                if (currLen + segLength < length)
+                                {
+                                    currLen += segLength;
+                                    currPoint = this.Segments[i].Point;
+                                }
+                                else
+                                {
+                                    double pos = (length - currLen) / segLength;
+                                    return this.Segments[i].GetPointAt(currPoint, pos);
+                                }
+                            }
+                            break;
+                    }
+                }
+
+                throw new InvalidOperationException("Unexpected code path!");
+            }
+            else if (length > pathLength)
+            {
+                double currLength = 0;
+
+                Point currPoint = new Point();
+                Point figureStartPoint = new Point();
+
+                for (int i = 0; i < this.Segments.Count - 1; i++)
+                {
+                    switch (this.Segments[i].Type)
+                    {
+                        case SegmentType.Move:
+                            currPoint = this.Segments[i].Point;
+                            figureStartPoint = this.Segments[i].Point;
+                            break;
+                        case SegmentType.Line:
+                            if (i > 0)
+                            {
+                                currLength += this.Segments[i].Measure(currPoint);
+                                currPoint = this.Segments[i].Point;
+                            }
+                            else
+                            {
+                                currPoint = this.Segments[i].Point;
+                                figureStartPoint = this.Segments[i].Point;
+                            }
+                            break;
+                        case SegmentType.Arc:
+                            if (i > 0)
+                            {
+                                currLength += this.Segments[i].Measure(currPoint);
+                                currPoint = this.Segments[i].Point;
+                            }
+                            else
+                            {
+                                ArcSegment seg = (ArcSegment)this.Segments[i];
+                                figureStartPoint = new Point(seg.Points[0].X + Math.Cos(seg.StartAngle) * seg.Radius, seg.Points[0].Y + Math.Sin(seg.StartAngle) * seg.Radius);
+                                currLength += this.Segments[i].Measure(figureStartPoint);
+                                currPoint = this.Segments[i].Point;
+                            }
+                            break;
+                        case SegmentType.Close:
+                            currLength += Math.Sqrt((currPoint.X - figureStartPoint.X) * (currPoint.X - figureStartPoint.X) + (currPoint.Y - figureStartPoint.Y) * (currPoint.Y - figureStartPoint.Y));
+                            currPoint = figureStartPoint;
+                            break;
+                        case SegmentType.CubicBezier:
+                            if (i > 0)
+                            {
+                                currLength += this.Segments[i].Measure(currPoint);
+                                currPoint = this.Segments[i].Point;
+                            }
+                            else
+                            {
+                                currPoint = this.Segments[i].Points[0];
+                                figureStartPoint = this.Segments[i].Points[0];
+                                currLength += this.Segments[i].Measure(currPoint);
+                                currPoint = this.Segments[i].Point;
+                            }
+                            break;
+                    }
+                }
+
+                switch (this.Segments[this.Segments.Count - 1].Type)
+                {
+                    case SegmentType.Arc:
+                    case SegmentType.CubicBezier:
+                    case SegmentType.Line:
+                        {
+                            double pos = 1 + (length - pathLength) / this.Segments[this.Segments.Count - 1].Measure(currPoint);
+                            return this.Segments[this.Segments.Count - 1].GetPointAt(currPoint, pos);
+                        }
+                    case SegmentType.Move:
+                        return currPoint;
+                    case SegmentType.Close:
+                        return this.GetPointAtAbsolute(length - pathLength);
+                }
+
+                throw new InvalidOperationException("Unexpected code path!");
+            }
+            else
+            {
+                Point currPoint = new Point();
+                Point figureStartPoint = new Point();
+
+                for (int i = 0; i < this.Segments.Count; i++)
+                {
+                    switch (this.Segments[i].Type)
+                    {
+                        case SegmentType.Move:
+                            currPoint = this.Segments[i].Point;
+                            figureStartPoint = this.Segments[i].Point;
+                            break;
+                        case SegmentType.Line:
+                            if (i > 0)
+                            {
+                                double segLength = this.Segments[i].Measure(currPoint);
+                                double pos = length / segLength;
+                                return this.Segments[i].GetPointAt(currPoint, pos);
+                            }
+                            else
+                            {
+                                currPoint = this.Segments[i].Point;
+                                figureStartPoint = this.Segments[i].Point;
+                            }
+                            break;
+                        case SegmentType.Arc:
+                            if (i > 0)
+                            {
+                                double segLength = this.Segments[i].Measure(currPoint);
+                                double pos = length / segLength;
+                                return this.Segments[i].GetPointAt(currPoint, pos);
+                            }
+                            else
+                            {
+                                ArcSegment seg = (ArcSegment)this.Segments[i];
+                                figureStartPoint = new Point(seg.Points[0].X + Math.Cos(seg.StartAngle) * seg.Radius, seg.Points[0].Y + Math.Sin(seg.StartAngle) * seg.Radius);
+                                currPoint = figureStartPoint;
+
+                                double segLength = this.Segments[i].Measure(currPoint);
+                                double pos = length / segLength;
+                                return this.Segments[i].GetPointAt(currPoint, pos);
+                            }
+                        case SegmentType.Close:
+                            {
+                                double segLength = Math.Sqrt((currPoint.X - figureStartPoint.X) * (currPoint.X - figureStartPoint.X) + (currPoint.Y - figureStartPoint.Y) * (currPoint.Y - figureStartPoint.Y));
+                                double pos = length / segLength;
+                                return new Point(currPoint.X * (1 - pos) + figureStartPoint.X * pos, currPoint.Y * (1 - pos) + figureStartPoint.Y * pos);
+                            }
+                        case SegmentType.CubicBezier:
+                            if (i > 0)
+                            {
+                                double segLength = this.Segments[i].Measure(currPoint);
+                                double pos = length / segLength;
+                                return this.Segments[i].GetPointAt(currPoint, pos);
+                            }
+                            else
+                            {
+                                currPoint = this.Segments[i].Points[0];
+                                figureStartPoint = this.Segments[i].Points[0];
+                                double segLength = this.Segments[i].Measure(currPoint);
+                                double pos = length / segLength;
+                                return this.Segments[i].GetPointAt(currPoint, pos);
+                            }
+                    }
+                }
+
+                throw new InvalidOperationException("Unexpected code path!");
+            }
+        }
+
+        /// <summary>
+        /// Gets the tangent to the point at the relative position specified on the <see cref="GraphicsPath"/>.
+        /// </summary>
+        /// <param name="position">The position on the <see cref="GraphicsPath"/> (0 is the start of the path, 1 is the end of the path).</param>
+        /// <returns>The tangent to the point at the specified position.</returns>
+        public Point GetTangentAtRelative(double position)
+        {
+            return GetTangentAtAbsolute(position * this.MeasureLength());
+        }
+
+        /// <summary>
+        /// Gets the tangent to the point at the absolute position specified on the <see cref="GraphicsPath"/>.
+        /// </summary>
+        /// <param name="length">The distance to the point from the start of the <see cref="GraphicsPath"/>.</param>
+        /// <returns>The tangent to the point at the specified position.</returns>
+        public Point GetTangentAtAbsolute(double length)
+        {
+            double pathLength = this.MeasureLength();
+
+            if (length >= 0 && length <= pathLength)
+            {
+                double currLen = 0;
+
+                Point currPoint = new Point();
+                Point figureStartPoint = new Point();
+
+                for (int i = 0; i < this.Segments.Count; i++)
+                {
+                    switch (this.Segments[i].Type)
+                    {
+                        case SegmentType.Move:
+                            currPoint = this.Segments[i].Point;
+                            figureStartPoint = this.Segments[i].Point;
+                            break;
+                        case SegmentType.Line:
+                            if (i > 0)
+                            {
+                                double segLength = this.Segments[i].Measure(currPoint);
+
+                                if (currLen + segLength < length)
+                                {
+                                    currLen += segLength;
+                                    currPoint = this.Segments[i].Point;
+                                }
+                                else
+                                {
+                                    double pos = (length - currLen) / segLength;
+                                    return this.Segments[i].GetTangentAt(currPoint, pos);
+                                }
+                            }
+                            else
+                            {
+                                currPoint = this.Segments[i].Point;
+                                figureStartPoint = this.Segments[i].Point;
+                            }
+                            break;
+                        case SegmentType.Arc:
+                            if (i > 0)
+                            {
+                                double segLength = this.Segments[i].Measure(currPoint);
+
+                                if (currLen + segLength < length)
+                                {
+                                    currLen += segLength;
+                                    currPoint = this.Segments[i].Point;
+                                }
+                                else
+                                {
+                                    double pos = (length - currLen) / segLength;
+                                    return this.Segments[i].GetTangentAt(currPoint, pos);
+                                }
+                            }
+                            else
+                            {
+                                ArcSegment seg = (ArcSegment)this.Segments[i];
+                                figureStartPoint = new Point(seg.Points[0].X + Math.Cos(seg.StartAngle) * seg.Radius, seg.Points[0].Y + Math.Sin(seg.StartAngle) * seg.Radius);
+                                currPoint = figureStartPoint;
+
+                                double segLength = this.Segments[i].Measure(currPoint);
+
+                                if (currLen + segLength < length)
+                                {
+                                    currLen += segLength;
+                                    currPoint = this.Segments[i].Point;
+                                }
+                                else
+                                {
+                                    double pos = (length - currLen) / segLength;
+                                    return this.Segments[i].GetTangentAt(currPoint, pos);
+                                }
+                            }
+                            break;
+                        case SegmentType.Close:
+                            {
+                                double segLength = Math.Sqrt((currPoint.X - figureStartPoint.X) * (currPoint.X - figureStartPoint.X) + (currPoint.Y - figureStartPoint.Y) * (currPoint.Y - figureStartPoint.Y));
+
+                                if (currLen + segLength < length)
+                                {
+                                    currLen += segLength;
+                                    currPoint = this.Segments[i].Point;
+                                }
+                                else
+                                {
+                                    double pos = (length - currLen) / segLength;
+                                    return new Point(figureStartPoint.X - currPoint.X, figureStartPoint.Y - currPoint.Y).Normalize();
+                                }
+                            }
+                            break;
+                        case SegmentType.CubicBezier:
+                            if (i > 0)
+                            {
+                                double segLength = this.Segments[i].Measure(currPoint);
+
+                                if (currLen + segLength < length)
+                                {
+                                    currLen += segLength;
+                                    currPoint = this.Segments[i].Point;
+                                }
+                                else
+                                {
+                                    double pos = (length - currLen) / segLength;
+                                    return this.Segments[i].GetTangentAt(currPoint, pos);
+                                }
+                            }
+                            else
+                            {
+                                currPoint = this.Segments[i].Points[0];
+                                figureStartPoint = this.Segments[i].Points[0];
+                                double segLength = this.Segments[i].Measure(currPoint);
+
+                                if (currLen + segLength < length)
+                                {
+                                    currLen += segLength;
+                                    currPoint = this.Segments[i].Point;
+                                }
+                                else
+                                {
+                                    double pos = (length - currLen) / segLength;
+                                    return this.Segments[i].GetTangentAt(currPoint, pos);
+                                }
+                            }
+                            break;
+                    }
+                }
+
+                throw new InvalidOperationException("Unexpected code path!");
+            }
+            else if (length > pathLength)
+            {
+                double currLength = 0;
+
+                Point currPoint = new Point();
+                Point figureStartPoint = new Point();
+
+                for (int i = 0; i < this.Segments.Count - 1; i++)
+                {
+                    switch (this.Segments[i].Type)
+                    {
+                        case SegmentType.Move:
+                            currPoint = this.Segments[i].Point;
+                            figureStartPoint = this.Segments[i].Point;
+                            break;
+                        case SegmentType.Line:
+                            if (i > 0)
+                            {
+                                currLength += this.Segments[i].Measure(currPoint);
+                                currPoint = this.Segments[i].Point;
+                            }
+                            else
+                            {
+                                currPoint = this.Segments[i].Point;
+                                figureStartPoint = this.Segments[i].Point;
+                            }
+                            break;
+                        case SegmentType.Arc:
+                            if (i > 0)
+                            {
+                                currLength += this.Segments[i].Measure(currPoint);
+                                currPoint = this.Segments[i].Point;
+                            }
+                            else
+                            {
+                                ArcSegment seg = (ArcSegment)this.Segments[i];
+                                figureStartPoint = new Point(seg.Points[0].X + Math.Cos(seg.StartAngle) * seg.Radius, seg.Points[0].Y + Math.Sin(seg.StartAngle) * seg.Radius);
+                                currLength += this.Segments[i].Measure(figureStartPoint);
+                                currPoint = this.Segments[i].Point;
+                            }
+                            break;
+                        case SegmentType.Close:
+                            currLength += Math.Sqrt((currPoint.X - figureStartPoint.X) * (currPoint.X - figureStartPoint.X) + (currPoint.Y - figureStartPoint.Y) * (currPoint.Y - figureStartPoint.Y));
+                            currPoint = figureStartPoint;
+                            break;
+                        case SegmentType.CubicBezier:
+                            if (i > 0)
+                            {
+                                currLength += this.Segments[i].Measure(currPoint);
+                                currPoint = this.Segments[i].Point;
+                            }
+                            else
+                            {
+                                currPoint = this.Segments[i].Points[0];
+                                figureStartPoint = this.Segments[i].Points[0];
+                                currLength += this.Segments[i].Measure(currPoint);
+                                currPoint = this.Segments[i].Point;
+                            }
+                            break;
+                    }
+                }
+
+                switch (this.Segments[this.Segments.Count - 1].Type)
+                {
+                    case SegmentType.Arc:
+                    case SegmentType.CubicBezier:
+                    case SegmentType.Line:
+                        {
+                            double pos = 1 + (length - pathLength) / this.Segments[this.Segments.Count - 1].Measure(currPoint);
+                            return this.Segments[this.Segments.Count - 1].GetTangentAt(currPoint, pos);
+                        }
+                    case SegmentType.Move:
+                        return new Point();
+                    case SegmentType.Close:
+                        return this.GetTangentAtAbsolute(length - pathLength);
+                }
+
+                throw new InvalidOperationException("Unexpected code path!");
+            }
+            else
+            {
+                Point currPoint = new Point();
+                Point figureStartPoint = new Point();
+
+                for (int i = 0; i < this.Segments.Count; i++)
+                {
+                    switch (this.Segments[i].Type)
+                    {
+                        case SegmentType.Move:
+                            currPoint = this.Segments[i].Point;
+                            figureStartPoint = this.Segments[i].Point;
+                            break;
+                        case SegmentType.Line:
+                            if (i > 0)
+                            {
+                                double segLength = this.Segments[i].Measure(currPoint);
+                                double pos = length / segLength;
+                                return this.Segments[i].GetTangentAt(currPoint, pos);
+                            }
+                            else
+                            {
+                                currPoint = this.Segments[i].Point;
+                                figureStartPoint = this.Segments[i].Point;
+                            }
+                            break;
+                        case SegmentType.Arc:
+                            if (i > 0)
+                            {
+                                double segLength = this.Segments[i].Measure(currPoint);
+                                double pos = length / segLength;
+                                return this.Segments[i].GetTangentAt(currPoint, pos);
+                            }
+                            else
+                            {
+                                ArcSegment seg = (ArcSegment)this.Segments[i];
+                                figureStartPoint = new Point(seg.Points[0].X + Math.Cos(seg.StartAngle) * seg.Radius, seg.Points[0].Y + Math.Sin(seg.StartAngle) * seg.Radius);
+                                currPoint = figureStartPoint;
+
+                                double segLength = this.Segments[i].Measure(currPoint);
+                                double pos = length / segLength;
+                                return this.Segments[i].GetTangentAt(currPoint, pos);
+                            }
+                        case SegmentType.Close:
+                            {
+                                double segLength = Math.Sqrt((currPoint.X - figureStartPoint.X) * (currPoint.X - figureStartPoint.X) + (currPoint.Y - figureStartPoint.Y) * (currPoint.Y - figureStartPoint.Y));
+                                double pos = length / segLength;
+                                return new Point(figureStartPoint.X - currPoint.X, figureStartPoint.Y - currPoint.Y).Normalize();
+                            }
+                        case SegmentType.CubicBezier:
+                            if (i > 0)
+                            {
+                                double segLength = this.Segments[i].Measure(currPoint);
+                                double pos = length / segLength;
+                                return this.Segments[i].GetTangentAt(currPoint, pos);
+                            }
+                            else
+                            {
+                                currPoint = this.Segments[i].Points[0];
+                                figureStartPoint = this.Segments[i].Points[0];
+                                double segLength = this.Segments[i].Measure(currPoint);
+                                double pos = length / segLength;
+                                return this.Segments[i].GetTangentAt(currPoint, pos);
+                            }
+                    }
+                }
+
+                throw new InvalidOperationException("Unexpected code path!");
+            }
+        }
+
+        /// <summary>
+        /// Gets the normal to the point at the absolute position specified on the <see cref="GraphicsPath"/>.
+        /// </summary>
+        /// <param name="length">The distance to the point from the start of the <see cref="GraphicsPath"/>.</param>
+        /// <returns>The normal to the point at the specified position.</returns>
+        public Point GetNormalAtAbsolute(double length)
+        {
+            Point tangent = this.GetTangentAtAbsolute(length);
+            return new Point(-tangent.Y, tangent.X);
+        }
+
+        /// <summary>
+        /// Gets the normal to the point at the relative position specified on the <see cref="GraphicsPath"/>.
+        /// </summary>
+        /// <param name="position">The position on the <see cref="GraphicsPath"/> (0 is the start of the path, 1 is the end of the path).</param>
+        /// <returns>The normal to the point at the specified position.</returns>
+        public Point GetNormalAtRelative(double position)
+        {
+            Point tangent = this.GetTangentAtRelative(position);
+            return new Point(-tangent.Y, tangent.X);
+        }
     }
 
 }
