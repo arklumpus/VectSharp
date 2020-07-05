@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace VectSharp
@@ -83,9 +84,15 @@ namespace VectSharp
             fontChecksum += ((uint)this.NumTables << 16) + (uint)this.SearchRange;
             fontChecksum += ((uint)this.EntrySelector << 16) + (uint)this.RangeShift;
 
+            //For some reason, OpenType Sanitizer (https://github.com/khaledhosny/ots), integrated into Chromium and Firefox, complains if the tables are ordered differently.
+            List<string> tableOrdering = new List<string>()
+            {
+                "OS/2", "cmap", "glyf", "head", "hhea", "hmtx", "loca", "maxp", "name", "post"
+            };
+
             Dictionary<string, byte[]> allBytes = new Dictionary<string, byte[]>();
 
-            foreach (KeyValuePair<string, ITrueTypeTable> kvp in Tables)
+            foreach (KeyValuePair<string, ITrueTypeTable> kvp in from el in Tables let ind = tableOrdering.IndexOf(el.Key) orderby (ind >= 0 ? ind : tableOrdering.Count) ascending select el)
             {
                 if (kvp.Key == "head")
                 {
@@ -143,7 +150,7 @@ namespace VectSharp
             FontStream.WriteUShort(this.EntrySelector);
             FontStream.WriteUShort(this.RangeShift);
 
-            foreach (KeyValuePair<string, ITrueTypeTable> kvp in Tables)
+            foreach (KeyValuePair<string, ITrueTypeTable> kvp in from el in Tables let ind = tableOrdering.IndexOf(el.Key) orderby (ind >= 0 ? ind : tableOrdering.Count) ascending select el)
             {
                 FontStream.Write(Encoding.ASCII.GetBytes(kvp.Key), 0, 4);
                 FontStream.WriteUInt(this.TableOffsets[kvp.Key].Checksum);
@@ -151,7 +158,7 @@ namespace VectSharp
                 FontStream.WriteUInt(this.TableOffsets[kvp.Key].Length);
             }
 
-            foreach (KeyValuePair<string, ITrueTypeTable> kvp in Tables)
+            foreach (KeyValuePair<string, ITrueTypeTable> kvp in from el in Tables let ind = tableOrdering.IndexOf(el.Key) orderby (ind >= 0 ? ind : tableOrdering.Count) ascending select el)
             {
                 FontStream.Write(allBytes[kvp.Key], 0, allBytes[kvp.Key].Length);
                 switch (allBytes[kvp.Key].Length % 4)
@@ -339,7 +346,8 @@ namespace VectSharp
             if (this.TableOffsets.ContainsKey("OS/2"))
             {
                 fs.Seek(this.TableOffsets["OS/2"].Offset, SeekOrigin.Begin);
-                Tables.Add("OS/2", new TrueTypeOS2Table()
+
+                TrueTypeOS2Table os2 = new TrueTypeOS2Table()
                 {
                     Version = fs.ReadUShort(),
                     XAvgCharWidth = fs.ReadShort(),
@@ -364,7 +372,82 @@ namespace VectSharp
                     FsSelection = fs.ReadUShort(),
                     FsFirstCharIndex = fs.ReadUShort(),
                     FsLastCharIndex = fs.ReadUShort()
-                });
+                };
+
+                if (os2.Version > 0 || os2.Version == 0 && this.TableOffsets["OS/2"].Length > 68)
+                {
+                    os2.STypoAscender = fs.ReadShort();
+                    os2.STypoDescender = fs.ReadShort();
+                    os2.STypoLineGap = fs.ReadShort();
+                    os2.UsWinAscent = fs.ReadUShort();
+                    os2.UsWinDescent = fs.ReadUShort();
+
+                    if (os2.Version >= 1)
+                    {
+                        os2.UlCodePageRange = new uint[] { fs.ReadUInt(), fs.ReadUInt() };
+
+                        if (os2.Version >= 2)
+                        {
+                            os2.SxHeight = fs.ReadShort();
+                            os2.SCapHeight = fs.ReadShort();
+                            os2.UsDefaultChar = fs.ReadUShort();
+                            os2.UsBreakChar = fs.ReadUShort();
+                            os2.UsMaxContext = fs.ReadUShort();
+
+                            if (os2.Version >= 5)
+                            {
+                                os2.UsLowerOpticalPointSize = fs.ReadUShort();
+                                os2.UsUpperOpticalPointSize = fs.ReadUShort();
+                            }
+                        }
+                    }
+                }
+
+
+                Tables.Add("OS/2", os2);
+            }
+
+            if (this.TableOffsets.ContainsKey("post"))
+            {
+                fs.Seek(this.TableOffsets["post"].Offset, SeekOrigin.Begin);
+
+                TrueTypePostTable post = new TrueTypePostTable()
+                {
+                    Version = fs.ReadFixed(),
+                    ItalicAngle = fs.ReadFixed(),
+                    UnderlinePosition = fs.ReadShort(),
+                    UnderlineThickness = fs.ReadShort(),
+                    IsFixedPitch = fs.ReadUInt(),
+                    MinMemType42 = fs.ReadUInt(),
+                    MaxMemType42 = fs.ReadUInt(),
+                    MinMemType1 = fs.ReadUInt(),
+                    MaxMemType1 = fs.ReadUInt()
+                };
+
+                if (post.Version.Bits == 0x00020000)
+                {
+                    post.NumGlyphs = fs.ReadUShort();
+                    post.GlyphNameIndex = new ushort[post.NumGlyphs];
+
+                    int numberNewGlyphs = 0;
+
+                    for (int i = 0; i < post.NumGlyphs; i++)
+                    {
+                        post.GlyphNameIndex[i] = fs.ReadUShort();
+                        if (post.GlyphNameIndex[i] >= 258)
+                        {
+                            numberNewGlyphs++;
+                        }
+                    }
+
+                    post.Names = new string[numberNewGlyphs];
+
+                    for (int i = 0; i < numberNewGlyphs; i++)
+                    {
+                        post.Names[i] = fs.ReadPascalString();
+                    }
+                }
+                Tables.Add("post", post);
             }
 
             if (this.TableOffsets.ContainsKey("name"))
@@ -719,39 +802,62 @@ namespace VectSharp
                 Dictionary<string, ITrueTypeTable> newTables = new Dictionary<string, ITrueTypeTable>() {
                     {"head", head },
                     {"hhea", hhea },
-                    {"loca", loca },
                     {"maxp", maxp },
-                    {"cmap", cmap },
-                    {"glyf", glyf },
-                    {"hmtx", hmtx }
                 };
 
-                if (Tables.ContainsKey("cvt "))
-                {
-                    TrueTypeRawTable cvt = (TrueTypeRawTable)Tables["cvt "];
-                    newTables.Add("cvt ", cvt);
-                }
-
-                if (Tables.ContainsKey("prep"))
-                {
-                    TrueTypeRawTable prep = (TrueTypeRawTable)Tables["prep"];
-                    newTables.Add("prep", prep);
-                }
-                if (Tables.ContainsKey("fpgm"))
-                {
-                    TrueTypeRawTable fpgm = (TrueTypeRawTable)Tables["fpgm"];
-                    newTables.Add("fpgm", fpgm);
-                }
                 if (Tables.ContainsKey("OS/2"))
                 {
                     TrueTypeOS2Table os2 = (TrueTypeOS2Table)Tables["OS/2"];
                     newTables.Add("OS/2", os2);
                 }
+
+                newTables.Add("hmtx", hmtx);
+                newTables.Add("cmap", cmap);
+                if (Tables.ContainsKey("fpgm"))
+                {
+                    TrueTypeRawTable fpgm = (TrueTypeRawTable)Tables["fpgm"];
+                    newTables.Add("fpgm", fpgm);
+                }
+                if (Tables.ContainsKey("prep"))
+                {
+                    TrueTypeRawTable prep = (TrueTypeRawTable)Tables["prep"];
+                    newTables.Add("prep", prep);
+                }
+                if (Tables.ContainsKey("cvt "))
+                {
+                    TrueTypeRawTable cvt = (TrueTypeRawTable)Tables["cvt "];
+                    newTables.Add("cvt ", cvt);
+                }
+                newTables.Add("loca", loca);
+                newTables.Add("glyf", glyf);
+
                 if (Tables.ContainsKey("name"))
                 {
                     TrueTypeNameTable name = (TrueTypeNameTable)Tables["name"];
                     newTables.Add("name", name);
                 }
+
+                if (Tables.ContainsKey("post"))
+                {
+                    TrueTypePostTable oldPost = (TrueTypePostTable)Tables["post"];
+
+                    TrueTypePostTable post = new TrueTypePostTable()
+                    {
+                        //We don't really care about PostScript names
+                        Version = new Fixed(0x00030000, 16),
+                        ItalicAngle = oldPost.ItalicAngle,
+                        UnderlinePosition = oldPost.UnderlinePosition,
+                        UnderlineThickness = oldPost.UnderlineThickness,
+                        IsFixedPitch = oldPost.IsFixedPitch,
+                        MinMemType42 = oldPost.MinMemType42,
+                        MaxMemType42 = oldPost.MaxMemType42,
+                        MinMemType1 = oldPost.MinMemType1,
+                        MaxMemType1 = oldPost.MaxMemType1
+                    };
+
+                    newTables.Add("post", post);
+                }
+
                 TrueTypeFile newFile = new TrueTypeFile(newTables);
 
                 return newFile;
@@ -2425,6 +2531,22 @@ namespace VectSharp
             public ushort FsSelection;
             public ushort FsFirstCharIndex;
             public ushort FsLastCharIndex;
+            public short STypoAscender;
+            public short STypoDescender;
+            public short STypoLineGap;
+            public ushort UsWinAscent;
+            public ushort UsWinDescent;
+
+            public uint[] UlCodePageRange;
+
+            public short SxHeight;
+            public short SCapHeight;
+            public ushort UsDefaultChar;
+            public ushort UsBreakChar;
+            public ushort UsMaxContext;
+
+            public ushort UsLowerOpticalPointSize;
+            public ushort UsUpperOpticalPointSize;
 
             public byte[] GetBytes()
             {
@@ -2456,6 +2578,34 @@ namespace VectSharp
                     ms.WriteUShort(this.FsSelection);
                     ms.WriteUShort(this.FsFirstCharIndex);
                     ms.WriteUShort(this.FsLastCharIndex);
+                    ms.WriteShort(this.STypoAscender);
+                    ms.WriteShort(this.STypoDescender);
+                    ms.WriteShort(this.STypoLineGap);
+                    ms.WriteUShort(this.UsWinAscent);
+                    ms.WriteUShort(this.UsWinDescent);
+
+                    if (this.Version >= 1)
+                    {
+                        for (int i = 0; i < this.UlCodePageRange.Length; i++)
+                        {
+                            ms.WriteUInt(this.UlCodePageRange[i]);
+                        }
+
+                        if (this.Version >= 2)
+                        {
+                            ms.WriteShort(this.SxHeight);
+                            ms.WriteShort(this.SCapHeight);
+                            ms.WriteUShort(this.UsDefaultChar);
+                            ms.WriteUShort(this.UsBreakChar);
+                            ms.WriteUShort(this.UsMaxContext);
+
+                            if (this.Version >= 5)
+                            {
+                                ms.WriteUShort(this.UsLowerOpticalPointSize);
+                                ms.WriteUShort(this.UsUpperOpticalPointSize);
+                            }
+                        }
+                    }
 
                     return ms.ToArray();
                 }
@@ -2491,6 +2641,55 @@ namespace VectSharp
                 public byte[] GetBytes()
                 {
                     return new byte[] { BFamilyType, BSerifStyle, BWeight, BProportion, BContrast, BStrokeVariation, BArmStyle, BLetterform, BMidline, BXHeight };
+                }
+            }
+        }
+
+        internal class TrueTypePostTable : ITrueTypeTable
+        {
+            public Fixed Version;
+            public Fixed ItalicAngle;
+            public short UnderlinePosition;
+            public short UnderlineThickness;
+            public uint IsFixedPitch;
+            public uint MinMemType42;
+            public uint MaxMemType42;
+            public uint MinMemType1;
+            public uint MaxMemType1;
+
+            public ushort NumGlyphs;
+            public ushort[] GlyphNameIndex;
+            public string[] Names;
+
+            public byte[] GetBytes()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    ms.WriteFixed(this.Version);
+                    ms.WriteFixed(this.ItalicAngle);
+                    ms.WriteShort(this.UnderlinePosition);
+                    ms.WriteShort(this.UnderlineThickness);
+                    ms.WriteUInt(this.IsFixedPitch);
+                    ms.WriteUInt(this.MinMemType42);
+                    ms.WriteUInt(this.MaxMemType42);
+                    ms.WriteUInt(this.MinMemType1);
+                    ms.WriteUInt(this.MaxMemType1);
+
+                    if (this.Version.Bits == 0x00020000)
+                    {
+                        ms.WriteUShort(NumGlyphs);
+                        for (int i = 0; i < GlyphNameIndex.Length; i++)
+                        {
+                            ms.WriteUShort(GlyphNameIndex[i]);
+                        }
+
+                        for (int i = 0; i < Names.Length; i++)
+                        {
+                            ms.WritePascalString(Names[i]);
+                        }
+                    }
+
+                    return ms.ToArray();
                 }
             }
         }
@@ -2691,6 +2890,26 @@ namespace VectSharp
 
     internal static class ReadUtils
     {
+        public static void WritePascalString(this Stream sr, string val)
+        {
+            sr.WriteByte((byte)val.Length);
+            for (int i = 0; i < val.Length; i++)
+            {
+                sr.WriteByte((byte)(int)val[i]);
+            }
+        }
+
+        public static string ReadPascalString(this Stream sr)
+        {
+            byte length = (byte)sr.ReadByte();
+            StringBuilder tbr = new StringBuilder(length);
+            for (int i = 0; i < length; i++)
+            {
+                tbr.Append((char)sr.ReadByte());
+            }
+            return tbr.ToString();
+        }
+
         public static uint ReadUInt(this Stream sr)
         {
             return ((uint)sr.ReadByte() << 24) | ((uint)sr.ReadByte() << 16) | ((uint)sr.ReadByte() << 8) | (uint)sr.ReadByte();
