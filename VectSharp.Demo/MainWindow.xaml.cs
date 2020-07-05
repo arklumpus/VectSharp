@@ -9,6 +9,7 @@ using VectSharp;
 using VectSharp.Canvas;
 using VectSharp.PDF;
 using VectSharp.Raster;
+using VectSharp.SVG;
 
 namespace VectSharp.Demo
 {
@@ -128,14 +129,12 @@ namespace VectSharp.Demo
             gpr.FillText(2700, 1200, "q", biggerTimes, Colour.FromRgb(0, 0, 0), textBaseline: TextBaselines.Baseline);
 
 
-            //Save graphics state (e.g. rotation, translation, scale etc.)
-            gpr.Save();
 
-            //Translate
-            gpr.Translate(2000, 1000);
+            //Create a new graphics object
+            Graphics faceGraphics = new Graphics();
 
             //Scale
-            gpr.Scale(5, 5);
+            faceGraphics.Scale(5, 5);
 
             //Create a new path object
             GraphicsPath face = new GraphicsPath();
@@ -155,7 +154,7 @@ namespace VectSharp.Demo
             //Close the path
             face.Close();
             //Fill the path
-            gpr.FillPath(face, Colour.FromRgb(242, 216, 35));
+            faceGraphics.FillPath(face, Colour.FromRgb(242, 216, 35));
 
             //Another path
             GraphicsPath mouth = new GraphicsPath();
@@ -165,7 +164,7 @@ namespace VectSharp.Demo
             mouth.CubicBezierTo(66.007, 267.158, 61.554, 269.144, 58.156, 268.97);
             mouth.CubicBezierTo(58.156, 268.97, 60.486, 288.088, 69.361, 288.088);
             mouth.Close();
-            gpr.FillPath(mouth, Colour.FromRgb(181, 20, 24));
+            faceGraphics.FillPath(mouth, Colour.FromRgb(181, 20, 24));
 
             //Yet another path
             GraphicsPath tongue = new GraphicsPath();
@@ -174,7 +173,7 @@ namespace VectSharp.Demo
             tongue.CubicBezierTo(73.931, 288.088, 76.896, 282.985, 78.683, 278.074);
             tongue.CubicBezierTo(72.673, 275.222, 66.57, 274.868, 60.305, 278.13);
             tongue.Close();
-            gpr.FillPath(tongue, Colour.FromRgb(237, 27, 36));
+            faceGraphics.FillPath(tongue, Colour.FromRgb(237, 27, 36));
 
             //Yet another path
             GraphicsPath leftCheek = new GraphicsPath();
@@ -184,7 +183,7 @@ namespace VectSharp.Demo
             leftCheek.CubicBezierTo(25.12, 268.743, 27.785, 264.105, 32.077, 263.213);
             leftCheek.CubicBezierTo(36.369, 262.32, 40.662, 265.511, 41.666, 270.34);
             leftCheek.Close();
-            gpr.FillPath(leftCheek, Colour.FromRgb(235, 28, 34));
+            faceGraphics.FillPath(leftCheek, Colour.FromRgb(235, 28, 34));
 
             //Yet another path
             GraphicsPath rightCheek = new GraphicsPath();
@@ -194,11 +193,10 @@ namespace VectSharp.Demo
             rightCheek.CubicBezierTo(113.049, 268.743, 110.384, 264.105, 106.092, 263.213);
             rightCheek.CubicBezierTo(101.8, 262.32, 97.507, 265.511, 96.503, 270.34);
             rightCheek.Close();
-            gpr.FillPath(rightCheek, Colour.FromRgb(235, 28, 34));
-
+            faceGraphics.FillPath(rightCheek, Colour.FromRgb(235, 28, 34));
 
             //Inline path syntax - mouth
-            gpr.StrokePath(new GraphicsPath().MoveTo(84.683, 265.03)
+            faceGraphics.StrokePath(new GraphicsPath().MoveTo(84.683, 265.03)
             .CubicBezierTo(82.771, 272.435, 74.1, 267.158, 69.084, 267.158)
             .CubicBezierTo(64.069, 267.158, 55.398, 272.435, 53.486, 265.03)
             .MoveTo(58.182, 268.972)
@@ -209,33 +207,33 @@ namespace VectSharp.Demo
             Colour.FromRgb(0, 0, 0), lineWidth: 2.5, lineCap: LineCaps.Round);
 
             //Again, inline path syntax - left ear
-            gpr.FillPath(new GraphicsPath().MoveTo(20.118, 192.906).CubicBezierTo(14.005, 188.531, 7.872, 185.824, 2.664, 186.221).CubicBezierTo(-1.235, 186.519, 1.041, 202.568, 16.932, 222.774).CubicBezierTo(15.793, 212.993, 14.194, 202.11, 20.118, 192.906).Close(), Colour.FromRgb(0, 0, 0));
+            faceGraphics.FillPath(new GraphicsPath().MoveTo(20.118, 192.906).CubicBezierTo(14.005, 188.531, 7.872, 185.824, 2.664, 186.221).CubicBezierTo(-1.235, 186.519, 1.041, 202.568, 16.932, 222.774).CubicBezierTo(15.793, 212.993, 14.194, 202.11, 20.118, 192.906).Close(), Colour.FromRgb(0, 0, 0));
             //Right ear
-            gpr.FillPath(new GraphicsPath().MoveTo(120.095, 224.029).CubicBezierTo(137.116, 203.05, 139.479, 186.526, 135.484, 186.221).CubicBezierTo(130.041, 185.806, 123.77, 188.626, 117.569, 193.202).CubicBezierTo(122.356, 200.373, 120.978, 212.396, 120.095, 224.029).Close(), Colour.FromRgb(0, 0, 0));
+            faceGraphics.FillPath(new GraphicsPath().MoveTo(120.095, 224.029).CubicBezierTo(137.116, 203.05, 139.479, 186.526, 135.484, 186.221).CubicBezierTo(130.041, 185.806, 123.77, 188.626, 117.569, 193.202).CubicBezierTo(122.356, 200.373, 120.978, 212.396, 120.095, 224.029).Close(), Colour.FromRgb(0, 0, 0));
             //Nose
-            gpr.FillPath(new GraphicsPath().MoveTo(71.3, 261.868).CubicBezierTo(71.3, 262.361, 70.308, 262.761, 69.084, 262.761).CubicBezierTo(67.861, 262.761, 66.869, 262.361, 66.869, 261.868).CubicBezierTo(66.869, 261.375, 67.861, 260.975, 69.085, 260.975).CubicBezierTo(70.308, 260.975, 71.3, 261.375, 71.3, 261.868).Close(), Colour.FromRgb(0, 0, 0));
+            faceGraphics.FillPath(new GraphicsPath().MoveTo(71.3, 261.868).CubicBezierTo(71.3, 262.361, 70.308, 262.761, 69.084, 262.761).CubicBezierTo(67.861, 262.761, 66.869, 262.361, 66.869, 261.868).CubicBezierTo(66.869, 261.375, 67.861, 260.975, 69.085, 260.975).CubicBezierTo(70.308, 260.975, 71.3, 261.375, 71.3, 261.868).Close(), Colour.FromRgb(0, 0, 0));
 
             GraphicsPath leftEye = new GraphicsPath();
             //Circle
             leftEye.Arc(44.875, 252.274, 8.029, 0, 2 * Math.PI);
-            gpr.FillPath(leftEye, Colour.FromRgb(0, 0, 0));
-            gpr.FillPath(new GraphicsPath().Arc(45.757, 249.371, 3.567, 0, 2 * Math.PI), Colour.FromRgb(255, 255, 255));
+            faceGraphics.FillPath(leftEye, Colour.FromRgb(0, 0, 0));
+            faceGraphics.FillPath(new GraphicsPath().Arc(45.757, 249.371, 3.567, 0, 2 * Math.PI), Colour.FromRgb(255, 255, 255));
 
             //Right eye
-            gpr.FillPath(new GraphicsPath().Arc(93.294, 252.274, 8.029, 0, 2 * Math.PI), Colour.FromRgb(0, 0, 0));
-            gpr.FillPath(new GraphicsPath().Arc(92.412, 249.371, 3.567, 0, 2 * Math.PI), Colour.FromRgb(255, 255, 255));
+            faceGraphics.FillPath(new GraphicsPath().Arc(93.294, 252.274, 8.029, 0, 2 * Math.PI), Colour.FromRgb(0, 0, 0));
+            faceGraphics.FillPath(new GraphicsPath().Arc(92.412, 249.371, 3.567, 0, 2 * Math.PI), Colour.FromRgb(255, 255, 255));
 
             //Reuse the first path for a stroke           
-            gpr.StrokePath(face, Colour.FromRgb(0, 0, 0), lineWidth: 2.5);
+            faceGraphics.StrokePath(face, Colour.FromRgb(0, 0, 0), lineWidth: 2.5);
 
-            //Restore the previous graphics state
-            gpr.Restore();
+            //Copy the graphics object on the main graphics
+            gpr.DrawGraphics(2000, 1000, faceGraphics);
 
 
 
             //Rotation sample
 
-            //Save graphics state
+            //Save graphics state (e.g. rotation, translation, scale etc.)
             gpr.Save();
 
             string[] angles = new string[] { "0", "π/6", "π/3", "π/2", "2π/3", "5π/6", "π", "7π/6", "4π/3", "3π/2", "5π/3", "11π/6" };
@@ -337,6 +335,9 @@ namespace VectSharp.Demo
 
             //Save the image as a PNG file
             doc.Pages.Last().SaveAsPNG(@"Sample.png");
+
+            //Save the image as an SVG file
+            doc.Pages.Last().SaveAsSVG("Sample.svg");
 
             //Transfer the page onto an Avalonia Canvas object
             this.FindControl<Viewbox>("mainViewBox").Child = doc.Pages.Last().PaintToCanvas(taggedActions);
