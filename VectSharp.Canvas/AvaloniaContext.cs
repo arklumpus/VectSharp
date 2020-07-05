@@ -152,106 +152,114 @@ namespace VectSharp.Canvas
 
         public void FillText(string text, double x, double y)
         {
-            TextBlock blk = new TextBlock() { ClipToBounds = false, Text = text, Foreground = new SolidColorBrush(Color.FromArgb(FillAlpha, (byte)(FillStyle.R * 255), (byte)(FillStyle.G * 255), (byte)(FillStyle.B * 255))), FontFamily = Avalonia.Media.FontFamily.Parse(FontFamily), FontSize = Font.FontSize, FontStyle = (Font.FontFamily.IsOblique ? FontStyle.Oblique : Font.FontFamily.IsItalic ? FontStyle.Italic : FontStyle.Normal), FontWeight = (Font.FontFamily.IsBold ? FontWeight.Bold : FontWeight.Regular) };
-
-            double top = y;
-            double left = x;
-
-            double[,] currTransform = null;
-
-            if (Font.FontFamily.TrueTypeFile != null)
+            if (Font.FontFamily.IsStandardFamily)
             {
-                currTransform = MatrixUtils.Translate(_transform, x, y);
-            }
+                TextBlock blk = new TextBlock() { ClipToBounds = false, Text = text, Foreground = new SolidColorBrush(Color.FromArgb(FillAlpha, (byte)(FillStyle.R * 255), (byte)(FillStyle.G * 255), (byte)(FillStyle.B * 255))), FontFamily = Avalonia.Media.FontFamily.Parse(FontFamily), FontSize = Font.FontSize, FontStyle = (Font.FontFamily.IsOblique ? FontStyle.Oblique : Font.FontFamily.IsItalic ? FontStyle.Italic : FontStyle.Normal), FontWeight = (Font.FontFamily.IsBold ? FontWeight.Bold : FontWeight.Regular) };
 
-            if (TextBaseline == TextBaselines.Top)
-            {
-                Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
-                blk.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top;
+                double top = y;
+                double left = x;
+
+                double[,] currTransform = null;
 
                 if (Font.FontFamily.TrueTypeFile != null)
                 {
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    currTransform = MatrixUtils.Translate(_transform, x, y);
+                }
+
+                if (TextBaseline == TextBaselines.Top)
+                {
+                    Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
+                    blk.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top;
+
+                    if (Font.FontFamily.TrueTypeFile != null)
                     {
-                        currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.YMax);
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.YMax);
+                        }
+                        else
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.Ascent);
+                        }
                     }
-                    else
+                }
+                else if (TextBaseline == TextBaselines.Middle)
+                {
+                    Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
+
+                    blk.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top;
+
+                    if (Font.FontFamily.TrueTypeFile != null)
                     {
-                        currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.Ascent);
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.YMax);
+                        }
+                        else
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
+                        }
+                    }
+                }
+                else if (TextBaseline == TextBaselines.Baseline)
+                {
+                    double lsb = Font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(text[0]).LeftSideBearing * Font.FontSize / 1000;
+
+                    blk.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top;
+
+                    if (Font.FontFamily.TrueTypeFile != null)
+                    {
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.YMax);
+                        }
+                        else
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.Ascent);
+                        }
+                    }
+                }
+                else if (TextBaseline == TextBaselines.Bottom)
+                {
+                    Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
+
+                    blk.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Bottom;
+
+                    if (Font.FontFamily.TrueTypeFile != null)
+                    {
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.YMax + metrics.Bottom);
+                        }
+                        else
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.Ascent + metrics.Bottom);
+                        }
+                    }
+                }
+
+                blk.RenderTransform = new MatrixTransform(currTransform.ToAvaloniaMatrix());
+                blk.RenderTransformOrigin = new Avalonia.RelativePoint(0, 0, Avalonia.RelativeUnit.Absolute);
+
+                ControlItem.Children.Add(blk);
+
+                if (!string.IsNullOrEmpty(Tag))
+                {
+                    if (TaggedActions.ContainsKey(Tag))
+                    {
+                        TaggedActions[Tag].DynamicInvoke(blk);
+
+                        if (removeTaggedActions)
+                        {
+                            TaggedActions.Remove(Tag);
+                        }
                     }
                 }
             }
-            else if (TextBaseline == TextBaselines.Middle)
+            else
             {
-                Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
-
-                blk.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top;
-
-                if (Font.FontFamily.TrueTypeFile != null)
-                {
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
-                        currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.YMax);
-                    }
-                    else
-                    {
-                        currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
-                    }
-                }
-            }
-            else if (TextBaseline == TextBaselines.Baseline)
-            {
-                double lsb = Font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(text[0]).LeftSideBearing * Font.FontSize / 1000;
-
-                blk.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top;
-
-                if (Font.FontFamily.TrueTypeFile != null)
-                {
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
-                        currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.YMax);
-                    }
-                    else
-                    {
-                        currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.Ascent);
-                    }
-                }
-            }
-            else if (TextBaseline == TextBaselines.Bottom)
-            {
-                Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
-
-                blk.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Bottom;
-
-                if (Font.FontFamily.TrueTypeFile != null)
-                {
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
-                        currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.YMax + metrics.Bottom);
-                    }
-                    else
-                    {
-                        currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.Ascent + metrics.Bottom);
-                    }
-                }
-            }
-
-            blk.RenderTransform = new MatrixTransform(currTransform.ToAvaloniaMatrix());
-            blk.RenderTransformOrigin = new Avalonia.RelativePoint(0, 0, Avalonia.RelativeUnit.Absolute);
-
-            ControlItem.Children.Add(blk);
-
-            if (!string.IsNullOrEmpty(Tag))
-            {
-                if (TaggedActions.ContainsKey(Tag))
-                {
-                    TaggedActions[Tag].DynamicInvoke(blk);
-
-                    if (removeTaggedActions)
-                    {
-                        TaggedActions.Remove(Tag);
-                    }
-                }
+                PathText(text, x, y);
+                Fill();
             }
         }
 
@@ -295,6 +303,16 @@ namespace VectSharp.Canvas
         public void Rotate(double angle)
         {
             _transform = MatrixUtils.Rotate(_transform, angle);
+
+            currentPath = new PathGeometry();
+            currentFigure = new PathFigure() { IsClosed = false };
+            figureInitialised = false;
+        }
+
+        public void Transform(double a, double b, double c, double d, double e, double f)
+        {
+            double[,] transfMatrix = new double[3, 3] { { a, c, e }, { b, d, f }, { 0, 0, 1 } };
+            _transform = MatrixUtils.Multiply(_transform, transfMatrix);
 
             currentPath = new PathGeometry();
             currentFigure = new PathFigure() { IsClosed = false };
@@ -1021,105 +1039,124 @@ namespace VectSharp.Canvas
 
         public void FillText(string text, double x, double y)
         {
-            FormattedText txt = new FormattedText()
+            if (Font.FontFamily.IsStandardFamily)
             {
-                Text = text,
-                Typeface = new Typeface(Avalonia.Media.FontFamily.Parse(FontFamily), Font.FontSize, (Font.FontFamily.IsOblique ? FontStyle.Oblique : Font.FontFamily.IsItalic ? FontStyle.Italic : FontStyle.Normal), (Font.FontFamily.IsBold ? FontWeight.Bold : FontWeight.Regular))
-            };
 
 
 
-            double top = y;
-            double left = x;
+                FormattedText txt = new FormattedText()
+                {
+                    Text = text,
+                    Typeface = new Typeface(Avalonia.Media.FontFamily.Parse(FontFamily), Font.FontSize, (Font.FontFamily.IsOblique ? FontStyle.Oblique : Font.FontFamily.IsItalic ? FontStyle.Italic : FontStyle.Normal), (Font.FontFamily.IsBold ? FontWeight.Bold : FontWeight.Regular))
+                };
 
-            double[,] currTransform = null;
 
-            if (Font.FontFamily.TrueTypeFile != null)
-            {
-                currTransform = MatrixUtils.Translate(_transform, x, y);
-            }
 
-            if (TextBaseline == TextBaselines.Top)
-            {
-                Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
+                double top = y;
+                double left = x;
+
+                double[,] currTransform = null;
 
                 if (Font.FontFamily.TrueTypeFile != null)
                 {
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    currTransform = MatrixUtils.Translate(_transform, x, y);
+                }
+
+                if (TextBaseline == TextBaselines.Top)
+                {
+                    Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
+
+                    if (Font.FontFamily.TrueTypeFile != null)
                     {
-                        currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.YMax);
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.YMax);
+                        }
+                        else
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.Ascent);
+                        }
+                    }
+                }
+                else if (TextBaseline == TextBaselines.Middle)
+                {
+                    Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
+
+                    if (Font.FontFamily.TrueTypeFile != null)
+                    {
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.YMax);
+                        }
+                        else
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
+                        }
+                    }
+                }
+                else if (TextBaseline == TextBaselines.Baseline)
+                {
+                    double lsb = Font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(text[0]).LeftSideBearing * Font.FontSize / 1000;
+
+                    if (Font.FontFamily.TrueTypeFile != null)
+                    {
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.YMax);
+                        }
+                        else
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.Ascent);
+                        }
+                    }
+                }
+                else if (TextBaseline == TextBaselines.Bottom)
+                {
+                    Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
+
+                    if (Font.FontFamily.TrueTypeFile != null)
+                    {
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.YMax + metrics.Bottom);
+                        }
+                        else
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.Ascent + metrics.Bottom);
+                        }
+                    }
+                }
+
+                RenderAction act = RenderAction.TextAction(txt, new SolidColorBrush(Color.FromArgb(FillAlpha, (byte)(FillStyle.R * 255), (byte)(FillStyle.G * 255), (byte)(FillStyle.B * 255))), currTransform.ToAvaloniaMatrix(), Tag);
+
+                if (!string.IsNullOrEmpty(Tag))
+                {
+                    if (TaggedActions.ContainsKey(Tag))
+                    {
+                        IEnumerable<RenderAction> actions = TaggedActions[Tag](act);
+
+                        foreach (RenderAction action in actions)
+                        {
+                            RenderActions.Add(action);
+                        }
+
+                        if (removeTaggedActions)
+                        {
+                            TaggedActions.Remove(Tag);
+                        }
                     }
                     else
                     {
-                        currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.Ascent);
+                        RenderActions.Add(act);
                     }
                 }
-            }
-            else if (TextBaseline == TextBaselines.Middle)
-            {
-                Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
-
-                if (Font.FontFamily.TrueTypeFile != null)
+                else if (TaggedActions.ContainsKey(""))
                 {
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
-                        currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.YMax);
-                    }
-                    else
-                    {
-                        currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
-                    }
-                }
-            }
-            else if (TextBaseline == TextBaselines.Baseline)
-            {
-                double lsb = Font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(text[0]).LeftSideBearing * Font.FontSize / 1000;
-
-                if (Font.FontFamily.TrueTypeFile != null)
-                {
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
-                        currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.YMax);
-                    }
-                    else
-                    {
-                        currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.Ascent);
-                    }
-                }
-            }
-            else if (TextBaseline == TextBaselines.Bottom)
-            {
-                Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
-
-                if (Font.FontFamily.TrueTypeFile != null)
-                {
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
-                        currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.YMax + metrics.Bottom);
-                    }
-                    else
-                    {
-                        currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.Ascent + metrics.Bottom);
-                    }
-                }
-            }
-
-            RenderAction act = RenderAction.TextAction(txt, new SolidColorBrush(Color.FromArgb(FillAlpha, (byte)(FillStyle.R * 255), (byte)(FillStyle.G * 255), (byte)(FillStyle.B * 255))), currTransform.ToAvaloniaMatrix(), Tag);
-
-            if (!string.IsNullOrEmpty(Tag))
-            {
-                if (TaggedActions.ContainsKey(Tag))
-                {
-                    IEnumerable<RenderAction> actions = TaggedActions[Tag](act);
+                    IEnumerable<RenderAction> actions = TaggedActions[""](act);
 
                     foreach (RenderAction action in actions)
                     {
                         RenderActions.Add(action);
-                    }
-
-                    if (removeTaggedActions)
-                    {
-                        TaggedActions.Remove(Tag);
                     }
                 }
                 else
@@ -1127,18 +1164,10 @@ namespace VectSharp.Canvas
                     RenderActions.Add(act);
                 }
             }
-            else if (TaggedActions.ContainsKey(""))
-            {
-                IEnumerable<RenderAction> actions = TaggedActions[""](act);
-
-                foreach (RenderAction action in actions)
-                {
-                    RenderActions.Add(action);
-                }
-            }
             else
             {
-                RenderActions.Add(act);
+                PathText(text, x, y);
+                Fill();
             }
         }
 
@@ -1182,6 +1211,16 @@ namespace VectSharp.Canvas
         public void Rotate(double angle)
         {
             _transform = MatrixUtils.Rotate(_transform, angle);
+
+            currentPath = new PathGeometry();
+            currentFigure = new PathFigure() { IsClosed = false };
+            figureInitialised = false;
+        }
+
+        public void Transform(double a, double b, double c, double d, double e, double f)
+        {
+            double[,] transfMatrix = new double[3, 3] { { a, c, e }, { b, d, f }, { 0, 0, 1 } };
+            _transform = MatrixUtils.Multiply(_transform, transfMatrix);
 
             currentPath = new PathGeometry();
             currentFigure = new PathFigure() { IsClosed = false };
