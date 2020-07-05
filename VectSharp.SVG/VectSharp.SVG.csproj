@@ -6,6 +6,8 @@
     <Authors>Giorgio Bianchini</Authors>
     <Company>University of Bristol</Company>
     <Product>VectSharp</Product>
+    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/arklumpus/VectSharp</PackageProjectUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
