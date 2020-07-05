@@ -435,6 +435,11 @@ namespace VectSharp.PDF
         {
             _figures.Add(new TransformFigure(TransformFigure.TransformTypes.Transform, new double[,] { { scaleX, 0, 0 }, { 0, scaleY, 0 }, { 0, 0, 1 } }));
         }
+
+        public void Transform(double a, double b, double c, double d, double e, double f)
+        {
+            _figures.Add(new TransformFigure(TransformFigure.TransformTypes.Transform, new double[,] { { a, b, e }, { c, d, f }, { 0, 0, 1 } }));
+        }
     }
 
     /// <summary>
