@@ -60,7 +60,7 @@ namespace VectSharp
     /// <summary>
     /// Represents an RGB colour.
     /// </summary>
-    public struct Colour : IEquatable<Colour>
+    public partial struct Colour : IEquatable<Colour>
     {
         /// <summary>
         /// Red component of the colour. Range: [0, 1].
@@ -96,7 +96,7 @@ namespace VectSharp
         /// <param name="r">The red component of the colour. Range: [0, 1].</param>
         /// <param name="g">The green component of the colour. Range: [0, 1].</param>
         /// <param name="b">The blue component of the colour. Range: [0, 1].</param>
-        /// <returns>A colour struct witht the specified components and an alpha component of 1.</returns>
+        /// <returns>A <see cref="Colour"/> struct with the specified components and an alpha component of 1.</returns>
         public static Colour FromRgb(double r, double g, double b)
         {
             return new Colour(r, g, b, 1);
@@ -108,7 +108,7 @@ namespace VectSharp
         /// <param name="r">The red component of the colour. Range: [0, 255].</param>
         /// <param name="g">The green component of the colour. Range: [0, 255].</param>
         /// <param name="b">The blue component of the colour. Range: [0, 255].</param>
-        /// <returns>A colour struct witht the specified components and an alpha component of 1.</returns>
+        /// <returns>A <see cref="Colour"/> struct with the specified components and an alpha component of 1.</returns>
         public static Colour FromRgb(byte r, byte g, byte b)
         {
             return new Colour(r / 255.0, g / 255.0, b / 255.0, 1);
@@ -120,7 +120,7 @@ namespace VectSharp
         /// <param name="r">The red component of the colour. Range: [0, 255].</param>
         /// <param name="g">The green component of the colour. Range: [0, 255].</param>
         /// <param name="b">The blue component of the colour. Range: [0, 255].</param>
-        /// <returns>A colour struct witht the specified components and an alpha component of 1.</returns>
+        /// <returns>A <see cref="Colour"/> struct with the specified components and an alpha component of 1.</returns>
         public static Colour FromRgb(int r, int g, int b)
         {
             return new Colour(r / 255.0, g / 255.0, b / 255.0, 1);
@@ -133,7 +133,7 @@ namespace VectSharp
         /// <param name="g">The green component of the colour. Range: [0, 1].</param>
         /// <param name="b">The blue component of the colour. Range: [0, 1].</param>
         /// <param name="a">The alpha component of the colour. Range: [0, 1].</param>
-        /// <returns>A colour struct witht the specified components.</returns>
+        /// <returns>A <see cref="Colour"/> struct with the specified components.</returns>
         public static Colour FromRgba(double r, double g, double b, double a)
         {
             return new Colour(r, g, b, a);
@@ -146,7 +146,7 @@ namespace VectSharp
         /// <param name="g">The green component of the colour. Range: [0, 255].</param>
         /// <param name="b">The blue component of the colour. Range: [0, 255].</param>
         /// <param name="a">The alpha component of the colour. Range: [0, 255].</param>
-        /// <returns>A colour struct witht the specified components.</returns>
+        /// <returns>A <see cref="Colour"/><see cref="Colour"/> struct with the specified components.</returns>
         public static Colour FromRgba(byte r, byte g, byte b, byte a)
         {
             return new Colour(r / 255.0, g / 255.0, b / 255.0, a / 255.0);
@@ -159,7 +159,7 @@ namespace VectSharp
         /// <param name="g">The green component of the colour. Range: [0, 255].</param>
         /// <param name="b">The blue component of the colour. Range: [0, 255].</param>
         /// <param name="a">The alpha component of the colour. Range: [0, 1].</param>
-        /// <returns>A colour struct witht the specified components.</returns>
+        /// <returns>A <see cref="Colour"/> struct with the specified components.</returns>
         public static Colour FromRgba(byte r, byte g, byte b, double a)
         {
             return new Colour(r / 255.0, g / 255.0, b / 255.0, a);
@@ -171,8 +171,7 @@ namespace VectSharp
         /// <param name="g">The green component of the colour. Range: [0, 255].</param>
         /// <param name="b">The blue component of the colour. Range: [0, 255].</param>
         /// <param name="a">The alpha component of the colour. Range: [0, 255].</param>
-        /// <returns>A colour struct witht the specified components.</returns>
-
+        /// <returns>A <see cref="Colour"/> struct with the specified components.</returns>
         public static Colour FromRgba(int r, int g, int b, int a)
         {
             return new Colour(r / 255.0, g / 255.0, b / 255.0, a / 255.0);
@@ -185,19 +184,17 @@ namespace VectSharp
         /// <param name="g">The green component of the colour. Range: [0, 255].</param>
         /// <param name="b">The blue component of the colour. Range: [0, 255].</param>
         /// <param name="a">The alpha component of the colour. Range: [0, 1].</param>
-        /// <returns>A colour struct witht the specified components.</returns>
+        /// <returns>A <see cref="Colour"/> struct with the specified components.</returns>
         public static Colour FromRgba(int r, int g, int b, double a)
         {
             return new Colour(r / 255.0, g / 255.0, b / 255.0, a);
-
-
         }
 
         /// <summary>
         /// Create a new colour from RGBA (red, green, blue and alpha) values.
         /// </summary>
         /// <param name="colour">A <see cref="System.ValueTuple{int, int, int, double}"/> containing component information for the colour. For r, g, and b, range: [0, 255]; for a, range: [0, 1].</param>
-        /// <returns>A colour struct witht the specified components.</returns>
+        /// <returns>A <see cref="Colour"/> struct with the specified components.</returns>
         public static Colour FromRgba((int r, int g, int b, double a) colour)
         {
             return new Colour(colour.r / 255.0, colour.g / 255.0, colour.b / 255.0, colour.a);
@@ -233,6 +230,170 @@ namespace VectSharp
         public override int GetHashCode()
         {
             return (int)(this.R * 255 + this.G * 255 * 255 + this.B * 255 * 255 * 255 + this.A * 255 * 255 * 255 * 255);
+        }
+
+        /// <summary>
+        /// Convert the <see cref="Colour"/> object into a hex string that is constituted by a "#" followed by two-digit hexadecimal representations of the red, green and blue components of the colour (in the range 0x00 - 0xFF).
+        /// Optionally also includes opacity (alpha channel) data.
+        /// </summary>
+        /// <param name="includeAlpha">Whether two additional hex digits representing the colour's opacity (alpha channel) should be included in the string.</param>
+        /// <returns>A hex colour string.</returns>
+        public string ToCSSString(bool includeAlpha)
+        {
+            if (includeAlpha)
+            {
+                return "#" + ((int)Math.Round(this.R * 255)).ToString("X2") + ((int)Math.Round(this.G * 255)).ToString("X2") + ((int)Math.Round(this.B * 255)).ToString("X2") + ((int)Math.Round(this.A * 255)).ToString("X2");
+            }
+            else
+            {
+                return "#" + ((int)Math.Round(this.R * 255)).ToString("X2") + ((int)Math.Round(this.G * 255)).ToString("X2") + ((int)Math.Round(this.B * 255)).ToString("X2");
+            }
+        }
+
+        /// <summary>
+        /// Convert a CSS colour string into a <see cref="Colour"/> object.
+        /// </summary>
+        /// <param name="cssString">The CSS colour string. In addition to 148 standard colour names (case-insensitive), #RGB, #RGBA, #RRGGBB and #RRGGBBAA hex strings and rgb(r, g, b) and rgba(r, g, b, a) functional colour notations are supported.</param>
+        /// <returns></returns>
+        public static Colour? FromCSSString(string cssString)
+        {
+            if (cssString.StartsWith("#"))
+            {
+                cssString = cssString.Substring(1);
+
+                if (cssString.Length == 3)
+                {
+                    byte r = byte.Parse(cssString.Substring(0, 1) + cssString.Substring(0, 1), System.Globalization.NumberStyles.HexNumber);
+                    byte g = byte.Parse(cssString.Substring(1, 1) + cssString.Substring(1, 1), System.Globalization.NumberStyles.HexNumber);
+                    byte b = byte.Parse(cssString.Substring(2, 1) + cssString.Substring(2, 1), System.Globalization.NumberStyles.HexNumber);
+
+                    return Colour.FromRgb(r, g, b);
+                }
+                else if (cssString.Length == 4)
+                {
+                    byte r = byte.Parse(cssString.Substring(0, 1) + cssString.Substring(0, 1), System.Globalization.NumberStyles.HexNumber);
+                    byte g = byte.Parse(cssString.Substring(1, 1) + cssString.Substring(1, 1), System.Globalization.NumberStyles.HexNumber);
+                    byte b = byte.Parse(cssString.Substring(2, 1) + cssString.Substring(2, 1), System.Globalization.NumberStyles.HexNumber);
+                    byte a = byte.Parse(cssString.Substring(3, 1) + cssString.Substring(3, 1), System.Globalization.NumberStyles.HexNumber);
+
+                    return Colour.FromRgba(r, g, b, a);
+                }
+                else if (cssString.Length == 6)
+                {
+                    byte r = byte.Parse(cssString.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+                    byte g = byte.Parse(cssString.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+                    byte b = byte.Parse(cssString.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
+
+                    return Colour.FromRgb(r, g, b);
+                }
+                else if (cssString.Length == 8)
+                {
+                    byte r = byte.Parse(cssString.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+                    byte g = byte.Parse(cssString.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+                    byte b = byte.Parse(cssString.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
+                    byte a = byte.Parse(cssString.Substring(6, 2), System.Globalization.NumberStyles.HexNumber);
+
+                    return Colour.FromRgba(r, g, b, a);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else if (cssString.StartsWith("rgb(") || cssString.StartsWith("rgba("))
+            {
+                try
+                {
+                    cssString = cssString.Substring(cssString.IndexOf("(") + 1).Replace(")", "").Replace(" ", "");
+                    string[] splitCssString = cssString.Split(',');
+
+                    double R = ParseColourValueOrPercentage(splitCssString[0]);
+                    double G = ParseColourValueOrPercentage(splitCssString[1]);
+                    double B = ParseColourValueOrPercentage(splitCssString[2]);
+
+                    double A = 1;
+
+                    if (splitCssString.Length == 4)
+                    {
+                        A = double.Parse(splitCssString[3], System.Globalization.CultureInfo.InvariantCulture);
+                    }
+
+                    return Colour.FromRgba(R, G, B, A);
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                if (StandardColours.TryGetValue(cssString, out Colour tbr))
+                {
+                    return tbr;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        private static double ParseColourValueOrPercentage(string value)
+        {
+            if (int.TryParse(value, out int tbr))
+            {
+                return tbr / 255.0;
+            }
+            else if (value.Contains("%"))
+            {
+                return double.Parse(value.Replace("%", ""), System.Globalization.CultureInfo.InvariantCulture) / 100.0;
+            }
+            else
+            {
+                return double.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
+            }
+        }
+
+        /// <summary>
+        /// Create a new <see cref="Colour"/> with the same RGB components as the <paramref name="original"/> <see cref="Colour"/>, but with the specified <paramref name="alpha"/>.
+        /// </summary>
+        /// <param name="original">The original <see cref="Colour"/> from which the RGB components will be taken.</param>
+        /// <param name="alpha">The alpha component of the new <see cref="Colour"/>.</param>
+        /// <returns>A <see cref="Colour"/> struct with the same RGB components as the <paramref name="original"/> <see cref="Colour"/> and the specified <paramref name="alpha"/>.</returns>
+        public static Colour WithAlpha(Colour original, double alpha)
+        {
+            return Colour.FromRgba(original.R, original.G, original.B, alpha);
+        }
+
+        /// <summary>
+        /// Create a new <see cref="Colour"/> with the same RGB components as the <paramref name="original"/> <see cref="Colour"/>, but with the specified <paramref name="alpha"/>.
+        /// </summary>
+        /// <param name="original">The original <see cref="Colour"/> from which the RGB components will be taken.</param>
+        /// <param name="alpha">The alpha component of the new <see cref="Colour"/>.</param>
+        /// <returns>A <see cref="Colour"/> struct with the same RGB components as the <paramref name="original"/> <see cref="Colour"/> and the specified <paramref name="alpha"/>.</returns>
+        public static Colour WithAlpha(Colour original, byte alpha)
+        {
+            return Colour.FromRgba(original.R, original.G, original.B, (double)alpha / 255.0);
+        }
+
+        /// <summary>
+        /// Create a new <see cref="Colour"/> with the same RGB components as the current <see cref="Colour"/>, but with the specified <paramref name="alpha"/>.
+        /// </summary>
+        /// <param name="alpha">The alpha component of the new <see cref="Colour"/>.</param>
+        /// <returns>A <see cref="Colour"/> struct with the same RGB components as the current <see cref="Colour"/> and the specified <paramref name="alpha"/>.</returns>
+        public Colour WithAlpha(double alpha)
+        {
+            return Colour.FromRgba(this.R, this.G, this.B, alpha);
+        }
+
+        /// <summary>
+        /// Create a new <see cref="Colour"/> with the same RGB components as the current <see cref="Colour"/>, but with the specified <paramref name="alpha"/>.
+        /// </summary>
+        /// <param name="alpha">The alpha component of the new <see cref="Colour"/>.</param>
+        /// <returns>A <see cref="Colour"/> struct with the same RGB components as the current <see cref="Colour"/> and the specified <paramref name="alpha"/>.</returns>
+        public Colour WithAlpha(byte alpha)
+        {
+            return Colour.FromRgba(this.R, this.G, this.B, (double)alpha / 255.0);
         }
     }
 
@@ -1339,6 +1500,17 @@ namespace VectSharp
         void Scale(double scaleX, double scaleY);
 
         /// <summary>
+        /// Transform the coordinate system with the specified transformation matrix [ [a, c, e], [b, d, f], [0, 0, 1] ].
+        /// </summary>
+        /// <param name="a">The first element of the first column.</param>
+        /// <param name="b">The second element of the first column.</param>
+        /// <param name="c">The first element of the second column.</param>
+        /// <param name="d">The second element of the second column.</param>
+        /// <param name="e">The first element of the third column.</param>
+        /// <param name="f">The second element of the third column.</param>
+        void Transform(double a, double b, double c, double d, double e, double f);
+
+        /// <summary>
         /// The current font.
         /// </summary>
         Font Font { get; set; }
@@ -1528,6 +1700,22 @@ namespace VectSharp
             Actions.Add(new TransformAction(pivot));
             Actions.Add(new TransformAction(angle));
             Actions.Add(new TransformAction(new Point(-pivot.X, -pivot.Y)));
+        }
+
+
+        /// <summary>
+        /// Transform the coordinate system with the specified transformation matrix [ [a, c, e], [b, d, f], [0, 0, 1] ].
+        /// </summary>
+        /// <param name="a">The first element of the first column.</param>
+        /// <param name="b">The second element of the first column.</param>
+        /// <param name="c">The first element of the second column.</param>
+        /// <param name="d">The second element of the second column.</param>
+        /// <param name="e">The first element of the third column.</param>
+        /// <param name="f">The second element of the third column.</param>
+        public void Transform(double a, double b, double c, double d, double e, double f)
+        {
+            double[,] matrix = new double[,] { { a, c, e }, { b, d, f }, { 0, 0, 1 } };
+            Actions.Add(new TransformAction(matrix));
         }
 
         /// <summary>
@@ -1893,10 +2081,6 @@ namespace VectSharp
             }
         }
 
-
-
-
-
         /// <summary>
         /// Measure a text string.
         /// See also <seealso cref="Font.MeasureText(string)"/> and <seealso cref="Font.MeasureTextAdvanced(string)"/>.
@@ -2088,6 +2272,10 @@ namespace VectSharp
                     {
                         destinationContext.Scale(((Size)trf.Scale).Width, ((Size)trf.Scale).Height);
                     }
+                    else if (trf.Matrix != null)
+                    {
+                        destinationContext.Transform(trf.Matrix[0, 0], trf.Matrix[1, 0], trf.Matrix[0, 1], trf.Matrix[1, 1], trf.Matrix[0, 2], trf.Matrix[1, 2]);
+                    }
                 }
                 else if (this.Actions[i] is StateAction)
                 {
@@ -2101,6 +2289,32 @@ namespace VectSharp
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Draws a <see cref="Graphics"/> object on the current <see cref="Graphics"/> object.
+        /// </summary>
+        /// <param name="origin">The point at which to place the origin of <paramref name="graphics"/>.</param>
+        /// <param name="graphics">The <see cref="Graphics"/> object to draw on the current <see cref="Graphics"/> object.</param>
+        public void DrawGraphics(Point origin, Graphics graphics)
+        {
+            this.Save();
+            this.Translate(origin);
+
+            this.Actions.AddRange(graphics.Actions);
+
+            this.Restore();
+        }
+
+        /// <summary>
+        /// Draws a <see cref="Graphics"/> object on the current <see cref="Graphics"/> object.
+        /// </summary>
+        /// <param name="originX">The horizontal coordinate at which to place the origin of <paramref name="graphics"/>.</param>
+        /// <param name="originY">The vertical coordinate at which to place the origin of <paramref name="graphics"/>.</param>
+        /// <param name="graphics">The <see cref="Graphics"/> object to draw on the current <see cref="Graphics"/> object.</param>
+        public void DrawGraphics(double originX, double originY, Graphics graphics)
+        {
+            this.DrawGraphics(new Point(originX, originY), graphics);
         }
     }
 
@@ -2128,6 +2342,8 @@ namespace VectSharp
 
         public Size? Scale { get; } = null;
 
+        public double[,] Matrix { get; } = null;
+
         public TransformAction(Point delta)
         {
             this.Delta = delta;
@@ -2141,6 +2357,11 @@ namespace VectSharp
         public TransformAction(Size scale)
         {
             this.Scale = scale;
+        }
+
+        public TransformAction(double[,] matrix)
+        {
+            this.Matrix = matrix;
         }
     }
 
@@ -2338,8 +2559,107 @@ namespace VectSharp
         }
 
         /// <summary>
+        /// Trace an arc from an ellipse with the specified radii, rotated by <paramref name="axisAngle"/> with respect to the x-axis, starting at the current point and ending at the <paramref name="endPoint"/>.
+        /// </summary>
+        /// <param name="radiusX">The horizontal radius of the ellipse.</param>
+        /// <param name="radiusY">The vertical radius of the ellipse.</param>
+        /// <param name="axisAngle">The angle of the horizontal axis of the ellipse with respect to the horizontal axis.</param>
+        /// <param name="largeArc">Determines whether the large or the small arc is drawn.</param>
+        /// <param name="sweepClockwise">Determines whether the clockwise or counterclockwise arc is drawn.</param>
+        /// <param name="endPoint">The end point of the arc.</param>
+        /// <returns></returns>
+        public GraphicsPath EllipticalArc(double radiusX, double radiusY, double axisAngle, bool largeArc, bool sweepClockwise, Point endPoint)
+        {
+            double x1 = 0;
+            double y1 = 0;
+
+            if (this.Segments.Count > 0)
+            {
+                for (int i = this.Segments.Count - 1; i >= 0; i--)
+                {
+                    if (this.Segments[i].Type != SegmentType.Close)
+                    {
+                        x1 = this.Segments[i].Point.X;
+                        y1 = this.Segments[i].Point.Y;
+                        break;
+                    }
+                }
+            }
+
+            double x2 = endPoint.X;
+            double y2 = endPoint.Y;
+
+            double x1P = Math.Cos(axisAngle) * (x1 - x2) * 0.5 + Math.Sin(axisAngle) * (y1 - y2) * 0.5;
+
+            if (Math.Abs(x1P) < 1e-7)
+            {
+                x1P = 0;
+            }
+
+            double y1P = -Math.Sin(axisAngle) * (x1 - x2) * 0.5 + Math.Cos(axisAngle) * (y1 - y2) * 0.5;
+
+            if (Math.Abs(y1P) < 1e-7)
+            {
+                y1P = 0;
+            }
+
+            double sqrtTerm = (largeArc != sweepClockwise ? 1 : -1) * Math.Sqrt((radiusX * radiusX * radiusY * radiusY - radiusX * radiusX * y1P * y1P - radiusY * radiusY * x1P * x1P) / (radiusX * radiusX * y1P * y1P + radiusY * radiusY * x1P * x1P));
+
+            double cXP = sqrtTerm * radiusX * y1P / radiusY;
+            double cYP = -sqrtTerm * radiusY * x1P / radiusX;
+
+            double cX = Math.Cos(axisAngle) * cXP - Math.Sin(axisAngle) * cYP + (x1 + x2) * 0.5;
+            double cY = Math.Sin(axisAngle) * cXP + Math.Cos(axisAngle) * cYP + (y1 + y2) * 0.5;
+
+            double theta1 = AngleVectors(1, 0, (x1P - cXP) / radiusX, (y1P - cYP) / radiusY);
+            double deltaTheta = AngleVectors((x1P - cXP) / radiusX, (y1P - cYP) / radiusY, (-x1P - cXP) / radiusX, (-y1P - cYP) / radiusY) % (2 * Math.PI);
+
+            if (!sweepClockwise && deltaTheta > 0)
+            {
+                deltaTheta -= 2 * Math.PI;
+            }
+            else if (sweepClockwise && deltaTheta < 0)
+            {
+                deltaTheta += 2 * Math.PI;
+            }
+
+            double r = Math.Min(radiusX, radiusY);
+
+            ArcSegment arc = new ArcSegment(0, 0, r, theta1, theta1 + deltaTheta);
+
+            Segment[] segments = arc.ToBezierSegments();
+
+            for (int i = 0; i < segments.Length; i++)
+            {
+                for (int j = 0; j < segments[i].Points.Length; j++)
+                {
+                    double newX = segments[i].Points[j].X * radiusX / r;
+                    double newY = segments[i].Points[j].Y * radiusY / r;
+
+                    segments[i].Points[j] = new Point(newX * Math.Cos(axisAngle) - newY * Math.Sin(axisAngle) + cX, newX * Math.Sin(axisAngle) + newY * Math.Cos(axisAngle) + cY);
+                }
+            }
+
+            this.Segments.AddRange(segments);
+
+            return this;
+        }
+
+        private static double AngleVectors(double uX, double uY, double vX, double vY)
+        {
+            double tbr = Math.Acos((uX * vX + uY * vY) / Math.Sqrt((uX * uX + uY * uY) * (vX * vX + vY * vY)));
+            double sign = Math.Sign(uX * vY - uY * vX);
+            if (sign != 0)
+            {
+                tbr *= sign;
+            }
+            return tbr;
+        }
+
+
+        /// <summary>
         /// Trace a cubic Bezier curve from the current point to a destination point, with two control points.
-        /// The current point is updated to the end point of the bezier curve.
+        /// The current point is updated to the end point of the Bezier curve.
         /// </summary>
         /// <param name="control1">The first control point.</param>
         /// <param name="control2">The second control point.</param>
@@ -2357,7 +2677,7 @@ namespace VectSharp
 
         /// <summary>
         /// Trace a cubic Bezier curve from the current point to a destination point, with two control points.
-        /// The current point is updated to the end point of the bezier curve.
+        /// The current point is updated to the end point of the Bezier curve.
         /// </summary>
         /// <param name="control1X">The horizontal coordinate of the first control point.</param>
         /// <param name="control1Y">The vertical coordinate of the first control point.</param>
