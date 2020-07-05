@@ -87,7 +87,9 @@ namespace VectSharp.Canvas
 
         public string Tag { get; set; }
 
-        public AvaloniaContext(double width, double height, bool removeTaggedActionsAfterExecution)
+        private AvaloniaContextInterpreter.TextOptions _textOption;
+
+        public AvaloniaContext(double width, double height, bool removeTaggedActionsAfterExecution, AvaloniaContextInterpreter.TextOptions textOption)
         {
             currentPath = new PathGeometry();
             currentFigure = new PathFigure() { IsClosed = false };
@@ -102,6 +104,8 @@ namespace VectSharp.Canvas
             _transform[2, 2] = 1;
 
             states = new Stack<double[,]>();
+
+            _textOption = textOption;
         }
 
         public Avalonia.Controls.Canvas ControlItem { get; }
@@ -152,7 +156,7 @@ namespace VectSharp.Canvas
 
         public void FillText(string text, double x, double y)
         {
-            if (Font.FontFamily.IsStandardFamily)
+            if (_textOption == AvaloniaContextInterpreter.TextOptions.NeverConvert || (_textOption == AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary && Font.FontFamily.IsStandardFamily))
             {
                 TextBlock blk = new TextBlock() { ClipToBounds = false, Text = text, Foreground = new SolidColorBrush(Color.FromArgb(FillAlpha, (byte)(FillStyle.R * 255), (byte)(FillStyle.G * 255), (byte)(FillStyle.B * 255))), FontFamily = Avalonia.Media.FontFamily.Parse(FontFamily), FontSize = Font.FontSize, FontStyle = (Font.FontFamily.IsOblique ? FontStyle.Oblique : Font.FontFamily.IsItalic ? FontStyle.Italic : FontStyle.Normal), FontWeight = (Font.FontFamily.IsBold ? FontWeight.Bold : FontWeight.Regular) };
 
@@ -587,11 +591,11 @@ namespace VectSharp.Canvas
             }
         }
 
-        public RenderCanvas(Graphics content, double width, double height, Dictionary<string, Delegate> taggedActions, bool removeTaggedActionsAfterExecution)
+        public RenderCanvas(Graphics content, double width, double height, Dictionary<string, Delegate> taggedActions, bool removeTaggedActionsAfterExecution, AvaloniaContextInterpreter.TextOptions textOption)
         {
             this.Width = width;
             this.Height = height;
-            AvaloniaDrawingContext ctx = new AvaloniaDrawingContext(this.Width, this.Height, removeTaggedActionsAfterExecution);
+            AvaloniaDrawingContext ctx = new AvaloniaDrawingContext(this.Width, this.Height, removeTaggedActionsAfterExecution, textOption);
             foreach (KeyValuePair<string, Delegate> action in taggedActions)
             {
                 ctx.TaggedActions.Add(action.Key, (Func<RenderAction, IEnumerable<RenderAction>>)action.Value);
@@ -970,7 +974,9 @@ namespace VectSharp.Canvas
 
         public string Tag { get; set; }
 
-        public AvaloniaDrawingContext(double width, double height, bool removeTaggedActionsAfterExecution)
+        AvaloniaContextInterpreter.TextOptions _textOption;
+
+        public AvaloniaDrawingContext(double width, double height, bool removeTaggedActionsAfterExecution, AvaloniaContextInterpreter.TextOptions textOption)
         {
             currentPath = new PathGeometry();
             currentFigure = new PathFigure() { IsClosed = false };
@@ -989,6 +995,8 @@ namespace VectSharp.Canvas
             _transform[2, 2] = 1;
 
             states = new Stack<double[,]>();
+
+            _textOption = textOption;
         }
 
         public List<RenderAction> RenderActions { get; set; }
@@ -1039,11 +1047,8 @@ namespace VectSharp.Canvas
 
         public void FillText(string text, double x, double y)
         {
-            if (Font.FontFamily.IsStandardFamily)
+            if (_textOption == AvaloniaContextInterpreter.TextOptions.NeverConvert || (_textOption == AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary && Font.FontFamily.IsStandardFamily))
             {
-
-
-
                 FormattedText txt = new FormattedText()
                 {
                     Text = text,
@@ -1496,13 +1501,35 @@ namespace VectSharp.Canvas
     public static class AvaloniaContextInterpreter
     {
         /// <summary>
+        /// Defines whether text items should be converted into paths when drawing.
+        /// </summary>
+        public enum TextOptions
+        {
+            /// <summary>
+            /// Converts all text items into paths.
+            /// </summary>
+            AlwaysConvert,
+
+            /// <summary>
+            /// Converts all text items into paths, with the exception of those that use a standard font.
+            /// </summary>
+            ConvertIfNecessary,
+
+            /// <summary>
+            /// Does not convert any text items into paths.
+            /// </summary>
+            NeverConvert
+        }
+
+        /// <summary>
         /// Render a <see cref="Page"/> to an <see cref="Avalonia.Controls.Canvas"/>.
         /// </summary>
         /// <param name="page">The <see cref="Page"/> to render.</param>
+        /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
-        public static Avalonia.Controls.Canvas PaintToCanvas(this Page page)
+        public static Avalonia.Controls.Canvas PaintToCanvas(this Page page, TextOptions textOption = TextOptions.ConvertIfNecessary)
         {
-            AvaloniaContext ctx = new AvaloniaContext(page.Width, page.Height, true);
+            AvaloniaContext ctx = new AvaloniaContext(page.Width, page.Height, true, textOption);
             page.Graphics.CopyToIGraphicsContext(ctx);
             ctx.ControlItem.Background = new SolidColorBrush(Color.FromArgb((byte)(page.Background.A * 255), (byte)(page.Background.R * 255), (byte)(page.Background.G * 255), (byte)(page.Background.B * 255)));
             return ctx.ControlItem;
@@ -1513,8 +1540,9 @@ namespace VectSharp.Canvas
         /// </summary>
         /// <param name="page">The <see cref="Page"/> to render.</param>
         /// <param name="graphicsAsControls">If this is <see cref="true"/>, each graphics object (e.g. paths, text...) is rendered as a separate <see cref="Avalonia.Controls.Control"/>. Otherwise, they are directly rendered onto the drawing context (which is faster, but does not allow interactivity).</param>
+        /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
-        public static Avalonia.Controls.Canvas PaintToCanvas(this Page page, bool graphicsAsControls)
+        public static Avalonia.Controls.Canvas PaintToCanvas(this Page page, bool graphicsAsControls, TextOptions textOption = TextOptions.ConvertIfNecessary)
         {
             if (graphicsAsControls)
             {
@@ -1524,7 +1552,7 @@ namespace VectSharp.Canvas
             }
             else
             {
-                return new RenderCanvas(page.Graphics, page.Width, page.Height, new Dictionary<string, Delegate>(), true) { Background = new SolidColorBrush(Color.FromArgb((byte)(page.Background.A * 255), (byte)(page.Background.R * 255), (byte)(page.Background.G * 255), (byte)(page.Background.B * 255))) };
+                return new RenderCanvas(page.Graphics, page.Width, page.Height, new Dictionary<string, Delegate>(), true, textOption) { Background = new SolidColorBrush(Color.FromArgb((byte)(page.Background.A * 255), (byte)(page.Background.R * 255), (byte)(page.Background.G * 255), (byte)(page.Background.B * 255))) };
             }
         }
 
@@ -1536,8 +1564,9 @@ namespace VectSharp.Canvas
         /// <param name="taggedActions">A <see cref="Dictionary{string, Delegate}"/> containing the <see cref="Action"/>s that will be performed on items with the corresponding tag.
         /// If <paramref name="graphicsAsControls"/> is <see cref="true"/>, the delegates should be voids that accept one parameter of type <see cref="TextBlock"/> or <see cref="Path"/> (depending on the tagged item), otherwise, they should accept one parameter of type <see cref="RenderAction"/> and return an <see cref="IEnumerable{RenderAction}"/> of the actions that will actually be performed.</param>
         /// <param name="removeTaggedActionsAfterExecution">Whether the <see cref="Action"/>s should be removed from <paramref name="taggedActions"/> after their execution. Set to false if the same <see cref="Action"/> should be performed on multiple items with the same tag.</param>
+        /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
-        public static Avalonia.Controls.Canvas PaintToCanvas(this Page page, bool graphicsAsControls, Dictionary<string, Delegate> taggedActions, bool removeTaggedActionsAfterExecution = true)
+        public static Avalonia.Controls.Canvas PaintToCanvas(this Page page, bool graphicsAsControls, Dictionary<string, Delegate> taggedActions, bool removeTaggedActionsAfterExecution = true, TextOptions textOption = TextOptions.ConvertIfNecessary)
         {
             if (graphicsAsControls)
             {
@@ -1547,7 +1576,7 @@ namespace VectSharp.Canvas
             }
             else
             {
-                return new RenderCanvas(page.Graphics, page.Width, page.Height, taggedActions, removeTaggedActionsAfterExecution) { Background = new SolidColorBrush(Color.FromArgb((byte)(page.Background.A * 255), (byte)(page.Background.R * 255), (byte)(page.Background.G * 255), (byte)(page.Background.B * 255))) }; ;
+                return new RenderCanvas(page.Graphics, page.Width, page.Height, taggedActions, removeTaggedActionsAfterExecution, textOption) { Background = new SolidColorBrush(Color.FromArgb((byte)(page.Background.A * 255), (byte)(page.Background.R * 255), (byte)(page.Background.G * 255), (byte)(page.Background.B * 255))) }; ;
             }
         }
 
@@ -1558,10 +1587,11 @@ namespace VectSharp.Canvas
         /// <param name="taggedActions">A <see cref="Dictionary{string, Delegate}"/> containing the <see cref="Action"/>s that will be performed on items with the corresponding tag.
         /// The delegates should accept one parameter of type <see cref="TextBlock"/> or <see cref="Path"/> (depending on the tagged item).</param>
         /// <param name="removeTaggedActionsAfterExecution">Whether the <see cref="Action"/>s should be removed from <paramref name="taggedActions"/> after their execution. Set to false if the same <see cref="Action"/> should be performed on multiple items with the same tag.</param>
+        /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
-        public static Avalonia.Controls.Canvas PaintToCanvas(this Page page, Dictionary<string, Delegate> taggedActions, bool removeTaggedActionsAfterExecution = true)
+        public static Avalonia.Controls.Canvas PaintToCanvas(this Page page, Dictionary<string, Delegate> taggedActions, bool removeTaggedActionsAfterExecution = true, TextOptions textOption = TextOptions.ConvertIfNecessary)
         {
-            AvaloniaContext ctx = new AvaloniaContext(page.Width, page.Height, removeTaggedActionsAfterExecution)
+            AvaloniaContext ctx = new AvaloniaContext(page.Width, page.Height, removeTaggedActionsAfterExecution, textOption)
             {
                 TaggedActions = taggedActions
             };
