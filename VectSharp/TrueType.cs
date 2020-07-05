@@ -807,7 +807,48 @@ namespace VectSharp
 
                 if (Tables.ContainsKey("OS/2"))
                 {
-                    TrueTypeOS2Table os2 = (TrueTypeOS2Table)Tables["OS/2"];
+                    TrueTypeOS2Table originalOS2 = (TrueTypeOS2Table)Tables["OS/2"];
+
+                    TrueTypeOS2Table os2 = new TrueTypeOS2Table()
+                    {
+                        AchVendID = originalOS2.AchVendID,
+                        FsSelection = originalOS2.FsSelection,
+                        FsType = originalOS2.FsType,
+                        Panose = originalOS2.Panose,
+                        SCapHeight = originalOS2.SCapHeight,
+                        SFamilyClass = originalOS2.SFamilyClass,
+                        SFamilySubClass = originalOS2.SFamilySubClass,
+                        STypoAscender = originalOS2.STypoAscender,
+                        STypoDescender = originalOS2.STypoDescender,
+                        STypoLineGap = originalOS2.STypoLineGap,
+                        SxHeight = originalOS2.SxHeight,
+                        UlCodePageRange = originalOS2.UlCodePageRange,
+                        UlUnicodeRange = originalOS2.UlUnicodeRange,
+                        UsLowerOpticalPointSize = originalOS2.UsLowerOpticalPointSize,
+                        UsBreakChar = originalOS2.UsBreakChar,
+                        UsDefaultChar = originalOS2.UsDefaultChar,
+                        UsMaxContext = originalOS2.UsMaxContext,
+                        UsUpperOpticalPointSize = originalOS2.UsUpperOpticalPointSize,
+                        UsWeightClass = originalOS2.UsWeightClass,
+                        UsWidthClass = originalOS2.UsWidthClass,
+                        UsWinAscent = originalOS2.UsWinAscent,
+                        UsWinDescent = originalOS2.UsWinDescent,
+                        Version = originalOS2.Version,
+                        XAvgCharWidth = originalOS2.XAvgCharWidth,
+                        YStrikeoutPosition = originalOS2.YStrikeoutPosition,
+                        YStrikeoutSize = originalOS2.YStrikeoutSize,
+                        YSubscriptXOffset = originalOS2.YSubscriptXOffset,
+                        YSubscriptXSize = originalOS2.YSubscriptXSize,
+                        YSubscriptYOffset = originalOS2.YSubscriptYOffset,
+                        YSubscriptYSize = originalOS2.YSubscriptYSize,
+                        YSuperscriptXOffset = originalOS2.YSuperscriptXOffset,
+                        YSuperscriptXSize = originalOS2.YSuperscriptXSize,
+                        YSuperscriptYOffset = originalOS2.YSuperscriptYOffset,
+                        YSuperscriptYSize = originalOS2.YSuperscriptYSize,
+                        FsFirstCharIndex = (ushort)characterCodes[0],
+                        FsLastCharIndex = (ushort)characterCodes[characterCodes.Count - 1]
+                    };
+
                     newTables.Add("OS/2", os2);
                 }
 
@@ -1802,6 +1843,29 @@ namespace VectSharp
 
             return null;
         }
+
+        /// <summary>
+        /// Returns the index of the first character glyph represented by the font.
+        /// </summary>
+        /// <returns>The index of the first character glyph represented by the font.</returns>
+        public ushort GetFirstCharIndex()
+        {
+            TrueTypeOS2Table os2 = (TrueTypeOS2Table)this.Tables["OS/2"];
+
+            return os2.FsFirstCharIndex;
+        }
+
+        /// <summary>
+        /// Returns the index of the last character glyph represented by the font.
+        /// </summary>
+        /// <returns>The index of the last character glyph represented by the font.</returns>
+        public ushort GetLastCharIndex()
+        {
+            TrueTypeOS2Table os2 = (TrueTypeOS2Table)this.Tables["OS/2"];
+
+            return os2.FsLastCharIndex;
+        }
+
 
         /// <summary>
         /// Determines whether the typeface is Italic or Oblique or not.
