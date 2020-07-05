@@ -637,6 +637,7 @@ namespace VectSharp.SVG
         /// </summary>
         /// <param name="page">The <see cref="Page"/> to render.</param>
         /// <param name="fileName">The full path to the file to save. If it exists, it will be overwritten.</param>
+        /// <param name="textOption">Defines whether the used fonts should be included in the file.</param>
         public static void SaveAsSVG(this Page page, string fileName, TextOptions textOption = TextOptions.SubsetFonts)
         {
             using (FileStream sr = new FileStream(fileName, FileMode.Create))
