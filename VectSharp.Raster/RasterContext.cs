@@ -378,6 +378,12 @@ namespace VectSharp.Raster
             _transform = MatrixUtils.Rotate(_transform, angle);
         }
 
+        public void Transform(double a, double b, double c, double d, double e, double f)
+        {
+            double[,] transfMatrix = new double[3, 3] { { a, c, e }, { b, d, f }, { 0, 0, 1 } };
+            _transform = MatrixUtils.Multiply(_transform, transfMatrix);
+        }
+
         public void Save()
         {
             states.Push((double[,])_transform.Clone());
