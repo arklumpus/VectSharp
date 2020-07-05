@@ -291,7 +291,9 @@ namespace VectSharp.PDF
         private Colour _fillStyle;
         private LineDash _lineDash;
 
-        public PDFContext(double width, double height, Colour background)
+        private bool _textToPaths;
+
+        public PDFContext(double width, double height, Colour background, bool textToPaths)
         {
             this.Width = width;
             this.Height = height;
@@ -306,6 +308,8 @@ namespace VectSharp.PDF
             LineCap = LineCaps.Butt;
             LineJoin = LineJoins.Miter;
             _lineDash = new LineDash(0, 0, 0);
+
+            _textToPaths = textToPaths;
 
             Font = new Font(new FontFamily(FontFamily.StandardFontFamilies.Helvetica), 12);
 
@@ -398,9 +402,41 @@ namespace VectSharp.PDF
 
         public Font Font { get; set; }
 
+        private void PathText(string text, double x, double y)
+        {
+            GraphicsPath textPath = new GraphicsPath().AddText(x, y, text, Font, TextBaseline);
+
+            for (int j = 0; j < textPath.Segments.Count; j++)
+            {
+                switch (textPath.Segments[j].Type)
+                {
+                    case VectSharp.SegmentType.Move:
+                        this.MoveTo(textPath.Segments[j].Point.X, textPath.Segments[j].Point.Y);
+                        break;
+                    case VectSharp.SegmentType.Line:
+                        this.LineTo(textPath.Segments[j].Point.X, textPath.Segments[j].Point.Y);
+                        break;
+                    case VectSharp.SegmentType.CubicBezier:
+                        this.CubicBezierTo(textPath.Segments[j].Points[0].X, textPath.Segments[j].Points[0].Y, textPath.Segments[j].Points[1].X, textPath.Segments[j].Points[1].Y, textPath.Segments[j].Points[2].X, textPath.Segments[j].Points[2].Y);
+                        break;
+                    case VectSharp.SegmentType.Close:
+                        this.Close();
+                        break;
+                }
+            }
+        }
+
         public void FillText(string text, double x, double y)
         {
-            _figures.Add(new TextFigure(text, Font, new Point(x, y), TextBaseline, _fillStyle, null, 0, LineCaps.Butt, LineJoins.Miter, new LineDash(0, 0, 0)));
+            if (!_textToPaths)
+            {
+                _figures.Add(new TextFigure(text, Font, new Point(x, y), TextBaseline, _fillStyle, null, 0, LineCaps.Butt, LineJoins.Miter, new LineDash(0, 0, 0))); _figures.Add(new TextFigure(text, Font, new Point(x, y), TextBaseline, _fillStyle, null, 0, LineCaps.Butt, LineJoins.Miter, new LineDash(0, 0, 0)));
+            }
+            else
+            {
+                PathText(text, x, y);
+                Fill();
+            }
         }
 
         public TextBaselines TextBaseline { get; set; }
@@ -423,7 +459,15 @@ namespace VectSharp.PDF
 
         public void StrokeText(string text, double x, double y)
         {
-            _figures.Add(new TextFigure(text, Font, new Point(x, y), TextBaseline, null, _strokeStyle, LineWidth, LineCap, LineJoin, _lineDash));
+            if (!_textToPaths)
+            {
+                _figures.Add(new TextFigure(text, Font, new Point(x, y), TextBaseline, null, _strokeStyle, LineWidth, LineCap, LineJoin, _lineDash));
+            }
+            else
+            {
+                PathText(text, x, y);
+                Stroke();
+            }
         }
 
         public void Translate(double x, double y)
@@ -600,24 +644,42 @@ namespace VectSharp.PDF
         /// </summary>
         /// <param name="document">The <see cref="Document"/> to save.</param>
         /// <param name="fileName">The full path to the file to save. If it exists, it will be overwritten.</param>
-        /// <param name="subsetFonts">Indicates whether embedded fonts should be subset to only include the glyphs that are actually used in the document.</param>
+        /// <param name="textOption">Defines whether the used fonts should be included in the file.</param>
         /// <param name="compressStreams">Indicates whether the streams in the PDF file should be compressed.</param>
-        public static void SaveAsPDF(this Document document, string fileName, bool subsetFonts = true, bool compressStreams = true)
+        public static void SaveAsPDF(this Document document, string fileName, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true)
         {
             using (FileStream stream = new FileStream(fileName, FileMode.Create))
             {
-                document.SaveAsPDF(stream, subsetFonts, compressStreams);
+                document.SaveAsPDF(stream, textOption, compressStreams);
             }
         }
+
+        /// <summary>
+        /// Defines whether the used fonts should be included in the file.
+        /// </summary>
+        public enum TextOptions
+        {
+            /// <summary>
+            /// Embeds subsetted font files containing only the glyphs for the characters that have been used.
+            /// </summary>
+            SubsetFonts,
+
+            /// <summary>
+            /// Does not embed any font file and converts all text items into paths.
+            /// </summary>
+            ConvertIntoPaths
+        }
+
+
 
         /// <summary>
         /// Save the document to a PDF stream.
         /// </summary>
         /// <param name="document">The <see cref="Document"/> to save.</param>
         /// <param name="stream">The stream to which the PDF data will be written.</param>
-        /// <param name="subsetFonts">Indicates whether embedded fonts should be subset to only include the glyphs that are actually used in the document.</param>
+        /// <param name="textOption">Defines whether the used fonts should be included in the file.</param>
         /// <param name="compressStreams">Indicates whether the streams in the PDF file should be compressed.</param>
-        public static void SaveAsPDF(this Document document, Stream stream, bool subsetFonts = true, bool compressStreams = true)
+        public static void SaveAsPDF(this Document document, Stream stream, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true)
         {
             long position = 0;
 
@@ -638,7 +700,7 @@ namespace VectSharp.PDF
 
             for (int i = 0; i < document.Pages.Count; i++)
             {
-                pageContexts[i] = new PDFContext(document.Pages[i].Width, document.Pages[i].Height, document.Pages[i].Background);
+                pageContexts[i] = new PDFContext(document.Pages[i].Width, document.Pages[i].Height, document.Pages[i].Background, textOption == TextOptions.ConvertIntoPaths);
                 document.Pages[i].Graphics.CopyToIGraphicsContext(pageContexts[i]);
             }
 
@@ -687,16 +749,7 @@ namespace VectSharp.PDF
                 {
                     int fontFileInd = objectNum;
 
-                    TrueTypeFile subsettedFont;
-
-                    if (subsetFonts)
-                    {
-                        subsettedFont = kvp.Value.TrueTypeFile.SubsetFont(new string(usedChars[kvp.Key].ToArray()));
-                    }
-                    else
-                    {
-                        subsettedFont = kvp.Value.TrueTypeFile;
-                    }
+                    TrueTypeFile subsettedFont = kvp.Value.TrueTypeFile.SubsetFont(new string(usedChars[kvp.Key].ToArray()));
 
                     Stream compressedStream;
 
