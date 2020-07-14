@@ -690,7 +690,7 @@ namespace VectSharp.PDF
 
             int resourceObject = -1;
 
-            StreamWriter sw = new StreamWriter(stream);
+            StreamWriter sw = new StreamWriter(stream, Encoding.UTF8, 1024, true);
 
             //Header
             sw.Write("%PDF-1.4\n");
