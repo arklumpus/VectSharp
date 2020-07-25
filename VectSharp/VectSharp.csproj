@@ -21,23 +21,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="StandardFonts\D050000L.ttf" />
-    <None Remove="StandardFonts\NimbusMono-Bold.ttf" />
-    <None Remove="StandardFonts\NimbusMono-BoldOblique.ttf" />
-    <None Remove="StandardFonts\NimbusMono-Oblique.ttf" />
-    <None Remove="StandardFonts\NimbusMono-Regular.ttf" />
-    <None Remove="StandardFonts\NimbusRomNo9L-Med.ttf" />
-    <None Remove="StandardFonts\NimbusRomNo9L-MedIta.ttf" />
-    <None Remove="StandardFonts\NimbusRomNo9L-Reg.ttf" />
-    <None Remove="StandardFonts\NimbusRomNo9L-RegIta.ttf" />
-    <None Remove="StandardFonts\NimbusSanL-Bol.ttf" />
-    <None Remove="StandardFonts\NimbusSanL-BolIta.ttf" />
-    <None Remove="StandardFonts\NimbusSanL-Reg.ttf" />
-    <None Remove="StandardFonts\NimbusSanL-RegIta.ttf" />
-    <None Remove="StandardFonts\StandardSymbolsPS.ttf" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="StandardFonts\D050000L.ttf" />
     <EmbeddedResource Include="StandardFonts\NimbusMono-Bold.ttf" />
     <EmbeddedResource Include="StandardFonts\NimbusMono-BoldOblique.ttf" />

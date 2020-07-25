@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Avalonia;
-using Avalonia.Logging.Serilog;
 
 namespace VectSharp.Demo
 {
