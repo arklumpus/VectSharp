@@ -738,6 +738,22 @@ namespace VectSharp
         }
 
         /// <summary>
+        /// Create a new <see cref="FontFamily"/>.
+        /// </summary>
+        /// <param name="ttfStream">A stream containing a file in TTF format.</param>
+        public FontFamily(Stream ttfStream)
+        {
+            IsStandardFamily = false;
+
+            TrueTypeFile = TrueTypeFile.CreateTrueTypeFile(ttfStream);
+
+            FileName = TrueTypeFile.GetFontFamilyName();
+            this.IsBold = TrueTypeFile.IsBold();
+            this.IsItalic = TrueTypeFile.IsItalic();
+            this.IsOblique = TrueTypeFile.IsOblique();
+        }
+
+        /// <summary>
         /// Create a new standard <see cref="FontFamily"/>.
         /// </summary>
         /// <param name="standardFontFamily">The standard font family.</param>
