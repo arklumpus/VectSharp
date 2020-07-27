@@ -18,7 +18,7 @@ var hierarchy =
     [ "VectSharp.SVG.Parser", "class_vect_sharp_1_1_s_v_g_1_1_parser.html", null ],
     [ "VectSharp.PDF.PDFContextInterpreter", "class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html", null ],
     [ "VectSharp.Point", "struct_vect_sharp_1_1_point.html", null ],
-    [ "VectSharp.Raster.RasterContextInterpreter", "class_vect_sharp_1_1_raster_1_1_raster_context_interpreter.html", null ],
+    [ "VectSharp.Raster.Raster", "class_vect_sharp_1_1_raster_1_1_raster.html", null ],
     [ "VectSharp.Canvas.RenderAction", "class_vect_sharp_1_1_canvas_1_1_render_action.html", null ],
     [ "VectSharp.Segment", "class_vect_sharp_1_1_segment.html", null ],
     [ "VectSharp.Size", "struct_vect_sharp_1_1_size.html", null ],

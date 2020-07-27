@@ -11,6 +11,8 @@ It includes an abstract layer on top of which output layers can be written. Curr
 
 VectSharp is written using .NET Core, and is available for Mac, Windows and Linux. It is released under a GPLv3 license. It includes 14 standard fonts, also released under a GPL license.
 
+Since version 2.0.0, VectSharp.Raster is released under an AGPLv3 license.
+
 ## Installing VectSharp
 To include VectSharp in your project, you will need one of the output layer NuGet packages: [VectSharp.PDF](https://www.nuget.org/packages/VectSharp.PDF/), [VectSharp.Canvas](https://www.nuget.org/packages/VectSharp.Canvas/), [VectSharp.Raster](https://www.nuget.org/packages/VectSharp.Raster/), or [VectSharp.SVG](https://www.nuget.org/packages/VectSharp.SVG/).
 

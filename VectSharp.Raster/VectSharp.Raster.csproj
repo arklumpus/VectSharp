@@ -8,8 +8,8 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Product>VectSharp</Product>
     <Company>University of Bristol</Company>
-    <Version>1.2.1</Version>
-    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+    <Version>2.0.0</Version>
+    <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/arklumpus/VectSharp</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
@@ -22,7 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MuPDFCore" Version="1.0.0" />
     <PackageReference Include="VectSharp" Version="1.4.2" />
+    <PackageReference Include="VectSharp.PDF" Version="2.0.2" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

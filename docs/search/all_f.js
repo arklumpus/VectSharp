@@ -1,7 +1,7 @@
 var searchData=
 [
   ['r_259',['R',['../struct_vect_sharp_1_1_colour.html#a4477a64d804a1624ec1fa27773be1885',1,'VectSharp::Colour']]],
-  ['rastercontextinterpreter_260',['RasterContextInterpreter',['../class_vect_sharp_1_1_raster_1_1_raster_context_interpreter.html',1,'VectSharp::Raster']]],
+  ['raster_260',['Raster',['../class_vect_sharp_1_1_raster_1_1_raster.html',1,'VectSharp::Raster']]],
   ['rebeccapurple_261',['RebeccaPurple',['../class_vect_sharp_1_1_colours.html#a86ff0ae5deb3c958b4884ad4bdae6349',1,'VectSharp::Colours']]],
   ['rectangle_262',['Rectangle',['../interface_vect_sharp_1_1_i_graphics_context.html#a69e9610fd933afb80ea91a3b46465993',1,'VectSharp::IGraphicsContext']]],
   ['red_263',['Red',['../class_vect_sharp_1_1_colours.html#a61eeb6bd8c4e90ad55104264028f6e63',1,'VectSharp::Colours']]],

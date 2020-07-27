@@ -22,10 +22,10 @@
     <PackageReference Include="Avalonia.Desktop" Version="0.10.0-preview2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VectSharp.Canvas\VectSharp.Canvas.csproj" />
-    <ProjectReference Include="..\VectSharp.PDF\VectSharp.PDF.csproj" />
-    <ProjectReference Include="..\VectSharp.Raster\VectSharp.Raster.csproj" />
-    <ProjectReference Include="..\VectSharp.SVG\VectSharp.SVG.csproj" />
-    <ProjectReference Include="..\VectSharp\VectSharp.csproj" />
+    <PackageReference Include="VectSharp" Version="1.4.2" />
+    <PackageReference Include="VectSharp.Canvas" Version="2.0.2-preview2" />
+    <PackageReference Include="VectSharp.PDF" Version="2.0.2" />
+    <PackageReference Include="VectSharp.Raster" Version="2.0.0" />
+    <PackageReference Include="VectSharp.SVG" Version="1.0.1" />
   </ItemGroup>
 </Project>
