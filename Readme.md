@@ -1,6 +1,9 @@
 
 
 # VectSharp: a light library for C# vector graphics
+
+<img src="icon.svg" width="256" align="right">
+
 ## Introduction
 **VectSharp** is a library to create vector graphics (including text) in C#, without too many dependencies.
 
@@ -12,6 +15,8 @@ VectSharp is written using .NET Core, and is available for Mac, Windows and Linu
 To include VectSharp in your project, you will need one of the output layer NuGet packages: [VectSharp.PDF](https://www.nuget.org/packages/VectSharp.PDF/), [VectSharp.Canvas](https://www.nuget.org/packages/VectSharp.Canvas/), [VectSharp.Raster](https://www.nuget.org/packages/VectSharp.Raster/), or [VectSharp.SVG](https://www.nuget.org/packages/VectSharp.SVG/).
 
 ## Usage
+You can find the full documentation for the VectSharp library at the [documentation website](https://arklumpus.github.io/VectSharp). A [PDF reference manual](https://arklumpus.github.io/VectSharp/VectSharp.pdf) is also available.
+
 In general, working with VectSharp involves: creating a `Document`, adding `Page`s, drawing to the `Page`s' `Graphics` objects and, finally, exporting them to a PDF document, `Canvas`, PNG image or SVG document.
 
 * Create a `Document`:
@@ -53,7 +58,7 @@ using VectSharp.SVG;
 //...
 doc.Pages.Last().SaveAsSVG(@"Sample.svg");
 ``` 
-The public classes and methods are fully documented, and you can find a (much) more detailed code example in [MainWindow.xaml.cs](https://github.com/arklumpus/VectSharp/blob/master/VectSharp.Demo/MainWindow.xaml.cs).
+The public classes and methods are [fully documented](https://arklumpus.github.io/VectSharp), and you can find a (much) more detailed code example in [MainWindow.xaml.cs](https://github.com/arklumpus/VectSharp/blob/master/VectSharp.Demo/MainWindow.xaml.cs).
 
 ## Creating new output layers
 
@@ -71,7 +76,7 @@ To be able to compile VectSharp from source, you will need to install the [.NET 
 
 You can use [Microsoft Visual Studio](https://visualstudio.microsoft.com/it/vs/) to compile the program. The following instructions will cover compiling VectSharp from the command line, instead.
 
-First of all, you will need to download the VectSharp source code: [VectSharp.tar.gz](https://github.com/arklumpus/VectSharp/archive/v1.4.0.tar.gz) and extract it somewhere.
+First of all, you will need to download the VectSharp source code: [VectSharp.tar.gz](https://github.com/arklumpus/VectSharp/archive/v1.4.2.tar.gz) and extract it somewhere.
 
 ### Windows
 Open a command-line window in the folder where you have extracted the source code, and type:

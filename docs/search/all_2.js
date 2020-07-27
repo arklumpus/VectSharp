@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['cadetblue_31',['CadetBlue',['../class_vect_sharp_1_1_colours.html#a1074baf90899cc9ae75764f8e9fd0399',1,'VectSharp::Colours']]],
+  ['center_32',['Center',['../namespace_vect_sharp.html#a3e60bcba440b3af56d63ab44ef1fc5d7a4f1f6016fc9f3f2353c0cc7c67b292bd',1,'VectSharp']]],
+  ['chartreuse_33',['Chartreuse',['../class_vect_sharp_1_1_colours.html#ae76c71466c484f990178cd24e7ed312d',1,'VectSharp::Colours']]],
+  ['chocolate_34',['Chocolate',['../class_vect_sharp_1_1_colours.html#aea331506f0b56fd18c293b978cf18f4e',1,'VectSharp::Colours']]],
+  ['clone_35',['Clone',['../class_vect_sharp_1_1_segment.html#ad8cc11af24e64a2d051c5ff7f202ebf4',1,'VectSharp::Segment']]],
+  ['close_36',['Close',['../interface_vect_sharp_1_1_i_graphics_context.html#aee6422b22a12103db71ce2ae6095716e',1,'VectSharp.IGraphicsContext.Close()'],['../class_vect_sharp_1_1_graphics_path.html#aed7e7730ed904883e3a0fb2b901c2783',1,'VectSharp.GraphicsPath.Close()'],['../namespace_vect_sharp.html#ad82c158fff255cb1cbe8d51de61cb4e4ad3d2e617335f08df83599665eef8a418',1,'VectSharp.Close()']]],
+  ['colour_37',['Colour',['../struct_vect_sharp_1_1_colour.html',1,'VectSharp']]],
+  ['colours_38',['Colours',['../class_vect_sharp_1_1_colours.html',1,'VectSharp']]],
+  ['convertifnecessary_39',['ConvertIfNecessary',['../class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html#ab1be8c4c6246dad9c92fcc3f2b3cdd77a3078eae57eb621634ae88b57c0d9c61b',1,'VectSharp::Canvas::AvaloniaContextInterpreter']]],
+  ['convertintopaths_40',['ConvertIntoPaths',['../class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html#a8cd1a292b80db0cce76c229f069899fea7f3652c450cd2f48bfe0c61ef2fe4a8d',1,'VectSharp.PDF.PDFContextInterpreter.ConvertIntoPaths()'],['../class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#ac7b4162096a35c9a1954a0e347f88188a7f3652c450cd2f48bfe0c61ef2fe4a8d',1,'VectSharp.SVG.SVGContextInterpreter.ConvertIntoPaths()']]],
+  ['copytoigraphicscontext_41',['CopyToIGraphicsContext',['../class_vect_sharp_1_1_graphics.html#a545b7fe5cea9fc34b7bd720020a4ce76',1,'VectSharp::Graphics']]],
+  ['coral_42',['Coral',['../class_vect_sharp_1_1_colours.html#a895f7272b5f627d2821f0ae29cad018c',1,'VectSharp::Colours']]],
+  ['cornflowerblue_43',['CornflowerBlue',['../class_vect_sharp_1_1_colours.html#a0b2a4a1682e0ed14449ed9018f754403',1,'VectSharp::Colours']]],
+  ['cornsilk_44',['Cornsilk',['../class_vect_sharp_1_1_colours.html#a4081135aa0132a001bc31abb9519d662',1,'VectSharp::Colours']]],
+  ['courier_45',['Courier',['../class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780a5055d1a4444c630d6839f48ab48aef91',1,'VectSharp::FontFamily']]],
+  ['courierbold_46',['CourierBold',['../class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780af4df7bfe79eef34b241c935fa75e8e45',1,'VectSharp::FontFamily']]],
+  ['courierboldoblique_47',['CourierBoldOblique',['../class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780af0a2b85c296fc058c759b1f33329ca61',1,'VectSharp::FontFamily']]],
+  ['courieroblique_48',['CourierOblique',['../class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780aa66e799dd8107ba13fbd4a597e85eb59',1,'VectSharp::FontFamily']]],
+  ['crimson_49',['Crimson',['../class_vect_sharp_1_1_colours.html#aaaaf5d174ccafc1ba7f1ddfeb5c151cc',1,'VectSharp::Colours']]],
+  ['crop_50',['Crop',['../class_vect_sharp_1_1_page.html#a9037b22e0ec56bdcf0b5aa1e446153ee',1,'VectSharp::Page']]],
+  ['cubicbezier_51',['CubicBezier',['../namespace_vect_sharp.html#ad82c158fff255cb1cbe8d51de61cb4e4aced824f3a4e9dd5feb68da4cb78a3430',1,'VectSharp']]],
+  ['cubicbezierto_52',['CubicBezierTo',['../interface_vect_sharp_1_1_i_graphics_context.html#a4abdb2a21fd2f7b6bb8682cec0d63327',1,'VectSharp.IGraphicsContext.CubicBezierTo()'],['../class_vect_sharp_1_1_graphics_path.html#af86483dc1b86c204fa8b07598b14df99',1,'VectSharp.GraphicsPath.CubicBezierTo(Point control1, Point control2, Point endPoint)'],['../class_vect_sharp_1_1_graphics_path.html#a92b12bcc311a890448cbc75d402730ac',1,'VectSharp.GraphicsPath.CubicBezierTo(double control1X, double control1Y, double control2X, double control2Y, double endPointX, double endPointY)']]],
+  ['cyan_53',['Cyan',['../class_vect_sharp_1_1_colours.html#a1d557b8ca7654761c5612437129902ef',1,'VectSharp::Colours']]]
+];

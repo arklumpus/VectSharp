@@ -764,7 +764,15 @@ namespace VectSharp.Canvas
         /// </summary>
         public enum ActionTypes
         {
-            Path, Text
+            /// <summary>
+            /// The render action represents a path object.
+            /// </summary>
+            Path,
+            
+            /// <summary>
+            /// The render action represents a text object.
+            /// </summary>
+            Text
         }
 
         /// <summary>
@@ -773,22 +781,22 @@ namespace VectSharp.Canvas
         public ActionTypes ActionType { get; private set; }
 
         /// <summary>
-        /// Geometry that needs to be rendered (<see cref="null"/> if the action type is <see cref="ActionTypes.Text"/>). If you change this, you need to invalidate the <see cref="Parent"/>'s visual.
+        /// Geometry that needs to be rendered (null if the action type is <see cref="ActionTypes.Text"/>). If you change this, you need to invalidate the <see cref="Parent"/>'s visual.
         /// </summary>
         public Geometry Geometry { get; set; }
 
         /// <summary>
-        /// Text that needs to be rendered (<see cref="null"/> if the action type is <see cref="ActionTypes.Path"/>). If you change this, you need to invalidate the <see cref="Parent"/>'s visual.
+        /// Text that needs to be rendered (null if the action type is <see cref="ActionTypes.Path"/>). If you change this, you need to invalidate the <see cref="Parent"/>'s visual.
         /// </summary>
         public FormattedText Text { get; set; }
 
         /// <summary>
-        /// Rendering stroke (<see cref="null"/> if the action type is <see cref="ActionTypes.Text"/> or if the rendered action only has a <see cref="Fill"/>). If you change this, you need to invalidate the <see cref="Parent"/>'s visual.
+        /// Rendering stroke (null if the action type is <see cref="ActionTypes.Text"/> or if the rendered action only has a <see cref="Fill"/>). If you change this, you need to invalidate the <see cref="Parent"/>'s visual.
         /// </summary>
         public Pen Stroke { get; set; }
 
         /// <summary>
-        /// Rendering fill (<see cref="null"/> if the rendered action only has a <see cref="Stroke"/>). If you change this, you need to invalidate the <see cref="Parent"/>'s visual.
+        /// Rendering fill (null if the rendered action only has a <see cref="Stroke"/>). If you change this, you need to invalidate the <see cref="Parent"/>'s visual.
         /// </summary>
         public IBrush Fill { get; set; }
 
@@ -881,10 +889,10 @@ namespace VectSharp.Canvas
         /// Creates a new <see cref="RenderAction"/> representing a Path.
         /// </summary>
         /// <param name="geometry">The geometry to be rendered.</param>
-        /// <param name="stroke">The stroke of the path (can be <see cref="null"/>).</param>
-        /// <param name="fill">The fill of the path (can be <see cref="null" />).</param>
+        /// <param name="stroke">The stroke of the path (can be null).</param>
+        /// <param name="fill">The fill of the path (can be null).</param>
         /// <param name="transform">The transform that will be applied to the path.</param>
-        /// <param name="tag">A tag to access the <see cref="RenderAction"/>. If this is <see cref="null"/> this <see cref="RenderAction"/> is not visible in the hit test.</param>
+        /// <param name="tag">A tag to access the <see cref="RenderAction"/>. If this is null this <see cref="RenderAction"/> is not visible in the hit test.</param>
         /// <returns>A new <see cref="RenderAction"/> representing a Path.</returns>
         public static RenderAction PathAction(Geometry geometry, Pen stroke, IBrush fill, Avalonia.Matrix transform, string tag = null)
         {
@@ -903,9 +911,9 @@ namespace VectSharp.Canvas
         /// Creates a new <see cref="RenderAction"/> representing text.
         /// </summary>
         /// <param name="text">The text to be rendered.</param>
-        /// <param name="fill">The fill of the text (can be <see cref="null" />).</param>
+        /// <param name="fill">The fill of the text (can be null).</param>
         /// <param name="transform">The transform that will be applied to the text.</param>
-        /// <param name="tag">A tag to access the <see cref="RenderAction"/>. If this is <see cref="null"/> this <see cref="RenderAction"/> is not visible in the hit test.</param>
+        /// <param name="tag">A tag to access the <see cref="RenderAction"/>. If this is null this <see cref="RenderAction"/> is not visible in the hit test.</param>
         /// <returns></returns>
         public static RenderAction TextAction(FormattedText text, IBrush fill, Avalonia.Matrix transform, string tag = null)
         {
@@ -1485,7 +1493,7 @@ namespace VectSharp.Canvas
         /// Render a <see cref="Page"/> to an <see cref="Avalonia.Controls.Canvas"/>.
         /// </summary>
         /// <param name="page">The <see cref="Page"/> to render.</param>
-        /// <param name="graphicsAsControls">If this is <see cref="true"/>, each graphics object (e.g. paths, text...) is rendered as a separate <see cref="Avalonia.Controls.Control"/>. Otherwise, they are directly rendered onto the drawing context (which is faster, but does not allow interactivity).</param>
+        /// <param name="graphicsAsControls">If this is true, each graphics object (e.g. paths, text...) is rendered as a separate <see cref="Avalonia.Controls.Control"/>. Otherwise, they are directly rendered onto the drawing context (which is faster, but does not allow interactivity).</param>
         /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
         public static Avalonia.Controls.Canvas PaintToCanvas(this Page page, bool graphicsAsControls, TextOptions textOption = TextOptions.ConvertIfNecessary)
@@ -1506,9 +1514,9 @@ namespace VectSharp.Canvas
         /// Render a <see cref="Page"/> to an <see cref="Avalonia.Controls.Canvas"/>.
         /// </summary>
         /// <param name="page">The <see cref="Page"/> to render.</param>
-        /// <param name="graphicsAsControls">If this is <see cref="true"/>, each graphics object (e.g. paths, text...) is rendered as a separate <see cref="Avalonia.Controls.Control"/>. Otherwise, they are directly rendered onto the drawing context (which is faster, but does not allow interactivity).</param>
-        /// <param name="taggedActions">A <see cref="Dictionary{string, Delegate}"/> containing the <see cref="Action"/>s that will be performed on items with the corresponding tag.
-        /// If <paramref name="graphicsAsControls"/> is <see cref="true"/>, the delegates should be voids that accept one parameter of type <see cref="TextBlock"/> or <see cref="Path"/> (depending on the tagged item), otherwise, they should accept one parameter of type <see cref="RenderAction"/> and return an <see cref="IEnumerable{RenderAction}"/> of the actions that will actually be performed.</param>
+        /// <param name="graphicsAsControls">If this is true, each graphics object (e.g. paths, text...) is rendered as a separate <see cref="Avalonia.Controls.Control"/>. Otherwise, they are directly rendered onto the drawing context (which is faster, but does not allow interactivity).</param>
+        /// <param name="taggedActions">A <see cref="Dictionary{String, Delegate}"/> containing the <see cref="Action"/>s that will be performed on items with the corresponding tag.
+        /// If <paramref name="graphicsAsControls"/> is true, the delegates should be voids that accept one parameter of type <see cref="TextBlock"/> or <see cref="Path"/> (depending on the tagged item), otherwise, they should accept one parameter of type <see cref="RenderAction"/> and return an <see cref="IEnumerable{RenderAction}"/> of the actions that will actually be performed.</param>
         /// <param name="removeTaggedActionsAfterExecution">Whether the <see cref="Action"/>s should be removed from <paramref name="taggedActions"/> after their execution. Set to false if the same <see cref="Action"/> should be performed on multiple items with the same tag.</param>
         /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
@@ -1530,7 +1538,7 @@ namespace VectSharp.Canvas
         /// Render a <see cref="Page"/> to an <see cref="Avalonia.Controls.Canvas"/>.
         /// </summary>
         /// <param name="page">The <see cref="Page"/> to render.</param>
-        /// <param name="taggedActions">A <see cref="Dictionary{string, Delegate}"/> containing the <see cref="Action"/>s that will be performed on items with the corresponding tag.
+        /// <param name="taggedActions">A <see cref="Dictionary{String, Delegate}"/> containing the <see cref="Action"/>s that will be performed on items with the corresponding tag.
         /// The delegates should accept one parameter of type <see cref="TextBlock"/> or <see cref="Path"/> (depending on the tagged item).</param>
         /// <param name="removeTaggedActionsAfterExecution">Whether the <see cref="Action"/>s should be removed from <paramref name="taggedActions"/> after their execution. Set to false if the same <see cref="Action"/> should be performed on multiple items with the same tag.</param>
         /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>

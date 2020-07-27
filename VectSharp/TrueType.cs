@@ -7,7 +7,9 @@ using System.Text;
 
 namespace VectSharp
 {
-    //Reference: http://stevehanov.ca/blog/?id=143, https://developer.apple.com/fonts/TrueType-Reference-Manual/, https://docs.microsoft.com/en-us/typography/opentype/spec/
+    /// <summary>
+    /// Represents a font file in TrueType format. Reference: http://stevehanov.ca/blog/?id=143, https://developer.apple.com/fonts/TrueType-Reference-Manual/, https://docs.microsoft.com/en-us/typography/opentype/spec/
+    /// </summary>
     public class TrueTypeFile
     {
         private static readonly Dictionary<string, TrueTypeFile> FontCache = new Dictionary<string, TrueTypeFile>();
@@ -2464,7 +2466,7 @@ namespace VectSharp
             public string[] Name;
             private readonly byte[] RawBytes;
 
-            public struct NameRecord
+            internal struct NameRecord
             {
                 public ushort PlatformID;
                 public ushort PlatformSpecificID;
@@ -2498,7 +2500,7 @@ namespace VectSharp
                 }
             }
 
-            public TrueTypeNameTable(uint tableOffset, Stream sr)
+            internal TrueTypeNameTable(uint tableOffset, Stream sr)
             {
                 this.Format = sr.ReadUShort();
                 this.Count = sr.ReadUShort();
@@ -2675,7 +2677,7 @@ namespace VectSharp
                 }
             }
 
-            public struct PANOSE
+            internal struct PANOSE
             {
                 public byte BFamilyType;
                 public byte BSerifStyle;

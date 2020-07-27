@@ -13,10 +13,94 @@ namespace VectSharp
         }
     }
 
-    public enum TextBaselines { Top, Bottom, Middle, Baseline }
-    public enum TextAnchors { Left, Center, Right }
-    public enum LineCaps { Butt = 0, Round = 1, Square = 2 }
-    public enum LineJoins { Bevel = 2, Miter = 0, Round = 1 }
+    /// <summary>
+    /// Represent text baselines.
+    /// </summary>
+    public enum TextBaselines
+    {
+        /// <summary>
+        /// The current vertical coordinate determines where the top of the text string will be placed.
+        /// </summary>
+        Top,
+
+        /// <summary>
+        /// The current vertical coordinate determines where the bottom of the text string will be placed.
+        /// </summary>
+        Bottom,
+
+        /// <summary>
+        /// The current vertical coordinate determines where the middle of the text string will be placed.
+        /// </summary>
+        Middle,
+
+        /// <summary>
+        /// The current vertical coordinate determines where the baseline of the text string will be placed.
+        /// </summary>
+        Baseline
+    }
+
+    /// <summary>
+    /// Represents text anchors.
+    /// </summary>
+    public enum TextAnchors
+    {
+        /// <summary>
+        /// The current coordinate will determine the position of the left side of the text string.
+        /// </summary>
+        Left,
+
+        /// <summary>
+        /// The current coordinate will determine the position of the center of the text string.
+        /// </summary>
+        Center,
+
+        /// <summary>
+        /// The current coordinate will determine the position of the right side of the text string.
+        /// </summary>
+        Right
+    }
+
+    /// <summary>
+    /// Represents line caps.
+    /// </summary>
+    public enum LineCaps
+    {
+        /// <summary>
+        /// The ends of the line are squared off at the endpoints.
+        /// </summary>
+        Butt = 0,
+
+        /// <summary>
+        /// The ends of the lines are rounded.
+        /// </summary>
+        Round = 1,
+
+        /// <summary>
+        /// The ends of the lines are squared off by adding an half square box at each end.
+        /// </summary>
+        Square = 2
+    }
+
+    /// <summary>
+    /// Represents line joining options.
+    /// </summary>
+    public enum LineJoins
+    {
+        /// <summary>
+        /// Consecutive segments are joined by straight corners.
+        /// </summary>
+        Bevel = 2,
+
+        /// <summary>
+        /// Consecutive segments are joined by extending their outside edges until they meet.
+        /// </summary>
+        Miter = 0,
+
+        /// <summary>
+        /// Consecutive segments are joined by arc segments.
+        /// </summary>
+        Round = 1
+    }
 
     /// <summary>
     /// Represents instructions on how to paint a dashed line.
@@ -193,13 +277,14 @@ namespace VectSharp
         /// <summary>
         /// Create a new colour from RGBA (red, green, blue and alpha) values.
         /// </summary>
-        /// <param name="colour">A <see cref="System.ValueTuple{int, int, int, double}"/> containing component information for the colour. For r, g, and b, range: [0, 255]; for a, range: [0, 1].</param>
+        /// <param name="colour">A <see cref="ValueTuple{Int32, Int32, Int32, Double}"/> containing component information for the colour. For r, g, and b, range: [0, 255]; for a, range: [0, 1].</param>
         /// <returns>A <see cref="Colour"/> struct with the specified components.</returns>
         public static Colour FromRgba((int r, int g, int b, double a) colour)
         {
-            return new Colour(colour.r / 255.0, colour.g / 255.0, colour.b / 255.0, colour.a);
+            return new Colour(colour.r / 255.0, colour.g / 255.0, colour.b / 255.0, colour.a);   
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj)
         {
             if (!(obj is Colour))
@@ -212,21 +297,25 @@ namespace VectSharp
             }
         }
 
+        /// <inheritdoc/>
         public bool Equals(Colour col)
         {
             return col.R == this.R && col.G == this.G && col.B == this.B && col.A == this.A;
         }
 
+        /// <inheritdoc/>
         public static bool operator ==(Colour col1, Colour col2)
         {
             return col1.R == col2.R && col1.G == col2.G && col1.B == col2.B && col1.A == col2.A;
         }
 
+        /// <inheritdoc/>
         public static bool operator !=(Colour col1, Colour col2)
         {
             return col1.R != col2.R || col1.G != col2.G || col1.B != col2.B || col1.A != col2.A;
         }
 
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             return (int)(this.R * 255 + this.G * 255 * 255 + this.B * 255 * 255 * 255 + this.A * 255 * 255 * 255 * 255);
@@ -428,12 +517,12 @@ namespace VectSharp
             public double RightSideBearing { get; }
 
             /// <summary>
-            /// Height of the tallest glyph in the string over the baseline. Always ≥ 0.
+            /// Height of the tallest glyph in the string over the baseline. Always &gt;= 0.
             /// </summary>
             public double Top { get; }
 
             /// <summary>
-            /// Depth of the deepest glyph in the string below the baseline. Always ≤ 0.
+            /// Depth of the deepest glyph in the string below the baseline. Always &lt;= 0.
             /// </summary>
             public double Bottom { get; }
 
@@ -470,7 +559,7 @@ namespace VectSharp
         }
 
         /// <summary>
-        /// Maximum height over the baseline of the usual glyphs in the font (there may be glyphs taller than this). Always ≥ 0.
+        /// Maximum height over the baseline of the usual glyphs in the font (there may be glyphs taller than this). Always &gt;= 0.
         /// </summary>
         public double Ascent
         {
@@ -488,7 +577,7 @@ namespace VectSharp
         }
 
         /// <summary>
-        /// Maximum depth below the baseline of the usual glyphs in the font (there may be glyphs deeper than this). Always ≤ 0.
+        /// Maximum depth below the baseline of the usual glyphs in the font (there may be glyphs deeper than this). Always &lt;= 0.
         /// </summary>
         public double Descent
         {
@@ -506,7 +595,7 @@ namespace VectSharp
         }
 
         /// <summary>
-        /// Absolute maximum height over the baseline of the glyphs in the font. Always ≥ 0.
+        /// Absolute maximum height over the baseline of the glyphs in the font. Always &gt;= 0.
         /// </summary>
         public double YMax
         {
@@ -524,7 +613,7 @@ namespace VectSharp
         }
 
         /// <summary>
-        /// Absolute maximum depth below the baseline of the glyphs in the font. Always ≤ 0.
+        /// Absolute maximum depth below the baseline of the glyphs in the font. Always &lt;= 0.
         /// </summary>
         public double YMin
         {
@@ -656,10 +745,75 @@ namespace VectSharp
         /// </summary>
         public enum StandardFontFamilies
         {
-            TimesRoman, TimesBold, TimesItalic, TimesBoldItalic,
-            Helvetica, HelveticaBold, HelveticaOblique, HelveticaBoldOblique,
-            Courier, CourierBold, CourierOblique, CourierBoldOblique,
-            Symbol, ZapfDingbats
+            /// <summary>
+            /// Serif normal regular face.
+            /// </summary>
+            TimesRoman,
+
+            /// <summary>
+            /// Serif bold regular face.
+            /// </summary>
+            TimesBold,
+
+            /// <summary>
+            /// Serif normal italic face.
+            /// </summary>
+            TimesItalic,
+
+            /// <summary>
+            /// Serif bold italic face.
+            /// </summary>
+            TimesBoldItalic,
+
+            /// <summary>
+            /// Sans-serif normal regular face.
+            /// </summary>
+            Helvetica,
+
+            /// <summary>
+            /// Sans-serif bold regular face.
+            /// </summary>
+            HelveticaBold,
+
+            /// <summary>
+            /// Sans-serif normal oblique face.
+            /// </summary>
+            HelveticaOblique,
+
+            /// <summary>
+            /// Sans-serif bold oblique face.
+            /// </summary>
+            HelveticaBoldOblique,
+
+            /// <summary>
+            /// Monospace normal regular face.
+            /// </summary>
+            Courier,
+
+            /// <summary>
+            /// Monospace bold regular face.
+            /// </summary>
+            CourierBold,
+
+            /// <summary>
+            /// Monospace normal oblique face.
+            /// </summary>
+            CourierOblique,
+
+            /// <summary>
+            /// Monospace bold oblique face.
+            /// </summary>
+            CourierBoldOblique,
+
+            /// <summary>
+            /// Symbol font.
+            /// </summary>
+            Symbol,
+
+            /// <summary>
+            /// Dingbat font.
+            /// </summary>
+            ZapfDingbats
         }
 
         /// <summary>
@@ -857,7 +1011,30 @@ namespace VectSharp
     /// </summary>
     public enum SegmentType
     {
-        Move, Line, CubicBezier, Arc, Close
+        /// <summary>
+        /// The segment represents a move from the current point to a new point.
+        /// </summary>
+        Move,
+        
+        /// <summary>
+        /// The segment represents a straight line from the current point to a new point.
+        /// </summary>
+        Line,
+        
+        /// <summary>
+        /// The segment represents a cubic bezier curve from the current point to a new point.
+        /// </summary>
+        CubicBezier,
+        
+        /// <summary>
+        /// The segment represents a circular arc from the current point to a new point.
+        /// </summary>
+        Arc, 
+        
+        /// <summary>
+        /// The segment represents the closing segment of a figure.
+        /// </summary>
+        Close
     }
 
     /// <summary>
@@ -890,6 +1067,7 @@ namespace VectSharp
         /// <summary>
         /// Creates a copy of the <see cref="Segment"/>.
         /// </summary>
+        /// <returns>A copy of the <see cref="Segment"/>.</returns>
         public abstract Segment Clone();
 
         /// <summary>
@@ -1585,7 +1763,7 @@ namespace VectSharp
         /// <summary>
         /// Set the current <see cref="FillStyle"/>.
         /// </summary>
-        /// <param name="style">A <see cref="System.ValueTuple{int, int, int, double}"/> containing component information for the colour. For r, g, and b, range: [0, 255]; for a, range: [0, 1].</param>
+        /// <param name="style">A <see cref="ValueTuple{Int32, Int32, Int32, Double}"/> containing component information for the colour. For r, g, and b, range: [0, 255]; for a, range: [0, 1].</param>
         void SetFillStyle((int r, int g, int b, double a) style);
 
         /// <summary>
@@ -1602,7 +1780,7 @@ namespace VectSharp
         /// <summary>
         /// Set the current <see cref="StrokeStyle"/>.
         /// </summary>
-        /// <param name="style">A <see cref="System.ValueTuple{int, int, int, double}"/> containing component information for the colour. For r, g, and b, range: [0, 255]; for a, range: [0, 1].</param>
+        /// <param name="style">A <see cref="ValueTuple{Int32, Int32, Int32, Double}"/> containing component information for the colour. For r, g, and b, range: [0, 255]; for a, range: [0, 1].</param>
         void SetStrokeStyle((int r, int g, int b, double a) style);
 
         /// <summary>
@@ -2816,6 +2994,7 @@ namespace VectSharp
         /// <param name="reference">The (relative) starting point on the path starting from which the text should be drawn (0 is the start of the path, 1 is the end of the path).</param>
         /// <param name="anchor">The anchor in the text string that will correspond to the point specified by the <paramref name="reference"/>.</param>
         /// <param name="textBaseline">The text baseline (determines which the position of the text in relation to the <paramref name="path"/>.</param>
+        /// <returns>The <see cref="GraphicsPath"/>, to allow for chained calls.</returns>
         public GraphicsPath AddTextOnPath(GraphicsPath path, string text, Font font, double reference = 0, TextAnchors anchor = TextAnchors.Left, TextBaselines textBaseline = TextBaselines.Top)
         {
             double currDelta = 0;
