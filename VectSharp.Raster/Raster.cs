@@ -45,7 +45,7 @@ namespace VectSharp.Raster
             {
                 using (MuPDFDocument muDoc = new MuPDFDocument(context, ref ms, InputFileTypes.PDF))
                 {
-                    muDoc.SaveImage(0, scale, PixelFormats.RGBA, fileName, RasterOutputFileTypes.PNG);
+                    muDoc.SaveImage(0, scale, MuPDFCore.PixelFormats.RGBA, fileName, RasterOutputFileTypes.PNG);
                 }
             }
         }
@@ -68,7 +68,7 @@ namespace VectSharp.Raster
             {
                 using (MuPDFDocument muDoc = new MuPDFDocument(context, ref ms, InputFileTypes.PDF))
                 {
-                    muDoc.WriteImage(0, scale, PixelFormats.RGBA, stream, RasterOutputFileTypes.PNG);
+                    muDoc.WriteImage(0, scale, MuPDFCore.PixelFormats.RGBA, stream, RasterOutputFileTypes.PNG);
                 }
             }
         }

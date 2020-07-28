@@ -298,7 +298,7 @@ namespace VectSharp
         /// <returns>A <see cref="Colour"/> struct with the specified components.</returns>
         public static Colour FromRgba((int r, int g, int b, double a) colour)
         {
-            return new Colour(colour.r / 255.0, colour.g / 255.0, colour.b / 255.0, colour.a);   
+            return new Colour(colour.r / 255.0, colour.g / 255.0, colour.b / 255.0, colour.a);
         }
 
         /// <inheritdoc/>
@@ -1032,22 +1032,22 @@ namespace VectSharp
         /// The segment represents a move from the current point to a new point.
         /// </summary>
         Move,
-        
+
         /// <summary>
         /// The segment represents a straight line from the current point to a new point.
         /// </summary>
         Line,
-        
+
         /// <summary>
         /// The segment represents a cubic bezier curve from the current point to a new point.
         /// </summary>
         CubicBezier,
-        
+
         /// <summary>
         /// The segment represents a circular arc from the current point to a new point.
         /// </summary>
-        Arc, 
-        
+        Arc,
+
         /// <summary>
         /// The segment represents the closing segment of a figure.
         /// </summary>
@@ -1726,7 +1726,6 @@ namespace VectSharp
         /// </summary>
         Font Font { get; set; }
 
-
         /// <summary>
         /// The current text baseline.
         /// </summary>
@@ -1771,6 +1770,11 @@ namespace VectSharp
         /// Stroke the current path using the current <see cref="StrokeStyle"/>, <see cref="LineWidth"/>, <see cref="LineCap"/>, <see cref="LineJoin"/> and <see cref="LineDash"/>.
         /// </summary>
         void Stroke();
+
+        /// <summary>
+        /// Set the current clipping path as the intersection of the previous clipping path and the current path.
+        /// </summary>
+        void SetClippingPath();
 
         /// <summary>
         /// Current colour used to fill paths.
@@ -1856,6 +1860,20 @@ namespace VectSharp
         /// The current tag. How this can be used depends on each implementation.
         /// </summary>
         string Tag { get; set; }
+
+        /// <summary>
+        /// Draw a raster image.
+        /// </summary>
+        /// <param name="sourceX">The horizontal coordinate of the top-left corner of the rectangle delimiting the source area of the image.</param>
+        /// <param name="sourceY">The vertical coordinate of the top-left corner of the rectangle delimiting the source area of the image.</param>
+        /// <param name="sourceWidth">The width of the rectangle delimiting the source area of the image.</param>
+        /// <param name="sourceHeight">The height of the rectangle delimiting the source area of the image.</param>
+        /// <param name="destinationX">The horizontal coordinate of the top-left corner of the rectangle delimiting the destination area of the image.</param>
+        /// <param name="destinationY">The vertical coordinate of the top-left corner of the rectangle delimiting the destination area of the image.</param>
+        /// <param name="destinationWidth">The width of the rectangle delimiting the destination area of the image.</param>
+        /// <param name="destinationHeight">The height of the rectangle delimiting the destination area of the image.</param>
+        /// <param name="image">The image to draw.</param>
+        void DrawRasterImage(int sourceX, int sourceY, int sourceWidth, int sourceHeight, double destinationX, double destinationY, double destinationWidth, double destinationHeight, RasterImage image);
     }
 
     /// <summary>
@@ -1873,7 +1891,7 @@ namespace VectSharp
         /// <param name="tag">A tag to identify the filled path.</param>
         public void FillPath(GraphicsPath path, Colour fillColour, string tag = null)
         {
-            Actions.Add(new PathAction(path, fillColour, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, tag));
+            Actions.Add(new PathAction(path, fillColour, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, tag, false));
         }
 
 
@@ -1889,7 +1907,38 @@ namespace VectSharp
         /// <param name="tag">A tag to identify the stroked path.</param>
         public void StrokePath(GraphicsPath path, Colour strokeColour, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
         {
-            Actions.Add(new PathAction(path, null, strokeColour, lineWidth, lineCap, lineJoin, lineDash ?? LineDash.SolidLine, tag));
+            Actions.Add(new PathAction(path, null, strokeColour, lineWidth, lineCap, lineJoin, lineDash ?? LineDash.SolidLine, tag, false));
+        }
+
+        /// <summary>
+        /// Intersect the current clipping path with the specified <see cref="GraphicsPath"/>.
+        /// </summary>
+        /// <param name="path">The <see cref="GraphicsPath"/> to intersect with the current clipping path.</param>
+        public void SetClippingPath(GraphicsPath path)
+        {
+            Actions.Add(new PathAction(path, null, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, null, true));
+        }
+
+        /// <summary>
+        /// Intersect the current clipping path with the specified rectangle.
+        /// </summary>
+        /// <param name="leftX">The horizontal coordinate of the top-left corner of the rectangle.</param>
+        /// <param name="topY">The vertical coordinate of the top-left corner of the rectangle.</param>
+        /// <param name="width">The width of the rectangle.</param>
+        /// <param name="height">The height of the rectangle.</param>
+        public void SetClippingPath(double leftX, double topY, double width, double height)
+        {
+            SetClippingPath(new Point(leftX, topY), new Size(width, height));
+        }
+
+        /// <summary>
+        /// Intersect the current clipping path with the specified rectangle.
+        /// </summary>
+        /// <param name="topLeft">The top-left corner of the rectangle.</param>
+        /// <param name="size">The size of the rectangle.</param>
+        public void SetClippingPath(Point topLeft, Size size)
+        {
+            Actions.Add(new PathAction(new GraphicsPath().MoveTo(topLeft).LineTo(topLeft.X + size.Width, topLeft.Y).LineTo(topLeft.X + size.Width, topLeft.Y + size.Height).LineTo(topLeft.X, topLeft.Y + size.Height).Close(), null, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, null, true));
         }
 
         /// <summary>
@@ -2016,6 +2065,73 @@ namespace VectSharp
         public void StrokeRectangle(double leftX, double topY, double width, double height, Colour strokeColour, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
         {
             Actions.Add(new RectangleAction(new Point(leftX, topY), new Size(width, height), null, strokeColour, lineWidth, lineCap, lineJoin, lineDash ?? LineDash.SolidLine, tag));
+        }
+
+        /// <summary>
+        /// Draw a raster image.
+        /// </summary>
+        /// <param name="sourceX">The horizontal coordinate of the top-left corner of the rectangle delimiting the source area of the image.</param>
+        /// <param name="sourceY">The vertical coordinate of the top-left corner of the rectangle delimiting the source area of the image.</param>
+        /// <param name="sourceWidth">The width of the rectangle delimiting the source area of the image.</param>
+        /// <param name="sourceHeight">The height of the rectangle delimiting the source area of the image.</param>
+        /// <param name="destinationX">The horizontal coordinate of the top-left corner of the rectangle delimiting the destination area of the image.</param>
+        /// <param name="destinationY">The vertical coordinate of the top-left corner of the rectangle delimiting the destination area of the image.</param>
+        /// <param name="destinationWidth">The width of the rectangle delimiting the destination area of the image.</param>
+        /// <param name="destinationHeight">The height of the rectangle delimiting the destination area of the image.</param>
+        /// <param name="image">The image to draw.</param>
+        /// <param name="tag">A tag to identify the drawn image.</param>
+        public void DrawRasterImage(int sourceX, int sourceY, int sourceWidth, int sourceHeight, double destinationX, double destinationY, double destinationWidth, double destinationHeight, RasterImage image, string tag = null)
+        {
+            Actions.Add(new RasterImageAction(sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight, image, tag));
+        }
+
+        /// <summary>
+        /// Draw a raster image.
+        /// </summary>
+        /// <param name="x">The horizontal coordinate of the top-left corner of the rectangle delimiting the destination area of the image.</param>
+        /// <param name="y">The vertical coordinate of the top-left corner of the rectangle delimiting the destination area of the image.</param>
+        /// <param name="image">The image to draw.</param>
+        /// <param name="tag">A tag to identify the drawn image.</param>
+        public void DrawRasterImage(double x, double y, RasterImage image, string tag = null)
+        {
+            DrawRasterImage(0, 0, image.Width, image.Height, x, y, image.Width, image.Height, image, tag);
+        }
+
+        /// <summary>
+        /// Draw a raster image.
+        /// </summary>
+        /// <param name="position">The the top-left corner of the rectangle delimiting the destination area of the image.</param>
+        /// <param name="image">The image to draw.</param>
+        /// <param name="tag">A tag to identify the drawn image.</param>
+        public void DrawRasterImage(Point position, RasterImage image, string tag = null)
+        {
+            DrawRasterImage(0, 0, image.Width, image.Height, position.X, position.Y, image.Width, image.Height, image, tag);
+        }
+
+        /// <summary>
+        /// Draw a raster image.
+        /// </summary>
+        /// <param name="x">The horizontal coordinate of the top-left corner of the rectangle delimiting the destination area of the image.</param>
+        /// <param name="y">The vertical coordinate of the top-left corner of the rectangle delimiting the destination area of the image.</param>
+        /// <param name="width">The width of the rectangle delimiting the destination area of the image.</param>
+        /// <param name="height">The height of the rectangle delimiting the destination area of the image.</param>
+        /// <param name="image">The image to draw.</param>
+        /// <param name="tag">A tag to identify the drawn image.</param>
+        public void DrawRasterImage(double x, double y, double width, double height, RasterImage image, string tag = null)
+        {
+            DrawRasterImage(0, 0, image.Width, image.Height, x, y, width, height, image, tag);
+        }
+
+        /// <summary>
+        /// Draw a raster image.
+        /// </summary>
+        /// <param name="position">The the top-left corner of the rectangle delimiting the destination area of the image.</param>
+        /// <param name="size">The size of the rectangle delimiting the destination area of the image.</param>
+        /// <param name="image">The image to draw.</param>
+        /// <param name="tag">A tag to identify the drawn image.</param>
+        public void DrawRasterImage(Point position, Size size, RasterImage image, string tag = null)
+        {
+            DrawRasterImage(0, 0, image.Width, image.Height, position.X, position.Y, size.Width, size.Height, image, tag);
         }
 
         /// <summary>
@@ -2406,29 +2522,36 @@ namespace VectSharp
                         }
                     }
 
-                    if (pth.Fill != null)
+                    if (pth.IsClipping)
                     {
-                        if (destinationContext.FillStyle != pth.Fill)
-                        {
-                            destinationContext.SetFillStyle((Colour)pth.Fill);
-                        }
-                        destinationContext.Fill();
+                        destinationContext.SetClippingPath();
                     }
-                    else if (pth.Stroke != null)
+                    else
                     {
-                        if (destinationContext.StrokeStyle != pth.Stroke)
+                        if (pth.Fill != null)
                         {
-                            destinationContext.SetStrokeStyle((Colour)pth.Stroke);
+                            if (destinationContext.FillStyle != pth.Fill)
+                            {
+                                destinationContext.SetFillStyle((Colour)pth.Fill);
+                            }
+                            destinationContext.Fill();
                         }
-                        if (destinationContext.LineWidth != pth.LineWidth)
+                        else if (pth.Stroke != null)
                         {
-                            destinationContext.LineWidth = pth.LineWidth;
-                        }
-                        destinationContext.SetLineDash(pth.LineDash);
-                        destinationContext.LineCap = pth.LineCap;
-                        destinationContext.LineJoin = pth.LineJoin;
+                            if (destinationContext.StrokeStyle != pth.Stroke)
+                            {
+                                destinationContext.SetStrokeStyle((Colour)pth.Stroke);
+                            }
+                            if (destinationContext.LineWidth != pth.LineWidth)
+                            {
+                                destinationContext.LineWidth = pth.LineWidth;
+                            }
+                            destinationContext.SetLineDash(pth.LineDash);
+                            destinationContext.LineCap = pth.LineCap;
+                            destinationContext.LineJoin = pth.LineJoin;
 
-                        destinationContext.Stroke();
+                            destinationContext.Stroke();
+                        }
                     }
                 }
                 else if (this.Actions[i] is TextAction)
@@ -2498,6 +2621,11 @@ namespace VectSharp
                     {
                         destinationContext.Restore();
                     }
+                }
+                else if (this.Actions[i] is RasterImageAction)
+                {
+                    RasterImageAction img = this.Actions[i] as RasterImageAction;
+                    destinationContext.DrawRasterImage(img.SourceX, img.SourceY, img.SourceWidth, img.SourceHeight, img.DestinationX, img.DestinationY, img.DestinationWidth, img.DestinationHeight, img.Image);
                 }
             }
         }
@@ -2657,7 +2785,8 @@ namespace VectSharp
         public LineCaps LineCap { get; }
         public LineJoins LineJoin { get; }
         public LineDash LineDash { get; }
-        public PathAction(GraphicsPath path, Colour? fill, Colour? stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, string tag)
+        public bool IsClipping { get; }
+        public PathAction(GraphicsPath path, Colour? fill, Colour? stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, string tag, bool isClipping)
         {
             this.Path = path;
             this.Fill = fill;
@@ -2666,6 +2795,43 @@ namespace VectSharp
             this.LineJoin = lineJoin;
             this.LineWidth = lineWidth;
             this.LineDash = lineDash;
+            this.Tag = tag;
+            this.IsClipping = isClipping;
+        }
+    }
+
+    internal class RasterImageAction : IGraphicsAction, IPrintableAction
+    {
+        public Colour? Fill { get; }
+        public Colour? Stroke { get; }
+        public string Tag { get; }
+        public double LineWidth { get; }
+        public LineCaps LineCap { get; }
+        public LineJoins LineJoin { get; }
+        public LineDash LineDash { get; }
+        public int SourceX { get; }
+        public int SourceY { get; }
+        public int SourceWidth { get; }
+        public int SourceHeight { get; }
+        public double DestinationX { get; }
+        public double DestinationY { get; }
+        public double DestinationWidth { get; }
+        public double DestinationHeight { get; }
+        public RasterImage Image { get; }
+
+        public RasterImageAction(int sourceX, int sourceY, int sourceWidth, int sourceHeight, double destinationX, double destinationY, double destinationWidth, double destinationHeight, RasterImage image, string tag)
+        {
+            this.SourceX = sourceX;
+            this.SourceY = sourceY;
+            this.SourceWidth = sourceWidth;
+            this.SourceHeight = sourceHeight;
+
+            this.DestinationX = destinationX;
+            this.DestinationY = destinationY;
+            this.DestinationWidth = destinationWidth;
+            this.DestinationHeight = destinationHeight;
+
+            this.Image = image;
             this.Tag = tag;
         }
     }

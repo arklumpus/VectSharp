@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace VectSharp.PDF
@@ -121,12 +122,10 @@ namespace VectSharp.PDF
         Colour? Fill { get; }
         Colour? Stroke { get; }
         double LineWidth { get; }
-
         LineCaps LineCap { get; }
-
         LineJoins LineJoin { get; }
-
         LineDash LineDash { get; }
+        bool IsClipping { get; }
     }
 
     internal class TransformFigure : IFigure
@@ -140,6 +139,8 @@ namespace VectSharp.PDF
 
         public Colour? Fill { get; }
         public Colour? Stroke { get; }
+
+        public bool IsClipping { get; }
         public double LineWidth { get; }
 
         public double[,] TransformationMatrix { get; }
@@ -149,7 +150,6 @@ namespace VectSharp.PDF
         public LineJoins LineJoin { get; }
 
         public LineDash LineDash { get; }
-        public Segment[] Segments { get; }
 
         public TransformFigure(TransformTypes type, double[,] transformationMatrix)
         {
@@ -158,10 +158,36 @@ namespace VectSharp.PDF
         }
     }
 
+    internal class RasterImageFigure : IFigure
+    {
+
+        public Colour? Fill { get; }
+        public Colour? Stroke { get; }
+
+        public bool IsClipping { get; }
+        public double LineWidth { get; }
+
+        public double[,] TransformationMatrix { get; }
+
+        public LineCaps LineCap { get; }
+
+        public LineJoins LineJoin { get; }
+
+        public LineDash LineDash { get; }
+
+        public RasterImage Image { get; }
+
+        public RasterImageFigure(RasterImage image)
+        {
+            this.Image = image;
+        }
+    }
+
     internal class PathFigure : IFigure
     {
         public Colour? Fill { get; }
         public Colour? Stroke { get; }
+        public bool IsClipping { get; }
         public double LineWidth { get; }
 
         public LineCaps LineCap { get; }
@@ -171,7 +197,7 @@ namespace VectSharp.PDF
         public LineDash LineDash { get; }
         public Segment[] Segments { get; }
 
-        public PathFigure(IEnumerable<Segment> segments, Colour? fill, Colour? stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash)
+        public PathFigure(IEnumerable<Segment> segments, Colour? fill, Colour? stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, bool isClipping)
         {
             List<Segment> segs = new List<Segment>();
 
@@ -188,6 +214,7 @@ namespace VectSharp.PDF
             LineCap = lineCap;
             LineJoin = lineJoin;
             LineDash = lineDash;
+            IsClipping = isClipping;
         }
     }
 
@@ -196,7 +223,7 @@ namespace VectSharp.PDF
         public Colour? Fill { get; }
         public Colour? Stroke { get; }
         public double LineWidth { get; }
-
+        public bool IsClipping { get; }
         public LineCaps LineCap { get; }
 
         public LineJoins LineJoin { get; }
@@ -308,7 +335,7 @@ namespace VectSharp.PDF
         private Colour _fillStyle;
         private LineDash _lineDash;
 
-        private bool _textToPaths;
+        private readonly bool _textToPaths;
 
         public PDFContext(double width, double height, Colour background, bool textToPaths)
         {
@@ -397,13 +424,19 @@ namespace VectSharp.PDF
 
         public void Fill()
         {
-            _figures.Add(new PathFigure(_currentFigure, _fillStyle, null, 0, LineCaps.Butt, LineJoins.Bevel, new LineDash(0, 0, 0)));
+            _figures.Add(new PathFigure(_currentFigure, _fillStyle, null, 0, LineCaps.Butt, LineJoins.Bevel, new LineDash(0, 0, 0), false));
             _currentFigure = new List<Segment>();
         }
 
         public void Stroke()
         {
-            _figures.Add(new PathFigure(_currentFigure, null, _strokeStyle, LineWidth, LineCap, LineJoin, _lineDash));
+            _figures.Add(new PathFigure(_currentFigure, null, _strokeStyle, LineWidth, LineCap, LineJoin, _lineDash, false));
+            _currentFigure = new List<Segment>();
+        }
+
+        public void SetClippingPath()
+        {
+            _figures.Add(new PathFigure(_currentFigure, null, null, 0, LineCaps.Butt, LineJoins.Bevel, new LineDash(0, 0, 0), true));
             _currentFigure = new List<Segment>();
         }
 
@@ -501,6 +534,37 @@ namespace VectSharp.PDF
         {
             _figures.Add(new TransformFigure(TransformFigure.TransformTypes.Transform, new double[,] { { a, b, e }, { c, d, f }, { 0, 0, 1 } }));
         }
+
+        public void DrawRasterImage(int sourceX, int sourceY, int sourceWidth, int sourceHeight, double destinationX, double destinationY, double destinationWidth, double destinationHeight, RasterImage image)
+        {
+            Save();
+
+            MoveTo(destinationX, destinationY);
+            LineTo(destinationX + destinationWidth, destinationY);
+            LineTo(destinationX + destinationWidth, destinationY + destinationHeight);
+            LineTo(destinationX, destinationY + destinationHeight);
+            Close();
+            SetClippingPath();
+
+            double sourceRectX = (double)sourceX / image.Width;
+            double sourceRectY = 1 - (double)sourceY / image.Height;
+            double sourceRectWidth = (double)sourceWidth / image.Width;
+            double sourceRectHeight = - (double)sourceHeight / image.Height;
+
+            double scaleX = destinationWidth / sourceRectWidth;
+            double scaleY = destinationHeight / sourceRectHeight;
+
+            double translationX = destinationX / scaleX - sourceRectX;
+            double translationY = destinationY / scaleY - sourceRectY;
+
+
+            Scale(scaleX, scaleY);
+            Translate(translationX, translationY);
+
+            _figures.Add(new RasterImageFigure(image));
+
+            Restore();
+        }
     }
 
     /// <summary>
@@ -593,9 +657,9 @@ namespace VectSharp.PDF
             {
                 foreach (IFigure act in ctx._figures)
                 {
-                    if (act is TextFigure && !tbr.ContainsKey(((TextFigure)act).Font.FontFamily.FileName))
+                    if (act is TextFigure figure && !tbr.ContainsKey(figure.Font.FontFamily.FileName))
                     {
-                        tbr.Add(((TextFigure)act).Font.FontFamily.FileName, new FontFamily(((TextFigure)act).Font.FontFamily.FileName));
+                        tbr.Add(figure.Font.FontFamily.FileName, new FontFamily(figure.Font.FontFamily.FileName));
                     }
                 }
             }
@@ -611,16 +675,16 @@ namespace VectSharp.PDF
             {
                 foreach (IFigure act in ctx._figures)
                 {
-                    if (act is TextFigure && !tbr.ContainsKey(((TextFigure)act).Font.FontFamily.FileName))
+                    if (act is TextFigure figure && !tbr.ContainsKey(figure.Font.FontFamily.FileName))
                     {
-                        tbr.Add(((TextFigure)act).Font.FontFamily.FileName, new HashSet<char>(((TextFigure)act).Text));
+                        tbr.Add(figure.Font.FontFamily.FileName, new HashSet<char>(figure.Text));
                     }
-                    else if (act is TextFigure)
+                    else if (act is TextFigure figure1)
                     {
-                        string txt = ((TextFigure)act).Text;
+                        string txt = figure1.Text;
                         for (int i = 0; i < txt.Length; i++)
                         {
-                            tbr[((TextFigure)act).Font.FontFamily.FileName].Add(txt[i]);
+                            tbr[figure1.Font.FontFamily.FileName].Add(txt[i]);
                         }
                     }
                 }
@@ -633,6 +697,8 @@ namespace VectSharp.PDF
         private static double[] GetAlphas(PDFContext[] pdfContexts)
         {
             HashSet<double> tbr = new HashSet<double>();
+
+            tbr.Add(1);
 
             foreach (PDFContext ctx in pdfContexts)
             {
@@ -651,6 +717,24 @@ namespace VectSharp.PDF
             }
 
             return tbr.ToArray();
+        }
+
+        private static Dictionary<string, RasterImage> GetAllImages(PDFContext[] pdfContexts)
+        {
+            Dictionary<string, RasterImage> tbr = new Dictionary<string, RasterImage>();
+
+            foreach (PDFContext ctx in pdfContexts)
+            {
+                foreach (IFigure act in ctx._figures)
+                {
+                    if (act is RasterImageFigure figure && !tbr.ContainsKey(figure.Image.Id))
+                    {
+                        tbr.Add(figure.Image.Id, figure.Image);
+                    }
+                }
+            }
+
+            return tbr;
         }
 
 
@@ -707,7 +791,7 @@ namespace VectSharp.PDF
 
             int resourceObject = -1;
 
-            StreamWriter sw = new StreamWriter(stream, Encoding.UTF8, 1024, true);
+            StreamWriter sw = new StreamWriter(stream, Encoding.GetEncoding("ISO-8859-1"), 1024, true);
 
             //Header
             sw.Write("%PDF-1.4\n");
@@ -728,6 +812,8 @@ namespace VectSharp.PDF
             Dictionary<string, string> nonSymbolFontIDs = new Dictionary<string, string>();
             Dictionary<string, Dictionary<char, int>> symbolGlyphIndices = new Dictionary<string, Dictionary<char, int>>();
             double[] alphas = GetAlphas(pageContexts);
+            Dictionary<string, RasterImage> allImages = GetAllImages(pageContexts);
+            Dictionary<string, int> imageObjectNums = new Dictionary<string, int>();
 
             int fontId = 1;
 
@@ -955,6 +1041,193 @@ namespace VectSharp.PDF
                 }
             }
 
+            foreach (KeyValuePair<string, RasterImage> img in allImages)
+            {
+                RasterImage image = img.Value;
+                int stride = image.Width * (image.HasAlpha ? 4 : 3);
+
+                string filter = "";
+
+                if (image.HasAlpha)
+                {
+                    objectPositions.Add(position);
+
+                    filter = "";
+                    MemoryStream alphaStream = new MemoryStream();
+
+                    unsafe
+                    {
+                        byte* dataPointer = (byte*)image.ImageDataAddress;
+
+                        if (compressStreams)
+                        {
+                            filter = "/FlateDecode";
+
+                            for (int y = 0; y < image.Height; y++)
+                            {
+                                for (int x = 0; x < image.Width; x++)
+                                {
+                                    dataPointer += 3;
+                                    alphaStream.WriteByte(*dataPointer);
+                                    dataPointer++;
+                                }
+                            }
+
+                            alphaStream.Seek(0, SeekOrigin.Begin);
+                            MemoryStream compressed = ZLibCompress(alphaStream);
+                            alphaStream.Dispose();
+                            alphaStream = compressed;
+                        }
+                        else
+                        {
+                            filter = "/ASCIIHexDecode";
+
+                            using (StreamWriter imageWriter = new StreamWriter(alphaStream, Encoding.ASCII, 1024, true))
+                            {
+                                for (int y = 0; y < image.Height; y++)
+                                {
+                                    for (int x = 0; x < image.Width; x++)
+                                    {
+                                        dataPointer += 3;
+                                        imageWriter.Write((*dataPointer).ToString("X2"));
+                                        dataPointer++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    currObject = objectNum.ToString() + " 0 obj\n<< /Type /XObject /Subtype /Image /Width " + image.Width.ToString() + " /Height " + image.Height.ToString() + " /ColorSpace /DeviceGray /BitsPerComponent 8 /Interpolate " + (image.Interpolate ? "true" : "false") + " /Filter " + filter + " /Length " + alphaStream.Length + " >>\nstream\n";
+
+                    sw.Write(currObject);
+                    position += currObject.Length;
+                    sw.Flush();
+
+                    alphaStream.Seek(0, SeekOrigin.Begin);
+                    alphaStream.CopyTo(stream);
+                    position += alphaStream.Length;
+
+                    currObject = "\nendstream\nendobj\n";
+                    sw.Write(currObject);
+                    position += currObject.Length;
+                    objectNum++;
+
+                    alphaStream.Dispose();
+
+                }
+
+                objectPositions.Add(position);
+                int imageObjectNum = objectNum;
+
+                filter = "";
+                MemoryStream imageStream = new MemoryStream();
+
+                unsafe
+                {
+                    byte* dataPointer = (byte*)image.ImageDataAddress;
+
+                    if (compressStreams)
+                    {
+                        filter = "/FlateDecode";
+
+                        if (image.HasAlpha)
+                        {
+                            for (int y = 0; y < image.Height; y++)
+                            {
+                                for (int x = 0; x < image.Width; x++)
+                                {
+                                    imageStream.WriteByte(*dataPointer);
+                                    dataPointer++;
+                                    imageStream.WriteByte(*dataPointer);
+                                    dataPointer++;
+                                    imageStream.WriteByte(*dataPointer);
+                                    dataPointer++;
+                                    dataPointer++;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            for (int y = 0; y < image.Height; y++)
+                            {
+                                for (int x = 0; x < image.Width; x++)
+                                {
+                                    imageStream.WriteByte(*dataPointer);
+                                    dataPointer++;
+                                    imageStream.WriteByte(*dataPointer);
+                                    dataPointer++;
+                                    imageStream.WriteByte(*dataPointer);
+                                    dataPointer++;
+                                }
+                            }
+                        }
+
+                        imageStream.Seek(0, SeekOrigin.Begin);
+                        MemoryStream compressed = ZLibCompress(imageStream);
+                        imageStream.Dispose();
+                        imageStream = compressed;
+                    }
+                    else
+                    {
+                        filter = "/ASCIIHexDecode";
+
+                        using (StreamWriter imageWriter = new StreamWriter(imageStream, Encoding.ASCII, 1024, true))
+                        {
+                            if (image.HasAlpha)
+                            {
+                                for (int y = 0; y < image.Height; y++)
+                                {
+                                    for (int x = 0; x < image.Width; x++)
+                                    {
+                                        imageWriter.Write((*dataPointer).ToString("X2"));
+                                        dataPointer++;
+                                        imageWriter.Write((*dataPointer).ToString("X2"));
+                                        dataPointer++;
+                                        imageWriter.Write((*dataPointer).ToString("X2"));
+                                        dataPointer++;
+                                        dataPointer++;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                for (int y = 0; y < image.Height; y++)
+                                {
+                                    for (int x = 0; x < image.Width; x++)
+                                    {
+                                        imageWriter.Write((*dataPointer).ToString("X2"));
+                                        dataPointer++;
+                                        imageWriter.Write((*dataPointer).ToString("X2"));
+                                        dataPointer++;
+                                        imageWriter.Write((*dataPointer).ToString("X2"));
+                                        dataPointer++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                currObject = objectNum.ToString() + " 0 obj\n<< /Type /XObject /Subtype /Image /Width " + image.Width.ToString() + " /Height " + image.Height.ToString() + " /ColorSpace /DeviceRGB /BitsPerComponent 8 /Interpolate " + (image.Interpolate ? "true" : "false") + " /Filter " + filter + " /Length " + imageStream.Length + (image.HasAlpha ? " /SMask " + (objectNum - 1) + " 0 R" : "") + " >>\nstream\n";
+
+                sw.Write(currObject);
+                position += currObject.Length;
+                sw.Flush();
+
+                imageStream.Seek(0, SeekOrigin.Begin);
+                imageStream.CopyTo(stream);
+                position += imageStream.Length;
+
+                currObject = "\nendstream\nendobj\n";
+                sw.Write(currObject);
+                position += currObject.Length;
+                objectNum++;
+
+                imageStream.Dispose();
+
+                imageObjectNums.Add(img.Key, imageObjectNum);
+            }
+
             if (allFontFamilies.Count > 0)
             {
 
@@ -993,6 +1266,18 @@ namespace VectSharp.PDF
                     currObject += ">>";
                 }
 
+                if (imageObjectNums.Count > 0)
+                {
+                    currObject += " /XObject <<";
+
+                    foreach (KeyValuePair<string, int> kvp in imageObjectNums)
+                    {
+                        currObject += " /Img" + kvp.Value.ToString() + " " + kvp.Value.ToString() + " 0 R";
+                    }
+
+                    currObject += " >>";
+                }
+
                 currObject += " >>\nendobj\n";
                 sw.Write(currObject);
                 position += currObject.Length;
@@ -1017,6 +1302,18 @@ namespace VectSharp.PDF
                     currObject += ">>";
                 }
 
+                if (imageObjectNums.Count > 0)
+                {
+                    currObject += " /XObject <<";
+
+                    foreach (KeyValuePair<string, int> kvp in imageObjectNums)
+                    {
+                        currObject += " /Img" + kvp.Value.ToString() + " " + kvp.Value.ToString() + " 0 R";
+                    }
+
+                    currObject += " >>";
+                }
+
                 currObject += " >>\nendobj\n";
                 sw.Write(currObject);
                 position += currObject.Length;
@@ -1029,13 +1326,11 @@ namespace VectSharp.PDF
             {
                 MemoryStream contentStream = new MemoryStream();
 
-
-
                 using (StreamWriter ctW = new StreamWriter(contentStream, Encoding.ASCII, 1024, true))
                 {
                     for (int i = 0; i < pageContexts[pageInd]._figures.Count; i++)
                     {
-                        ctW.Write(FigureAsPDFString(pageContexts[pageInd]._figures[i], nonSymbolFontIDs, symbolFontIDs, symbolGlyphIndices, alphas));
+                        ctW.Write(FigureAsPDFString(pageContexts[pageInd]._figures[i], nonSymbolFontIDs, symbolFontIDs, symbolGlyphIndices, alphas, imageObjectNums));
                     }
                 }
 
@@ -1131,7 +1426,7 @@ namespace VectSharp.PDF
             sw.Dispose();
         }
 
-        private static string FigureAsPDFString(IFigure figure, Dictionary<string, string> nonSymbolFontIds, Dictionary<string, string> symbolFontIds, Dictionary<string, Dictionary<char, int>> symbolGlyphIndices, double[] alphas)
+        private static string FigureAsPDFString(IFigure figure, Dictionary<string, string> nonSymbolFontIds, Dictionary<string, string> symbolFontIds, Dictionary<string, Dictionary<char, int>> symbolGlyphIndices, double[] alphas, Dictionary<string, int> imageObjectNums)
         {
 
             StringBuilder sb = new StringBuilder();
@@ -1190,14 +1485,21 @@ namespace VectSharp.PDF
                     }
                 }
 
-                if (fig.Fill != null)
+                if (fig.IsClipping)
                 {
-                    sb.Append("f\n");
+                    sb.Append("W n\n");
                 }
-
-                if (fig.Stroke != null)
+                else
                 {
-                    sb.Append("S\n");
+                    if (fig.Fill != null)
+                    {
+                        sb.Append("f\n");
+                    }
+
+                    if (fig.Stroke != null)
+                    {
+                        sb.Append("S\n");
+                    }
                 }
             }
             else if (figure is TextFigure)
@@ -1355,6 +1657,14 @@ namespace VectSharp.PDF
                 {
                     sb.Append("Q\n");
                 }
+            }
+            else if (figure is RasterImageFigure fig)
+            {
+                sb.Append("/a" + Array.IndexOf(alphas, 1).ToString() + " gs\n");
+
+                int imageNum = imageObjectNums[fig.Image.Id];
+
+                sb.Append("/Img" + imageNum.ToString() + " Do\n");
             }
 
             return sb.ToString();

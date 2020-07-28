@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectSharp.Canvas", "VectSha
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectSharp.Raster", "VectSharp.Raster\VectSharp.Raster.csproj", "{AA099810-711A-4A7C-9403-D8F71DE5499A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectSharp.SVG", "VectSharp.SVG\VectSharp.SVG.csproj", "{B69B1606-89A8-4EB7-9AF0-87D4CF276DBD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectSharp.SVG", "VectSharp.SVG\VectSharp.SVG.csproj", "{B69B1606-89A8-4EB7-9AF0-87D4CF276DBD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectSharp.MuPDFUtils", "VectSharp.MuPDFUtils\VectSharp.MuPDFUtils.csproj", "{D2D2CD04-2B9F-4139-93E7-D6B505B6A7BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{B69B1606-89A8-4EB7-9AF0-87D4CF276DBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B69B1606-89A8-4EB7-9AF0-87D4CF276DBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B69B1606-89A8-4EB7-9AF0-87D4CF276DBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2D2CD04-2B9F-4139-93E7-D6B505B6A7BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2D2CD04-2B9F-4139-93E7-D6B505B6A7BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2D2CD04-2B9F-4139-93E7-D6B505B6A7BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2D2CD04-2B9F-4139-93E7-D6B505B6A7BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

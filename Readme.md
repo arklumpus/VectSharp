@@ -13,8 +13,10 @@ VectSharp is written using .NET Core, and is available for Mac, Windows and Linu
 
 Since version 2.0.0, VectSharp.Raster is released under an AGPLv3 license.
 
+**VectSharp.MuPDFUtils**, also released under an AGPLv3 license, contains some utility functions that use [MuPDFCore]() to make it possible to include in VectSharp graphics images in various formats.
+
 ## Installing VectSharp
-To include VectSharp in your project, you will need one of the output layer NuGet packages: [VectSharp.PDF](https://www.nuget.org/packages/VectSharp.PDF/), [VectSharp.Canvas](https://www.nuget.org/packages/VectSharp.Canvas/), [VectSharp.Raster](https://www.nuget.org/packages/VectSharp.Raster/), or [VectSharp.SVG](https://www.nuget.org/packages/VectSharp.SVG/).
+To include VectSharp in your project, you will need one of the output layer NuGet packages: [VectSharp.PDF](https://www.nuget.org/packages/VectSharp.PDF/), [VectSharp.Canvas](https://www.nuget.org/packages/VectSharp.Canvas/), [VectSharp.Raster](https://www.nuget.org/packages/VectSharp.Raster/), or [VectSharp.SVG](https://www.nuget.org/packages/VectSharp.SVG/). You may want the [VectSharp.MuPDFUtils](https://www.nuget.org/packages/VectSharp.MuPDFUtils/) package if you wish to manipulate raster images.
 
 ## Usage
 You can find the full documentation for the VectSharp library at the [documentation website](https://arklumpus.github.io/VectSharp). A [PDF reference manual](https://arklumpus.github.io/VectSharp/VectSharp.pdf) is also available.

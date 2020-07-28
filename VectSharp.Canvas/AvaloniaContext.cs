@@ -18,6 +18,7 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -106,6 +107,10 @@ namespace VectSharp.Canvas
 
         private AvaloniaContextInterpreter.TextOptions _textOption;
 
+        private Avalonia.Controls.Canvas currControlElement;
+
+        private Stack<Avalonia.Controls.Canvas> controlElements;
+
         public AvaloniaContext(double width, double height, bool removeTaggedActionsAfterExecution, AvaloniaContextInterpreter.TextOptions textOption)
         {
             currentPath = new PathGeometry();
@@ -123,6 +128,10 @@ namespace VectSharp.Canvas
             states = new Stack<double[,]>();
 
             _textOption = textOption;
+
+            currControlElement = ControlItem;
+            controlElements = new Stack<Avalonia.Controls.Canvas>();
+            controlElements.Push(ControlItem);
         }
 
         public Avalonia.Controls.Canvas ControlItem { get; }
@@ -235,7 +244,7 @@ namespace VectSharp.Canvas
                 blk.RenderTransform = new MatrixTransform(currTransform.ToAvaloniaMatrix());
                 blk.RenderTransformOrigin = new Avalonia.RelativePoint(0, 0, Avalonia.RelativeUnit.Absolute);
 
-                ControlItem.Children.Add(blk);
+                currControlElement.Children.Add(blk);
 
                 if (!string.IsNullOrEmpty(Tag))
                 {
@@ -329,11 +338,13 @@ namespace VectSharp.Canvas
         public void Save()
         {
             states.Push((double[,])_transform.Clone());
+            controlElements.Push(currControlElement);
         }
 
         public void Restore()
         {
             _transform = states.Pop();
+            currControlElement = controlElements.Pop();
         }
 
         public double LineWidth { get; set; }
@@ -485,7 +496,7 @@ namespace VectSharp.Canvas
             pth.RenderTransform = new MatrixTransform(_transform.ToAvaloniaMatrix());
             pth.RenderTransformOrigin = new Avalonia.RelativePoint(0, 0, Avalonia.RelativeUnit.Absolute);
 
-            ControlItem.Children.Add(pth);
+            currControlElement.Children.Add(pth);
 
             currentPath = new PathGeometry();
             currentFigure = new PathFigure() { IsClosed = false };
@@ -519,7 +530,7 @@ namespace VectSharp.Canvas
             pth.RenderTransform = new MatrixTransform(_transform.ToAvaloniaMatrix());
             pth.RenderTransformOrigin = new Avalonia.RelativePoint(0, 0, Avalonia.RelativeUnit.Absolute);
 
-            ControlItem.Children.Add(pth);
+            currControlElement.Children.Add(pth);
 
             currentPath = new PathGeometry();
             currentFigure = new PathFigure() { IsClosed = false };
@@ -530,6 +541,68 @@ namespace VectSharp.Canvas
                 if (TaggedActions.ContainsKey(Tag))
                 {
                     TaggedActions[Tag].DynamicInvoke(pth);
+
+                    if (removeTaggedActions)
+                    {
+                        TaggedActions.Remove(Tag);
+                    }
+                }
+            }
+        }
+
+        public void SetClippingPath()
+        {
+            if (figureInitialised)
+            {
+                currentPath.Figures.Add(currentFigure);
+            }
+
+            Avalonia.Controls.Canvas newControlElement = new Avalonia.Controls.Canvas();
+
+            newControlElement.Clip = currentPath;
+
+            newControlElement.RenderTransformOrigin = new Avalonia.RelativePoint(0, 0, Avalonia.RelativeUnit.Absolute);
+            newControlElement.RenderTransform = new MatrixTransform(_transform.ToAvaloniaMatrix());
+
+            _transform = new double[3, 3];
+
+            _transform[0, 0] = 1;
+            _transform[1, 1] = 1;
+            _transform[2, 2] = 1;
+
+            currControlElement.Children.Add(newControlElement);
+            currControlElement = newControlElement;
+
+            currentPath = new PathGeometry();
+            currentFigure = new PathFigure() { IsClosed = false };
+            figureInitialised = false;
+        }
+
+
+        public void DrawRasterImage(int sourceX, int sourceY, int sourceWidth, int sourceHeight, double destinationX, double destinationY, double destinationWidth, double destinationHeight, RasterImage image)
+        {
+            Image img = new Image() { Source = new CroppedBitmap(new Bitmap(image.PNGStream), new Avalonia.PixelRect(sourceX, sourceY, sourceWidth, sourceHeight)), Width = destinationWidth, Height = destinationHeight };
+
+            if (image.Interpolate)
+            {
+                RenderOptions.SetBitmapInterpolationMode(img, Avalonia.Visuals.Media.Imaging.BitmapInterpolationMode.HighQuality);
+            }
+            else
+            {
+                RenderOptions.SetBitmapInterpolationMode(img, Avalonia.Visuals.Media.Imaging.BitmapInterpolationMode.Default);
+            }
+
+            double[,] transf = MatrixUtils.Translate(_transform, destinationX, destinationY);
+            img.RenderTransform = new MatrixTransform(transf.ToAvaloniaMatrix());
+            img.RenderTransformOrigin = new Avalonia.RelativePoint(0, 0, Avalonia.RelativeUnit.Absolute);
+
+            currControlElement.Children.Add(img);
+
+            if (!string.IsNullOrEmpty(Tag))
+            {
+                if (TaggedActions.ContainsKey(Tag))
+                {
+                    TaggedActions[Tag].DynamicInvoke(img);
 
                     if (removeTaggedActions)
                     {
@@ -1462,6 +1535,16 @@ namespace VectSharp.Canvas
             currentPath = new PathGeometry();
             currentFigure = new PathFigure() { IsClosed = false };
             figureInitialised = false;
+        }
+
+        public void SetClippingPath()
+        {
+
+        }
+
+        public void DrawRasterImage(int sourceX, int sourceY, int sourceWidth, int sourceHeight, double destinationX, double destinationY, double destinationWidth, double destinationHeight, RasterImage image)
+        {
+
         }
     }
 

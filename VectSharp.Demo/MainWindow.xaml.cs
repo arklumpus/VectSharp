@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using VectSharp;
 using VectSharp.Canvas;
+using VectSharp.MuPDFUtils;
 using VectSharp.PDF;
 using VectSharp.Raster;
 using VectSharp.SVG;
@@ -286,6 +287,59 @@ namespace VectSharp.Demo
             gpr.FillPath(textPath, Colour.FromRgb(203, 245, 216));
             gpr.StrokePath(textPath, Colour.FromRgb(34, 177, 76), lineWidth: 6, lineJoin: LineJoins.Round);
 
+            //Embedding raster images
+            //First draw what is going to be the raster image
+            Page rasterPage = new Page(50, 25);
+
+            Graphics rasterGpr = rasterPage.Graphics;
+
+            rasterGpr.FillRectangle(10, 0, 4, 4, Colour.FromRgb(237, 28, 36));
+            rasterGpr.FillRectangle(14, 0, 4, 4, Colour.FromRgb(34, 177, 76));
+            rasterGpr.FillRectangle(18, 0, 4, 4, Colour.FromRgb(255, 127, 39));
+            rasterGpr.FillRectangle(22, 0, 4, 4, Colour.FromRgb(0, 162, 232));
+            rasterGpr.FillRectangle(26, 0, 4, 4, Colour.FromRgb(255, 242, 0));
+            rasterGpr.FillRectangle(10, 4, 4, 4, Colour.FromRgb(63, 72, 204));
+            rasterGpr.FillRectangle(14, 4, 4, 4, Colour.FromRgb(255, 201, 14));
+            rasterGpr.FillRectangle(18, 4, 4, 4, Colour.FromRgb(163, 73, 164));
+            rasterGpr.FillRectangle(22, 4, 4, 4, Colour.FromRgb(181, 230, 29));
+            rasterGpr.FillRectangle(26, 4, 4, 4, Colour.FromRgb(128, 128, 128));
+
+            rasterGpr.FillText(2, 10, "Raster", new Font(new VectSharp.FontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 12), Colours.Black);
+
+            //Save the raster image to a stream in PNG format
+            System.IO.MemoryStream rasterStream = new System.IO.MemoryStream();
+            rasterPage.SaveAsPNG(rasterStream, 2);
+
+            //Load the raster image from the stream (we load it twice: once with interpolation enabled and once with interpolation disabled).
+            RasterImage nonInterpolatedRasterImage = new RasterImageStream(rasterStream, MuPDFCore.InputFileTypes.PNG, interpolate: false);
+            RasterImage interpolatedRasterImage = new RasterImageStream(rasterStream, MuPDFCore.InputFileTypes.PNG, interpolate: true);
+
+            //Create and set clipping path
+            GraphicsPath clippingPathLeft = new GraphicsPath().MoveTo(1050, 250).LineTo(1275, 250).LineTo(1325, 300).LineTo(1275, 350).LineTo(1325, 400).LineTo(1275, 450).LineTo(1325, 500).LineTo(1275, 550).LineTo(1050, 550).Close();
+            gpr.Save();
+            gpr.SetClippingPath(clippingPathLeft);
+
+            //Draw the raster image
+            gpr.DrawRasterImage(1100, 300, 500, 250, nonInterpolatedRasterImage);
+
+            //Restore the clipping path
+            gpr.Restore();
+
+            //Create and set the new clipping path
+            GraphicsPath clippingPathRight = new GraphicsPath().MoveTo(1550, 250).LineTo(1275, 250).LineTo(1325, 300).LineTo(1275, 350).LineTo(1325, 400).LineTo(1275, 450).LineTo(1325, 500).LineTo(1275, 550).LineTo(1550, 550).Close();
+            gpr.Save();
+            gpr.SetClippingPath(clippingPathRight);
+
+            //Draw the other raster image
+            gpr.DrawRasterImage(1100, 300, 500, 250, interpolatedRasterImage);
+
+            //Restore the clipping path
+            gpr.Restore();
+
+            //Draw a path on the boundary between the clipping paths
+            GraphicsPath clippingPathTear = new GraphicsPath().MoveTo(1325, 200).LineTo(1275, 250).LineTo(1325, 300).LineTo(1275, 350).LineTo(1325, 400).LineTo(1275, 450).LineTo(1325, 500).LineTo(1275, 550).LineTo(1325, 600);
+            gpr.StrokePath(clippingPathTear, Colours.Red, 5);
+
 
             //Interactivity sample (Avalonia only)
             //Fill rectangle
@@ -298,42 +352,42 @@ namespace VectSharp.Demo
             gpr.FillText(3400 - gpr.MeasureText("Click me!", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBold), 80)).Width / 2, 1650, "Click me!", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBold), 80), Colour.FromRgb(0, 0, 0), textBaseline: TextBaselines.Middle, tag: "ClickMeText");
 
             //Text along a path
-            GraphicsPath flowPath = new GraphicsPath().Arc(1550, 1100, 300, - 7 * Math.PI / 8, -Math.PI / 8);
+            GraphicsPath flowPath = new GraphicsPath().Arc(1550, 1100, 300, -7 * Math.PI / 8, -Math.PI / 8);
             gpr.StrokePath(flowPath, Colour.FromRgb(220, 220, 220), lineWidth: 10);
             gpr.FillTextOnPath(flowPath, "Text on a path!", new Font(new VectSharp.FontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBold), 80), Colour.FromRgb(34, 177, 76), reference: 0.5, anchor: TextAnchors.Center, textBaseline: TextBaselines.Baseline);
 
             //Dictionary associating each tag to the action to perform on the object (Avalonia only)
             Dictionary<string, Delegate> taggedActions = new Dictionary<string, Delegate>()
-            {
-                {"ClickMeText", new Action<Control>(block => { block.IsHitTestVisible = false; }) },
-                {"ClickMeRectangle", new Action<Path>(path =>
-                {
-                    path.Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand);
-                    path.PointerEnter += (sender, e) =>
-                    {
-                        path.Fill = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.FromRgb(180, 180, 180));
-                    };
+             {
+                 {"ClickMeText", new Action<Control>(block => { block.IsHitTestVisible = false; }) },
+                 {"ClickMeRectangle", new Action<Path>(path =>
+                 {
+                     path.Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand);
+                     path.PointerEnter += (sender, e) =>
+                     {
+                         path.Fill = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.FromRgb(180, 180, 180));
+                     };
 
-                    path.PointerLeave += (sender, e) =>
-                    {
-                        path.Fill = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.FromRgb(220, 220, 220));
-                    };
+                     path.PointerLeave += (sender, e) =>
+                     {
+                         path.Fill = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.FromRgb(220, 220, 220));
+                     };
 
-                    path.PointerPressed += (sender, e) =>
-                    {
-                        path.Fill = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.FromRgb(128, 128, 128));
-                    };
+                     path.PointerPressed += (sender, e) =>
+                     {
+                         path.Fill = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.FromRgb(128, 128, 128));
+                     };
 
-                    path.PointerReleased += async (sender, e) =>
-                    {
-                        path.Fill = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.FromRgb(180, 180, 180));
+                     path.PointerReleased += async (sender, e) =>
+                     {
+                         path.Fill = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.FromRgb(180, 180, 180));
 
-                        Window win = new Window() { Width = 300, Height = 150, Title = "Thanks for clicking!", WindowStartupLocation = WindowStartupLocation.CenterOwner, Content = new TextBlock(){ Text = "Hello world!", HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center, VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center, FontSize = 40 } };
-                        await win.ShowDialog(this);
-                    };
+                         Window win = new Window() { Width = 300, Height = 150, Title = "Thanks for clicking!", WindowStartupLocation = WindowStartupLocation.CenterOwner, Content = new TextBlock(){ Text = "Hello world!", HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center, VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center, FontSize = 40 } };
+                         await win.ShowDialog(this);
+                     };
 
-                }) },
-            };
+                 }) },
+             };
 
             //Save the image as a PNG file
             doc.Pages.Last().SaveAsPNG(@"Sample.png");
@@ -342,7 +396,7 @@ namespace VectSharp.Demo
             doc.Pages.Last().SaveAsSVG("Sample.svg");
 
             //Transfer the page onto an Avalonia Canvas object
-            this.FindControl<Viewbox>("mainViewBox").Child = doc.Pages.Last().PaintToCanvas(taggedActions);
+            this.FindControl<Viewbox>("mainViewBox").Child = doc.Pages.Last().PaintToCanvas(/*taggedActions*/);
 
             //Add another page to the document (the size of each page can be different)
             doc.Pages.Add(new Page(480, 100));

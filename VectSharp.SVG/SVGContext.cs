@@ -143,6 +143,9 @@ namespace VectSharp.SVG
         private double[,] _transform;
         private Stack<double[,]> states;
 
+        private string _currClipPath;
+        private Stack<string> clipPaths;
+
         private bool TextToPaths = false;
 
         public SVGContext(double width, double height, bool textToPaths)
@@ -173,6 +176,10 @@ namespace VectSharp.SVG
 
             states = new Stack<double[,]>();
 
+            clipPaths = new Stack<string>();
+            clipPaths.Push(null);
+            _currClipPath = null;
+
             UsedFontFamilies = new Dictionary<string, FontFamily>();
             UsedChars = new Dictionary<string, HashSet<char>>();
 
@@ -181,6 +188,7 @@ namespace VectSharp.SVG
             Document.InsertBefore(Document.CreateXmlDeclaration("1.0", "UTF-8", null), Document.DocumentElement);
 
             currentElement = Document.CreateElement(null, "svg", SVGNamespace);
+            currentElement.SetAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
             currentElement.SetAttribute("viewBox", "0 0 " + width.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + height.ToString(System.Globalization.CultureInfo.InvariantCulture));
             currentElement.SetAttribute("version", "1.1");
             Document.AppendChild(currentElement);
@@ -245,6 +253,15 @@ namespace VectSharp.SVG
                 currentPath.Figures.Add(currentFigure);
             }
 
+            XmlElement currElement = currentElement;
+
+            if (!string.IsNullOrEmpty(_currClipPath))
+            {
+                currentElement = Document.CreateElement("g", SVGNamespace);
+                currentElement.SetAttribute("clip-path", _currClipPath);
+                currElement.AppendChild(currentElement);
+            }
+
             XmlElement path = Document.CreateElement("path", SVGNamespace);
             path.SetAttribute("d", currentPath.Figures.Aggregate("", (a, b) => a + b.Data));
             path.SetAttribute("stroke", "none");
@@ -260,6 +277,8 @@ namespace VectSharp.SVG
             }
 
             currentElement.AppendChild(path);
+
+            currentElement = currElement;
 
             currentPath = new SVGPathObject();
             currentFigure = new SVGFigure();
@@ -300,6 +319,15 @@ namespace VectSharp.SVG
                     default:
                         currTransform = MatrixUtils.Translate(_transform, x - metrics.LeftSideBearing, y);
                         break;
+                }
+
+                XmlElement currElement = currentElement;
+
+                if (!string.IsNullOrEmpty(_currClipPath))
+                {
+                    currentElement = Document.CreateElement("g", SVGNamespace);
+                    currentElement.SetAttribute("clip-path", _currClipPath);
+                    currElement.AppendChild(currentElement);
                 }
 
                 XmlElement textElement = Document.CreateElement("text", SVGNamespace);
@@ -348,6 +376,7 @@ namespace VectSharp.SVG
 
                 currentElement.AppendChild(textElement);
 
+                currentElement = currElement;
             }
             else
             {
@@ -394,6 +423,7 @@ namespace VectSharp.SVG
         public void Restore()
         {
             _transform = states.Pop();
+            _currClipPath = clipPaths.Pop();
             currentPath = new SVGPathObject();
             currentFigure = new SVGFigure();
         }
@@ -408,6 +438,7 @@ namespace VectSharp.SVG
         public void Save()
         {
             states.Push((double[,])_transform.Clone());
+            clipPaths.Push(_currClipPath);
         }
 
         public void Scale(double scaleX, double scaleY)
@@ -447,6 +478,15 @@ namespace VectSharp.SVG
             if (currentFigure.PointCount > 0)
             {
                 currentPath.Figures.Add(currentFigure);
+            }
+
+            XmlElement currElement = currentElement;
+
+            if (!string.IsNullOrEmpty(_currClipPath))
+            {
+                currentElement = Document.CreateElement("g", SVGNamespace);
+                currentElement.SetAttribute("clip-path", _currClipPath);
+                currElement.AppendChild(currentElement);
             }
 
             XmlElement path = Document.CreateElement("path", SVGNamespace);
@@ -499,6 +539,8 @@ namespace VectSharp.SVG
 
             currentElement.AppendChild(path);
 
+            currentElement = currElement;
+
             currentPath = new SVGPathObject();
             currentFigure = new SVGFigure();
         }
@@ -536,6 +578,15 @@ namespace VectSharp.SVG
                     default:
                         currTransform = MatrixUtils.Translate(_transform, x - metrics.LeftSideBearing, y);
                         break;
+                }
+
+                XmlElement currElement = currentElement;
+
+                if (!string.IsNullOrEmpty(_currClipPath))
+                {
+                    currentElement = Document.CreateElement("g", SVGNamespace);
+                    currentElement.SetAttribute("clip-path", _currClipPath);
+                    currElement.AppendChild(currentElement);
                 }
 
                 XmlElement textElement = Document.CreateElement("text", SVGNamespace);
@@ -616,6 +667,8 @@ namespace VectSharp.SVG
                 }
 
                 currentElement.AppendChild(textElement);
+
+                currentElement = currElement;
             }
             else
             {
@@ -639,6 +692,152 @@ namespace VectSharp.SVG
 
             currentPath = new SVGPathObject();
             currentFigure = new SVGFigure();
+        }
+
+        public void SetClippingPath()
+        {
+            if (currentFigure.PointCount > 0)
+            {
+                currentPath.Figures.Add(currentFigure);
+            }
+
+            XmlElement clipPath = Document.CreateElement("clipPath", SVGNamespace);
+            string id = Guid.NewGuid().ToString("N");
+            clipPath.SetAttribute("id", id);
+            
+            if (!string.IsNullOrEmpty(_currClipPath))
+            {
+                clipPath.SetAttribute("clip-path", _currClipPath);
+            }
+
+            XmlElement path = Document.CreateElement("path", SVGNamespace);
+            path.SetAttribute("d", currentPath.Figures.Aggregate("", (a, b) => a + b.Data));
+            path.SetAttribute("stroke", StrokeStyle.ToCSSString(false));
+            path.SetAttribute("stroke-opacity", StrokeStyle.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            path.SetAttribute("stroke-width", LineWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+            switch (LineCap)
+            {
+                case LineCaps.Butt:
+                    path.SetAttribute("stroke-linecap", "butt");
+                    break;
+                case LineCaps.Round:
+                    path.SetAttribute("stroke-linecap", "round");
+                    break;
+                case LineCaps.Square:
+                    path.SetAttribute("stroke-linecap", "square");
+                    break;
+            }
+
+            switch (LineJoin)
+            {
+                case LineJoins.Bevel:
+                    path.SetAttribute("stroke-linejoin", "bevel");
+                    break;
+                case LineJoins.Round:
+                    path.SetAttribute("stroke-linejoin", "round");
+                    break;
+                case LineJoins.Miter:
+                    path.SetAttribute("stroke-linejoin", "miter");
+                    break;
+            }
+
+            if (_lineDash.Phase != 0 || _lineDash.UnitsOn != 0 || _lineDash.UnitsOff != 0)
+            {
+                path.SetAttribute("stroke-dasharray", _lineDash.UnitsOn.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + _lineDash.UnitsOff.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                path.SetAttribute("stroke-dashoffset", _lineDash.Phase.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            }
+
+            path.SetAttribute("fill", "none");
+            path.SetAttribute("transform", "matrix(" + _transform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                "," + _transform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                "," + _transform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
+
+
+
+            if (!string.IsNullOrEmpty(Tag))
+            {
+                path.SetAttribute("id", Tag);
+            }
+
+            clipPath.AppendChild(path);
+
+            currentElement.AppendChild(clipPath);
+
+            _currClipPath = "url(#" + id + ")";
+
+            currentPath = new SVGPathObject();
+            currentFigure = new SVGFigure();
+        }
+
+        public void DrawRasterImage(int sourceX, int sourceY, int sourceWidth, int sourceHeight, double destinationX, double destinationY, double destinationWidth, double destinationHeight, RasterImage image)
+        {
+            Save();
+
+            MoveTo(destinationX, destinationY);
+            LineTo(destinationX + destinationWidth, destinationY);
+            LineTo(destinationX + destinationWidth, destinationY + destinationHeight);
+            LineTo(destinationX, destinationY + destinationHeight);
+            Close();
+            SetClippingPath();
+
+            double sourceRectX = (double)sourceX / image.Width;
+            double sourceRectY = (double)sourceY / image.Height;
+            double sourceRectWidth = (double)sourceWidth / image.Width;
+            double sourceRectHeight = (double)sourceHeight / image.Height;
+
+            double scaleX = destinationWidth / sourceRectWidth;
+            double scaleY = destinationHeight / sourceRectHeight;
+
+            double translationX = destinationX / scaleX - sourceRectX;
+            double translationY = destinationY / scaleY - sourceRectY;
+
+            Scale(scaleX, scaleY);
+            Translate(translationX, translationY);
+
+            XmlElement currElement = currentElement;
+
+            if (!string.IsNullOrEmpty(_currClipPath))
+            {
+                currentElement = Document.CreateElement("g", SVGNamespace);
+                currentElement.SetAttribute("clip-path", _currClipPath);
+                currElement.AppendChild(currentElement);
+            }
+
+            XmlElement img = Document.CreateElement("image", SVGNamespace);
+            img.SetAttribute("x", "0");
+            img.SetAttribute("y", "0");
+
+            img.SetAttribute("width", "1");
+            img.SetAttribute("height", "1");
+
+            img.SetAttribute("preserveAspectRatio", "none");
+
+            if (image.Interpolate)
+            {
+                img.SetAttribute("image-rendering", "optimizeQuality");
+            }
+            else
+            {
+                img.SetAttribute("image-rendering", "pixelated");
+            }
+
+            img.SetAttribute("transform", "matrix(" + _transform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                "," + _transform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                "," + _transform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
+
+            if (!string.IsNullOrEmpty(Tag))
+            {
+                img.SetAttribute("id", Tag);
+            }
+
+            img.SetAttribute("href", "http://www.w3.org/1999/xlink", "data:image/png;base64," + Convert.ToBase64String(image.PNGStream.ToArray()));
+            
+            currentElement.AppendChild(img);
+
+            currentElement = currElement;
+
+            Restore();
         }
     }
 
