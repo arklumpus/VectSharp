@@ -136,7 +136,7 @@ $(document).ready(function(){initNavTree('_raster_8cs_source.html',''); initResi
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            {</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                <span class="keyword">using</span> (MuPDFDocument muDoc = <span class="keyword">new</span> MuPDFDocument(context, ref ms, InputFileTypes.PDF))</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                {</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                    muDoc.SaveImage(0, scale, PixelFormats.RGBA, fileName, RasterOutputFileTypes.PNG);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                    muDoc.SaveImage(0, scale, MuPDFCore.PixelFormats.RGBA, fileName, RasterOutputFileTypes.PNG);</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                }</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            }</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        }</div>
@@ -159,7 +159,7 @@ $(document).ready(function(){initNavTree('_raster_8cs_source.html',''); initResi
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            {</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                <span class="keyword">using</span> (MuPDFDocument muDoc = <span class="keyword">new</span> MuPDFDocument(context, ref ms, InputFileTypes.PDF))</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                {</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                    muDoc.WriteImage(0, scale, PixelFormats.RGBA, stream, RasterOutputFileTypes.PNG);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                    muDoc.WriteImage(0, scale, MuPDFCore.PixelFormats.RGBA, stream, RasterOutputFileTypes.PNG);</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                }</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            }</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        }</div>
@@ -173,7 +173,7 @@ $(document).ready(function(){initNavTree('_raster_8cs_source.html',''); initResi
 <div class="ttc" id="aclass_vect_sharp_1_1_raster_1_1_raster_html_a542960c7ec48c41dd308bf2f67b262c5"><div class="ttname"><a href="class_vect_sharp_1_1_raster_1_1_raster.html#a542960c7ec48c41dd308bf2f67b262c5">VectSharp.Raster.Raster.SaveAsPNG</a></div><div class="ttdeci">static void SaveAsPNG(this Page page, Stream stream, double scale=1)</div><div class="ttdoc">Render the page to a PNG stream.</div><div class="ttdef"><b>Definition:</b> <a href="_raster_8cs_source.html#l00059">Raster.cs:59</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_raster_1_1_raster_html"><div class="ttname"><a href="class_vect_sharp_1_1_raster_1_1_raster.html">VectSharp.Raster.Raster</a></div><div class="ttdoc">Contains methods to render a page to a PNG image.</div><div class="ttdef"><b>Definition:</b> <a href="_raster_8cs_source.html#l00027">Raster.cs:28</a></div></div>
 <div class="ttc" id="anamespace_vect_sharp_1_1_raster_html"><div class="ttname"><a href="namespace_vect_sharp_1_1_raster.html">VectSharp.Raster</a></div><div class="ttdef"><b>Definition:</b> <a href="_raster_8cs_source.html#l00022">Raster.cs:23</a></div></div>
-<div class="ttc" id="anamespace_vect_sharp_1_1_p_d_f_html"><div class="ttname"><a href="namespace_vect_sharp_1_1_p_d_f.html">VectSharp.PDF</a></div><div class="ttdef"><b>Definition:</b> <a href="_p_d_f_context_8cs_source.html#l00025">PDFContext.cs:26</a></div></div>
+<div class="ttc" id="anamespace_vect_sharp_1_1_p_d_f_html"><div class="ttname"><a href="namespace_vect_sharp_1_1_p_d_f.html">VectSharp.PDF</a></div><div class="ttdef"><b>Definition:</b> <a href="_p_d_f_context_8cs_source.html#l00026">PDFContext.cs:27</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_raster_1_1_raster_html_a6a297fbcb54d1f3a85150bbe5c5bf70e"><div class="ttname"><a href="class_vect_sharp_1_1_raster_1_1_raster.html#a6a297fbcb54d1f3a85150bbe5c5bf70e">VectSharp.Raster.Raster.SaveAsPNG</a></div><div class="ttdeci">static void SaveAsPNG(this Page page, string fileName, double scale=1)</div><div class="ttdoc">Render the page to a PNG file.</div><div class="ttdef"><b>Definition:</b> <a href="_raster_8cs_source.html#l00036">Raster.cs:36</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_document_html_a37c0a15de4cf1ce2ea3bc6ae074c18c9"><div class="ttname"><a href="class_vect_sharp_1_1_document.html#a37c0a15de4cf1ce2ea3bc6ae074c18c9">VectSharp.Document.Pages</a></div><div class="ttdeci">List&lt; Page &gt; Pages</div><div class="ttdoc">The pages in the document.</div><div class="ttdef"><b>Definition:</b> <a href="_document_8cs_source.html#l00032">Document.cs:32</a></div></div>
 <!-- start footer part -->

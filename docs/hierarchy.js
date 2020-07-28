@@ -9,10 +9,18 @@ var hierarchy =
     [ "VectSharp.FontFamily", "class_vect_sharp_1_1_font_family.html", null ],
     [ "VectSharp.Graphics", "class_vect_sharp_1_1_graphics.html", null ],
     [ "VectSharp.GraphicsPath", "class_vect_sharp_1_1_graphics_path.html", null ],
+    [ "IDisposable", null, [
+      [ "VectSharp.DisposableIntPtr", "class_vect_sharp_1_1_disposable_int_ptr.html", null ],
+      [ "VectSharp.RasterImage", "class_vect_sharp_1_1_raster_image.html", [
+        [ "VectSharp.MuPDFUtils.RasterImageFile", "class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_file.html", null ],
+        [ "VectSharp.MuPDFUtils.RasterImageStream", "class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_stream.html", null ]
+      ] ]
+    ] ],
     [ "IEquatable", null, [
       [ "VectSharp.Colour", "struct_vect_sharp_1_1_colour.html", null ]
     ] ],
     [ "VectSharp.IGraphicsContext", "interface_vect_sharp_1_1_i_graphics_context.html", null ],
+    [ "VectSharp.MuPDFUtils.ImageURIParser", "class_vect_sharp_1_1_mu_p_d_f_utils_1_1_image_u_r_i_parser.html", null ],
     [ "VectSharp.LineDash", "struct_vect_sharp_1_1_line_dash.html", null ],
     [ "VectSharp.Page", "class_vect_sharp_1_1_page.html", null ],
     [ "VectSharp.SVG.Parser", "class_vect_sharp_1_1_s_v_g_1_1_parser.html", null ],

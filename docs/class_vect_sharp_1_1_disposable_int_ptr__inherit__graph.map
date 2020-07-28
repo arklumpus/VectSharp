@@ -1,0 +1,4 @@
+<map id="VectSharp.DisposableIntPtr" name="VectSharp.DisposableIntPtr">
+<area shape="rect" id="node1" title="An IDisposable wrapper around an IntPtr that frees the allocated memory when it is disposed." alt="" coords="5,80,188,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="52,5,141,32"/>
+</map>

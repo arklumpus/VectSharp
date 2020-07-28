@@ -102,6 +102,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_colours.html">Colours</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Standard colours.  <a href="class_vect_sharp_1_1_colours.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_disposable_int_ptr.html">DisposableIntPtr</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An IDisposable wrapper around an IntPtr that frees the allocated memory when it is disposed.  <a href="class_vect_sharp_1_1_disposable_int_ptr.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_document.html">Document</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a collection of pages.  <a href="class_vect_sharp_1_1_document.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -128,6 +131,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_vect_sharp_1_1_point.html">Point</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a point relative to an origin in the top-left corner.  <a href="struct_vect_sharp_1_1_point.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_raster_image.html">RasterImage</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a raster image, created from raw pixel data. Consider using the derived classes included in the NuGet package "VectSharp.MuPDFUtils" if you need to load a raster image from a file or a Stream.  <a href="class_vect_sharp_1_1_raster_image.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_segment.html">Segment</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a segment as part of a <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>.  <a href="class_vect_sharp_1_1_segment.html#details">More...</a><br /></td></tr>
@@ -177,6 +183,13 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:ad82c158fff255cb1cbe8d51de61cb4e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Types of Segment.  <a href="namespace_vect_sharp.html#ad82c158fff255cb1cbe8d51de61cb4e4">More...</a><br /></td></tr>
 <tr class="separator:ad82c158fff255cb1cbe8d51de61cb4e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ccfe4c0d79758b6c0e2fda8a319125c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_vect_sharp.html#a9ccfe4c0d79758b6c0e2fda8a319125c">PixelFormats</a> { <a class="el" href="namespace_vect_sharp.html#a9ccfe4c0d79758b6c0e2fda8a319125ca889574aebacda6bfd3e534e2b49b8028">PixelFormats.RGB</a>, 
+<a class="el" href="namespace_vect_sharp.html#a9ccfe4c0d79758b6c0e2fda8a319125caea3495a278957dc58165e48a8945469f">PixelFormats.RGBA</a>, 
+<a class="el" href="namespace_vect_sharp.html#a9ccfe4c0d79758b6c0e2fda8a319125ca2ad5640ebdec72fc79531d1778c6c2dc">PixelFormats.BGR</a>, 
+<a class="el" href="namespace_vect_sharp.html#a9ccfe4c0d79758b6c0e2fda8a319125ca5a1fe3c61c9e2fd6dbbc823589f6e697">PixelFormats.BGRA</a>
+ }</td></tr>
+<tr class="memdesc:a9ccfe4c0d79758b6c0e2fda8a319125c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the pixel format of a raster image.  <a href="namespace_vect_sharp.html#a9ccfe4c0d79758b6c0e2fda8a319125c">More...</a><br /></td></tr>
+<tr class="separator:a9ccfe4c0d79758b6c0e2fda8a319125c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="a6bde58d6aab37ea51e32240503678209"></a>
@@ -244,6 +257,42 @@ Enumerations</h2></td></tr>
 </table>
 
 <p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00104">104</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+
+</div>
+</div>
+<a id="a9ccfe4c0d79758b6c0e2fda8a319125c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ccfe4c0d79758b6c0e2fda8a319125c">&#9670;&nbsp;</a></span>PixelFormats</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespace_vect_sharp.html#a9ccfe4c0d79758b6c0e2fda8a319125c">VectSharp.PixelFormats</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Represents the pixel format of a raster image. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a9ccfe4c0d79758b6c0e2fda8a319125ca889574aebacda6bfd3e534e2b49b8028"></a>RGB&#160;</td><td class="fielddoc"><p>RGB 24bpp format. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a9ccfe4c0d79758b6c0e2fda8a319125caea3495a278957dc58165e48a8945469f"></a>RGBA&#160;</td><td class="fielddoc"><p>RGBA 32bpp format. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a9ccfe4c0d79758b6c0e2fda8a319125ca2ad5640ebdec72fc79531d1778c6c2dc"></a>BGR&#160;</td><td class="fielddoc"><p>BGR 24bpp format. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a9ccfe4c0d79758b6c0e2fda8a319125ca5a1fe3c61c9e2fd6dbbc823589f6e697"></a>BGRA&#160;</td><td class="fielddoc"><p>BGR 32bpp format. </p>
+</td></tr>
+</table>
+
+<p class="definition">Definition at line <a class="el" href="_raster_image_8cs_source.html#l00027">27</a> of file <a class="el" href="_raster_image_8cs_source.html">RasterImage.cs</a>.</p>
 
 </div>
 </div>

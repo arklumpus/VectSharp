@@ -64,7 +64,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_avalonia_context_8cs_source.html",
-"class_vect_sharp_1_1_graphics.html#a675df302f1821806025a0403ee6c2aef"
+"class_vect_sharp_1_1_graphics.html#a105b178d5b1bb07f56f68ff2b7f601d1",
+"struct_vect_sharp_1_1_colour.html#a54a2e4dac2e76d24394fe9d40117fae9"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

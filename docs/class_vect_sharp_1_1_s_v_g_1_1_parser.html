@@ -88,6 +88,7 @@ $(document).ready(function(){initNavTree('class_vect_sharp_1_1_s_v_g_1_1_parser.
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="class_vect_sharp_1_1_s_v_g_1_1_parser-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">VectSharp.SVG.Parser Class Reference</div>  </div>
@@ -99,6 +100,9 @@ $(document).ready(function(){initNavTree('class_vect_sharp_1_1_s_v_g_1_1_parser.
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a6f68508d2960525e92fc31bead086c1c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_vect_sharp_1_1_page.html">Page</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_s_v_g_1_1_parser.html#a6f68508d2960525e92fc31bead086c1c">ParseSVGURI</a> (string uri, bool ignored=false)</td></tr>
+<tr class="memdesc:a6f68508d2960525e92fc31bead086c1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses an <a class="el" href="namespace_vect_sharp_1_1_s_v_g.html">SVG</a> image URI.  <a href="class_vect_sharp_1_1_s_v_g_1_1_parser.html#a6f68508d2960525e92fc31bead086c1c">More...</a><br /></td></tr>
+<tr class="separator:a6f68508d2960525e92fc31bead086c1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66524a179a5308ea43b6869d8f31a538"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_vect_sharp_1_1_page.html">Page</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_s_v_g_1_1_parser.html#a66524a179a5308ea43b6869d8f31a538">FromString</a> (string svgSource)</td></tr>
 <tr class="memdesc:a66524a179a5308ea43b6869d8f31a538"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses <a class="el" href="namespace_vect_sharp_1_1_s_v_g.html">SVG</a> source into a <a class="el" href="class_vect_sharp_1_1_page.html" title="Represents a Graphics object with a width and height.">Page</a> containing the image represented by the code.  <a href="class_vect_sharp_1_1_s_v_g_1_1_parser.html#a66524a179a5308ea43b6869d8f31a538">More...</a><br /></td></tr>
 <tr class="separator:a66524a179a5308ea43b6869d8f31a538"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -108,6 +112,12 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a717b3d9deac5e07c9451495c107f2933"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_vect_sharp_1_1_page.html">Page</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_s_v_g_1_1_parser.html#a717b3d9deac5e07c9451495c107f2933">FromStream</a> (Stream svgSourceStream)</td></tr>
 <tr class="memdesc:a717b3d9deac5e07c9451495c107f2933"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses an stream containing <a class="el" href="namespace_vect_sharp_1_1_s_v_g.html">SVG</a> source code into a <a class="el" href="class_vect_sharp_1_1_page.html" title="Represents a Graphics object with a width and height.">Page</a> containing the image represented by the code.  <a href="class_vect_sharp_1_1_s_v_g_1_1_parser.html#a717b3d9deac5e07c9451495c107f2933">More...</a><br /></td></tr>
 <tr class="separator:a717b3d9deac5e07c9451495c107f2933"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:ab061b23582543541eeeb43896c28689a"><td class="memItemLeft" align="right" valign="top">static Func&lt; string, bool, <a class="el" href="class_vect_sharp_1_1_page.html">Page</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_s_v_g_1_1_parser.html#ab061b23582543541eeeb43896c28689a">ParseImageURI</a></td></tr>
+<tr class="memdesc:ab061b23582543541eeeb43896c28689a"><td class="mdescLeft">&#160;</td><td class="mdescRight">A function that takes as input an image URI and a boolean value indicating whether the image should be interpolated, and returns a <a class="el" href="class_vect_sharp_1_1_page.html" title="Represents a Graphics object with a width and height.">Page</a> object containing the image. By default, this is equal to <a class="el" href="class_vect_sharp_1_1_s_v_g_1_1_parser.html#a6f68508d2960525e92fc31bead086c1c" title="Parses an SVG image URI.">ParseSVGURI</a>, i.e. it is only able to parse <a class="el" href="namespace_vect_sharp_1_1_s_v_g.html">SVG</a> images. If you wish to enable the parsing of other formats, you should install the "VectSharp.MuPDFUtils" NuGet package and enable the parser in your program by doing something like:  <a href="class_vect_sharp_1_1_s_v_g_1_1_parser.html#ab061b23582543541eeeb43896c28689a">More...</a><br /></td></tr>
+<tr class="separator:ab061b23582543541eeeb43896c28689a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Contains methods to read an <a class="el" href="namespace_vect_sharp_1_1_s_v_g.html">SVG</a> image file. </p>
@@ -147,7 +157,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="class_vect_sharp_1_1_page.html" title="Represents a Graphics object with a width and height.">Page</a> containing the image represented by the file.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_s_v_g_parser_8cs_source.html#l00069">69</a> of file <a class="el" href="_s_v_g_parser_8cs_source.html">SVGParser.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_v_g_parser_8cs_source.html#l00132">132</a> of file <a class="el" href="_s_v_g_parser_8cs_source.html">SVGParser.cs</a>.</p>
 
 </div>
 </div>
@@ -184,7 +194,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="class_vect_sharp_1_1_page.html" title="Represents a Graphics object with a width and height.">Page</a> containing the image represented by the <em>svgSourceStream</em> .</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_s_v_g_parser_8cs_source.html#l00079">79</a> of file <a class="el" href="_s_v_g_parser_8cs_source.html">SVGParser.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_v_g_parser_8cs_source.html#l00142">142</a> of file <a class="el" href="_s_v_g_parser_8cs_source.html">SVGParser.cs</a>.</p>
 
 </div>
 </div>
@@ -221,7 +231,83 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="class_vect_sharp_1_1_page.html" title="Represents a Graphics object with a width and height.">Page</a> containing the image represented by the <em>svgSource</em> .</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_s_v_g_parser_8cs_source.html#l00038">38</a> of file <a class="el" href="_s_v_g_parser_8cs_source.html">SVGParser.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_v_g_parser_8cs_source.html#l00101">101</a> of file <a class="el" href="_s_v_g_parser_8cs_source.html">SVGParser.cs</a>.</p>
+
+</div>
+</div>
+<a id="a6f68508d2960525e92fc31bead086c1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f68508d2960525e92fc31bead086c1c">&#9670;&nbsp;</a></span>ParseSVGURI()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="class_vect_sharp_1_1_page.html">Page</a> VectSharp.SVG.Parser.ParseSVGURI </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>uri</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>ignored</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Parses an <a class="el" href="namespace_vect_sharp_1_1_s_v_g.html">SVG</a> image URI. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">uri</td><td>The image URI to parse.</td></tr>
+    <tr><td class="paramname">ignored</td><td>This value is ignored and is only needed for compatibility.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="class_vect_sharp_1_1_page.html" title="Represents a Graphics object with a width and height.">Page</a> containing the parsed <a class="el" href="namespace_vect_sharp_1_1_s_v_g.html">SVG</a> image, or null.</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_s_v_g_parser_8cs_source.html#l00052">52</a> of file <a class="el" href="_s_v_g_parser_8cs_source.html">SVGParser.cs</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="ab061b23582543541eeeb43896c28689a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab061b23582543541eeeb43896c28689a">&#9670;&nbsp;</a></span>ParseImageURI</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Func&lt;string, bool, <a class="el" href="class_vect_sharp_1_1_page.html">Page</a>&gt; VectSharp.SVG.Parser.ParseImageURI</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A function that takes as input an image URI and a boolean value indicating whether the image should be interpolated, and returns a <a class="el" href="class_vect_sharp_1_1_page.html" title="Represents a Graphics object with a width and height.">Page</a> object containing the image. By default, this is equal to <a class="el" href="class_vect_sharp_1_1_s_v_g_1_1_parser.html#a6f68508d2960525e92fc31bead086c1c" title="Parses an SVG image URI.">ParseSVGURI</a>, i.e. it is only able to parse <a class="el" href="namespace_vect_sharp_1_1_s_v_g.html">SVG</a> images. If you wish to enable the parsing of other formats, you should install the "VectSharp.MuPDFUtils" NuGet package and enable the parser in your program by doing something like: </p>
+<p><code><a class="el" href="class_vect_sharp_1_1_s_v_g_1_1_parser.html#ab061b23582543541eeeb43896c28689a" title="A function that takes as input an image URI and a boolean value indicating whether the image should b...">VectSharp.SVG.Parser.ParseImageURI</a> = <a class="el" href="class_vect_sharp_1_1_mu_p_d_f_utils_1_1_image_u_r_i_parser.html#ac9d2a2e3ae7d9e88d38c2250c9056146" title="Parses an image URI into a page. This is intended to replace the default image URI interpreter in Vec...">VectSharp.MuPDFUtils.ImageURIParser.Parser</a>(<a class="el" href="class_vect_sharp_1_1_s_v_g_1_1_parser.html#a6f68508d2960525e92fc31bead086c1c" title="Parses an SVG image URI.">VectSharp.SVG.Parser.ParseSVGURI</a>);</code></p>
+
+<p class="definition">Definition at line <a class="el" href="_s_v_g_parser_8cs_source.html#l00044">44</a> of file <a class="el" href="_s_v_g_parser_8cs_source.html">SVGParser.cs</a>.</p>
 
 </div>
 </div>

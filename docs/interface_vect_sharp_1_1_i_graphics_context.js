@@ -2,6 +2,7 @@ var interface_vect_sharp_1_1_i_graphics_context =
 [
     [ "Close", "interface_vect_sharp_1_1_i_graphics_context.html#aee6422b22a12103db71ce2ae6095716e", null ],
     [ "CubicBezierTo", "interface_vect_sharp_1_1_i_graphics_context.html#a4abdb2a21fd2f7b6bb8682cec0d63327", null ],
+    [ "DrawRasterImage", "interface_vect_sharp_1_1_i_graphics_context.html#a531e68add8d9bf7ef60ca8ede6366bc7", null ],
     [ "Fill", "interface_vect_sharp_1_1_i_graphics_context.html#a1271cbb1f3085a0c765d20e378390dd1", null ],
     [ "FillText", "interface_vect_sharp_1_1_i_graphics_context.html#a9d03d7fa22ce2f684ca3ac0c9aca32c1", null ],
     [ "LineTo", "interface_vect_sharp_1_1_i_graphics_context.html#ab58d1e78dc5e78ae06e6ce7ef113888d", null ],
@@ -11,6 +12,7 @@ var interface_vect_sharp_1_1_i_graphics_context =
     [ "Rotate", "interface_vect_sharp_1_1_i_graphics_context.html#a0971fe22859b83e823e31af9330f4d34", null ],
     [ "Save", "interface_vect_sharp_1_1_i_graphics_context.html#aa4d543a0272054a27a488f922fc6be55", null ],
     [ "Scale", "interface_vect_sharp_1_1_i_graphics_context.html#ac446263d92fecb57b4826de50c3aecb0", null ],
+    [ "SetClippingPath", "interface_vect_sharp_1_1_i_graphics_context.html#a073f9d737c9dd0f8fb2a69a50b8a1aeb", null ],
     [ "SetFillStyle", "interface_vect_sharp_1_1_i_graphics_context.html#a22cf6acce5d2178ecb233fbfc33b0fc4", null ],
     [ "SetFillStyle", "interface_vect_sharp_1_1_i_graphics_context.html#ad621692d18a158b1f749ff0f28db90c3", null ],
     [ "SetLineDash", "interface_vect_sharp_1_1_i_graphics_context.html#ad541c79cdbea3e6b231d9f532db82d12", null ],
