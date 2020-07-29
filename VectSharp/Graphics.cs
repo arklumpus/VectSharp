@@ -2625,6 +2625,7 @@ namespace VectSharp
                 else if (this.Actions[i] is RasterImageAction)
                 {
                     RasterImageAction img = this.Actions[i] as RasterImageAction;
+                    destinationContext.Tag = img.Tag;
                     destinationContext.DrawRasterImage(img.SourceX, img.SourceY, img.SourceWidth, img.SourceHeight, img.DestinationX, img.DestinationY, img.DestinationWidth, img.DestinationHeight, img.Image);
                 }
             }

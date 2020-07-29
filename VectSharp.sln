@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectSharp.Raster", "VectSha
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectSharp.SVG", "VectSharp.SVG\VectSharp.SVG.csproj", "{B69B1606-89A8-4EB7-9AF0-87D4CF276DBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectSharp.MuPDFUtils", "VectSharp.MuPDFUtils\VectSharp.MuPDFUtils.csproj", "{D2D2CD04-2B9F-4139-93E7-D6B505B6A7BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectSharp.MuPDFUtils", "VectSharp.MuPDFUtils\VectSharp.MuPDFUtils.csproj", "{D2D2CD04-2B9F-4139-93E7-D6B505B6A7BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
