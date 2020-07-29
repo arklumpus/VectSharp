@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['hasalpha_765',['HasAlpha',['../class_vect_sharp_1_1_raster_image.html#a3012ff06029d327b3a280260fb2207f2',1,'VectSharp::RasterImage']]],
-  ['height_766',['Height',['../class_vect_sharp_1_1_page.html#ad526058ea8d2032e71fdd499e24a7407',1,'VectSharp.Page.Height()'],['../class_vect_sharp_1_1_font_1_1_detailed_font_metrics.html#a8c602723696dee76ba380b1a9f0d0d41',1,'VectSharp.Font.DetailedFontMetrics.Height()'],['../interface_vect_sharp_1_1_i_graphics_context.html#ab26b84785247919d572ca1f58fd9bf8a',1,'VectSharp.IGraphicsContext.Height()'],['../class_vect_sharp_1_1_raster_image.html#a7fdcc792321aae93369d85c280bf696c',1,'VectSharp.RasterImage.Height()']]]
+  ['geometry_771',['Geometry',['../class_vect_sharp_1_1_canvas_1_1_render_action.html#a645390ebec3b6b698f1e395d00486c81',1,'VectSharp::Canvas::RenderAction']]],
+  ['graphics_772',['Graphics',['../class_vect_sharp_1_1_page.html#a6a3757a9f2e8efc2dceca8d99fff9ace',1,'VectSharp::Page']]]
 ];

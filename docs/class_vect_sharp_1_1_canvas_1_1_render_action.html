@@ -103,7 +103,8 @@ $(document).ready(function(){initNavTree('class_vect_sharp_1_1_canvas_1_1_render
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:a540142d9a35323a4d5301256c2c804c2"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a540142d9a35323a4d5301256c2c804c2">ActionTypes</a> { <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a540142d9a35323a4d5301256c2c804c2aac70412e939d72a9234cdebb1af5867b">ActionTypes.Path</a>, 
-<a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a540142d9a35323a4d5301256c2c804c2a9dffbf69ffba8bc38bc4e01abf4b1675">ActionTypes.Text</a>
+<a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a540142d9a35323a4d5301256c2c804c2a9dffbf69ffba8bc38bc4e01abf4b1675">ActionTypes.Text</a>, 
+<a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a540142d9a35323a4d5301256c2c804c2a87ee62f0c2390b73f784732a13cce8cb">ActionTypes.RasterImage</a>
  }</td></tr>
 <tr class="memdesc:a540142d9a35323a4d5301256c2c804c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Types of rendering actions.  <a href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a540142d9a35323a4d5301256c2c804c2">More...</a><br /></td></tr>
 <tr class="separator:a540142d9a35323a4d5301256c2c804c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -119,12 +120,15 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:aa56ea0d93289261bae9d495956b1690d"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html">RenderAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#aa56ea0d93289261bae9d495956b1690d">PathAction</a> (<a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a645390ebec3b6b698f1e395d00486c81">Geometry</a> geometry, Pen stroke, IBrush fill, Avalonia.Matrix transform, string tag=null)</td></tr>
-<tr class="memdesc:aa56ea0d93289261bae9d495956b1690d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html" title="Represents a light-weight rendering action.">RenderAction</a> representing a Path.  <a href="class_vect_sharp_1_1_canvas_1_1_render_action.html#aa56ea0d93289261bae9d495956b1690d">More...</a><br /></td></tr>
-<tr class="separator:aa56ea0d93289261bae9d495956b1690d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b7d03de4f3080f017eeb3a5b687d619"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html">RenderAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a5b7d03de4f3080f017eeb3a5b687d619">TextAction</a> (FormattedText text, IBrush fill, Avalonia.Matrix transform, string tag=null)</td></tr>
-<tr class="memdesc:a5b7d03de4f3080f017eeb3a5b687d619"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html" title="Represents a light-weight rendering action.">RenderAction</a> representing text.  <a href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a5b7d03de4f3080f017eeb3a5b687d619">More...</a><br /></td></tr>
-<tr class="separator:a5b7d03de4f3080f017eeb3a5b687d619"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab823aaf02a758a0643d2c745be71a200"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html">RenderAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#ab823aaf02a758a0643d2c745be71a200">PathAction</a> (<a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a645390ebec3b6b698f1e395d00486c81">Geometry</a> geometry, Pen stroke, IBrush fill, Avalonia.Matrix transform, <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a645390ebec3b6b698f1e395d00486c81">Geometry</a> clippingPath, string tag=null)</td></tr>
+<tr class="memdesc:ab823aaf02a758a0643d2c745be71a200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html" title="Represents a light-weight rendering action.">RenderAction</a> representing a Path.  <a href="class_vect_sharp_1_1_canvas_1_1_render_action.html#ab823aaf02a758a0643d2c745be71a200">More...</a><br /></td></tr>
+<tr class="separator:ab823aaf02a758a0643d2c745be71a200"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5fbf8e7878c1392aff0aed0ae3f07ef"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html">RenderAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#ac5fbf8e7878c1392aff0aed0ae3f07ef">TextAction</a> (FormattedText text, IBrush fill, Avalonia.Matrix transform, <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a645390ebec3b6b698f1e395d00486c81">Geometry</a> clippingPath, string tag=null)</td></tr>
+<tr class="memdesc:ac5fbf8e7878c1392aff0aed0ae3f07ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html" title="Represents a light-weight rendering action.">RenderAction</a> representing text.  <a href="class_vect_sharp_1_1_canvas_1_1_render_action.html#ac5fbf8e7878c1392aff0aed0ae3f07ef">More...</a><br /></td></tr>
+<tr class="separator:ac5fbf8e7878c1392aff0aed0ae3f07ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc6fda560a09d8426dca05131ea5e68d"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html">RenderAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#adc6fda560a09d8426dca05131ea5e68d">ImageAction</a> (string imageId, Avalonia.Rect sourceRect, Avalonia.Rect destinationRect, Avalonia.Matrix transform, <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a645390ebec3b6b698f1e395d00486c81">Geometry</a> clippingPath, string tag=null)</td></tr>
+<tr class="memdesc:adc6fda560a09d8426dca05131ea5e68d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html" title="Represents a light-weight rendering action.">RenderAction</a> representing an image.  <a href="class_vect_sharp_1_1_canvas_1_1_render_action.html#adc6fda560a09d8426dca05131ea5e68d">More...</a><br /></td></tr>
+<tr class="separator:adc6fda560a09d8426dca05131ea5e68d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
 Properties</h2></td></tr>
@@ -143,6 +147,18 @@ Properties</h2></td></tr>
 <tr class="memitem:aff0494e9ae3c91b46759484a3856bd58"><td class="memItemLeft" align="right" valign="top">IBrush&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#aff0494e9ae3c91b46759484a3856bd58">Fill</a><code> [get, set]</code></td></tr>
 <tr class="memdesc:aff0494e9ae3c91b46759484a3856bd58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rendering fill (null if the rendered action only has a <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#aead4222aca31896910f612a45c1e9347" title="Rendering stroke (null if the action type is ActionTypes.Text or if the rendered action only has a Fi...">Stroke</a>). If you change this, you need to invalidate the <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a6e8d94f05f0f24d6a743bcb19ec7432c" title="The container of this RenderAction.">Parent</a>'s visual.  <a href="class_vect_sharp_1_1_canvas_1_1_render_action.html#aff0494e9ae3c91b46759484a3856bd58">More...</a><br /></td></tr>
 <tr class="separator:aff0494e9ae3c91b46759484a3856bd58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bc0b0bed0343b2a2f05911b17dc54e9"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a3bc0b0bed0343b2a2f05911b17dc54e9">ImageId</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a3bc0b0bed0343b2a2f05911b17dc54e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Univocal identifier of the image that needs to be drawn.  <a href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a3bc0b0bed0343b2a2f05911b17dc54e9">More...</a><br /></td></tr>
+<tr class="separator:a3bc0b0bed0343b2a2f05911b17dc54e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac836817762df1e4ebb312c63f31e462e"><td class="memItemLeft" align="right" valign="top">Avalonia.? Rect&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#ac836817762df1e4ebb312c63f31e462e">ImageSource</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:ac836817762df1e4ebb312c63f31e462e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The source rectangle of the image.  <a href="class_vect_sharp_1_1_canvas_1_1_render_action.html#ac836817762df1e4ebb312c63f31e462e">More...</a><br /></td></tr>
+<tr class="separator:ac836817762df1e4ebb312c63f31e462e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68c4364bea1ed440d1b7b24d7575e1ef"><td class="memItemLeft" align="right" valign="top">Avalonia.? Rect&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a68c4364bea1ed440d1b7b24d7575e1ef">ImageDestination</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a68c4364bea1ed440d1b7b24d7575e1ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">The destination rectangle of the image.  <a href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a68c4364bea1ed440d1b7b24d7575e1ef">More...</a><br /></td></tr>
+<tr class="separator:a68c4364bea1ed440d1b7b24d7575e1ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6aefb84f43c2bf00492374c40a95351"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a645390ebec3b6b698f1e395d00486c81">Geometry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#ae6aefb84f43c2bf00492374c40a95351">ClippingPath</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:ae6aefb84f43c2bf00492374c40a95351"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current clipping path.  <a href="class_vect_sharp_1_1_canvas_1_1_render_action.html#ae6aefb84f43c2bf00492374c40a95351">More...</a><br /></td></tr>
+<tr class="separator:ae6aefb84f43c2bf00492374c40a95351"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96797af609bc033457af40ab5ea9d7ca"><td class="memItemLeft" align="right" valign="top">Avalonia.Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a96797af609bc033457af40ab5ea9d7ca">InverseTransform</a> = Avalonia.Matrix.Identity<code> [get]</code></td></tr>
 <tr class="memdesc:a96797af609bc033457af40ab5ea9d7ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inverse transformation matrix.  <a href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a96797af609bc033457af40ab5ea9d7ca">More...</a><br /></td></tr>
 <tr class="separator:a96797af609bc033457af40ab5ea9d7ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -174,7 +190,7 @@ Events</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a light-weight rendering action. </p>
 
-<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00850">850</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00949">949</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="a540142d9a35323a4d5301256c2c804c2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a540142d9a35323a4d5301256c2c804c2">&#9670;&nbsp;</a></span>ActionTypes</h2>
@@ -202,9 +218,11 @@ Events</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="a540142d9a35323a4d5301256c2c804c2a9dffbf69ffba8bc38bc4e01abf4b1675"></a>Text&#160;</td><td class="fielddoc"><p>The render action represents a text object. </p>
 </td></tr>
+<tr><td class="fieldname"><a id="a540142d9a35323a4d5301256c2c804c2a87ee62f0c2390b73f784732a13cce8cb"></a>RasterImage&#160;</td><td class="fielddoc"><p>The render action represents a raster image. </p>
+</td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00855">855</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00954">954</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
 
 </div>
 </div>
@@ -226,12 +244,88 @@ Events</h2></td></tr>
 
 <p>Brings the render action to the front of the rendering queue. This method can only be invoked after the output has been fully initialised. </p>
 
-<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l01024">1024</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l01175">1175</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
 
 </div>
 </div>
-<a id="aa56ea0d93289261bae9d495956b1690d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa56ea0d93289261bae9d495956b1690d">&#9670;&nbsp;</a></span>PathAction()</h2>
+<a id="adc6fda560a09d8426dca05131ea5e68d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc6fda560a09d8426dca05131ea5e68d">&#9670;&nbsp;</a></span>ImageAction()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html">RenderAction</a> VectSharp.Canvas.RenderAction.ImageAction </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>imageId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Avalonia.Rect&#160;</td>
+          <td class="paramname"><em>sourceRect</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Avalonia.Rect&#160;</td>
+          <td class="paramname"><em>destinationRect</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Avalonia.Matrix&#160;</td>
+          <td class="paramname"><em>transform</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a645390ebec3b6b698f1e395d00486c81">Geometry</a>&#160;</td>
+          <td class="paramname"><em>clippingPath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>tag</em> = <code>null</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Creates a new <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html" title="Represents a light-weight rendering action.">RenderAction</a> representing an image. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">imageId</td><td>The univocal identifier of the image to draw.</td></tr>
+    <tr><td class="paramname">sourceRect</td><td>The source rectangle of the image.</td></tr>
+    <tr><td class="paramname">destinationRect</td><td>The destination rectangle of the image.</td></tr>
+    <tr><td class="paramname">transform</td><td>The transform that will be applied to the image.</td></tr>
+    <tr><td class="paramname">clippingPath</td><td>The clipping path.</td></tr>
+    <tr><td class="paramname">tag</td><td>A tag to access the <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html" title="Represents a light-weight rendering action.">RenderAction</a>. If this is null this <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html" title="Represents a light-weight rendering action.">RenderAction</a> is not visible in the hit test.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l01158">1158</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+
+</div>
+</div>
+<a id="ab823aaf02a758a0643d2c745be71a200"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab823aaf02a758a0643d2c745be71a200">&#9670;&nbsp;</a></span>PathAction()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -266,6 +360,12 @@ Events</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a645390ebec3b6b698f1e395d00486c81">Geometry</a>&#160;</td>
+          <td class="paramname"><em>clippingPath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">string&#160;</td>
           <td class="paramname"><em>tag</em> = <code>null</code>&#160;</td>
         </tr>
@@ -289,13 +389,14 @@ Events</h2></td></tr>
     <tr><td class="paramname">stroke</td><td>The stroke of the path (can be null).</td></tr>
     <tr><td class="paramname">fill</td><td>The fill of the path (can be null).</td></tr>
     <tr><td class="paramname">transform</td><td>The transform that will be applied to the path.</td></tr>
+    <tr><td class="paramname">clippingPath</td><td>The clipping path.</td></tr>
     <tr><td class="paramname">tag</td><td>A tag to access the <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html" title="Represents a light-weight rendering action.">RenderAction</a>. If this is null this <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html" title="Represents a light-weight rendering action.">RenderAction</a> is not visible in the hit test.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A new <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html" title="Represents a light-weight rendering action.">RenderAction</a> representing a Path.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00987">987</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l01111">1111</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
 
 </div>
 </div>
@@ -316,12 +417,12 @@ Events</h2></td></tr>
 
 <p>Brings the render action to the back of the rendering queue. This method can only be invoked after the output has been fully initialised. </p>
 
-<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l01032">1032</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l01183">1183</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
 
 </div>
 </div>
-<a id="a5b7d03de4f3080f017eeb3a5b687d619"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5b7d03de4f3080f017eeb3a5b687d619">&#9670;&nbsp;</a></span>TextAction()</h2>
+<a id="ac5fbf8e7878c1392aff0aed0ae3f07ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5fbf8e7878c1392aff0aed0ae3f07ef">&#9670;&nbsp;</a></span>TextAction()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -350,6 +451,12 @@ Events</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a645390ebec3b6b698f1e395d00486c81">Geometry</a>&#160;</td>
+          <td class="paramname"><em>clippingPath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">string&#160;</td>
           <td class="paramname"><em>tag</em> = <code>null</code>&#160;</td>
         </tr>
@@ -372,13 +479,14 @@ Events</h2></td></tr>
     <tr><td class="paramname">text</td><td>The text to be rendered.</td></tr>
     <tr><td class="paramname">fill</td><td>The fill of the text (can be null).</td></tr>
     <tr><td class="paramname">transform</td><td>The transform that will be applied to the text.</td></tr>
+    <tr><td class="paramname">clippingPath</td><td>The clipping path.</td></tr>
     <tr><td class="paramname">tag</td><td>A tag to access the <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html" title="Represents a light-weight rendering action.">RenderAction</a>. If this is null this <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html" title="Represents a light-weight rendering action.">RenderAction</a> is not visible in the hit test.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l01008">1008</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l01134">1134</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
 
 </div>
 </div>
@@ -405,7 +513,33 @@ Events</h2></td></tr>
 
 <p>Type of the rendering action. </p>
 
-<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00871">871</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00975">975</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+
+</div>
+</div>
+<a id="ae6aefb84f43c2bf00492374c40a95351"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6aefb84f43c2bf00492374c40a95351">&#9670;&nbsp;</a></span>ClippingPath</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a645390ebec3b6b698f1e395d00486c81">Geometry</a> VectSharp.Canvas.RenderAction.ClippingPath</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The current clipping path. </p>
+
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l01015">1015</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
 
 </div>
 </div>
@@ -431,7 +565,7 @@ Events</h2></td></tr>
 
 <p>Rendering fill (null if the rendered action only has a <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#aead4222aca31896910f612a45c1e9347" title="Rendering stroke (null if the action type is ActionTypes.Text or if the rendered action only has a Fi...">Stroke</a>). If you change this, you need to invalidate the <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a6e8d94f05f0f24d6a743bcb19ec7432c" title="The container of this RenderAction.">Parent</a>'s visual. </p>
 
-<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00891">891</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00995">995</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
 
 </div>
 </div>
@@ -457,7 +591,85 @@ Events</h2></td></tr>
 
 <p>Geometry that needs to be rendered (null if the action type is <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a540142d9a35323a4d5301256c2c804c2a9dffbf69ffba8bc38bc4e01abf4b1675" title="The render action represents a text object.">ActionTypes.Text</a>). If you change this, you need to invalidate the <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a6e8d94f05f0f24d6a743bcb19ec7432c" title="The container of this RenderAction.">Parent</a>'s visual. </p>
 
-<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00876">876</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00980">980</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+
+</div>
+</div>
+<a id="a68c4364bea1ed440d1b7b24d7575e1ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a68c4364bea1ed440d1b7b24d7575e1ef">&#9670;&nbsp;</a></span>ImageDestination</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Avalonia.? Rect VectSharp.Canvas.RenderAction.ImageDestination</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The destination rectangle of the image. </p>
+
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l01010">1010</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+
+</div>
+</div>
+<a id="a3bc0b0bed0343b2a2f05911b17dc54e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3bc0b0bed0343b2a2f05911b17dc54e9">&#9670;&nbsp;</a></span>ImageId</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string VectSharp.Canvas.RenderAction.ImageId</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Univocal identifier of the image that needs to be drawn. </p>
+
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l01000">1000</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+
+</div>
+</div>
+<a id="ac836817762df1e4ebb312c63f31e462e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac836817762df1e4ebb312c63f31e462e">&#9670;&nbsp;</a></span>ImageSource</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Avalonia.? Rect VectSharp.Canvas.RenderAction.ImageSource</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The source rectangle of the image. </p>
+
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l01005">1005</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
 
 </div>
 </div>
@@ -483,7 +695,7 @@ Events</h2></td></tr>
 
 <p>Inverse transformation matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00899">899</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l01022">1022</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
 
 </div>
 </div>
@@ -509,7 +721,7 @@ Events</h2></td></tr>
 
 <p>The container of this <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html" title="Represents a light-weight rendering action.">RenderAction</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00924">924</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l01047">1047</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
 
 </div>
 </div>
@@ -535,7 +747,7 @@ Events</h2></td></tr>
 
 <p>Rendering stroke (null if the action type is <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a540142d9a35323a4d5301256c2c804c2a9dffbf69ffba8bc38bc4e01abf4b1675" title="The render action represents a text object.">ActionTypes.Text</a> or if the rendered action only has a <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#aff0494e9ae3c91b46759484a3856bd58" title="Rendering fill (null if the rendered action only has a Stroke). If you change this,...">Fill</a>). If you change this, you need to invalidate the <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a6e8d94f05f0f24d6a743bcb19ec7432c" title="The container of this RenderAction.">Parent</a>'s visual. </p>
 
-<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00886">886</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00990">990</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
 
 </div>
 </div>
@@ -561,7 +773,7 @@ Events</h2></td></tr>
 
 <p>A tag to access the <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html" title="Represents a light-weight rendering action.">RenderAction</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00917">917</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l01040">1040</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
 
 </div>
 </div>
@@ -587,7 +799,7 @@ Events</h2></td></tr>
 
 <p>Text that needs to be rendered (null if the action type is <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a540142d9a35323a4d5301256c2c804c2aac70412e939d72a9234cdebb1af5867b" title="The render action represents a path object.">ActionTypes.Path</a>). If you change this, you need to invalidate the <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a6e8d94f05f0f24d6a743bcb19ec7432c" title="The container of this RenderAction.">Parent</a>'s visual. </p>
 
-<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00881">881</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00985">985</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
 
 </div>
 </div>
@@ -613,7 +825,7 @@ Events</h2></td></tr>
 
 <p>Rendering transformation matrix. If you change this, you need to invalidate the <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a6e8d94f05f0f24d6a743bcb19ec7432c" title="The container of this RenderAction.">Parent</a>'s visual. </p>
 
-<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00904">904</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l01027">1027</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
 
 </div>
 </div>
@@ -632,7 +844,7 @@ Events</h2></td></tr>
 
 <p>Raised when the pointer enters the area covered by the <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html" title="Represents a light-weight rendering action.">RenderAction</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00935">935</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l01058">1058</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
 
 </div>
 </div>
@@ -650,7 +862,7 @@ Events</h2></td></tr>
 
 <p>Raised when the pointer leaves the area covered by the <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html" title="Represents a light-weight rendering action.">RenderAction</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00940">940</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l01063">1063</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
 
 </div>
 </div>
@@ -668,7 +880,7 @@ Events</h2></td></tr>
 
 <p>Raised when the pointer is pressed while over the area covered by the <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html" title="Represents a light-weight rendering action.">RenderAction</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00945">945</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l01068">1068</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
 
 </div>
 </div>
@@ -686,7 +898,7 @@ Events</h2></td></tr>
 
 <p>Raised when the pointer is released after a <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a030b7e25eebc00bfca6c8f993ced9e7f" title="Raised when the pointer is pressed while over the area covered by the RenderAction.">PointerPressed</a> event. </p>
 
-<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l00950">950</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_avalonia_context_8cs_source.html#l01073">1073</a> of file <a class="el" href="_avalonia_context_8cs_source.html">AvaloniaContext.cs</a>.</p>
 
 </div>
 </div>

@@ -621,6 +621,8 @@ namespace VectSharp.Canvas
 
         static Avalonia.Point Origin = new Avalonia.Point(0, 0);
 
+        public Dictionary<string, (IImage, bool)> Images;
+
         public void BringToFront(RenderAction action)
         {
             this.RenderActions.Remove(action);
@@ -657,7 +659,8 @@ namespace VectSharp.Canvas
         {
             this.Width = width;
             this.Height = height;
-            AvaloniaDrawingContext ctx = new AvaloniaDrawingContext(this.Width, this.Height, removeTaggedActionsAfterExecution, textOption);
+            this.Images = new Dictionary<string, (IImage, bool)>();
+            AvaloniaDrawingContext ctx = new AvaloniaDrawingContext(this.Width, this.Height, removeTaggedActionsAfterExecution, textOption, this.Images);
             foreach (KeyValuePair<string, Delegate> action in taggedActions)
             {
                 ctx.TaggedActions.Add(action.Key, (Func<RenderAction, IEnumerable<RenderAction>>)action.Value);
@@ -691,24 +694,36 @@ namespace VectSharp.Canvas
 
             for (int i = 0; i < TaggedRenderActions.Count; i++)
             {
-                Avalonia.Point localPosition = position.Transform(TaggedRenderActions[i].InverseTransform);
+                if (TaggedRenderActions[i].ClippingPath == null || TaggedRenderActions[i].ClippingPath.FillContains(position))
+                {
+                    Avalonia.Point localPosition = position.Transform(TaggedRenderActions[i].InverseTransform);
 
-                if (TaggedRenderActions[i].ActionType == RenderAction.ActionTypes.Path)
-                {
-                    if ((TaggedRenderActions[i].Fill != null && TaggedRenderActions[i].Geometry.FillContains(localPosition)) || TaggedRenderActions[i].Geometry.StrokeContains(TaggedRenderActions[i].Stroke, localPosition))
+                    if (TaggedRenderActions[i].ActionType == RenderAction.ActionTypes.Path)
                     {
-                        TaggedRenderActions[i].FirePointerPressed(e);
-                        CurrentPressedAction = i;
-                        break;
+                        if ((TaggedRenderActions[i].Fill != null && TaggedRenderActions[i].Geometry.FillContains(localPosition)) || TaggedRenderActions[i].Geometry.StrokeContains(TaggedRenderActions[i].Stroke, localPosition))
+                        {
+                            TaggedRenderActions[i].FirePointerPressed(e);
+                            CurrentPressedAction = i;
+                            break;
+                        }
                     }
-                }
-                else if (TaggedRenderActions[i].ActionType == RenderAction.ActionTypes.Text)
-                {
-                    if (TaggedRenderActions[i].Fill != null && TaggedRenderActions[i].Text.HitTestPoint(localPosition).IsInside)
+                    else if (TaggedRenderActions[i].ActionType == RenderAction.ActionTypes.Text)
                     {
-                        TaggedRenderActions[i].FirePointerPressed(e);
-                        CurrentPressedAction = i;
-                        break;
+                        if (TaggedRenderActions[i].Fill != null && TaggedRenderActions[i].Text.HitTestPoint(localPosition).IsInside)
+                        {
+                            TaggedRenderActions[i].FirePointerPressed(e);
+                            CurrentPressedAction = i;
+                            break;
+                        }
+                    }
+                    else if (TaggedRenderActions[i].ActionType == RenderAction.ActionTypes.RasterImage)
+                    {
+                        if (TaggedRenderActions[i].ImageDestination.Value.Contains(localPosition))
+                        {
+                            TaggedRenderActions[i].FirePointerPressed(e);
+                            CurrentPressedAction = i;
+                            break;
+                        }
                     }
                 }
             }
@@ -727,22 +742,33 @@ namespace VectSharp.Canvas
 
                 for (int i = 0; i < TaggedRenderActions.Count; i++)
                 {
-                    Avalonia.Point localPosition = position.Transform(TaggedRenderActions[i].InverseTransform);
+                    if (TaggedRenderActions[i].ClippingPath == null || TaggedRenderActions[i].ClippingPath.FillContains(position))
+                    {
+                        Avalonia.Point localPosition = position.Transform(TaggedRenderActions[i].InverseTransform);
 
-                    if (TaggedRenderActions[i].ActionType == RenderAction.ActionTypes.Path)
-                    {
-                        if ((TaggedRenderActions[i].Fill != null && TaggedRenderActions[i].Geometry.FillContains(localPosition)) || TaggedRenderActions[i].Geometry.StrokeContains(TaggedRenderActions[i].Stroke, localPosition))
+                        if (TaggedRenderActions[i].ActionType == RenderAction.ActionTypes.Path)
                         {
-                            TaggedRenderActions[i].FirePointerReleased(e);
-                            break;
+                            if ((TaggedRenderActions[i].Fill != null && TaggedRenderActions[i].Geometry.FillContains(localPosition)) || TaggedRenderActions[i].Geometry.StrokeContains(TaggedRenderActions[i].Stroke, localPosition))
+                            {
+                                TaggedRenderActions[i].FirePointerReleased(e);
+                                break;
+                            }
                         }
-                    }
-                    else if (TaggedRenderActions[i].ActionType == RenderAction.ActionTypes.Text)
-                    {
-                        if (TaggedRenderActions[i].Fill != null && TaggedRenderActions[i].Text.HitTestPoint(localPosition).IsInside)
+                        else if (TaggedRenderActions[i].ActionType == RenderAction.ActionTypes.Text)
                         {
-                            TaggedRenderActions[i].FirePointerReleased(e);
-                            break;
+                            if (TaggedRenderActions[i].Fill != null && TaggedRenderActions[i].Text.HitTestPoint(localPosition).IsInside)
+                            {
+                                TaggedRenderActions[i].FirePointerReleased(e);
+                                break;
+                            }
+                        }
+                        else if (TaggedRenderActions[i].ActionType == RenderAction.ActionTypes.RasterImage)
+                        {
+                            if (TaggedRenderActions[i].ImageDestination.Value.Contains(localPosition))
+                            {
+                                TaggedRenderActions[i].FirePointerReleased(e);
+                                break;
+                            }
                         }
                     }
                 }
@@ -758,44 +784,66 @@ namespace VectSharp.Canvas
 
             for (int i = 0; i < TaggedRenderActions.Count; i++)
             {
-                Avalonia.Point localPosition = position.Transform(TaggedRenderActions[i].InverseTransform);
-
-                if (TaggedRenderActions[i].ActionType == RenderAction.ActionTypes.Path)
+                if (TaggedRenderActions[i].ClippingPath == null || TaggedRenderActions[i].ClippingPath.FillContains(position))
                 {
-                    if ((TaggedRenderActions[i].Fill != null && TaggedRenderActions[i].Geometry.FillContains(localPosition)) || TaggedRenderActions[i].Geometry.StrokeContains(TaggedRenderActions[i].Stroke, localPosition))
+                    Avalonia.Point localPosition = position.Transform(TaggedRenderActions[i].InverseTransform);
+
+                    if (TaggedRenderActions[i].ActionType == RenderAction.ActionTypes.Path)
                     {
-                        found = true;
-
-                        if (CurrentOverAction != i)
+                        if ((TaggedRenderActions[i].Fill != null && TaggedRenderActions[i].Geometry.FillContains(localPosition)) || TaggedRenderActions[i].Geometry.StrokeContains(TaggedRenderActions[i].Stroke, localPosition))
                         {
-                            if (CurrentOverAction >= 0)
-                            {
-                                TaggedRenderActions[CurrentOverAction].FirePointerLeave(e);
-                            }
-                            CurrentOverAction = i;
-                            TaggedRenderActions[CurrentOverAction].FirePointerEnter(e);
-                        }
+                            found = true;
 
-                        break;
+                            if (CurrentOverAction != i)
+                            {
+                                if (CurrentOverAction >= 0)
+                                {
+                                    TaggedRenderActions[CurrentOverAction].FirePointerLeave(e);
+                                }
+                                CurrentOverAction = i;
+                                TaggedRenderActions[CurrentOverAction].FirePointerEnter(e);
+                            }
+
+                            break;
+                        }
                     }
-                }
-                else if (TaggedRenderActions[i].ActionType == RenderAction.ActionTypes.Text)
-                {
-                    if (TaggedRenderActions[i].Fill != null && TaggedRenderActions[i].Text.HitTestPoint(localPosition).IsInside)
+                    else if (TaggedRenderActions[i].ActionType == RenderAction.ActionTypes.Text)
                     {
-                        found = true;
-
-                        if (CurrentOverAction != i)
+                        if (TaggedRenderActions[i].Fill != null && TaggedRenderActions[i].Text.HitTestPoint(localPosition).IsInside)
                         {
-                            if (CurrentOverAction >= 0)
-                            {
-                                TaggedRenderActions[CurrentOverAction].FirePointerLeave(e);
-                            }
-                            CurrentOverAction = i;
-                            TaggedRenderActions[CurrentOverAction].FirePointerEnter(e);
-                        }
+                            found = true;
 
-                        break;
+                            if (CurrentOverAction != i)
+                            {
+                                if (CurrentOverAction >= 0)
+                                {
+                                    TaggedRenderActions[CurrentOverAction].FirePointerLeave(e);
+                                }
+                                CurrentOverAction = i;
+                                TaggedRenderActions[CurrentOverAction].FirePointerEnter(e);
+                            }
+
+                            break;
+                        }
+                    }
+                    else if (TaggedRenderActions[i].ActionType == RenderAction.ActionTypes.RasterImage)
+                    {
+                        if (TaggedRenderActions[i].ImageDestination.Value.Contains(localPosition))
+                        {
+                            found = true;
+
+                            if (CurrentOverAction != i)
+                            {
+                                if (CurrentOverAction >= 0)
+                                {
+                                    TaggedRenderActions[CurrentOverAction].FirePointerLeave(e);
+                                }
+                                CurrentOverAction = i;
+                                TaggedRenderActions[CurrentOverAction].FirePointerEnter(e);
+                            }
+
+                            break;
+                        }
                     }
                 }
             }
@@ -826,16 +874,73 @@ namespace VectSharp.Canvas
             {
                 if (act.ActionType == RenderAction.ActionTypes.Path)
                 {
+                    DrawingContext.PushedState? state = null;
+
+                    if (act.ClippingPath != null)
+                    {
+                        //Random draw operation needed due to https://github.com/AvaloniaUI/Avalonia/issues/4408
+                        context.DrawGeometry(null, new Pen(Brushes.Transparent), act.ClippingPath);
+                        state = context.PushGeometryClip(act.ClippingPath);
+                    }
+
                     using (context.PushPreTransform(act.Transform))
                     {
                         context.DrawGeometry(act.Fill, act.Stroke, act.Geometry);
                     }
+
+                    if (state != null)
+                    {
+                        state?.Dispose();
+                        //Random draw operation needed due to https://github.com/AvaloniaUI/Avalonia/issues/4408
+                        context.DrawGeometry(null, new Pen(Brushes.Transparent), act.ClippingPath);
+                    }
                 }
                 else if (act.ActionType == RenderAction.ActionTypes.Text)
                 {
+                    DrawingContext.PushedState? state = null;
+
+                    if (act.ClippingPath != null)
+                    {
+                        //Random draw operation needed due to https://github.com/AvaloniaUI/Avalonia/issues/4408
+                        context.DrawGeometry(null, new Pen(Brushes.Transparent), act.ClippingPath);
+                        state = context.PushGeometryClip(act.ClippingPath);
+                    }
+
                     using (context.PushPreTransform(act.Transform))
                     {
                         context.DrawText(act.Fill, Origin, act.Text);
+                    }
+
+                    if (state != null)
+                    {
+                        state?.Dispose();
+                        //Random draw operation needed due to https://github.com/AvaloniaUI/Avalonia/issues/4408
+                        context.DrawGeometry(null, new Pen(Brushes.Transparent), act.ClippingPath);
+                    }
+                }
+                else if (act.ActionType == RenderAction.ActionTypes.RasterImage)
+                {
+                    DrawingContext.PushedState? state = null;
+
+                    if (act.ClippingPath != null)
+                    {
+                        //Random draw operation needed due to https://github.com/AvaloniaUI/Avalonia/issues/4408
+                        context.DrawGeometry(null, new Pen(Brushes.Transparent), act.ClippingPath);
+                        state = context.PushGeometryClip(act.ClippingPath);
+                    }
+
+                    (IImage, bool) image = Images[act.ImageId];
+
+                    using (context.PushPreTransform(act.Transform))
+                    {
+                        context.DrawImage(image.Item1, act.ImageSource.Value, act.ImageDestination.Value, image.Item2 ? Avalonia.Visuals.Media.Imaging.BitmapInterpolationMode.HighQuality : Avalonia.Visuals.Media.Imaging.BitmapInterpolationMode.Default);
+                    }
+
+                    if (state != null)
+                    {
+                        state?.Dispose();
+                        //Random draw operation needed due to https://github.com/AvaloniaUI/Avalonia/issues/4408
+                        context.DrawGeometry(null, new Pen(Brushes.Transparent), act.ClippingPath);
                     }
                 }
             }
@@ -858,11 +963,16 @@ namespace VectSharp.Canvas
             /// The render action represents a path object.
             /// </summary>
             Path,
-            
+
             /// <summary>
             /// The render action represents a text object.
             /// </summary>
-            Text
+            Text,
+
+            /// <summary>
+            /// The render action represents a raster image.
+            /// </summary>
+            RasterImage
         }
 
         /// <summary>
@@ -890,6 +1000,25 @@ namespace VectSharp.Canvas
         /// </summary>
         public IBrush Fill { get; set; }
 
+        /// <summary>
+        /// Univocal identifier of the image that needs to be drawn.
+        /// </summary>
+        public string ImageId { get; set; }
+
+        /// <summary>
+        /// The source rectangle of the image.
+        /// </summary>
+        public Avalonia.Rect? ImageSource { get; set; }
+
+        /// <summary>
+        /// The destination rectangle of the image.
+        /// </summary>
+        public Avalonia.Rect? ImageDestination { get; set; }
+
+        /// <summary>
+        /// The current clipping path.
+        /// </summary>
+        public Geometry ClippingPath { get; set; }
 
         private Avalonia.Matrix _transform = Avalonia.Matrix.Identity;
 
@@ -982,9 +1111,10 @@ namespace VectSharp.Canvas
         /// <param name="stroke">The stroke of the path (can be null).</param>
         /// <param name="fill">The fill of the path (can be null).</param>
         /// <param name="transform">The transform that will be applied to the path.</param>
+        /// <param name="clippingPath">The clipping path.</param>
         /// <param name="tag">A tag to access the <see cref="RenderAction"/>. If this is null this <see cref="RenderAction"/> is not visible in the hit test.</param>
         /// <returns>A new <see cref="RenderAction"/> representing a Path.</returns>
-        public static RenderAction PathAction(Geometry geometry, Pen stroke, IBrush fill, Avalonia.Matrix transform, string tag = null)
+        public static RenderAction PathAction(Geometry geometry, Pen stroke, IBrush fill, Avalonia.Matrix transform, Geometry clippingPath, string tag = null)
         {
             return new RenderAction()
             {
@@ -993,6 +1123,7 @@ namespace VectSharp.Canvas
                 Stroke = stroke,
                 Fill = fill,
                 Transform = transform,
+                ClippingPath = clippingPath,
                 Tag = tag
             };
         }
@@ -1003,9 +1134,10 @@ namespace VectSharp.Canvas
         /// <param name="text">The text to be rendered.</param>
         /// <param name="fill">The fill of the text (can be null).</param>
         /// <param name="transform">The transform that will be applied to the text.</param>
+        /// <param name="clippingPath">The clipping path.</param>
         /// <param name="tag">A tag to access the <see cref="RenderAction"/>. If this is null this <see cref="RenderAction"/> is not visible in the hit test.</param>
         /// <returns></returns>
-        public static RenderAction TextAction(FormattedText text, IBrush fill, Avalonia.Matrix transform, string tag = null)
+        public static RenderAction TextAction(FormattedText text, IBrush fill, Avalonia.Matrix transform, Geometry clippingPath, string tag = null)
         {
             return new RenderAction()
             {
@@ -1014,6 +1146,31 @@ namespace VectSharp.Canvas
                 Stroke = null,
                 Fill = fill,
                 Transform = transform,
+                ClippingPath = clippingPath,
+                Tag = tag
+            };
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="RenderAction"/> representing an image.
+        /// </summary>
+        /// <param name="imageId">The univocal identifier of the image to draw.</param>
+        /// <param name="sourceRect">The source rectangle of the image.</param>
+        /// <param name="destinationRect">The destination rectangle of the image.</param>
+        /// <param name="transform">The transform that will be applied to the image.</param>
+        /// <param name="clippingPath">The clipping path.</param>
+        /// <param name="tag">A tag to access the <see cref="RenderAction"/>. If this is null this <see cref="RenderAction"/> is not visible in the hit test.</param>
+        /// <returns></returns>
+        public static RenderAction ImageAction(string imageId, Avalonia.Rect sourceRect, Avalonia.Rect destinationRect, Avalonia.Matrix transform, Geometry clippingPath, string tag = null)
+        {
+            return new RenderAction()
+            {
+                ActionType = ActionTypes.RasterImage,
+                ImageId = imageId,
+                ImageSource = sourceRect,
+                ImageDestination = destinationRect,
+                Transform = transform,
+                ClippingPath = clippingPath,
                 Tag = tag
             };
         }
@@ -1046,8 +1203,15 @@ namespace VectSharp.Canvas
 
         AvaloniaContextInterpreter.TextOptions _textOption;
 
-        public AvaloniaDrawingContext(double width, double height, bool removeTaggedActionsAfterExecution, AvaloniaContextInterpreter.TextOptions textOption)
+        private Dictionary<string, (IImage, bool)> Images;
+
+        private Geometry _clippingPath;
+        private Stack<Geometry> clippingPaths;
+
+        public AvaloniaDrawingContext(double width, double height, bool removeTaggedActionsAfterExecution, AvaloniaContextInterpreter.TextOptions textOption, Dictionary<string, (IImage, bool)> images)
         {
+            this.Images = images;
+
             currentPath = new PathGeometry();
             currentFigure = new PathFigure() { IsClosed = false };
             figureInitialised = false;
@@ -1067,6 +1231,10 @@ namespace VectSharp.Canvas
             states = new Stack<double[,]>();
 
             _textOption = textOption;
+
+            _clippingPath = null;
+            clippingPaths = new Stack<Geometry>();
+            clippingPaths.Push(_clippingPath);
         }
 
         public List<RenderAction> RenderActions { get; set; }
@@ -1176,7 +1344,7 @@ namespace VectSharp.Canvas
                     }
                 }
 
-                RenderAction act = RenderAction.TextAction(txt, new SolidColorBrush(Color.FromArgb(FillAlpha, (byte)(FillStyle.R * 255), (byte)(FillStyle.G * 255), (byte)(FillStyle.B * 255))), currTransform.ToAvaloniaMatrix(), Tag);
+                RenderAction act = RenderAction.TextAction(txt, new SolidColorBrush(Color.FromArgb(FillAlpha, (byte)(FillStyle.R * 255), (byte)(FillStyle.G * 255), (byte)(FillStyle.B * 255))), currTransform.ToAvaloniaMatrix(), _clippingPath?.Clone(), Tag);
 
                 if (!string.IsNullOrEmpty(Tag))
                 {
@@ -1292,11 +1460,13 @@ namespace VectSharp.Canvas
         public void Save()
         {
             states.Push((double[,])_transform.Clone());
+            clippingPaths.Push(_clippingPath?.Clone());
         }
 
         public void Restore()
         {
             _transform = states.Pop();
+            _clippingPath = clippingPaths.Pop();
         }
 
         public double LineWidth { get; set; }
@@ -1446,7 +1616,7 @@ namespace VectSharp.Canvas
                     break;
             }
 
-            RenderAction act = RenderAction.PathAction(currentPath, pen, null, _transform.ToAvaloniaMatrix(), Tag);
+            RenderAction act = RenderAction.PathAction(currentPath, pen, null, _transform.ToAvaloniaMatrix(), _clippingPath?.Clone(), Tag);
 
             if (!string.IsNullOrEmpty(Tag))
             {
@@ -1495,7 +1665,7 @@ namespace VectSharp.Canvas
                 currentPath.Figures.Add(currentFigure);
             }
 
-            RenderAction act = RenderAction.PathAction(currentPath, null, new SolidColorBrush(Color.FromArgb(FillAlpha, (byte)(FillStyle.R * 255), (byte)(FillStyle.G * 255), (byte)(FillStyle.B * 255))), _transform.ToAvaloniaMatrix(), Tag);
+            RenderAction act = RenderAction.PathAction(currentPath, null, new SolidColorBrush(Color.FromArgb(FillAlpha, (byte)(FillStyle.R * 255), (byte)(FillStyle.G * 255), (byte)(FillStyle.B * 255))), _transform.ToAvaloniaMatrix(), _clippingPath?.Clone(), Tag);
 
             if (!string.IsNullOrEmpty(Tag))
             {
@@ -1537,14 +1707,102 @@ namespace VectSharp.Canvas
             figureInitialised = false;
         }
 
+        private static void TransformGeometry(PathGeometry geo, double[,] transf)
+        {
+            for (int i = 0; i < geo.Figures.Count; i++)
+            {
+                double[] tP = MatrixUtils.Multiply(transf, new double[] { geo.Figures[i].StartPoint.X, geo.Figures[i].StartPoint.Y });
+                geo.Figures[i].StartPoint = new Avalonia.Point(tP[0], tP[1]);
+
+                for (int j = 0; j < geo.Figures[i].Segments.Count; j++)
+                {
+                    if (geo.Figures[i].Segments[j] is LineSegment lS)
+                    {
+                        tP = MatrixUtils.Multiply(transf, new double[] { lS.Point.X, lS.Point.Y });
+                        lS.Point = new Avalonia.Point(tP[0], tP[1]);
+                    }
+                    else if (geo.Figures[i].Segments[j] is BezierSegment bS)
+                    {
+                        tP = MatrixUtils.Multiply(transf, new double[] { bS.Point1.X, bS.Point1.Y });
+                        double[] tP2 = MatrixUtils.Multiply(transf, new double[] { bS.Point2.X, bS.Point2.Y });
+                        double[] tP3 = MatrixUtils.Multiply(transf, new double[] { bS.Point3.X, bS.Point3.Y });
+
+                        bS.Point1 = new Avalonia.Point(tP[0], tP[1]);
+                        bS.Point2 = new Avalonia.Point(tP2[0], tP2[1]);
+                        bS.Point3 = new Avalonia.Point(tP3[0], tP3[1]);
+                    }
+                }
+            }
+        }
+
         public void SetClippingPath()
         {
+            if (figureInitialised)
+            {
+                currentPath.Figures.Add(currentFigure);
+            }
 
+            TransformGeometry(currentPath, _transform);
+
+            if (_clippingPath == null)
+            {
+                _clippingPath = currentPath;
+            }
+            else
+            {
+                //Can't find a better way of transforming an IStreamGeometryImpl into a Geometry...
+                _clippingPath = (StreamGeometry)Activator.CreateInstance(typeof(StreamGeometry), System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, null, new object[] { _clippingPath.PlatformImpl.Intersect(currentPath.PlatformImpl) }, null);
+            }
+
+            currentPath = new PathGeometry();
+            currentFigure = new PathFigure() { IsClosed = false };
+            figureInitialised = false;
         }
 
         public void DrawRasterImage(int sourceX, int sourceY, int sourceWidth, int sourceHeight, double destinationX, double destinationY, double destinationWidth, double destinationHeight, RasterImage image)
         {
+            if (!this.Images.ContainsKey(image.Id))
+            {
+                Bitmap bmp = new Bitmap(image.PNGStream);
+                this.Images.Add(image.Id, (bmp, image.Interpolate));
+            }
 
+            RenderAction act = RenderAction.ImageAction(image.Id, new Avalonia.Rect(sourceX, sourceY, sourceWidth, sourceHeight), new Avalonia.Rect(destinationX, destinationY, destinationWidth, destinationHeight), _transform.ToAvaloniaMatrix(), _clippingPath?.Clone(), Tag);
+
+            if (!string.IsNullOrEmpty(Tag))
+            {
+                if (TaggedActions.ContainsKey(Tag))
+                {
+                    IEnumerable<RenderAction> actions = TaggedActions[Tag](act);
+
+                    foreach (RenderAction action in actions)
+                    {
+                        RenderActions.Add(action);
+                    }
+
+                    if (removeTaggedActions)
+                    {
+                        TaggedActions.Remove(Tag);
+                    }
+                }
+                else
+                {
+                    RenderActions.Add(act);
+                }
+            }
+            else if (TaggedActions.ContainsKey(""))
+            {
+                IEnumerable<RenderAction> actions = TaggedActions[""](act);
+
+                foreach (RenderAction action in actions)
+                {
+                    RenderActions.Add(action);
+                }
+            }
+            else
+            {
+                RenderActions.Add(act);
+            }
         }
     }
 

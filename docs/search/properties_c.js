@@ -1,4 +1,10 @@
 var searchData=
 [
-  ['width_794',['Width',['../class_vect_sharp_1_1_page.html#a1a8817155492c03cbfaa73f18925c8e9',1,'VectSharp.Page.Width()'],['../class_vect_sharp_1_1_font_1_1_detailed_font_metrics.html#a7aef9faf1ea83fa9925865bbaaf802b0',1,'VectSharp.Font.DetailedFontMetrics.Width()'],['../interface_vect_sharp_1_1_i_graphics_context.html#a83c23feb3ed390c58fbe824d2f11c022',1,'VectSharp.IGraphicsContext.Width()'],['../class_vect_sharp_1_1_raster_image.html#a5c022bcd18b4e37c26df5ec67c8c2b71',1,'VectSharp.RasterImage.Width()']]]
+  ['tag_798',['Tag',['../interface_vect_sharp_1_1_i_graphics_context.html#a9ec168c1f81982cd55d82420bbf3f3d8',1,'VectSharp.IGraphicsContext.Tag()'],['../class_vect_sharp_1_1_canvas_1_1_render_action.html#a5c5246d7a22399645c639a944c2acc04',1,'VectSharp.Canvas.RenderAction.Tag()']]],
+  ['text_799',['Text',['../class_vect_sharp_1_1_canvas_1_1_render_action.html#ad8864004f50a9cc221b8494bcf328ce7',1,'VectSharp::Canvas::RenderAction']]],
+  ['textbaseline_800',['TextBaseline',['../interface_vect_sharp_1_1_i_graphics_context.html#ac1010fdd73c34bc0f633ee2c43b3362d',1,'VectSharp::IGraphicsContext']]],
+  ['top_801',['Top',['../class_vect_sharp_1_1_font_1_1_detailed_font_metrics.html#aa5aebb76cef45fc769bf9d896c6b37b7',1,'VectSharp::Font::DetailedFontMetrics']]],
+  ['transform_802',['Transform',['../class_vect_sharp_1_1_canvas_1_1_render_action.html#a00f70e2e7337e9cf863ac0ee4cc576f8',1,'VectSharp::Canvas::RenderAction']]],
+  ['truetypefile_803',['TrueTypeFile',['../class_vect_sharp_1_1_font_family.html#a01fbe58dd8f630ceb147439890bb786c',1,'VectSharp::FontFamily']]],
+  ['type_804',['Type',['../class_vect_sharp_1_1_segment.html#a54f86cb60f2affda241370f302703b63',1,'VectSharp::Segment']]]
 ];

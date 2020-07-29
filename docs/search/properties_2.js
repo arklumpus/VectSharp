@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['dataholder_754',['DataHolder',['../class_vect_sharp_1_1_raster_image.html#a07a7d81044a8a90b2499b6af9acf8de0',1,'VectSharp::RasterImage']]],
-  ['descent_755',['Descent',['../class_vect_sharp_1_1_font.html#a17b1bee67490f8075fb7e073b6390c82',1,'VectSharp::Font']]]
+  ['clippingpath_761',['ClippingPath',['../class_vect_sharp_1_1_canvas_1_1_render_action.html#ae6aefb84f43c2bf00492374c40a95351',1,'VectSharp::Canvas::RenderAction']]]
 ];

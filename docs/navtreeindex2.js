@@ -1,5 +1,11 @@
 var NAVTREEINDEX2 =
 {
+"struct_vect_sharp_1_1_colour.html#a114451c549f2636cb93a20aaa0519d8a":[2,0,0,5,1],
+"struct_vect_sharp_1_1_colour.html#a2588faa7d3c92467f715db1fff82e214":[2,0,0,5,6],
+"struct_vect_sharp_1_1_colour.html#a2ac682d76a238254e3d750254820a9af":[2,0,0,5,15],
+"struct_vect_sharp_1_1_colour.html#a3d890c9efeae548a18e00ae396f7789c":[2,0,0,5,8],
+"struct_vect_sharp_1_1_colour.html#a4477a64d804a1624ec1fa27773be1885":[2,0,0,5,23],
+"struct_vect_sharp_1_1_colour.html#a4c316cac2ed75e622e2f86c608cc8abe":[2,0,0,5,2],
 "struct_vect_sharp_1_1_colour.html#a54a2e4dac2e76d24394fe9d40117fae9":[2,0,0,5,12],
 "struct_vect_sharp_1_1_colour.html#a5ae01d2810757c45611de9c02d11d359":[2,0,0,5,10],
 "struct_vect_sharp_1_1_colour.html#a611fe30e3066c79106d7b7aeaec38f57":[2,0,0,5,3],
