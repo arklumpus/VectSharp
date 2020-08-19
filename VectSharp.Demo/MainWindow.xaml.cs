@@ -396,7 +396,7 @@ namespace VectSharp.Demo
             doc.Pages.Last().SaveAsSVG("Sample.svg");
 
             //Transfer the page onto an Avalonia Canvas object
-            this.FindControl<Viewbox>("mainViewBox").Child = doc.Pages.Last().PaintToCanvas(/*taggedActions*/);
+            this.FindControl<Viewbox>("mainViewBox").Child = doc.Pages.Last().PaintToCanvas(taggedActions);
 
             //Add another page to the document (the size of each page can be different)
             doc.Pages.Add(new Page(480, 100));

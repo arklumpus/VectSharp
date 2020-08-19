@@ -182,8 +182,7 @@ namespace VectSharp.Canvas
 
         public void FillText(string text, double x, double y)
         {
-            //We always need to convert text to paths in Windows due to a bug in Avalonia (see https://github.com/AvaloniaUI/Avalonia/issues/4370).
-            if (_textOption == AvaloniaContextInterpreter.TextOptions.NeverConvert || (_textOption == AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary && Font.FontFamily.IsStandardFamily && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows)))
+            if (_textOption == AvaloniaContextInterpreter.TextOptions.NeverConvert || (_textOption == AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary && Font.FontFamily.IsStandardFamily))
             {
                 TextBlock blk = new TextBlock() { ClipToBounds = false, Text = text, Foreground = new SolidColorBrush(Color.FromArgb(FillAlpha, (byte)(FillStyle.R * 255), (byte)(FillStyle.G * 255), (byte)(FillStyle.B * 255))), FontFamily = Avalonia.Media.FontFamily.Parse(FontFamily), FontSize = Font.FontSize, FontStyle = (Font.FontFamily.IsOblique ? FontStyle.Oblique : Font.FontFamily.IsItalic ? FontStyle.Italic : FontStyle.Normal), FontWeight = (Font.FontFamily.IsBold ? FontWeight.Bold : FontWeight.Regular) };
 
@@ -619,6 +618,8 @@ namespace VectSharp.Canvas
         private List<RenderAction> RenderActions;
         private List<RenderAction> TaggedRenderActions;
 
+        private SolidColorBrush BackgroundBrush;
+
         static Avalonia.Point Origin = new Avalonia.Point(0, 0);
 
         public Dictionary<string, (IImage, bool)> Images;
@@ -655,8 +656,10 @@ namespace VectSharp.Canvas
             }
         }
 
-        public RenderCanvas(Graphics content, double width, double height, Dictionary<string, Delegate> taggedActions, bool removeTaggedActionsAfterExecution, AvaloniaContextInterpreter.TextOptions textOption)
+        public RenderCanvas(Graphics content, Colour backgroundColour, double width, double height, Dictionary<string, Delegate> taggedActions, bool removeTaggedActionsAfterExecution, AvaloniaContextInterpreter.TextOptions textOption)
         {
+            this.BackgroundBrush = new SolidColorBrush(Color.FromArgb((byte)(backgroundColour.A * 255), (byte)(backgroundColour.R * 255), (byte)(backgroundColour.G * 255), (byte)(backgroundColour.B * 255)));
+
             this.Width = width;
             this.Height = height;
             this.Images = new Dictionary<string, (IImage, bool)>();
@@ -870,6 +873,8 @@ namespace VectSharp.Canvas
 
         public override void Render(DrawingContext context)
         {
+            context.FillRectangle(this.BackgroundBrush, new Avalonia.Rect(0, 0, Width, Height));
+
             foreach (RenderAction act in this.RenderActions)
             {
                 if (act.ActionType == RenderAction.ActionTypes.Path)
@@ -1285,8 +1290,7 @@ namespace VectSharp.Canvas
 
         public void FillText(string text, double x, double y)
         {
-            //We always need to convert text to paths in Windows due to a bug in Avalonia (see https://github.com/AvaloniaUI/Avalonia/issues/4370).
-            if (_textOption == AvaloniaContextInterpreter.TextOptions.NeverConvert || (_textOption == AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary && Font.FontFamily.IsStandardFamily && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows)))
+            if (_textOption == AvaloniaContextInterpreter.TextOptions.NeverConvert || (_textOption == AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary && Font.FontFamily.IsStandardFamily))
             {
                 FormattedText txt = new FormattedText()
                 {
@@ -1313,7 +1317,15 @@ namespace VectSharp.Canvas
 
                     if (Font.FontFamily.TrueTypeFile != null)
                     {
-                        currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.Ascent);
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.YMax);
+                        }
+                        else
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.Ascent);
+                        }
+                        
                     }
                 }
                 else if (TextBaseline == TextBaselines.Middle)
@@ -1322,7 +1334,14 @@ namespace VectSharp.Canvas
 
                     if (Font.FontFamily.TrueTypeFile != null)
                     {
-                        currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.YMax);
+                        }
+                        else
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
+                        }
                     }
                 }
                 else if (TextBaseline == TextBaselines.Baseline)
@@ -1331,7 +1350,14 @@ namespace VectSharp.Canvas
 
                     if (Font.FontFamily.TrueTypeFile != null)
                     {
-                        currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.Ascent);
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.YMax);
+                        }
+                        else
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.Ascent);
+                        }
                     }
                 }
                 else if (TextBaseline == TextBaselines.Bottom)
@@ -1340,7 +1366,14 @@ namespace VectSharp.Canvas
 
                     if (Font.FontFamily.TrueTypeFile != null)
                     {
-                        currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.Ascent + metrics.Bottom);
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.YMax + metrics.Bottom);
+                        }
+                        else
+                        {
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.Ascent + metrics.Bottom);
+                        }
                     }
                 }
 
@@ -1864,7 +1897,7 @@ namespace VectSharp.Canvas
             }
             else
             {
-                return new RenderCanvas(page.Graphics, page.Width, page.Height, new Dictionary<string, Delegate>(), true, textOption) { Background = new SolidColorBrush(Color.FromArgb((byte)(page.Background.A * 255), (byte)(page.Background.R * 255), (byte)(page.Background.G * 255), (byte)(page.Background.B * 255))) };
+                return new RenderCanvas(page.Graphics, page.Background, page.Width, page.Height, new Dictionary<string, Delegate>(), true, textOption) { Background = new SolidColorBrush(Color.FromArgb((byte)(page.Background.A * 255), (byte)(page.Background.R * 255), (byte)(page.Background.G * 255), (byte)(page.Background.B * 255))) };
             }
         }
 
@@ -1888,7 +1921,7 @@ namespace VectSharp.Canvas
             }
             else
             {
-                return new RenderCanvas(page.Graphics, page.Width, page.Height, taggedActions, removeTaggedActionsAfterExecution, textOption) { Background = new SolidColorBrush(Color.FromArgb((byte)(page.Background.A * 255), (byte)(page.Background.R * 255), (byte)(page.Background.G * 255), (byte)(page.Background.B * 255))) }; ;
+                return new RenderCanvas(page.Graphics, page.Background, page.Width, page.Height, taggedActions, removeTaggedActionsAfterExecution, textOption) { Background = new SolidColorBrush(Color.FromArgb((byte)(page.Background.A * 255), (byte)(page.Background.R * 255), (byte)(page.Background.G * 255), (byte)(page.Background.B * 255))) }; ;
             }
         }
 
