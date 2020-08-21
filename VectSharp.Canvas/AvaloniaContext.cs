@@ -25,6 +25,24 @@ using System.Runtime.InteropServices;
 
 namespace VectSharp.Canvas
 {
+    /// <summary>
+    /// Represents a FontFamily created from a resource stream.
+    /// </summary>
+    public class ResourceFontFamily : FontFamily
+    {
+        internal string ResourceName;
+
+        /// <summary>
+        /// Create a new <see cref="ResourceFontFamily"/> from the specified <paramref name="resourceStream"/> containing a TTF file, passing the specified <paramref name="resourceName"/> to the <see cref="Avalonia.Media.FontFamily.Parse(string, Uri)"/> method.
+        /// </summary>
+        /// <param name="resourceStream">A resource stream containing a TTF file.</param>
+        /// <param name="resourceName">The name of the embedded resource, which will be parsed using <see cref="Avalonia.Media.FontFamily.Parse(string, Uri)"/>.</param>
+        public ResourceFontFamily(System.IO.Stream resourceStream, string resourceName) : base(resourceStream)
+        {
+            this.ResourceName = resourceName;
+        }
+    }
+
     internal static class MatrixUtils
     {
         public static Avalonia.Matrix ToAvaloniaMatrix(this double[,] matrix)
@@ -366,13 +384,20 @@ namespace VectSharp.Canvas
 
                 if (!Font.FontFamily.IsStandardFamily)
                 {
-                    if (Font.FontFamily.TrueTypeFile != null)
+                    if (Font.FontFamily is ResourceFontFamily fam)
                     {
-                        FontFamily = Font.FontFamily.TrueTypeFile.GetFontFamilyName();
+                        FontFamily = fam.ResourceName;
                     }
                     else
                     {
-                        FontFamily = Font.FontFamily.FileName;
+                        if (Font.FontFamily.TrueTypeFile != null)
+                        {
+                            FontFamily = Font.FontFamily.TrueTypeFile.GetFontFamilyName();
+                        }
+                        else
+                        {
+                            FontFamily = Font.FontFamily.FileName;
+                        }
                     }
                 }
                 else
@@ -1522,14 +1547,20 @@ namespace VectSharp.Canvas
 
                 if (!Font.FontFamily.IsStandardFamily)
                 {
-
-                    if (Font.FontFamily.TrueTypeFile != null)
+                    if (Font.FontFamily is ResourceFontFamily fam)
                     {
-                        FontFamily = Font.FontFamily.TrueTypeFile.GetFontFamilyName();
+                        FontFamily = fam.ResourceName;
                     }
                     else
                     {
-                        FontFamily = Font.FontFamily.FileName;
+                        if (Font.FontFamily.TrueTypeFile != null)
+                        {
+                            FontFamily = Font.FontFamily.TrueTypeFile.GetFontFamilyName();
+                        }
+                        else
+                        {
+                            FontFamily = Font.FontFamily.FileName;
+                        }
                     }
                 }
                 else
@@ -1891,7 +1922,7 @@ namespace VectSharp.Canvas
         {
             if (graphicsAsControls)
             {
-                Avalonia.Controls.Canvas tbr = page.PaintToCanvas();
+                Avalonia.Controls.Canvas tbr = page.PaintToCanvas(textOption);
                 tbr.Background = new SolidColorBrush(Color.FromArgb((byte)(page.Background.A * 255), (byte)(page.Background.R * 255), (byte)(page.Background.G * 255), (byte)(page.Background.B * 255)));
                 return tbr;
             }
@@ -1915,7 +1946,7 @@ namespace VectSharp.Canvas
         {
             if (graphicsAsControls)
             {
-                Avalonia.Controls.Canvas tbr = page.PaintToCanvas(taggedActions, removeTaggedActionsAfterExecution);
+                Avalonia.Controls.Canvas tbr = page.PaintToCanvas(taggedActions, removeTaggedActionsAfterExecution, textOption);
                 tbr.Background = new SolidColorBrush(Color.FromArgb((byte)(page.Background.A * 255), (byte)(page.Background.R * 255), (byte)(page.Background.G * 255), (byte)(page.Background.B * 255)));
                 return tbr;
             }
