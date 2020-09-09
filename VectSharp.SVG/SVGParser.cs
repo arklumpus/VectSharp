@@ -15,6 +15,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+using ExCSS;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -62,7 +63,7 @@ namespace VectSharp.SVG
                     int offset = uri.IndexOf(",") + 1;
 
                     string data;
-                    
+
                     switch (type)
                     {
                         case "base64":
@@ -105,17 +106,28 @@ namespace VectSharp.SVG
 
             Dictionary<string, FontFamily> embeddedFonts = new Dictionary<string, FontFamily>();
 
+            StylesheetParser parser = new StylesheetParser();
+
+            List<Stylesheet> styleSheets = new List<Stylesheet>();
+
             foreach (XmlNode styleNode in svgDoc.GetElementsByTagName("style"))
             {
                 foreach (KeyValuePair<string, FontFamily> fnt in GetEmbeddedFonts(styleNode.InnerText))
                 {
                     embeddedFonts.Add(fnt.Key, fnt.Value);
                 }
+
+                try
+                {
+                    Stylesheet sheet = parser.Parse(styleNode.InnerText);
+                    styleSheets.Add(sheet);
+                }
+                catch { }
             }
 
             Graphics gpr = new Graphics();
 
-            Size pageSize = InterpretSVGObject(svgDoc.GetElementsByTagName("svg")[0], gpr, new PresentationAttributes() { EmbeddedFonts = embeddedFonts });
+            Size pageSize = InterpretSVGObject(svgDoc.GetElementsByTagName("svg")[0], gpr, new PresentationAttributes() { EmbeddedFonts = embeddedFonts }, styleSheets);
 
             Page pg = new Page(pageSize.Width, pageSize.Height);
 
@@ -147,7 +159,7 @@ namespace VectSharp.SVG
             }
         }
 
-        private static Size InterpretSVGObject(XmlNode svgObject, Graphics gpr, PresentationAttributes attributes)
+        private static Size InterpretSVGObject(XmlNode svgObject, Graphics gpr, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets)
         {
             double[] viewBox = ParseListOfDoubles(svgObject.Attributes?["viewBox"]?.Value);
 
@@ -217,82 +229,82 @@ namespace VectSharp.SVG
             gpr.Scale(scaleX, scaleY);
             gpr.Translate(postTranslateX, postTranslateY);
 
-            attributes = InterpretPresentationAttributes(svgObject, attributes, viewBox[2], viewBox[3], diagonal, gpr);
+            attributes = InterpretPresentationAttributes(svgObject, attributes, viewBox[2], viewBox[3], diagonal, gpr, styleSheets);
 
-            InterpretSVGChildren(svgObject, gpr, attributes, viewBox[2], viewBox[3], diagonal);
+            InterpretSVGChildren(svgObject, gpr, attributes, viewBox[2], viewBox[3], diagonal, styleSheets);
 
             gpr.Restore();
 
             return tbrSize;
         }
 
-        private static void InterpretSVGChildren(XmlNode svgObject, Graphics gpr, PresentationAttributes attributes, double width, double height, double diagonal)
+        private static void InterpretSVGChildren(XmlNode svgObject, Graphics gpr, PresentationAttributes attributes, double width, double height, double diagonal, IEnumerable<Stylesheet> styleSheets)
         {
             foreach (XmlNode child in svgObject.ChildNodes)
             {
-                InterpretSVGElement(child, gpr, attributes, width, height, diagonal);
+                InterpretSVGElement(child, gpr, attributes, width, height, diagonal, styleSheets);
             }
         }
 
-        private static void InterpretSVGElement(XmlNode currObject, Graphics gpr, PresentationAttributes attributes, double width, double height, double diagonal)
+        private static void InterpretSVGElement(XmlNode currObject, Graphics gpr, PresentationAttributes attributes, double width, double height, double diagonal, IEnumerable<Stylesheet> styleSheets)
         {
             if (currObject.NodeType == XmlNodeType.EntityReference)
             {
-                InterpretSVGChildren(currObject, gpr, attributes, width, height, diagonal);
+                InterpretSVGChildren(currObject, gpr, attributes, width, height, diagonal, styleSheets);
             }
             else if (currObject.Name.Equals("svg", StringComparison.OrdinalIgnoreCase))
             {
-                InterpretSVGObject(currObject, gpr, attributes);
+                InterpretSVGObject(currObject, gpr, attributes, styleSheets);
             }
             else if (currObject.Name.Equals("line", StringComparison.OrdinalIgnoreCase))
             {
-                InterpretLineObject(currObject, gpr, width, height, diagonal, attributes);
+                InterpretLineObject(currObject, gpr, width, height, diagonal, attributes, styleSheets);
             }
             else if (currObject.Name.Equals("circle", StringComparison.OrdinalIgnoreCase))
             {
-                InterpretCircleObject(currObject, gpr, width, height, diagonal, attributes);
+                InterpretCircleObject(currObject, gpr, width, height, diagonal, attributes, styleSheets);
             }
             else if (currObject.Name.Equals("ellipse", StringComparison.OrdinalIgnoreCase))
             {
-                InterpretEllipseObject(currObject, gpr, width, height, diagonal, attributes);
+                InterpretEllipseObject(currObject, gpr, width, height, diagonal, attributes, styleSheets);
             }
             else if (currObject.Name.Equals("path", StringComparison.OrdinalIgnoreCase))
             {
-                InterpretPathObject(currObject, gpr, width, height, diagonal, attributes);
+                InterpretPathObject(currObject, gpr, width, height, diagonal, attributes, styleSheets);
             }
             else if (currObject.Name.Equals("polyline", StringComparison.OrdinalIgnoreCase))
             {
-                InterpretPolyLineObject(currObject, false, gpr, width, height, diagonal, attributes);
+                InterpretPolyLineObject(currObject, false, gpr, width, height, diagonal, attributes, styleSheets);
             }
             else if (currObject.Name.Equals("polygon", StringComparison.OrdinalIgnoreCase))
             {
-                InterpretPolyLineObject(currObject, true, gpr, width, height, diagonal, attributes);
+                InterpretPolyLineObject(currObject, true, gpr, width, height, diagonal, attributes, styleSheets);
             }
             else if (currObject.Name.Equals("rect", StringComparison.OrdinalIgnoreCase))
             {
-                InterpretRectObject(currObject, gpr, width, height, diagonal, attributes);
+                InterpretRectObject(currObject, gpr, width, height, diagonal, attributes, styleSheets);
             }
             else if (currObject.Name.Equals("use", StringComparison.OrdinalIgnoreCase))
             {
-                InterpretUseObject(currObject, gpr, width, height, diagonal, attributes);
+                InterpretUseObject(currObject, gpr, width, height, diagonal, attributes, styleSheets);
             }
             else if (currObject.Name.Equals("g", StringComparison.OrdinalIgnoreCase) || currObject.Name.Equals("symbol", StringComparison.OrdinalIgnoreCase))
             {
-                InterpretGObject(currObject, gpr, width, height, diagonal, attributes);
+                InterpretGObject(currObject, gpr, width, height, diagonal, attributes, styleSheets);
             }
             else if (currObject.Name.Equals("text", StringComparison.OrdinalIgnoreCase))
             {
-                InterpretTextObject(currObject, gpr, width, height, diagonal, attributes);
+                InterpretTextObject(currObject, gpr, width, height, diagonal, attributes, styleSheets);
             }
             else if (currObject.Name.Equals("image", StringComparison.OrdinalIgnoreCase))
             {
-                InterpretImageObject(currObject, gpr, width, height, diagonal, attributes);
+                InterpretImageObject(currObject, gpr, width, height, diagonal, attributes, styleSheets);
             }
         }
 
-        private static void InterpretImageObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes)
+        private static void InterpretImageObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets)
         {
-            PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr);
+            PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr, styleSheets);
 
             double x = ParseLengthOrPercentage(currObject.Attributes?["x"]?.Value, width, currAttributes.X);
             double y = ParseLengthOrPercentage(currObject.Attributes?["y"]?.Value, height, currAttributes.Y);
@@ -309,7 +321,7 @@ namespace VectSharp.SVG
                 href = currObject.Attributes?["xlink:href"]?.Value;
             }
 
-            bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes);
+            bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes, styleSheets);
 
             if (!string.IsNullOrEmpty(href) && w > 0 && h > 0)
             {
@@ -346,9 +358,9 @@ namespace VectSharp.SVG
             }
         }
 
-        private static void InterpretTextObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, double x = 0, double y = 0, double fontSize = double.NaN, string fontFamily = null, string textAlign = null)
+        private static void InterpretTextObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, double x = 0, double y = 0, double fontSize = double.NaN, string fontFamily = null, string textAlign = null)
         {
-            PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr);
+            PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr, styleSheets);
 
             x = ParseLengthOrPercentage(currObject.Attributes?["x"]?.Value, width, x);
             y = ParseLengthOrPercentage(currObject.Attributes?["y"]?.Value, height, y);
@@ -357,13 +369,13 @@ namespace VectSharp.SVG
             fontSize = ParseLengthOrPercentage(currObject.Attributes?["font-size"]?.Value, width, fontSize);
             textAlign = currObject.Attributes?["text-align"]?.Value ?? textAlign;
 
-            bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes);
+            bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes, styleSheets);
 
             if (currObject.ChildNodes.OfType<XmlNode>().Any(a => a.NodeType != XmlNodeType.Text))
             {
                 foreach (XmlNode child in currObject.ChildNodes)
                 {
-                    InterpretTextObject(child, gpr, width, height, diagonal, currAttributes, x, y, fontSize, fontFamily, textAlign);
+                    InterpretTextObject(child, gpr, width, height, diagonal, currAttributes, styleSheets, x, y, fontSize, fontFamily, textAlign);
                 }
             }
             else
@@ -595,13 +607,13 @@ namespace VectSharp.SVG
             return new FontFamily(FontFamily.StandardFontFamilies.Helvetica);
         }
 
-        private static void InterpretGObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes)
+        private static void InterpretGObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets)
         {
-            PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr);
+            PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr, styleSheets);
 
-            bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes);
+            bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes, styleSheets);
 
-            InterpretSVGChildren(currObject, gpr, currAttributes, width, height, diagonal);
+            InterpretSVGChildren(currObject, gpr, currAttributes, width, height, diagonal, styleSheets);
 
             if (hadClippingPath)
             {
@@ -614,7 +626,7 @@ namespace VectSharp.SVG
             }
         }
 
-        private static void InterpretUseObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes)
+        private static void InterpretUseObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets)
         {
             double x, y, w, h;
 
@@ -638,7 +650,7 @@ namespace VectSharp.SVG
                     currObject.AppendChild(clone);
 
 
-                    PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr);
+                    PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr, styleSheets);
 
 
                     gpr.Save();
@@ -653,7 +665,7 @@ namespace VectSharp.SVG
                         ((XmlElement)clone).SetAttribute("height", h.ToString(System.Globalization.CultureInfo.InvariantCulture));
                     }
 
-                    InterpretSVGElement(clone, gpr, currAttributes, width, height, diagonal);
+                    InterpretSVGElement(clone, gpr, currAttributes, width, height, diagonal, styleSheets);
 
                     gpr.Restore();
 
@@ -665,7 +677,7 @@ namespace VectSharp.SVG
             }
         }
 
-        private static bool ApplyClipPath(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes)
+        private static bool ApplyClipPath(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets)
         {
             string id = currObject.Attributes?["clip-path"]?.Value;
 
@@ -678,10 +690,10 @@ namespace VectSharp.SVG
 
                 if (element != null && element.ChildNodes.Count == 1 && element.ChildNodes[0].Name.Equals("path", StringComparison.OrdinalIgnoreCase))
                 {
-                    bool hasParentClipPath = ApplyClipPath(element, gpr, width, height, diagonal, attributes);
+                    bool hasParentClipPath = ApplyClipPath(element, gpr, width, height, diagonal, attributes, styleSheets);
 
                     Graphics pathGraphics = new Graphics();
-                    InterpretPathObject(element.ChildNodes[0], pathGraphics, width, height, diagonal, attributes);
+                    InterpretPathObject(element.ChildNodes[0], pathGraphics, width, height, diagonal, attributes, styleSheets);
 
                     PathTransformerGraphicsContext ptgc = new PathTransformerGraphicsContext();
                     pathGraphics.CopyToIGraphicsContext(ptgc);
@@ -704,7 +716,7 @@ namespace VectSharp.SVG
             }
         }
 
-        private static void InterpretRectObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes)
+        private static void InterpretRectObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets)
         {
             double x, y, w, h, rx, ry;
 
@@ -772,9 +784,9 @@ namespace VectSharp.SVG
 
                 path.Close();
 
-                PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr);
+                PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr, styleSheets);
 
-                bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes);
+                bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes, styleSheets);
 
                 if (currAttributes.StrokeFirst)
                 {
@@ -817,7 +829,7 @@ namespace VectSharp.SVG
             }
         }
 
-        private static void InterpretPolyLineObject(XmlNode currObject, bool isPolygon, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes)
+        private static void InterpretPolyLineObject(XmlNode currObject, bool isPolygon, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets)
         {
             string points = currObject.Attributes?["points"]?.Value;
 
@@ -837,9 +849,9 @@ namespace VectSharp.SVG
                     path.Close();
                 }
 
-                PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr);
+                PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr, styleSheets);
 
-                bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes);
+                bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes, styleSheets);
 
                 if (currAttributes.StrokeFirst)
                 {
@@ -882,7 +894,7 @@ namespace VectSharp.SVG
             }
         }
 
-        private static void InterpretPathObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes)
+        private static void InterpretPathObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets)
         {
             string d = currObject.Attributes?["d"]?.Value;
 
@@ -1280,9 +1292,9 @@ namespace VectSharp.SVG
                     }
                 }
 
-                PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr);
-                
-                bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes);
+                PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr, styleSheets);
+
+                bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes, styleSheets);
 
                 if (currAttributes.StrokeFirst)
                 {
@@ -1382,7 +1394,7 @@ namespace VectSharp.SVG
             return tbr;
         }
 
-        private static void InterpretCircleObject(XmlNode circleObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes)
+        private static void InterpretCircleObject(XmlNode circleObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets)
         {
             double cx, cy, r;
 
@@ -1390,9 +1402,9 @@ namespace VectSharp.SVG
             cy = ParseLengthOrPercentage(circleObject.Attributes?["cy"]?.Value, height);
             r = ParseLengthOrPercentage(circleObject.Attributes?["r"]?.Value, diagonal);
 
-            PresentationAttributes circleAttributes = InterpretPresentationAttributes(circleObject, attributes, width, height, diagonal, gpr);
+            PresentationAttributes circleAttributes = InterpretPresentationAttributes(circleObject, attributes, width, height, diagonal, gpr, styleSheets);
 
-            bool hadClippingPath = ApplyClipPath(circleObject, gpr, width, height, diagonal, attributes);
+            bool hadClippingPath = ApplyClipPath(circleObject, gpr, width, height, diagonal, attributes, styleSheets);
 
             if (circleAttributes.StrokeFirst)
             {
@@ -1434,7 +1446,7 @@ namespace VectSharp.SVG
             }
         }
 
-        private static void InterpretEllipseObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes)
+        private static void InterpretEllipseObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets)
         {
             double cx, cy, rx, ry;
 
@@ -1455,9 +1467,9 @@ namespace VectSharp.SVG
             if (rx > 0 && ry > 0)
             {
 
-                PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr);
+                PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr, styleSheets);
 
-                bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes);
+                bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes, styleSheets);
 
                 double r = Math.Min(rx, ry);
 
@@ -1508,7 +1520,7 @@ namespace VectSharp.SVG
             }
         }
 
-        private static void InterpretLineObject(XmlNode lineObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes)
+        private static void InterpretLineObject(XmlNode lineObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets)
         {
             double x1, x2, y1, y2;
 
@@ -1517,9 +1529,9 @@ namespace VectSharp.SVG
             x2 = ParseLengthOrPercentage(lineObject.Attributes?["x2"]?.Value, width);
             y2 = ParseLengthOrPercentage(lineObject.Attributes?["y2"]?.Value, height);
 
-            PresentationAttributes lineAttributes = InterpretPresentationAttributes(lineObject, attributes, width, height, diagonal, gpr);
+            PresentationAttributes lineAttributes = InterpretPresentationAttributes(lineObject, attributes, width, height, diagonal, gpr, styleSheets);
 
-            bool hadClippingPath = ApplyClipPath(lineObject, gpr, width, height, diagonal, attributes);
+            bool hadClippingPath = ApplyClipPath(lineObject, gpr, width, height, diagonal, attributes, styleSheets);
 
             if (lineAttributes.Stroke != null)
             {
@@ -1538,9 +1550,33 @@ namespace VectSharp.SVG
             }
         }
 
-        private static void SetStyleAttributes(XmlNode obj)
+        private static void SetStyleAttributes(XmlNode obj, IEnumerable<Stylesheet> styleSheets)
         {
             string style = obj.Attributes?["style"]?.Value;
+
+            string classes = obj.Attributes?["class"]?.Value;
+
+            if (!string.IsNullOrEmpty(classes))
+            {
+                string[] splitClasses = classes.Split(' ');
+
+                foreach (string className in splitClasses)
+                {
+                    if (!string.IsNullOrEmpty(className.Trim()))
+                    {
+                        foreach (Stylesheet sheet in styleSheets)
+                        {
+                            foreach (StyleRule rule in sheet.StyleRules)
+                            {
+                                if (rule.SelectorText.Contains("." + className))
+                                {
+                                    style = rule.Style.CssText + "; " + style;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
             if (!string.IsNullOrEmpty(style))
             {
@@ -1565,9 +1601,9 @@ namespace VectSharp.SVG
             }
         }
 
-        internal static PresentationAttributes InterpretPresentationAttributes(XmlNode obj, PresentationAttributes parentPresentationAttributes, double width, double height, double diagonal, Graphics gpr)
+        internal static PresentationAttributes InterpretPresentationAttributes(XmlNode obj, PresentationAttributes parentPresentationAttributes, double width, double height, double diagonal, Graphics gpr, IEnumerable<Stylesheet> styleSheets)
         {
-            SetStyleAttributes(obj);
+            SetStyleAttributes(obj, styleSheets);
 
             PresentationAttributes tbr = parentPresentationAttributes.Clone();
 
@@ -1819,9 +1855,14 @@ namespace VectSharp.SVG
                     value = value.Replace("%", "");
                     return double.Parse(value, System.Globalization.CultureInfo.InvariantCulture) * total / 100;
                 }
+                else if (double.TryParse(value.Replace("px", "").Replace("pt", ""), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double result))
+                {
+                    return result;
+                }
                 else
                 {
-                    return double.Parse(value.Replace("px", "").Replace("pt", ""), System.Globalization.CultureInfo.InvariantCulture);
+                    string cleanedNumber = Regexes.NumberRegex.Match(value).Value;
+                    return double.Parse(cleanedNumber, System.Globalization.CultureInfo.InvariantCulture);
                 }
             }
             else
@@ -1880,6 +1921,7 @@ namespace VectSharp.SVG
         {
             public static Regex ListSeparator = new Regex("[ \\t\\n\\r\\f]*,[ \\t\\n\\r\\f]*|[ \\t\\n\\r\\f]+", RegexOptions.Compiled);
             public static Regex FontFamilySeparator = new Regex("(?:^|,)(\"(?:[^\"])*\"|[^,]*)", RegexOptions.Compiled);
+            public static Regex NumberRegex = new Regex(@"^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?", RegexOptions.Compiled);
         }
 
         private static double[] ParseListOfDoubles(string value)
@@ -2121,7 +2163,7 @@ namespace VectSharp.SVG
 
         public void Fill()
         {
-            
+
         }
 
         public void FillText(string text, double x, double y)
@@ -2145,32 +2187,32 @@ namespace VectSharp.SVG
 
         public void SetFillStyle((int r, int g, int b, double a) style)
         {
-            
+
         }
 
         public void SetFillStyle(Colour style)
         {
-            
+
         }
 
         public void SetLineDash(LineDash dash)
         {
-            
+
         }
 
         public void SetStrokeStyle((int r, int g, int b, double a) style)
         {
-            
+
         }
 
         public void SetStrokeStyle(Colour style)
         {
-            
+
         }
 
         public void Stroke()
         {
-            
+
         }
 
         public void StrokeText(string text, double x, double y)
