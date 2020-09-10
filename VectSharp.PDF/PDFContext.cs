@@ -1493,7 +1493,7 @@ namespace VectSharp.PDF
                 {
                     if (fig.Fill != null)
                     {
-                        sb.Append("f\n");
+                        sb.Append("f*\n");
                     }
 
                     if (fig.Stroke != null)
