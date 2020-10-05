@@ -501,6 +501,273 @@ namespace VectSharp
         {
             return Colour.FromRgba(this.R, this.G, this.B, (double)alpha / 255.0);
         }
+
+        /// <summary>
+        /// Converts a <see cref="Colour"/> to the CIE XYZ colour space.
+        /// </summary>
+        /// <returns>A <see cref="ValueTuple"/> containing the X, Y and Z components of the <see cref="Colour"/>.</returns>
+        public (double X, double Y, double Z) ToXYZ()
+        {
+            double r, g, b;
+
+            if (R <= 0.04045)
+            {
+                r = 25 * R / 323;
+            }
+            else
+            {
+                r = Math.Pow((200 * R + 11) / 211, 2.4);
+            }
+
+            if (G <= 0.04045)
+            {
+                g = 25 * G / 323;
+            }
+            else
+            {
+                g = Math.Pow((200 * G + 11) / 211, 2.4);
+            }
+
+            if (B <= 0.04045)
+            {
+                b = 25 * B / 323;
+            }
+            else
+            {
+                b = Math.Pow((200 * B + 11) / 211, 2.4);
+            }
+
+            double x = 0.41239080 * r + 0.35758434 * g + 0.18048079 * b;
+            double y = 0.21263901 * r + 0.71516868 * g + 0.07219232 * b;
+            double z = 0.01933082 * r + 0.11919478 * g + 0.95053215 * b;
+
+            return (x, y, z);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="Colour"/> from CIE XYZ coordinates.
+        /// </summary>
+        /// <param name="x">The X coordinate.</param>
+        /// <param name="y">The Y coordinate.</param>
+        /// <param name="z">The Z coordinate.</param>
+        /// <returns>An sRGB <see cref="Colour"/> created from the specified components.</returns>
+        public static Colour FromXYZ(double x, double y, double z)
+        {
+            double r = +3.24096994 * x - 1.53738318 * y - 0.49861076 * z;
+            double g = -0.96924364 * x + 1.8759675 * y + 0.04155506 * z;
+            double b = 0.05563008 * x - 0.20397696 * y + 1.05697151 * z;
+
+            if (r <= 0.0031308)
+            {
+                r = 323 * r / 25;
+            }
+            else
+            {
+                r = (211 * Math.Pow(r, 1 / 2.4) - 11) / 200;
+            }
+
+            if (g <= 0.0031308)
+            {
+                g = 323 * g / 25;
+            }
+            else
+            {
+                g = (211 * Math.Pow(g, 1 / 2.4) - 11) / 200;
+            }
+
+            if (b <= 0.0031308)
+            {
+                b = 323 * b / 25;
+            }
+            else
+            {
+                b = (211 * Math.Pow(b, 1 / 2.4) - 11) / 200;
+            }
+
+            r = Math.Min(Math.Max(0, r), 1);
+            g = Math.Min(Math.Max(0, g), 1);
+            b = Math.Min(Math.Max(0, b), 1);
+
+            return Colour.FromRgb(r, g, b);
+        }
+
+        /// <summary>
+        /// Converts a <see cref="Colour"/> to the CIE Lab colour space (under Illuminant D65).
+        /// </summary>
+        /// <returns>A <see cref="ValueType"/> containing the L*, a* and b* components of the <see cref="Colour"/>.</returns>
+        public (double L, double a, double b) ToLab()
+        {
+            double f(double t)
+            {
+                const double d = 6.0 / 29;
+
+                if (t > d * d * d)
+                {
+                    return Math.Pow(t, 1.0 / 3);
+                }
+                else
+                {
+                    return t / (3 * d * d) + 4.0 / 29;
+                }
+            }
+
+            const double xN = 0.950489;
+            const double yN = 1;
+            const double zN = 1.088840;
+
+            (double x, double y, double z) = this.ToXYZ();
+
+            double fY = f(y / yN);
+
+            double l = 1.16 * fY - 0.16;
+            double a = 5 * (f(x / xN) - fY);
+            double b = 2 * (fY - f(z / zN));
+
+            return (l, a, b);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="Colour"/> from CIE Lab coordinates (under Illuminant D65).
+        /// </summary>
+        /// <param name="L">The L* component.</param>
+        /// <param name="a">The a* component.</param>
+        /// <param name="b">The b* component.</param>
+        /// <returns>An sRGB <see cref="Colour"/> created from the specified components.</returns>
+        public static Colour FromLab(double L, double a, double b)
+        {
+            double f(double t)
+            {
+                const double d = 6.0 / 29;
+
+                if (t > d)
+                {
+                    return t * t * t;
+                }
+                else
+                {
+                    return 3 * d * d * (t - 4.0 / 29);
+                }
+            }
+
+            const double xN = 0.950489;
+            const double yN = 1;
+            const double zN = 1.088840;
+
+            double x = xN * f((L + 0.16) / 1.16 + a / 5);
+            double y = yN * f((L + 0.16) / 1.16);
+            double z = zN * f((L + 0.16) / 1.16 - b / 2);
+
+            return Colour.FromXYZ(x, y, z);
+        }
+
+        /// <summary>
+        /// Converts a <see cref="Colour"/> to the HSL colour space.
+        /// </summary>
+        /// <returns>A <see cref="ValueType"/> containing the H, S and L components of the <see cref="Colour"/>. Each component has range [0, 1].</returns>
+        public (double H, double S, double L) ToHSL()
+        {
+            double xMax = Math.Max(Math.Max(R, G), B);
+            double xMin = Math.Min(Math.Min(R, G), B);
+
+            double l = (xMax + xMin) * 0.5;
+
+            double h;
+
+            if (xMax == xMin)
+            {
+                h = 0;
+            }
+            else if (xMax == R)
+            {
+                h = (G - B) / (xMax - xMin) / 6;
+            }
+            else if (xMax == G)
+            {
+                h = (2 + (B - R) / (xMax - xMin)) / 6;
+            }
+            else
+            {
+                h = (4 + (R - G) / (xMax - xMin)) / 6;
+            }
+
+            double s;
+
+            if (l == 0 || l == 1)
+            {
+                s = 0;
+            }
+            else
+            {
+                s = (xMax - l) / Math.Min(l, 1 - l);
+            }
+
+            return (h, s, l);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="Colour"/> from HSL coordinates.
+        /// </summary>
+        /// <param name="h">The H component. Should be in range [0, 1].</param>
+        /// <param name="s">The S component. Should be in range [0, 1].</param>
+        /// <param name="l">The L component. Should be in range [0, 1].</param>
+        /// <returns>A <see cref="Colour"/> created from the specified components.</returns>
+        public static Colour FromHSL(double h, double s, double l)
+        {
+            double c = (1 - Math.Abs(2 * l - 1)) * s;
+
+            double hp = h * 6;
+
+            double x = c * (1 - Math.Abs((hp % 2) - 1));
+
+            double r1, g1, b1;
+
+            if (hp <= 1)
+            {
+                r1 = c;
+                g1 = x;
+                b1 = 0;
+            }
+            else if (hp <= 2)
+            {
+                r1 = x;
+                g1 = c;
+                b1 = 0;
+            }
+            else if (hp <= 3)
+            {
+                r1 = 0;
+                g1 = c;
+                b1 = x;
+            }
+            else if (hp <= 4)
+            {
+                r1 = 0;
+                g1 = x;
+                b1 = c;
+            }
+            else if (hp <= 5)
+            {
+                r1 = x;
+                g1 = 0;
+                b1 = c;
+            }
+            else if (hp <= 6)
+            {
+                r1 = c;
+                g1 = 0;
+                b1 = x;
+            }
+            else
+            {
+                r1 = 0;
+                g1 = 0;
+                b1 = 0;
+            }
+
+            double m = l - c / 2;
+
+            return Colour.FromRgb(r1 + m, g1 + m, b1 + m);
+        }
     }
 
     /// <summary>
