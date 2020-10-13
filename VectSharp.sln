@@ -17,6 +17,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectSharp.SVG", "VectSharp.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectSharp.MuPDFUtils", "VectSharp.MuPDFUtils\VectSharp.MuPDFUtils.csproj", "{D2D2CD04-2B9F-4139-93E7-D6B505B6A7BF}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectSharp.ThreeD", "VectSharp.ThreeD\VectSharp.ThreeD.csproj", "{D0AC8E2D-FE5E-4AB3-98F2-15C6301A1A8F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectSharp.Demo3D", "VectSharp.Demo3D\VectSharp.Demo3D.csproj", "{7F501584-E20E-4AD5-941D-F381B9BCC66D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestVectSharpConsole", "TestVectSharpConsole\TestVectSharpConsole.csproj", "{28B5FEE0-5377-488B-B274-34C6C43F4EF8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +57,18 @@ Global
 		{D2D2CD04-2B9F-4139-93E7-D6B505B6A7BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2D2CD04-2B9F-4139-93E7-D6B505B6A7BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2D2CD04-2B9F-4139-93E7-D6B505B6A7BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0AC8E2D-FE5E-4AB3-98F2-15C6301A1A8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0AC8E2D-FE5E-4AB3-98F2-15C6301A1A8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0AC8E2D-FE5E-4AB3-98F2-15C6301A1A8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0AC8E2D-FE5E-4AB3-98F2-15C6301A1A8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F501584-E20E-4AD5-941D-F381B9BCC66D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F501584-E20E-4AD5-941D-F381B9BCC66D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F501584-E20E-4AD5-941D-F381B9BCC66D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F501584-E20E-4AD5-941D-F381B9BCC66D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28B5FEE0-5377-488B-B274-34C6C43F4EF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28B5FEE0-5377-488B-B274-34C6C43F4EF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28B5FEE0-5377-488B-B274-34C6C43F4EF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28B5FEE0-5377-488B-B274-34C6C43F4EF8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

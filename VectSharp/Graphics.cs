@@ -16,9 +16,14 @@
 */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Security.Principal;
+using System.Transactions;
 
 namespace VectSharp
 {
@@ -1261,6 +1266,17 @@ namespace VectSharp
             double mod = Modulus();
             return new Point(X / mod, Y / mod);
         }
+
+        /// <summary>
+        /// Checks whether this <see cref="Point"/> is equal to another <see cref="Point"/>, up to a specified tolerance.
+        /// </summary>
+        /// <param name="p2">The <see cref="Point"/> to compare.</param>
+        /// <param name="tolerance">The tolerance threshold.</param>
+        /// <returns><see langword="true"/> if both coordinates of the <see cref="Point"/>s are closer than <paramref name="tolerance"/> or if their relative difference (i.e. <c>(a - b) / (a + b) * 2</c>) is smaller than <paramref name="tolerance"/>. <see langword="false"/> otherwise.</returns>
+        public bool IsEqual(Point p2, double tolerance)
+        {
+            return (Math.Abs(p2.X - this.X) <= tolerance || Math.Abs((p2.X - this.X) / (p2.X + this.X)) <= tolerance * 0.5) && (Math.Abs(p2.Y - this.Y) <= tolerance || Math.Abs((p2.Y - this.Y) / (p2.Y + this.Y)) <= tolerance * 0.5);
+        }
     }
 
     /// <summary>
@@ -1376,6 +1392,24 @@ namespace VectSharp
         /// <param name="position">The relative position on the <see cref="Segment"/> (0 is the start of the <see cref="Segment"/>, 1 is the end of the <see cref="Segment"/>).</param>
         /// <returns>The tangent to the point at the specified position.</returns>
         public abstract Point GetTangentAt(Point previousPoint, double position);
+
+        /// <summary>
+        /// Transform the segment into a series of linear segments. Segments that are already linear are not changed.
+        /// </summary>
+        /// <param name="previousPoint">The point from which the <see cref="Segment"/> starts (i.e. the endpoint of the previous <see cref="Segment"/>).</param>
+        /// <param name="resolution">The absolute length between successive samples in curve segments.</param>
+        /// <returns>A collection of linear segments that approximate the current segment.</returns>
+        public abstract IEnumerable<Segment> Linearise(Point? previousPoint, double resolution);
+
+        /// <summary>
+        /// Gets the tanget at the points at which the segment would be linearised.
+        /// </summary>
+        /// <param name="previousPoint">The point from which the <see cref="Segment"/> starts (i.e. the endpoint of the previous <see cref="Segment"/>).</param>
+        /// <param name="resolution">The absolute length between successive samples in curve segments.</param>
+        /// <returns>A collection of tangents at the points in which the segment would be linearised.</returns>
+        public abstract IEnumerable<Point> GetLinearisationTangents(Point? previousPoint, double resolution);
+
+        public abstract IEnumerable<Segment> Transform(Func<Point, Point> transformationFunction);
     }
 
     internal class MoveSegment : Segment
@@ -1410,6 +1444,21 @@ namespace VectSharp
         public override Point GetTangentAt(Point previousPoint, double position)
         {
             throw new InvalidOperationException();
+        }
+
+        public override IEnumerable<Segment> Linearise(Point? previousPoint, double resolution)
+        {
+            yield return new MoveSegment(this.Point);
+        }
+
+        public override IEnumerable<Point> GetLinearisationTangents(Point? previousPoint, double resolution)
+        {
+            throw new InvalidOperationException();
+        }
+
+        public override IEnumerable<Segment> Transform(Func<Point, Point> transformationFunction)
+        {
+            yield return new MoveSegment(transformationFunction(this.Point));
         }
     }
 
@@ -1453,6 +1502,21 @@ namespace VectSharp
         {
             return new Point(this.Point.X - previousPoint.X, this.Point.Y - previousPoint.Y).Normalize();
         }
+
+        public override IEnumerable<Segment> Linearise(Point? previousPoint, double resolution)
+        {
+            yield return new LineSegment(this.Point);
+        }
+
+        public override IEnumerable<Point> GetLinearisationTangents(Point? previousPoint, double resolution)
+        {
+            yield return this.GetTangentAt(previousPoint.Value, 1);
+        }
+
+        public override IEnumerable<Segment> Transform(Func<Point, Point> transformationFunction)
+        {
+            yield return new LineSegment(transformationFunction(this.Point));
+        }
     }
 
     internal class CloseSegment : Segment
@@ -1479,6 +1543,21 @@ namespace VectSharp
         public override Point GetTangentAt(Point previousPoint, double position)
         {
             throw new InvalidOperationException();
+        }
+
+        public override IEnumerable<Segment> Linearise(Point? previousPoint, double resolution)
+        {
+            yield return new CloseSegment();
+        }
+
+        public override IEnumerable<Point> GetLinearisationTangents(Point? previousPoint, double resolution)
+        {
+            throw new InvalidOperationException();
+        }
+
+        public override IEnumerable<Segment> Transform(Func<Point, Point> transformationFunction)
+        {
+            yield return new CloseSegment();
         }
     }
 
@@ -1666,6 +1745,33 @@ namespace VectSharp
 
                 return lowerBound + (position - lowerPos) / (upperPos - lowerPos) * (upperBound - lowerBound);
             }
+        }
+
+        public override IEnumerable<Segment> Linearise(Point? previousPoint, double resolution)
+        {
+            double length = this.Measure(previousPoint.Value);
+            int segmentCount = (int)Math.Ceiling(length / resolution);
+
+            for (int i = 0; i < segmentCount; i++)
+            {
+                yield return new LineSegment(this.GetPointAt(previousPoint.Value, (double)(i + 1) / segmentCount));
+            }
+        }
+
+        public override IEnumerable<Point> GetLinearisationTangents(Point? previousPoint, double resolution)
+        {
+            double length = this.Measure(previousPoint.Value);
+            int segmentCount = (int)Math.Ceiling(length / resolution);
+
+            for (int i = 0; i < segmentCount; i++)
+            {
+                yield return this.GetTangentAt(previousPoint.Value, (double)(i + 1) / segmentCount);
+            }
+        }
+
+        public override IEnumerable<Segment> Transform(Func<Point, Point> transformationFunction)
+        {
+            yield return new CubicBezierSegment(transformationFunction(this.Points[0]), transformationFunction(this.Points[1]), transformationFunction(this.Points[2]));
         }
     }
 
@@ -1928,6 +2034,38 @@ namespace VectSharp
                 }
             }
 
+        }
+
+        public override IEnumerable<Segment> Linearise(Point? previousPoint, double resolution)
+        {
+            double length = this.Measure(previousPoint.Value);
+            int segmentCount = (int)Math.Ceiling(length / resolution);
+
+            for (int i = 0; i < segmentCount; i++)
+            {
+                yield return new LineSegment(this.GetPointAt(previousPoint.Value, (double)(i + 1) / segmentCount));
+            }
+        }
+        public override IEnumerable<Point> GetLinearisationTangents(Point? previousPoint, double resolution)
+        {
+            double length = this.Measure(previousPoint.Value);
+            int segmentCount = (int)Math.Ceiling(length / resolution);
+
+            for (int i = 0; i < segmentCount; i++)
+            {
+                yield return this.GetTangentAt(previousPoint.Value, (double)(i + 1) / segmentCount);
+            }
+        }
+
+        public override IEnumerable<Segment> Transform(Func<Point, Point> transformationFunction)
+        {
+            foreach (Segment seg in this.ToBezierSegments())
+            {
+                foreach (Segment seg2 in seg.Transform(transformationFunction))
+                {
+                    yield return seg2;
+                }
+            }
         }
     }
 
@@ -2923,9 +3061,232 @@ namespace VectSharp
         {
             this.DrawGraphics(new Point(originX, originY), graphics);
         }
+
+
+        private static Point Multiply(double[,] matrix, Point pt)
+        {
+            double x = matrix[0, 0] * pt.X + matrix[0, 1] * pt.Y + matrix[0, 2];
+            double y = matrix[1, 0] * pt.X + matrix[1, 1] * pt.Y + matrix[1, 2];
+            double z = matrix[2, 0] * pt.X + matrix[2, 1] * pt.Y + matrix[2, 2];
+
+            return new Point(x / z, y / z);
+        }
+
+        private static double[,] Multiply(double[,] m1, double[,] m2)
+        {
+            return new double[3, 3]
+            {
+                { m1[0,0] * m2[0,0] + m1[0,1] * m2[1,0] + m1[0,2] *m2[2,0], m1[0,0] * m2[0,1] + m1[0,1] * m2[1,1] + m1[0,2] * m2[2,1], m1[0,0] * m2[0,2] + m1[0,1] * m2[1,2] + m1[0,2] * m2[2,2] },
+                { m1[1,0] * m2[0,0] + m1[1,1] * m2[1,0] + m1[1,2] *m2[2,0], m1[1,0] * m2[0,1] + m1[1,1] * m2[1,1] + m1[1,2] * m2[2,1], m1[1,0] * m2[0,2] + m1[1,1] * m2[1,2] + m1[1,2] * m2[2,2] },
+                { m1[2,0] * m2[0,0] + m1[2,1] * m2[1,0] + m1[2,2] *m2[2,0], m1[2,0] * m2[0,1] + m1[2,1] * m2[1,1] + m1[2,2] * m2[2,1], m1[2,0] * m2[0,2] + m1[2,1] * m2[1,2] + m1[2,2] * m2[2,2] }
+            };
+        }
+
+        private static double[,] TranslationMatrix(double dx, double dy)
+        {
+            return new double[3, 3]
+            {
+                {1, 0, dx },
+                {0, 1, dy },
+                {0, 0, 1 }
+            };
+        }
+
+        private static double[,] ScaleMatrix(double sx, double sy)
+        {
+            return new double[3, 3]
+            {
+                {sx, 0, 0 },
+                {0, sy, 0 },
+                {0, 0, 1 }
+            };
+        }
+
+        private static double[,] RotationMatrix(double theta)
+        {
+            return new double[3, 3]
+            {
+                {Math.Cos(theta), -Math.Sin(theta), 0 },
+                {Math.Sin(theta), Math.Cos(theta), 0 },
+                {0, 0, 1 }
+            };
+        }
+
+        public Graphics Transform(Func<Point, Point> transformationFunction, double linearisationResolution)
+        {
+            Graphics destinationGraphics = new Graphics();
+
+            Stack<double[,]> transformMatrix = new Stack<double[,]>();
+            double[,] currMatrix = new double[3, 3] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
+
+            for (int i = 0; i < this.Actions.Count; i++)
+            {
+                if (this.Actions[i] is RectangleAction)
+                {
+                    RectangleAction rec = this.Actions[i] as RectangleAction;
+
+                    GraphicsPath rectanglePath = new GraphicsPath();
+
+                    Point pt1 = transformationFunction(Multiply(currMatrix, rec.TopLeft));
+                    Point pt2 = transformationFunction(Multiply(currMatrix, new Point(rec.TopLeft.X + rec.Size.Width, rec.TopLeft.Y)));
+                    Point pt3 = transformationFunction(Multiply(currMatrix, new Point(rec.TopLeft.X + rec.Size.Width, rec.TopLeft.Y + rec.Size.Height)));
+                    Point pt4 = transformationFunction(Multiply(currMatrix, new Point(rec.TopLeft.X, rec.TopLeft.Y + rec.Size.Height)));
+
+                    rectanglePath.MoveTo(pt1).LineTo(pt2).LineTo(pt3).LineTo(pt4).Close();
+
+                    if (rec.Fill != null)
+                    {
+                        destinationGraphics.FillPath(rectanglePath, rec.Fill.Value, rec.Tag);
+                    }
+                    else if (rec.Stroke != null)
+                    {
+                        destinationGraphics.StrokePath(rectanglePath, rec.Stroke.Value, rec.LineWidth, rec.LineCap, rec.LineJoin, rec.LineDash, rec.Tag);
+                    }
+                }
+                else if (this.Actions[i] is PathAction)
+                {
+                    PathAction pth = this.Actions[i] as PathAction;
+
+                    GraphicsPath newPath = pth.Path.Linearise(linearisationResolution).Transform(pt => transformationFunction(Multiply(currMatrix, pt)));
+
+                    if (pth.IsClipping)
+                    {
+                        destinationGraphics.SetClippingPath(newPath);
+                    }
+                    else
+                    {
+                        if (pth.Fill != null)
+                        {
+                            destinationGraphics.FillPath(newPath, pth.Fill.Value, pth.Tag);
+                        }
+                        else if (pth.Stroke != null)
+                        {
+                            destinationGraphics.StrokePath(newPath, pth.Stroke.Value, pth.LineWidth, pth.LineCap, pth.LineJoin, pth.LineDash, pth.Tag);
+                        }
+                    }
+                }
+                else if (this.Actions[i] is TextAction)
+                {
+                    TextAction txt = this.Actions[i] as TextAction;
+
+                    GraphicsPath textPath = new GraphicsPath().AddText(txt.Origin, txt.Text, txt.Font, txt.TextBaseline).Linearise(linearisationResolution).Transform(pt => transformationFunction(Multiply(currMatrix, pt)));
+
+                    if (txt.Fill != null)
+                    {
+                        destinationGraphics.FillPath(textPath, txt.Fill.Value, txt.Tag);
+                    }
+                    else if (txt.Stroke != null)
+                    {
+                        destinationGraphics.StrokePath(textPath, txt.Stroke.Value, txt.LineWidth, txt.LineCap, txt.LineJoin, txt.LineDash, txt.Tag);
+                    }
+                }
+                else if (this.Actions[i] is TransformAction)
+                {
+                    TransformAction trf = this.Actions[i] as TransformAction;
+
+                    if (trf.Delta != null)
+                    {
+                        currMatrix = Multiply(currMatrix, TranslationMatrix(trf.Delta.Value.X, trf.Delta.Value.Y));
+                    }
+                    else if (trf.Angle != null)
+                    {
+                        currMatrix = Multiply(currMatrix, RotationMatrix(trf.Angle.Value));
+                    }
+                    else if (trf.Scale != null)
+                    {
+                        currMatrix = Multiply(currMatrix, ScaleMatrix(trf.Scale.Value.Width, trf.Scale.Value.Height));
+                    }
+                    else if (trf.Matrix != null)
+                    {
+                        currMatrix = Multiply(currMatrix, trf.Matrix);
+                    }
+                }
+                else if (this.Actions[i] is StateAction)
+                {
+                    if (((StateAction)this.Actions[i]).StateActionType == StateAction.StateActionTypes.Save)
+                    {
+                        transformMatrix.Push(currMatrix);
+                    }
+                    else
+                    {
+                        currMatrix = transformMatrix.Pop();
+                    }
+                }
+                else if (this.Actions[i] is RasterImageAction)
+                {
+                    RasterImageAction img = this.Actions[i] as RasterImageAction;
+
+                    GraphicsPath rectanglePath = new GraphicsPath();
+
+                    Point pt1 = transformationFunction(Multiply(currMatrix, new Point(img.DestinationX, img.DestinationY)));
+                    Point pt2 = transformationFunction(Multiply(currMatrix, new Point(img.DestinationX + img.DestinationWidth, img.DestinationY)));
+                    Point pt3 = transformationFunction(Multiply(currMatrix, new Point(img.DestinationX + img.DestinationWidth, img.DestinationY + img.DestinationHeight)));
+                    Point pt4 = transformationFunction(Multiply(currMatrix, new Point(img.DestinationX, img.DestinationY + img.DestinationHeight)));
+
+                    rectanglePath.MoveTo(pt1).LineTo(pt2).LineTo(pt3).LineTo(pt4).Close();
+
+                    destinationGraphics.FillPath(rectanglePath, Colour.FromRgb(220, 220, 220), img.Tag);
+                }
+            }
+
+            return destinationGraphics;
+        }
+
+        public Graphics Linearise(double resolution)
+        {
+            Graphics destinationGraphics = new Graphics();
+
+            for (int i = 0; i < this.Actions.Count; i++)
+            {
+                if (this.Actions[i] is RectangleAction || this.Actions[i] is TransformAction || this.Actions[i] is StateAction || this.Actions[i] is RasterImageAction)
+                {
+                    destinationGraphics.Actions.Add(this.Actions[i]);
+                }
+                else if (this.Actions[i] is PathAction)
+                {
+                    PathAction pth = this.Actions[i] as PathAction;
+
+                    GraphicsPath newPath = pth.Path.Linearise(resolution);
+
+                    if (pth.IsClipping)
+                    {
+                        destinationGraphics.SetClippingPath(newPath);
+                    }
+                    else
+                    {
+                        if (pth.Fill != null)
+                        {
+                            destinationGraphics.FillPath(newPath, pth.Fill.Value, pth.Tag);
+                        }
+                        else if (pth.Stroke != null)
+                        {
+                            destinationGraphics.StrokePath(newPath, pth.Stroke.Value, pth.LineWidth, pth.LineCap, pth.LineJoin, pth.LineDash, pth.Tag);
+                        }
+                    }
+                }
+                else if (this.Actions[i] is TextAction)
+                {
+                    TextAction txt = this.Actions[i] as TextAction;
+
+                    GraphicsPath textPath = new GraphicsPath().AddText(txt.Origin, txt.Text, txt.Font, txt.TextBaseline).Linearise(resolution);
+
+                    if (txt.Fill != null)
+                    {
+                        destinationGraphics.FillPath(textPath, txt.Fill.Value, txt.Tag);
+                    }
+                    else if (txt.Stroke != null)
+                    {
+                        destinationGraphics.StrokePath(textPath, txt.Stroke.Value, txt.LineWidth, txt.LineCap, txt.LineJoin, txt.LineDash, txt.Tag);
+                    }
+                }
+            }
+
+            return destinationGraphics;
+        }
     }
 
-    internal interface IGraphicsAction
+
+internal interface IGraphicsAction
     {
 
     }
@@ -3210,7 +3571,7 @@ namespace VectSharp
         /// <param name="radiusY">The vertical radius of the ellipse.</param>
         /// <param name="axisAngle">The angle of the horizontal axis of the ellipse with respect to the horizontal axis.</param>
         /// <param name="largeArc">Determines whether the large or the small arc is drawn.</param>
-        /// <param name="sweepClockwise">Determines whether the clockwise or counterclockwise arc is drawn.</param>
+        /// <param name="sweepClockwise">Determines whether the clockwise or anticlockwise arc is drawn.</param>
         /// <param name="endPoint">The end point of the arc.</param>
         /// <returns></returns>
         public GraphicsPath EllipticalArc(double radiusX, double radiusY, double axisAngle, bool largeArc, bool sweepClockwise, Point endPoint)
@@ -4272,6 +4633,1158 @@ namespace VectSharp
         {
             Point tangent = this.GetTangentAtRelative(position);
             return new Point(-tangent.Y, tangent.X);
+        }
+
+        /// <summary>
+        /// Linearises a <see cref="GraphicsPath"/>, replacing curve segments with series of line segments that approximate them.
+        /// </summary>
+        /// <param name="resolution">The absolute length between successive samples in curve segments.</param>
+        /// <returns>A <see cref="GraphicsPath"/> composed only of linear segments that approximates the current <see cref="GraphicsPath"/>.</returns>
+        public GraphicsPath Linearise(double resolution)
+        {
+            if (!(resolution > 0))
+            {
+                throw new ArgumentOutOfRangeException(nameof(resolution), resolution, "The resolution must be greater than 0!");
+            }
+
+            GraphicsPath tbr = new GraphicsPath();
+
+            Point? previousPoint = null;
+
+            foreach (Segment seg in this.Segments)
+            {
+                tbr.Segments.AddRange(seg.Linearise(previousPoint, resolution));
+
+                if (seg.Type != SegmentType.Close)
+                {
+                    previousPoint = seg.Point;
+                }
+            }
+
+            return tbr;
+        }
+
+        /// <summary>
+        /// Gets a collection of the end points of all the segments in the <see cref="GraphicsPath"/>, divided by figure.
+        /// </summary>
+        /// <returns>A collection of the end points of all the segments in the <see cref="GraphicsPath"/>, divided by figure.</returns>
+        public IEnumerable<List<Point>> GetPoints()
+        {
+            Point startPoint = new Point();
+
+            List<Point> currFigure = null;
+            bool returned = true;
+
+            foreach (Segment seg in this.Segments)
+            {
+                if (seg.Type != SegmentType.Close)
+                {
+                    Point currPoint = seg.Point;
+                    if (seg.Type == SegmentType.Move)
+                    {
+                        if (!returned)
+                        {
+                            yield return currFigure;
+                        }
+
+                        startPoint = currPoint;
+                        currFigure = new List<Point>();
+                        returned = false;
+                    }
+                    currFigure.Add(currPoint);
+                }
+                else
+                {
+                    currFigure.Add(startPoint);
+                    yield return currFigure;
+                    returned = true;
+                }
+            }
+
+            if (!returned)
+            {
+                yield return currFigure;
+            }
+        }
+
+
+        /// <summary>
+        /// Gets a collection of the tangents at the end point of the segments in which the <see cref="GraphicsPath"/> would be linearised, divided by figure.
+        /// </summary>
+        /// <param name="resolution">The absolute length between successive samples in curve segments.</param>
+        /// <returns>A collection of the tangents at the end point of the segments in which the <see cref="GraphicsPath"/> would be linearised, divided by figure.</returns>
+        public IEnumerable<List<Point>> GetLinearisationPointsNormals(double resolution)
+        {
+            if (!(resolution > 0))
+            {
+                throw new ArgumentOutOfRangeException(nameof(resolution), resolution, "The resolution must be greater than 0!");
+            }
+
+            Point previousPoint = new Point();
+            Point startPoint = new Point();
+
+            List<Point> currFigure = null;
+            bool returned = true;
+
+            foreach (Segment seg in this.Segments)
+            {
+                //tbr.Segments.AddRange(seg.Linearise(previousPoint, resolution));
+
+                if (seg.Type != SegmentType.Close)
+                {
+                    Point currPoint = seg.Point;
+                    if (seg.Type == SegmentType.Move)
+                    {
+                        if (!returned)
+                        {
+                            yield return currFigure;
+                        }
+
+                        startPoint = currPoint;
+                        currFigure = new List<Point>();
+                        returned = false;
+                        currFigure.Add(new Point());
+                    }
+                    else
+                    {
+                        foreach (Point tangent in seg.GetLinearisationTangents(previousPoint, resolution))
+                        {
+                            currFigure.Add(new Point(-tangent.Y, tangent.X));
+                        }
+                    }
+
+                    previousPoint = currPoint;
+                }
+                else
+                {
+                    Point normal;
+
+                    if (!startPoint.IsEqual(previousPoint, 1e-4))
+                    {
+                        Point tangent = new Point(startPoint.X - previousPoint.X, startPoint.Y - previousPoint.Y).Normalize();
+                        normal = new Point(-tangent.Y, tangent.X);
+                    }
+                    else
+                    {
+                        normal = currFigure[currFigure.Count - 1];
+                    }
+
+                    currFigure.Add(normal);
+                    currFigure[0] = new Point((currFigure[1].X + normal.X) * 0.5, (currFigure[1].Y + normal.Y) * 0.5).Normalize();
+
+                    yield return currFigure;
+                    returned = true;
+                }
+            }
+
+            if (!returned)
+            {
+                yield return currFigure;
+            }
+
+        }
+
+
+        private enum VertexType
+        {
+            Start, End, Regular, Split, Merge
+        };
+
+        /// <summary>
+        /// Divides a <see cref="GraphicsPath"/> into triangles.
+        /// </summary>
+        /// <param name="resolution">The resolution that will be used to linearise curve segments in the <see cref="GraphicsPath"/>.</param>
+        /// <param name="clockwise">If this is <see langword="true"/>, the triangles will have their vertices in a clockwise order, otherwise they will be in anticlockwise order.</param>
+        /// <returns>A collection of distinct <see cref="GraphicsPath"/>s, each representing one triangle.</returns>
+        public IEnumerable<GraphicsPath> Triangulate(double resolution, bool clockwise)
+        {
+            double shiftAmount = 0.01 * resolution;
+
+            if (!(resolution > 0))
+            {
+                throw new ArgumentOutOfRangeException(nameof(resolution), resolution, "The resolution must be greater than 0!");
+            }
+
+            GraphicsPath linearisedPath = this.Linearise(resolution);
+
+            List<Point> vertices = new List<Point>();
+            List<List<int>> vertexEdges = new List<List<int>>();
+            List<(int, int)> edges = new List<(int, int)>();
+            int lastStartingPoint = -1;
+            int lastSegmentEnd = -1;
+            double area = 0;
+
+            foreach (Segment seg in linearisedPath.Segments)
+            {
+                if (seg is MoveSegment)
+                {
+                    vertices.Add(seg.Point);
+                    vertexEdges.Add(new List<int>(2));
+                    lastStartingPoint = vertices.Count - 1;
+                    lastSegmentEnd = vertices.Count - 1;
+                }
+                else if (seg is LineSegment)
+                {
+                    if (!vertices[lastSegmentEnd].IsEqual(seg.Point, 1e-4))
+                    {
+                        vertices.Add(seg.Point);
+                        vertexEdges.Add(new List<int>(2));
+                        edges.Add((lastSegmentEnd, vertices.Count - 1));
+                        area += (seg.Point.X - vertices[lastSegmentEnd].X) * (seg.Point.Y + vertices[lastSegmentEnd].Y);
+                        vertexEdges[lastSegmentEnd].Add(edges.Count - 1);
+                        vertexEdges[vertices.Count - 1].Add(edges.Count - 1);
+                        lastSegmentEnd = vertices.Count - 1;
+                    }
+                }
+                else if (seg is CloseSegment)
+                {
+                    if (!vertices[lastSegmentEnd].IsEqual(vertices[lastStartingPoint], 1e-4))
+                    {
+                        edges.Add((lastSegmentEnd, lastStartingPoint));
+                        area += (vertices[lastStartingPoint].X - vertices[lastSegmentEnd].X) * (vertices[lastStartingPoint].Y + vertices[lastSegmentEnd].Y);
+                        vertexEdges[lastSegmentEnd].Add(edges.Count - 1);
+                        vertexEdges[lastStartingPoint].Add(edges.Count - 1);
+                    }
+                    else
+                    {
+                        vertices.RemoveAt(lastSegmentEnd);
+                        vertexEdges.RemoveAt(lastSegmentEnd);
+
+                        for (int i = 0; i < edges.Count; i++)
+                        {
+                            if (edges[i].Item1 == lastSegmentEnd)
+                            {
+                                edges[i] = (lastStartingPoint, edges[i].Item2);
+                                vertexEdges[lastStartingPoint].Add(i);
+                            }
+                            else if (edges[i].Item2 == lastSegmentEnd)
+                            {
+                                edges[i] = (edges[i].Item1, lastStartingPoint);
+                                vertexEdges[lastStartingPoint].Add(i);
+                            }
+                        }
+                    }
+
+                    lastStartingPoint = -1;
+                    lastSegmentEnd = -1;
+                }
+            }
+
+            bool isAntiClockwise = area > 0;
+
+            int compareVertices(Point a, Point b)
+            {
+                if (a.Y - b.Y != 0)
+                {
+                    return Math.Sign(a.Y - b.Y);
+                }
+                else
+                {
+                    return Math.Sign(a.X - b.X);
+                }
+            }
+
+            Dictionary<double, int> yCoordinates = new Dictionary<double, int>();
+            Dictionary<double, int> yShiftCount = new Dictionary<double, int>();
+
+            foreach (Point pt in vertices)
+            {
+                if (yCoordinates.ContainsKey(pt.Y))
+                {
+                    yCoordinates[pt.Y]++;
+                }
+                else
+                {
+                    yCoordinates[pt.Y] = 1;
+                    yShiftCount[pt.Y] = 0;
+                }
+            }
+
+            HashSet<double> yS = new HashSet<double>(from el in yCoordinates select el.Key);
+
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                if (yCoordinates[vertices[i].Y] > 1)
+                {
+                    int shiftCount = yShiftCount[vertices[i].Y];
+
+                    double targetCoordinate;
+
+                    do
+                    {
+                        shiftCount++;
+
+                        targetCoordinate = vertices[i].Y + (2 * (shiftCount % 2) - 1) * (1 - Math.Pow(0.5, (shiftCount - 1) / 2 + 1)) * shiftAmount;
+                    }
+                    while (yS.Contains(targetCoordinate));
+
+                    yS.Add(targetCoordinate);
+                    yCoordinates[vertices[i].Y]--;
+                    yShiftCount[vertices[i].Y] = shiftCount;
+                    vertices[i] = new Point(vertices[i].X, targetCoordinate);
+                }
+
+            }
+
+            Queue<int> sortedVertices = new Queue<int>(Enumerable.Range(0, vertices.Count).OrderBy(i => vertices[i], Comparer<Point>.Create(compareVertices)));
+
+            VertexType[] vertexTypes = new VertexType[vertices.Count];
+
+            List<(int, int)> exploredEdges = new List<(int, int)>();
+            List<int> helpers = new List<int>();
+            List<(int, int)> diagonals = new List<(int, int)>();
+            int[] nexts = new int[vertices.Count];
+            int[] prevs = new int[vertices.Count];
+
+            while (sortedVertices.Count > 0)
+            {
+                int vertex = sortedVertices.Dequeue();
+
+                Point pt = vertices[vertex];
+
+                (int, int) edge1 = edges[vertexEdges[vertex][0]];
+                (int, int) edge2 = edges[vertexEdges[vertex][1]];
+
+                int neighbour1 = edge1.Item1 != vertex ? edge1.Item1 : edge1.Item2;
+                int neighbour2 = edge2.Item1 != vertex ? edge2.Item1 : edge2.Item2;
+
+                int minNeighbour = Math.Min(neighbour1, neighbour2);
+                int maxNeighbour = Math.Max(neighbour1, neighbour2);
+
+                int prev, next;
+
+                if (vertex - minNeighbour == 1 && maxNeighbour - vertex == 1)
+                {
+                    prev = minNeighbour;
+                    next = maxNeighbour;
+                }
+                else if ((minNeighbour - vertex == 1 && maxNeighbour - vertex > 1) || vertex - maxNeighbour == 1 && vertex - minNeighbour > 1)
+                {
+                    prev = maxNeighbour;
+                    next = minNeighbour;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Could not make sense of the ordering of the vertices!");
+                }
+
+                nexts[vertex] = next;
+                prevs[vertex] = prev;
+
+                Point prevPoint = vertices[prev];
+                Point nextPoint = vertices[next];
+
+                double angle = Math.Atan2(prevPoint.Y - pt.Y, prevPoint.X - pt.X) - Math.Atan2(nextPoint.Y - pt.Y, nextPoint.X - pt.X);
+
+                if (angle < 0)
+                {
+                    angle += 2 * Math.PI;
+                }
+
+                VertexType vertexType;
+
+                if (prevPoint.Y >= pt.Y && nextPoint.Y >= pt.Y && angle < Math.PI)
+                {
+                    vertexType = VertexType.Start;
+                }
+                else if (prevPoint.Y >= pt.Y && nextPoint.Y >= pt.Y && angle > Math.PI)
+                {
+                    vertexType = VertexType.Split;
+                }
+                else if (prevPoint.Y <= pt.Y && nextPoint.Y <= pt.Y && angle < Math.PI)
+                {
+                    vertexType = VertexType.End;
+                }
+                else if (prevPoint.Y <= pt.Y && nextPoint.Y <= pt.Y && angle > Math.PI)
+                {
+                    vertexType = VertexType.Merge;
+                }
+                else
+                {
+                    vertexType = VertexType.Regular;
+                }
+
+                vertexTypes[vertex] = vertexType;
+
+                //gpr.FillText(vertices[vertex], vertex.ToString(), new Font(new FontFamily(FontFamily.StandardFontFamilies.Helvetica), 4), Colours.Orange);
+
+                if (vertexType == VertexType.Start)
+                {
+                    exploredEdges.Add((prev, vertex));
+                    helpers.Add(vertex);
+
+                    //gpr.StrokeRectangle(pt.X - 1, pt.Y - 1, 2, 2, Colours.Green, 0.25);
+                }
+                else if (vertexType == VertexType.End)
+                {
+                    int eiM1 = -1;
+
+                    for (int i = exploredEdges.Count - 1; i >= 0; i--)
+                    {
+                        if (exploredEdges[i].Item1 == vertex && exploredEdges[i].Item2 == next)
+                        {
+                            eiM1 = i;
+                            break;
+                        }
+                    }
+
+                    if (eiM1 >= 0)
+                    {
+                        if (vertexTypes[helpers[eiM1]] == VertexType.Merge)
+                        {
+                            diagonals.Add((helpers[eiM1], vertex));
+                        }
+
+                        exploredEdges.RemoveAt(eiM1);
+                        helpers.RemoveAt(eiM1);
+
+                        //gpr.FillRectangle(pt.X - 1, pt.Y - 1, 2, 2, Colours.Green);
+                    }
+                    /*else
+                    {
+                        gpr.FillRectangle(pt.X - 1, pt.Y - 1, 2, 2, Colours.Blue);
+                    }*/
+                }
+                else if (vertexType == VertexType.Split)
+                {
+                    (int, int) ej = (-1, -1);
+                    int ejIndex = -1;
+
+                    double xJ = double.MinValue;
+
+                    for (int i = 0; i < exploredEdges.Count; i++)
+                    {
+                        if ((vertices[exploredEdges[i].Item1].Y <= pt.Y && vertices[exploredEdges[i].Item2].Y >= pt.Y) || (vertices[exploredEdges[i].Item1].Y >= pt.Y && vertices[exploredEdges[i].Item2].Y <= pt.Y))
+                        {
+                            double dy = pt.Y - vertices[exploredEdges[i].Item1].Y;
+                            double dx = dy * (vertices[exploredEdges[i].Item2].X - vertices[exploredEdges[i].Item1].X) / (vertices[exploredEdges[i].Item2].Y - vertices[exploredEdges[i].Item1].Y);
+
+                            double x = dx + vertices[exploredEdges[i].Item1].X;
+
+                            if (x < pt.X && x >= xJ)
+                            {
+                                xJ = x;
+                                ej = exploredEdges[i];
+                                ejIndex = i;
+                            }
+                        }
+                    }
+
+                    if (ejIndex >= 0)
+                    {
+                        diagonals.Add((helpers[ejIndex], vertex));
+
+                        helpers[ejIndex] = vertex;
+
+                        exploredEdges.Add((prev, vertex));
+                        helpers.Add(vertex);
+
+                        //gpr.FillPath(new GraphicsPath().MoveTo(pt.X - 1, pt.Y + 1).LineTo(pt.X, pt.Y - 1).LineTo(pt.X + 1, pt.Y + 1).Close(), Colours.Green);
+                    }
+                    /* else
+                     {
+                         gpr.FillPath(new GraphicsPath().MoveTo(pt.X - 1, pt.Y + 1).LineTo(pt.X, pt.Y - 1).LineTo(pt.X + 1, pt.Y + 1).Close(), Colours.Blue);
+                     }*/
+
+
+                    /*(int, int) ej = (-1, -1);
+                    (int, int) ek = (-1, -1);
+
+                    double xJ = double.MinValue;
+                    double xK = double.MaxValue;
+
+                    for (int i = 0; i < edges.Count; i++)
+                    {
+                        if ((vertices[edges[i].Item1].Y < pt.Y && vertices[edges[i].Item2].Y > pt.Y) || (vertices[edges[i].Item1].Y > pt.Y && vertices[edges[i].Item2].Y < pt.Y))
+                        {
+                            double dy = pt.Y - vertices[edges[i].Item1].Y;
+                            double dx = dy * (vertices[edges[i].Item2].X - vertices[edges[i].Item1].X) / (vertices[edges[i].Item2].Y - vertices[edges[i].Item1].Y);
+
+                            double x = dx + vertices[edges[i].Item1].X;
+
+                            if (x < pt.X && x >= xJ)
+                            {
+                                xJ = x;
+                                ej = edges[i];
+                            }
+
+                            if (x > pt.X && x <= xK)
+                            {
+                                xK = x;
+                                ek = edges[i];
+                            }
+                        }
+                    }
+
+                    Point helper = new Point(double.NaN, double.MinValue);
+                    int helperIndex = -1;
+
+                    for (int i = 0; i < vertices.Count; i++)
+                    {
+                        Point h = vertices[i];
+                        if (h.Y < pt.Y && h.Y > helper.Y)
+                        {
+                            double dyJ = h.Y - vertices[ej.Item1].Y;
+                            double dxJ = dyJ * (vertices[ej.Item2].X - vertices[ej.Item1].X) / (vertices[ej.Item2].Y - vertices[ej.Item1].Y);
+                            double hxJ = dxJ + vertices[ej.Item1].X;
+
+                            double dyK = h.Y - vertices[ek.Item1].Y;
+                            double dxK = dyJ * (vertices[ek.Item2].X - vertices[ek.Item1].X) / (vertices[ek.Item2].Y - vertices[ek.Item1].Y);
+                            double hxK = dxJ + vertices[ek.Item1].X;
+
+                            if (h.X >= hxJ && h.X <= hxK)
+                            {
+                                helper = h;
+                                helperIndex = i;
+                            }
+                        }
+                    }
+
+                    diagonals.Add((vertex, helperIndex));*/
+                }
+                else if (vertexType == VertexType.Merge)
+                {
+                    int eiM1 = -1;
+
+                    for (int i = exploredEdges.Count - 1; i >= 0; i--)
+                    {
+                        if (exploredEdges[i].Item1 == vertex && exploredEdges[i].Item2 == next)
+                        {
+                            eiM1 = i;
+                            break;
+                        }
+                    }
+
+                    if (eiM1 >= 0)
+                    {
+                        if (vertexTypes[helpers[eiM1]] == VertexType.Merge)
+                        {
+                            diagonals.Add((helpers[eiM1], vertex));
+                        }
+
+                        exploredEdges.RemoveAt(eiM1);
+                        helpers.RemoveAt(eiM1);
+                    }
+
+                    (int, int) ej = (-1, -1);
+                    int ejIndex = -1;
+
+                    double xJ = double.MinValue;
+
+                    for (int i = 0; i < exploredEdges.Count; i++)
+                    {
+                        if ((vertices[exploredEdges[i].Item1].Y <= pt.Y && vertices[exploredEdges[i].Item2].Y >= pt.Y) || (vertices[exploredEdges[i].Item1].Y >= pt.Y && vertices[exploredEdges[i].Item2].Y <= pt.Y))
+                        {
+                            double dy = pt.Y - vertices[exploredEdges[i].Item1].Y;
+                            double dx = dy * (vertices[exploredEdges[i].Item2].X - vertices[exploredEdges[i].Item1].X) / (vertices[exploredEdges[i].Item2].Y - vertices[exploredEdges[i].Item1].Y);
+
+                            double x = dx + vertices[exploredEdges[i].Item1].X;
+
+                            if (x < pt.X && x >= xJ)
+                            {
+                                xJ = x;
+                                ej = exploredEdges[i];
+                                ejIndex = i;
+                            }
+                        }
+                    }
+
+                    if (ejIndex >= 0)
+                    {
+                        if (vertexTypes[helpers[ejIndex]] == VertexType.Merge)
+                        {
+                            diagonals.Add((helpers[ejIndex], vertex));
+                        }
+
+                        helpers[ejIndex] = vertex;
+                    }
+
+                    //gpr.FillPath(new GraphicsPath().MoveTo(pt.X - 1, pt.Y - 1).LineTo(pt.X, pt.Y + 1).LineTo(pt.X + 1, pt.Y - 1).Close(), Colours.Green);
+
+                    /*(int, int) ej = (-1, -1);
+                    (int, int) ek = (-1, -1);
+
+                    double xJ = double.MinValue;
+                    double xK = double.MaxValue;
+
+                    for (int i = 0; i < edges.Count; i++)
+                    {
+                        if ((vertices[edges[i].Item1].Y < pt.Y && vertices[edges[i].Item2].Y > pt.Y) || (vertices[edges[i].Item1].Y > pt.Y && vertices[edges[i].Item2].Y < pt.Y))
+                        {
+                            double dy = pt.Y - vertices[edges[i].Item1].Y;
+                            double dx = dy * (vertices[edges[i].Item2].X - vertices[edges[i].Item1].X) / (vertices[edges[i].Item2].Y - vertices[edges[i].Item1].Y);
+
+                            double x = dx + vertices[edges[i].Item1].X;
+
+                            if (x < pt.X && x >= xJ)
+                            {
+                                xJ = x;
+                                ej = edges[i];
+                            }
+
+                            if (x > pt.X && x <= xK)
+                            {
+                                xK = x;
+                                ek = edges[i];
+                            }
+                        }
+                    }
+
+                    Point helper = new Point(double.NaN, double.MaxValue);
+                    int helperIndex = -1;
+
+                    for (int i = 0; i < vertices.Count; i++)
+                    {
+                        Point h = vertices[i];
+                        if (h.Y > pt.Y && h.Y < helper.Y)
+                        {
+                            double dyJ = h.Y - vertices[ej.Item1].Y;
+                            double dxJ = dyJ * (vertices[ej.Item2].X - vertices[ej.Item1].X) / (vertices[ej.Item2].Y - vertices[ej.Item1].Y);
+                            double hxJ = dxJ + vertices[ej.Item1].X;
+
+                            double dyK = h.Y - vertices[ek.Item1].Y;
+                            double dxK = dyJ * (vertices[ek.Item2].X - vertices[ek.Item1].X) / (vertices[ek.Item2].Y - vertices[ek.Item1].Y);
+                            double hxK = dxJ + vertices[ek.Item1].X;
+
+                            if (h.X >= hxJ && h.X <= hxK)
+                            {
+                                helper = h;
+                                helperIndex = i;
+                            }
+                        }
+                    }
+
+                    diagonals.Add((vertex, helperIndex));*/
+                }
+                else if (vertexType == VertexType.Regular)
+                {
+
+                    //gpr.FillPath(new GraphicsPath().Arc(pt, 1, 0, 2 * Math.PI), Colours.Green);
+                    if ((isAntiClockwise && (prevPoint.Y < pt.Y || pt.Y < nextPoint.Y)) || (!isAntiClockwise && (prevPoint.Y > pt.Y || pt.Y > nextPoint.Y)))
+                    {
+                        int eiM1 = -1;
+
+                        for (int i = exploredEdges.Count - 1; i >= 0; i--)
+                        {
+                            if (exploredEdges[i].Item1 == vertex && exploredEdges[i].Item2 == next)
+                            {
+                                eiM1 = i;
+                                break;
+                            }
+                        }
+
+                        if (eiM1 >= 0)
+                        {
+                            if (vertexTypes[helpers[eiM1]] == VertexType.Merge)
+                            {
+                                diagonals.Add((helpers[eiM1], vertex));
+                            }
+
+                            exploredEdges.RemoveAt(eiM1);
+                            helpers.RemoveAt(eiM1);
+                        }
+
+                        exploredEdges.Add((prev, vertex));
+                        helpers.Add(vertex);
+                    }
+                    else
+                    {
+                        (int, int) ej = (-1, -1);
+                        int ejIndex = -1;
+
+                        double xJ = double.MinValue;
+
+                        for (int i = 0; i < exploredEdges.Count; i++)
+                        {
+                            if ((vertices[exploredEdges[i].Item1].Y <= pt.Y && vertices[exploredEdges[i].Item2].Y >= pt.Y) || (vertices[exploredEdges[i].Item1].Y >= pt.Y && vertices[exploredEdges[i].Item2].Y <= pt.Y))
+                            {
+                                double dy = pt.Y - vertices[exploredEdges[i].Item1].Y;
+                                double dx = dy * (vertices[exploredEdges[i].Item2].X - vertices[exploredEdges[i].Item1].X) / (vertices[exploredEdges[i].Item2].Y - vertices[exploredEdges[i].Item1].Y);
+
+                                double x = dx + vertices[exploredEdges[i].Item1].X;
+
+                                if (x < pt.X && x >= xJ)
+                                {
+                                    xJ = x;
+                                    ej = exploredEdges[i];
+                                    ejIndex = i;
+                                }
+                            }
+                        }
+
+                        if (ejIndex >= 0)
+                        {
+                            if (vertexTypes[helpers[ejIndex]] == VertexType.Merge)
+                            {
+                                diagonals.Add((helpers[ejIndex], vertex));
+                            }
+
+                            helpers[ejIndex] = vertex;
+                        }
+                    }
+                }
+            }
+
+            /*foreach ((int, int) diag in diagonals)
+            {
+                yield return new GraphicsPath().MoveTo(vertices[diag.Item1]).LineTo(vertices[diag.Item2]);
+            }
+
+            yield break;*/
+
+
+            //List<(int, int, bool)> allEdges = new List<(int, int, bool)>((from el in edges select (el.Item1, el.Item2, false)).Concat(from el in diagonals select (el.Item1, el.Item2, true)).Concat(from el in diagonals select (el.Item1, el.Item2, true)));
+
+            //List<List<(int, int)>> polygons = SplitPolygons(allEdges);
+
+            for (int i = diagonals.Count - 1; i >= 0; i--)
+            {
+                for (int j = 0; j < edges.Count; j++)
+                {
+                    if (CompareEdges(diagonals[i], edges[j]))
+                    {
+                        diagonals.RemoveAt(i);
+                        break;
+                    }
+                }
+            }
+
+            List<List<(int, int)>> polygons = SplitPolygons(edges, diagonals, vertices, isAntiClockwise ? prevs : nexts);
+
+            int[] directions = new int[vertices.Count];
+
+            int ind = 0;
+
+            foreach (List<(int, int)> polygon in polygons)
+            {
+                /*GraphicsPath polygonPath = new GraphicsPath();
+                foreach ((int, int) edge in polygon)
+                {
+                    if (polygonPath.Segments.Count == 0)
+                    {
+                        polygonPath.MoveTo(vertices[edge.Item1]);
+                    }
+
+                    polygonPath.LineTo(vertices[edge.Item2]);
+                }
+
+                yield return polygonPath;*/
+
+                /*if (ind == 0)
+                {*/
+                /*GraphicsPath polygonPath = new GraphicsPath();
+                foreach ((int, int) edge in polygon)
+                {
+                    if (polygonPath.Segments.Count == 0)
+                    {
+                        polygonPath.MoveTo(vertices[edge.Item1]);
+                    }
+
+                    polygonPath.LineTo(vertices[edge.Item2]);
+                }
+
+                //gpr.FillPath(polygonPath, Colours.LightCoral);
+                yield return polygonPath;
+                */
+                foreach (GraphicsPath pth in TriangulateMonotone(vertices, polygon, directions, clockwise ? -1 : 1/*, gpr*/))
+                {
+                    yield return pth;
+                }
+                //}
+
+                ind++;
+            }
+        }
+
+        private static bool CompareEdges((int, int) edge1, (int, int) edge2)
+        {
+            return (edge1.Item1 == edge2.Item1 && edge1.Item2 == edge2.Item2) || (edge1.Item1 == edge2.Item2 && edge1.Item2 == edge2.Item1);
+        }
+
+        private static List<List<(int, int)>> SplitPolygons(List<(int, int)> edges, List<(int, int)> diagonals, List<Point> vertices, int[] nexts)
+        {
+            List<List<(int, int)>> polygons = new List<List<(int, int)>>();
+
+            //List<(int, int, bool)> allEdges = new List<(int, int, bool)>(from el in edges select (el.Item1, el.Item2, false));
+
+            List<int>[] outPaths = new List<int>[vertices.Count];
+
+            for (int i = 0; i < edges.Count; i++)
+            {
+                if (outPaths[edges[i].Item1] == null)
+                {
+                    outPaths[edges[i].Item1] = new List<int>();
+                }
+
+                if (outPaths[edges[i].Item2] == null)
+                {
+                    outPaths[edges[i].Item2] = new List<int>();
+                }
+
+                outPaths[edges[i].Item1].Add(edges[i].Item2);
+                outPaths[edges[i].Item2].Add(edges[i].Item1);
+            }
+
+            for (int i = 0; i < diagonals.Count; i++)
+            {
+                if (outPaths[diagonals[i].Item1] == null)
+                {
+                    outPaths[diagonals[i].Item1] = new List<int>();
+                }
+
+                if (outPaths[diagonals[i].Item2] == null)
+                {
+                    outPaths[diagonals[i].Item2] = new List<int>();
+                }
+
+                outPaths[diagonals[i].Item1].Add(diagonals[i].Item2);
+                outPaths[diagonals[i].Item1].Add(diagonals[i].Item2);
+                outPaths[diagonals[i].Item2].Add(diagonals[i].Item1);
+                outPaths[diagonals[i].Item2].Add(diagonals[i].Item1);
+            }
+
+            List<int> activeVertices = (from el in Enumerable.Range(0, outPaths.Length) where outPaths[el] != null && outPaths[el].Count > 0 select el).ToList();
+
+            int[] newNexts = new int[nexts.Length];
+
+            for (int i = 0; i < nexts.Length; i++)
+            {
+                if (activeVertices.Contains(i))
+                {
+                    int currNext = nexts[i];
+                    while (!outPaths[i].Contains(currNext))
+                    {
+                        currNext = nexts[currNext];
+                    }
+                    newNexts[i] = currNext;
+                }
+                else
+                {
+                    newNexts[i] = -1;
+                }
+            }
+
+            while (activeVertices.Count > 0)
+            {
+                List<(int, int)> polygon = new List<(int, int)>();
+
+                int startPoint = activeVertices.Min();
+
+                if (!outPaths[startPoint].Contains(newNexts[startPoint]))
+                {
+                    throw new InvalidOperationException("Missing edge!");
+                }
+
+                int prevVertex = startPoint;
+                int currVertex = newNexts[startPoint];
+
+                outPaths[startPoint].Remove(currVertex);
+                outPaths[currVertex].Remove(startPoint);
+                polygon.Add((startPoint, currVertex));
+
+                while (currVertex != startPoint)
+                {
+                    Point currPoint = vertices[currVertex];
+                    Point prevPoint = vertices[prevVertex];
+
+                    double angleIncoming = Math.Atan2(prevPoint.Y - currPoint.Y, prevPoint.X - currPoint.X);
+                    if (angleIncoming < 0)
+                    {
+                        angleIncoming += 2 * Math.PI;
+                    }
+
+                    double maxAngle = double.MinValue;
+                    int candidateVertex = -1;
+
+                    for (int i = 0; i < outPaths[currVertex].Count; i++)
+                    {
+                        double angleI = Math.Atan2(vertices[outPaths[currVertex][i]].Y - currPoint.Y, vertices[outPaths[currVertex][i]].X - currPoint.X);
+                        if (angleI < 0)
+                        {
+                            angleI += 2 * Math.PI;
+                        }
+                        angleI -= angleIncoming;
+                        if (angleI < 0)
+                        {
+                            angleI += 2 * Math.PI;
+                        }
+
+                        if (angleI > maxAngle)
+                        {
+                            candidateVertex = outPaths[currVertex][i];
+                            maxAngle = angleI;
+                        }
+                    }
+
+                    outPaths[currVertex].Remove(candidateVertex);
+                    outPaths[candidateVertex].Remove(currVertex);
+                    polygon.Add((currVertex, candidateVertex));
+
+                    prevVertex = currVertex;
+                    currVertex = candidateVertex;
+                }
+
+                polygons.Add(polygon);
+                activeVertices = (from el in Enumerable.Range(0, outPaths.Length) where outPaths[el] != null && outPaths[el].Count > 0 select el).ToList();
+
+                if (activeVertices.Contains(currVertex))
+                {
+                    int currNext = newNexts[currVertex];
+                    while (!outPaths[currVertex].Contains(currNext))
+                    {
+                        currNext = newNexts[currNext];
+                    }
+                    newNexts[currVertex] = currNext;
+                }
+
+                if (activeVertices.Contains(prevVertex))
+                {
+                    int currNext = newNexts[prevVertex];
+                    while (!outPaths[prevVertex].Contains(currNext))
+                    {
+                        currNext = newNexts[currNext];
+                    }
+                    newNexts[prevVertex] = currNext;
+                }
+            }
+
+            return polygons;
+        }
+
+        private static IEnumerable<GraphicsPath> TriangulateMonotone(List<Point> vertices, List<(int, int)> edges, int[] directions, int targetSign)
+        {
+            int getDirection((int, int) edge)
+            {
+                if (vertices[edge.Item2].Y != vertices[edge.Item1].Y)
+                {
+                    return Math.Sign(vertices[edge.Item2].Y - vertices[edge.Item1].Y);
+                }
+                else
+                {
+                    //directions[edges[i].Item1] = Math.Sign(vertices[edges[i].Item2].X - vertices[edges[i].Item1].X);
+
+                    for (int i = 0; i < edges.Count; i++)
+                    {
+                        if (edges[i].Item2 == edge.Item1)
+                        {
+                            return getDirection(edges[i]);
+                        }
+                    }
+                }
+
+                throw new InvalidOperationException("Unknown edge direction!");
+            }
+
+
+            for (int i = 0; i < edges.Count; i++)
+            {
+                directions[edges[i].Item1] = getDirection(edges[i]);
+            }
+
+            int[] sortedVertices = (from el in edges select el.Item1).OrderBy(a => a, Comparer<int>.Create((a, b) =>
+              {
+                  if (vertices[a].Y != vertices[b].Y)
+                  {
+                      return Math.Sign(vertices[a].Y - vertices[b].Y);
+                  }
+                  else
+                  {
+                      return Math.Sign(vertices[a].X - vertices[b].X);
+                  }
+              })).ToArray();
+
+            /* for (int i = 0; i < sortedVertices.Length; i++)
+             {
+                 gpr.FillText(vertices[sortedVertices[i]], i.ToString(), new Font(new FontFamily(FontFamily.StandardFontFamilies.Helvetica), 4), Colours.Black);
+             }*/
+
+            List<(int, int)> diagonals = new List<(int, int)>();
+
+            Stack<int> stack = new Stack<int>();
+
+            stack.Push(sortedVertices[0]);
+            stack.Push(sortedVertices[1]);
+
+            for (int i = 2; i < sortedVertices.Length - 1; i++)
+            {
+                int onTop = stack.Peek();
+
+                if (directions[sortedVertices[i]] != directions[onTop])
+                {
+                    while (stack.Count > 1)
+                    {
+                        int v = stack.Pop();
+
+                        diagonals.Add((v, sortedVertices[i]));
+                    }
+
+                    stack.Pop();
+
+                    stack.Push(sortedVertices[i - 1]);
+                    stack.Push(sortedVertices[i]);
+                }
+                else
+                {
+                    int lastPopped = stack.Pop();
+
+                    bool shouldContinue = true;
+
+                    while (shouldContinue && stack.Count > 0)
+                    {
+                        int currVert = stack.Peek();
+
+                        // double angle = Math.Atan2(vertices[lastPopped].Y - vertices[sortedVertices[i]].Y, vertices[lastPopped].X - vertices[sortedVertices[i]].X) - Math.Atan2(vertices[currVert].Y - vertices[sortedVertices[i]].Y, vertices[currVert].X - vertices[sortedVertices[i]].X);
+
+                        //double angle2 = Math.Atan2(vertices[currVert].Y - vertices[lastPopped].Y, vertices[currVert].X - vertices[lastPopped].X) - Math.Atan2(vertices[sortedVertices[i]].Y - vertices[lastPopped].Y, vertices[sortedVertices[i]].X - vertices[lastPopped].X);
+
+                        double areaSign = Math.Sign((vertices[currVert].X - vertices[lastPopped].X) * (vertices[sortedVertices[i]].Y - vertices[lastPopped].Y) - (vertices[currVert].Y - vertices[lastPopped].Y) * (vertices[sortedVertices[i]].X - vertices[lastPopped].X));
+
+                        double dirSign = Math.Sign(vertices[currVert].X - vertices[lastPopped].X);
+
+
+                        /*if (angle2 < -Math.PI)
+                        {
+                            angle2 += 2 * Math.PI;
+                        }*/
+
+                        /* if (angle < -Math.PI)
+                         {
+                             angle += 2 * Math.PI;
+                         }*/
+
+                        if (areaSign * dirSign > 0)
+                        {
+                            lastPopped = stack.Pop();
+
+                            diagonals.Add((currVert, sortedVertices[i]));
+                        }
+                        else
+                        {
+                            shouldContinue = false;
+                        }
+                    }
+
+                    stack.Push(lastPopped);
+                    stack.Push(sortedVertices[i]);
+                }
+            }
+
+            stack.Pop();
+
+            while (stack.Count > 1)
+            {
+                int v = stack.Pop();
+
+                diagonals.Add((v, sortedVertices[sortedVertices.Length - 1]));
+            }
+
+            /*foreach ((int, int) diag in diagonals)
+            {
+                yield return new GraphicsPath().MoveTo(vertices[diag.Item1]).LineTo(vertices[diag.Item2]);
+            }
+
+            yield break;*/
+
+            List<int>[] connections = new List<int>[vertices.Count];
+
+            for (int i = 0; i < edges.Count; i++)
+            {
+                connections[edges[i].Item1] = new List<int>();
+            }
+
+            for (int i = 0; i < edges.Count; i++)
+            {
+                connections[edges[i].Item1].Add(edges[i].Item2);
+                connections[edges[i].Item2].Add(edges[i].Item1);
+            }
+
+            for (int i = 0; i < diagonals.Count; i++)
+            {
+                connections[diagonals[i].Item1].Add(diagonals[i].Item2);
+                connections[diagonals[i].Item1].Add(diagonals[i].Item2);
+
+                connections[diagonals[i].Item2].Add(diagonals[i].Item1);
+                connections[diagonals[i].Item2].Add(diagonals[i].Item1);
+            }
+
+            int totalTriangles = (edges.Count + diagonals.Count * 2) / 3;
+
+            List<List<(int, int)>> polygons = new List<List<(int, int)>>();
+
+            while (polygons.Count < totalTriangles)
+            {
+                int p1 = -1;
+                int p2 = -1;
+
+                for (int i = 0; i < connections.Length; i++)
+                {
+                    if (connections[i] != null && connections[i].Count > 0)
+                    {
+                        p1 = i;
+                        p2 = connections[i][0];
+
+                        connections[i].Remove(p2);
+                        connections[p2].Remove(i);
+                        break;
+                    }
+                }
+
+                int p3 = -1;
+
+                for (int i = 0; i < connections[p1].Count; i++)
+                {
+                    if (connections[connections[p1][i]].Contains(p2))
+                    {
+                        p3 = connections[p1][i];
+                        connections[p1].Remove(p3);
+                        connections[p2].Remove(p3);
+                        connections[p3].Remove(p1);
+                        connections[p3].Remove(p2);
+                        break;
+                    }
+                }
+
+                int sign = Math.Sign((vertices[p1].X - vertices[p2].X) * (vertices[p3].Y - vertices[p2].Y) - (vertices[p1].Y - vertices[p2].Y) * (vertices[p3].X - vertices[p2].X));
+
+                if (sign == targetSign)
+                {
+                    polygons.Add(new List<(int, int)>() { (p1, p2), (p2, p3), (p3, p1) });
+                }
+                else
+                {
+                    polygons.Add(new List<(int, int)>() { (p1, p3), (p3, p2), (p2, p1) });
+                }
+            }
+
+            //List<List<(int, int)>> polygons = SplitPolygons(edges, diagonals, vertices, nexts);
+
+            foreach (List<(int, int)> polygon in polygons)
+            {
+                GraphicsPath polygonPath = new GraphicsPath();
+                foreach ((int, int) edge in polygon)
+                {
+                    if (polygonPath.Segments.Count == 0)
+                    {
+                        polygonPath.MoveTo(vertices[edge.Item1]);
+                    }
+
+                    polygonPath.LineTo(vertices[edge.Item2]);
+                }
+
+                yield return polygonPath;
+            }
+        }
+
+        public GraphicsPath Transform(Func<Point, Point> transformationFunction)
+        {
+            GraphicsPath tbr = new GraphicsPath();
+
+            foreach (Segment seg in this.Segments)
+            {
+                tbr.Segments.AddRange(seg.Transform(transformationFunction));
+            }
+
+            return tbr;
         }
     }
 
