@@ -20,5 +20,6 @@ var namespace_vect_sharp =
     [ "RasterImage", "class_vect_sharp_1_1_raster_image.html", "class_vect_sharp_1_1_raster_image" ],
     [ "Segment", "class_vect_sharp_1_1_segment.html", "class_vect_sharp_1_1_segment" ],
     [ "Size", "struct_vect_sharp_1_1_size.html", "struct_vect_sharp_1_1_size" ],
-    [ "TrueTypeFile", "class_vect_sharp_1_1_true_type_file.html", "class_vect_sharp_1_1_true_type_file" ]
+    [ "TrueTypeFile", "class_vect_sharp_1_1_true_type_file.html", "class_vect_sharp_1_1_true_type_file" ],
+    [ "UnbalancedStackException", "class_vect_sharp_1_1_unbalanced_stack_exception.html", null ]
 ];

@@ -1,18 +1,18 @@
 var searchData=
 [
-  ['magenta_625',['Magenta',['../class_vect_sharp_1_1_colours.html#a337d9181ae54a76dda08352831861db8',1,'VectSharp::Colours']]],
-  ['maroon_626',['Maroon',['../class_vect_sharp_1_1_colours.html#aba922efbe4c38f9ed4f7c0947bb4407f',1,'VectSharp::Colours']]],
-  ['mediumaquamarine_627',['MediumAquaMarine',['../class_vect_sharp_1_1_colours.html#a2699e7f3d96bcc7839bbf4dd9c9cc8a6',1,'VectSharp::Colours']]],
-  ['mediumblue_628',['MediumBlue',['../class_vect_sharp_1_1_colours.html#a4c3c8852bf02c89d55e5b2d3e22b65fe',1,'VectSharp::Colours']]],
-  ['mediumorchid_629',['MediumOrchid',['../class_vect_sharp_1_1_colours.html#a484495436717ed04b11b0883a77a6536',1,'VectSharp::Colours']]],
-  ['mediumpurple_630',['MediumPurple',['../class_vect_sharp_1_1_colours.html#a09c994f6f786cf3d0c9e12a364c21f67',1,'VectSharp::Colours']]],
-  ['mediumseagreen_631',['MediumSeaGreen',['../class_vect_sharp_1_1_colours.html#a4b15879e6592028329fa7b607bb265db',1,'VectSharp::Colours']]],
-  ['mediumslateblue_632',['MediumSlateBlue',['../class_vect_sharp_1_1_colours.html#a684e5701486bccf4f92cca88bcc64c0f',1,'VectSharp::Colours']]],
-  ['mediumspringgreen_633',['MediumSpringGreen',['../class_vect_sharp_1_1_colours.html#ad500ebb35b00356d2d4db04a87f72c34',1,'VectSharp::Colours']]],
-  ['mediumturquoise_634',['MediumTurquoise',['../class_vect_sharp_1_1_colours.html#a0f23b7e00aea527b15127826b288f2ef',1,'VectSharp::Colours']]],
-  ['mediumvioletred_635',['MediumVioletRed',['../class_vect_sharp_1_1_colours.html#aaa9918403c515cf027e210b902645ba3',1,'VectSharp::Colours']]],
-  ['midnightblue_636',['MidnightBlue',['../class_vect_sharp_1_1_colours.html#a3b70f58af3be172c53ec3ae4ed0597ea',1,'VectSharp::Colours']]],
-  ['mintcream_637',['MintCream',['../class_vect_sharp_1_1_colours.html#aa43ca2e811ea82df3e5ac906afd2107c',1,'VectSharp::Colours']]],
-  ['mistyrose_638',['MistyRose',['../class_vect_sharp_1_1_colours.html#a60ef4eeec91cef799a8532c63582769e',1,'VectSharp::Colours']]],
-  ['moccasin_639',['Moccasin',['../class_vect_sharp_1_1_colours.html#af1a82371727ac56b7731986d3f788353',1,'VectSharp::Colours']]]
+  ['magenta_635',['Magenta',['../class_vect_sharp_1_1_colours.html#a337d9181ae54a76dda08352831861db8',1,'VectSharp::Colours']]],
+  ['maroon_636',['Maroon',['../class_vect_sharp_1_1_colours.html#aba922efbe4c38f9ed4f7c0947bb4407f',1,'VectSharp::Colours']]],
+  ['mediumaquamarine_637',['MediumAquaMarine',['../class_vect_sharp_1_1_colours.html#a2699e7f3d96bcc7839bbf4dd9c9cc8a6',1,'VectSharp::Colours']]],
+  ['mediumblue_638',['MediumBlue',['../class_vect_sharp_1_1_colours.html#a4c3c8852bf02c89d55e5b2d3e22b65fe',1,'VectSharp::Colours']]],
+  ['mediumorchid_639',['MediumOrchid',['../class_vect_sharp_1_1_colours.html#a484495436717ed04b11b0883a77a6536',1,'VectSharp::Colours']]],
+  ['mediumpurple_640',['MediumPurple',['../class_vect_sharp_1_1_colours.html#a09c994f6f786cf3d0c9e12a364c21f67',1,'VectSharp::Colours']]],
+  ['mediumseagreen_641',['MediumSeaGreen',['../class_vect_sharp_1_1_colours.html#a4b15879e6592028329fa7b607bb265db',1,'VectSharp::Colours']]],
+  ['mediumslateblue_642',['MediumSlateBlue',['../class_vect_sharp_1_1_colours.html#a684e5701486bccf4f92cca88bcc64c0f',1,'VectSharp::Colours']]],
+  ['mediumspringgreen_643',['MediumSpringGreen',['../class_vect_sharp_1_1_colours.html#ad500ebb35b00356d2d4db04a87f72c34',1,'VectSharp::Colours']]],
+  ['mediumturquoise_644',['MediumTurquoise',['../class_vect_sharp_1_1_colours.html#a0f23b7e00aea527b15127826b288f2ef',1,'VectSharp::Colours']]],
+  ['mediumvioletred_645',['MediumVioletRed',['../class_vect_sharp_1_1_colours.html#aaa9918403c515cf027e210b902645ba3',1,'VectSharp::Colours']]],
+  ['midnightblue_646',['MidnightBlue',['../class_vect_sharp_1_1_colours.html#a3b70f58af3be172c53ec3ae4ed0597ea',1,'VectSharp::Colours']]],
+  ['mintcream_647',['MintCream',['../class_vect_sharp_1_1_colours.html#aa43ca2e811ea82df3e5ac906afd2107c',1,'VectSharp::Colours']]],
+  ['mistyrose_648',['MistyRose',['../class_vect_sharp_1_1_colours.html#a60ef4eeec91cef799a8532c63582769e',1,'VectSharp::Colours']]],
+  ['moccasin_649',['Moccasin',['../class_vect_sharp_1_1_colours.html#af1a82371727ac56b7731986d3f788353',1,'VectSharp::Colours']]]
 ];

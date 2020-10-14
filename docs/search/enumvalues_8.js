@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['neverconvert_740',['NeverConvert',['../class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html#ab1be8c4c6246dad9c92fcc3f2b3cdd77ab11ded174ba879c08340adc36752024a',1,'VectSharp::Canvas::AvaloniaContextInterpreter']]]
+  ['middle_749',['Middle',['../namespace_vect_sharp.html#acfad2994b272989b9cb471230d95334fab1ca34f82e83c52b010f86955f264e05',1,'VectSharp']]],
+  ['miter_750',['Miter',['../namespace_vect_sharp.html#a58a4a36ea254b3d255755654fd9e61f6ae4396f81cd926bb129ccf3c147c64514',1,'VectSharp']]],
+  ['move_751',['Move',['../namespace_vect_sharp.html#ad82c158fff255cb1cbe8d51de61cb4e4a6bc362dbf494c61ea117fe3c71ca48a5',1,'VectSharp']]]
 ];

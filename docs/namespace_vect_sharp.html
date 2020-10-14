@@ -28,7 +28,7 @@
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VectSharp
-   &#160;<span id="projectnumber">1.4.2</span>
+   &#160;<span id="projectnumber">1.6.0</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -144,6 +144,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_true_type_file.html">TrueTypeFile</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a font file in TrueType format. Reference: <a href="http://stevehanov.ca/blog/?id=143">http://stevehanov.ca/blog/?id=143</a>, <a href="https://developer.apple.com/fonts/TrueType-Reference-Manual/">https://developer.apple.com/fonts/TrueType-Reference-Manual/</a>, <a href="https://docs.microsoft.com/en-us/typography/opentype/spec/">https://docs.microsoft.com/en-us/typography/opentype/spec/</a>  <a href="class_vect_sharp_1_1_true_type_file.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_unbalanced_stack_exception.html">UnbalancedStackException</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The exception that is thrown when an unbalanced graphics state stack occurs.  <a href="class_vect_sharp_1_1_unbalanced_stack_exception.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -183,6 +186,12 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:ad82c158fff255cb1cbe8d51de61cb4e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Types of Segment.  <a href="namespace_vect_sharp.html#ad82c158fff255cb1cbe8d51de61cb4e4">More...</a><br /></td></tr>
 <tr class="separator:ad82c158fff255cb1cbe8d51de61cb4e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88d2dd0aea021af9a8af889bf292006f"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_vect_sharp.html#a88d2dd0aea021af9a8af889bf292006f">UnbalancedStackActions</a> { <a class="el" href="namespace_vect_sharp.html#a88d2dd0aea021af9a8af889bf292006fa8ce61dd2505effd96f937fa743b6491f">UnbalancedStackActions.Throw</a>, 
+<a class="el" href="namespace_vect_sharp.html#a88d2dd0aea021af9a8af889bf292006fa9122a729789e23c144f254536609f41b">UnbalancedStackActions.SilentlyFix</a>, 
+<a class="el" href="namespace_vect_sharp.html#a88d2dd0aea021af9a8af889bf292006fafd038fc7f319e48f3115d92bf5bdbef9">UnbalancedStackActions.Ignore</a>
+ }</td></tr>
+<tr class="memdesc:a88d2dd0aea021af9a8af889bf292006f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents ways to deal with unbalanced graphics state stacks.  <a href="namespace_vect_sharp.html#a88d2dd0aea021af9a8af889bf292006f">More...</a><br /></td></tr>
+<tr class="separator:a88d2dd0aea021af9a8af889bf292006f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ccfe4c0d79758b6c0e2fda8a319125c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_vect_sharp.html#a9ccfe4c0d79758b6c0e2fda8a319125c">PixelFormats</a> { <a class="el" href="namespace_vect_sharp.html#a9ccfe4c0d79758b6c0e2fda8a319125ca889574aebacda6bfd3e534e2b49b8028">PixelFormats.RGB</a>, 
 <a class="el" href="namespace_vect_sharp.html#a9ccfe4c0d79758b6c0e2fda8a319125caea3495a278957dc58165e48a8945469f">PixelFormats.RGBA</a>, 
 <a class="el" href="namespace_vect_sharp.html#a9ccfe4c0d79758b6c0e2fda8a319125ca2ad5640ebdec72fc79531d1778c6c2dc">PixelFormats.BGR</a>, 
@@ -401,6 +410,40 @@ Enumerations</h2></td></tr>
 </table>
 
 <p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00036">36</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+
+</div>
+</div>
+<a id="a88d2dd0aea021af9a8af889bf292006f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88d2dd0aea021af9a8af889bf292006f">&#9670;&nbsp;</a></span>UnbalancedStackActions</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespace_vect_sharp.html#a88d2dd0aea021af9a8af889bf292006f">VectSharp.UnbalancedStackActions</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Represents ways to deal with unbalanced graphics state stacks. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a88d2dd0aea021af9a8af889bf292006fa8ce61dd2505effd96f937fa743b6491f"></a>Throw&#160;</td><td class="fielddoc"><p>If the graphics state stack is unbalanced, an exception will be thrown. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a88d2dd0aea021af9a8af889bf292006fa9122a729789e23c144f254536609f41b"></a>SilentlyFix&#160;</td><td class="fielddoc"><p>The graphics state stack will be automatically balanced by adding or removing calls to <a class="el" href="class_vect_sharp_1_1_graphics.html#a8f2e220bda144c50e515fe1aa0e232de" title="Restore the previous transform state (rotation, translation scale).">Graphics.Restore</a> as necessary. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a88d2dd0aea021af9a8af889bf292006fafd038fc7f319e48f3115d92bf5bdbef9"></a>Ignore&#160;</td><td class="fielddoc"><p>No attempt will be made at correcting an unbalanced graphics state stack. This may cause issues with some consumers. </p>
+</td></tr>
+</table>
+
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01882">1882</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>

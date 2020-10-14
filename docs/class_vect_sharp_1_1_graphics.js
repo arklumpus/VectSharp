@@ -31,5 +31,6 @@ var class_vect_sharp_1_1_graphics =
     [ "StrokeTextOnPath", "class_vect_sharp_1_1_graphics.html#a2a85a98aaa0400b3af0fc51320c5e41a", null ],
     [ "Transform", "class_vect_sharp_1_1_graphics.html#a2a53438684eb80483e692107575a6834", null ],
     [ "Translate", "class_vect_sharp_1_1_graphics.html#a1c353f23b9be14358cf8102fbeb2ea1d", null ],
-    [ "Translate", "class_vect_sharp_1_1_graphics.html#a675df302f1821806025a0403ee6c2aef", null ]
+    [ "Translate", "class_vect_sharp_1_1_graphics.html#a675df302f1821806025a0403ee6c2aef", null ],
+    [ "UnbalancedStackAction", "class_vect_sharp_1_1_graphics.html#af32ad440108219e8600983cc6d0f6d49", null ]
 ];
