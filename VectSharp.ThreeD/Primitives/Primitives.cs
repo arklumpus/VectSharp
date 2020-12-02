@@ -6,6 +6,53 @@ using System.Text;
 
 namespace VectSharp.ThreeD
 {
+    internal static class Intersections3D
+    {
+        public static bool PointInTriangle(Point3D p, Point3D A, Point3D B, Point3D C)
+        {
+            Vector3D v2 = p - A;
+
+            Vector3D v0 = B - A;
+            Vector3D v1 = C - A;
+            double d00 = v0 * v0;
+            double d01 = v0 * v1;
+            double d11 = v1 * v1;
+
+            double invDenomin = 1.0 / (d00 * d11 - d01 * d01);
+
+            double d20 = v2 * v0;
+            double d21 = v2 * v1;
+
+            double v = (d11 * d20 - d01 * d21) * invDenomin;
+            double w = (d00 * d21 - d01 * d20) * invDenomin;
+            double u = 1 - v - w;
+
+            return u >= 0 && v >= 0 && w >= 0 && u <= 1 && v <= 1 && w <= 1;
+        }
+
+        /*public static bool CoplanarTrianglesOverlap(Point3D A1, Point3D B1, Point3D C1, Point3D A2, Point3D B2, Point3D C2, double[,] rotMatToPlane)
+        {
+            if (PointInTriangle(A1, A2, B2, C2) || PointInTriangle(B1, A2, B2, C2) || PointInTriangle(C1, A2, B2, C2) || PointInTriangle(A2, A1, B1, C1) || PointInTriangle(B2, A1, B1, C1) || PointInTriangle(C2, A1, B1, C1))
+            {
+                return true;
+            }
+            else
+            {
+                Point a1 = (rotMatToPlane * A1).DropZ();
+                Point b1 = (rotMatToPlane * B1).DropZ();
+                Point c1 = (rotMatToPlane * C1).DropZ();
+
+                Point a2 = (rotMatToPlane * A2).DropZ();
+                Point b2 = (rotMatToPlane * B2).DropZ();
+                Point c2 = (rotMatToPlane * C2).DropZ();
+
+                return Intersections2D.SegmentsOverlap(a1, b1, a2, b2) || Intersections2D.SegmentsOverlap(a1, b1, b2, c2) || Intersections2D.SegmentsOverlap(a1, b1, c2, a2) ||
+                Intersections2D.SegmentsOverlap(b1, c1, a2, b2) || Intersections2D.SegmentsOverlap(b1, c1, b2, c2) || Intersections2D.SegmentsOverlap(b1, c1, c2, a2) ||
+                Intersections2D.SegmentsOverlap(c1, a1, a2, b2) || Intersections2D.SegmentsOverlap(c1, a1, b2, c2) || Intersections2D.SegmentsOverlap(c1, a1, c2, a2);
+            }
+        }*/
+    }
+
     internal static class Intersections2D
     {
         public static bool AreEqual(Point p1, Point p2, double tolerance)
@@ -45,6 +92,71 @@ namespace VectSharp.ThreeD
             return !((signAB < 0 || signBC < 0 || signCA < 0) && (signAB > 0 || signBC > 0 || signCA > 0));
         }
 
+        public static bool PointInTriangle(int ptX, int ptY, Point A, Point B, Point C)
+        {
+            double signAB = (ptX - B.X) * (A.Y - B.Y) - (A.X - B.X) * (ptY - B.Y);
+            double signBC = (ptX - C.X) * (B.Y - C.Y) - (B.X - C.X) * (ptY - C.Y);
+            double signCA = (ptX - A.X) * (C.Y - A.Y) - (C.X - A.X) * (ptY - A.Y);
+
+            return !((signAB < 0 || signBC < 0 || signCA < 0) && (signAB > 0 || signBC > 0 || signCA > 0));
+        }
+
+        /*  public static double HowMuchPointInTriangle(int ptX, int ptY, Point A, Point B, Point C)
+          {
+              double signAB = (ptX - B.X) * (A.Y - B.Y) - (A.X - B.X) * (ptY - B.Y);
+              double signBC = (ptX - C.X) * (B.Y - C.Y) - (B.X - C.X) * (ptY - C.Y);
+              double signCA = (ptX - A.X) * (C.Y - A.Y) - (C.X - A.X) * (ptY - A.Y);
+
+              if ((signAB <= 0 && signBC <= 0 && signCA <= 0) || (signAB >= 0 && signBC >= 0 && signCA >= 0))
+              {
+                  return 1;
+              }
+              else
+              {
+                  int dominantSign = -Math.Sign(signAB) * Math.Sign(signBC) * Math.Sign(signCA);
+
+                  if (Math.Sign(signAB) != dominantSign)
+                  {
+                      double distSq = signAB * signAB / ((A.X - B.X) * (A.X - B.X) + (A.Y - B.Y) * (A.Y - B.Y));
+
+                      if (distSq < 1)
+                      {
+                          return 1 - Math.Sqrt(distSq);
+                      }
+                      else
+                      {
+                          return 0;
+                      }
+                  }
+                  else if (Math.Sign(signBC) != dominantSign)
+                  {
+                      double distSq = signBC * signBC / ((C.X - B.X) * (C.X - B.X) + (C.Y - B.Y) * (C.Y - B.Y));
+
+                      if (distSq < 1)
+                      {
+                          return 1 - Math.Sqrt(distSq);
+                      }
+                      else
+                      {
+                          return 0;
+                      }
+                  }
+                  else //if (Math.Sign(signBC) != dominantSign)
+                  {
+                      double distSq = signCA * signCA / ((C.X - A.X) * (C.X - A.X) + (C.Y - A.Y) * (C.Y - A.Y));
+
+                      if (distSq < 1)
+                      {
+                          return 1 - Math.Sqrt(distSq);
+                      }
+                      else
+                      {
+                          return 0;
+                      }
+                  }
+              }
+          }
+        */
         public static Point? IntersectionPoint(Point l11, Point l12, Point l21, Point l22)
         {
             double denomin = (l11.X - l12.X) * (l21.Y - l22.Y) - (l11.Y - l12.Y) * (l21.X - l22.X);
@@ -78,6 +190,39 @@ namespace VectSharp.ThreeD
             }
         }
 
+        public static bool SegmentsOverlap(Point l11, Point l12, Point l21, Point l22)
+        {
+            double denomin = (l11.X - l12.X) * (l21.Y - l22.Y) - (l11.Y - l12.Y) * (l21.X - l22.X);
+
+            if (denomin != 0)
+            {
+                double t = ((l11.X - l21.X) * (l21.Y - l22.Y) - (l11.Y - l21.Y) * (l21.X - l22.X));
+
+                if ((denomin > 0 && t >= 0 && t <= denomin) || (denomin < 0 && t <= 0 && t >= denomin))
+                {
+                    double s = -((l11.X - l12.X) * (l11.Y - l21.Y) - (l11.Y - l12.Y) * (l11.X - l21.X));
+
+                    if ((denomin > 0 && s >= 0 && s <= denomin) || (denomin < 0 && s <= 0 && s >= denomin))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /*
         public static Point? IntersectLineWithTriangle(Point l1, Point l2, Point A, Point B, Point C)
         {
             Point? pt = IntersectionPoint(l1, l2, A, B);
@@ -99,7 +244,7 @@ namespace VectSharp.ThreeD
                 }
             }
         }
-
+        */
         public static List<Point> IntersectTriangles(Point A1, Point B1, Point C1, Point A2, Point B2, Point C2, double tolerance)
         {
             List<Point> intersections = new List<Point>(6);
@@ -283,7 +428,14 @@ namespace VectSharp.ThreeD
 
             return intersections;
         }
-
+        /*
+        public static bool TrianglesOverlap(Point A1, Point B1, Point C1, Point A2, Point B2, Point C2)
+        {
+            return PointInTriangle(A1, A2, B2, C2) || PointInTriangle(B1, A2, B2, C2) || PointInTriangle(C1, A2, B2, C2) || PointInTriangle(A2, A1, B1, C1) || PointInTriangle(B2, A1, B1, C1) || PointInTriangle(C2, A1, B1, C1) ||
+                SegmentsOverlap(A1, B1, A2, B2) || SegmentsOverlap(A1, B1, B2, C2) || SegmentsOverlap(A1, B1, C2, A2) ||
+                SegmentsOverlap(B1, C1, A2, B2) || SegmentsOverlap(B1, C1, B2, C2) || SegmentsOverlap(B1, C1, C2, A2) ||
+                SegmentsOverlap(C1, A1, A2, B2) || SegmentsOverlap(C1, A1, B2, C2) || SegmentsOverlap(C1, A1, C2, A2);
+        }*/
 
         static Point NaNPoint = new Point(double.NaN, double.NaN);
 
@@ -364,6 +516,30 @@ namespace VectSharp.ThreeD
             double dotProd = pDir.X * lineDir.X + pDir.Y * lineDir.Y;
 
             return new Point(l1.X + dotProd * lineDir.X, l1.Y + dotProd * lineDir.Y);
+        }
+
+        public static (double t, Point pt) ProjectOnSegment(int x, int y, Point l1, Point l2)
+        {
+            Point lineDir = new Point(l2.X - l1.X, l2.Y - l1.Y);
+            Point pDir = new Point(x - l1.X, y - l1.Y);
+            double lineLengthSq = lineDir.X * lineDir.X + lineDir.Y * lineDir.Y;
+            double dot = pDir.X * lineDir.X + pDir.Y * lineDir.Y;
+
+            double t = dot / lineLengthSq;
+
+            return (t, new Point(l1.X + t * lineDir.X, l1.Y + t * lineDir.Y));
+        }
+
+        public static (double t, Point pt) ProjectOnSegment(Point p, Point l1, Point l2)
+        {
+            Point lineDir = new Point(l2.X - l1.X, l2.Y - l1.Y);
+            Point pDir = new Point(p.X - l1.X, p.Y - l1.Y);
+            double lineLengthSq = lineDir.X * lineDir.X + lineDir.Y * lineDir.Y;
+            double dot = pDir.X * lineDir.X + pDir.Y * lineDir.Y;
+
+            double t = dot / lineLengthSq;
+
+            return (t, new Point(l1.X + t * lineDir.X, l1.Y + t * lineDir.Y));
         }
 
         public static List<Point> Intersect(Point l11, Point l12, Point A, Point B, Point C, double lineThickness, double tolerance)
@@ -627,146 +803,6 @@ namespace VectSharp.ThreeD
         }
     }
 
-    public static class Matrix3D
-    {
-        public static readonly double[,] Identity = new double[3, 3] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
-
-        public static double[,] RotationToAlignWithZ(NormalizedVector3D vector, bool preferY = true)
-        {
-            if (vector.Z != -1)
-            {
-                Vector3D v = new Vector3D(vector.Y, -vector.X, 0);
-                double c = 1 / (1 + vector.Z);
-
-                return new double[3, 3]
-                {
-                    {1 - v.Y * v.Y * c, v.X * v.Y * c, v.Y },
-                    {v.X * v.Y * c, 1 - v.X * v.X * c, -v.X },
-                    {-v.Y, v.X, 1 - v.X * v.X * c- v.Y * v.Y * c }
-                };
-            }
-            else
-            {
-                if (!preferY)
-                {
-                    return new double[3, 3]
-                    {
-                        { 1, 0, 0 },
-                        { 0, -1, 0 },
-                        { 0, 0, -1 }
-                    };
-                }
-                else
-                {
-                    return new double[3, 3]
-                    {
-                        {-1, 0, 0 },
-                        {0, 1, 0 },
-                        {0, 0, -1 }
-                    };
-                }
-            }
-        }
-
-        public static double[,] RotationToAlignAWithB(NormalizedVector3D a, NormalizedVector3D b)
-        {
-            double c = a * b;
-
-            if (c != -1)
-            {
-                Vector3D v = new Vector3D(a.Y * b.Z - a.Z * b.Y, a.Z * b.X - a.X * b.Z, a.X * b.Y - a.Y * b.X);
-
-                c = 1 / (1 + c);
-
-                return new double[3, 3]
-                {
-                    { 1 - (v.Y * v.Y - v.Z * v.Z) * c, (v.X * v.Y) * c - v.Z, (v.X * v.Z) * c + v.Y},
-                    { (v.X * v.Y) * c + v.Z,  1 + (- v.X * v.X - v.Z * v.Z) * c, (v.Y * v.Z) * c - v.X },
-                    { (v.X * v.Z) * c - v.Y, (v.Y * v.Z) * c + v.X, 1 + (- v.X * v.X - v.Y * v.Y) * c }
-                };
-            }
-            else
-            {
-                if (a.X != 0 || a.Z != 0)
-                {
-                    NormalizedVector3D p = new NormalizedVector3D(-a.Z, 0, a.X);
-
-                    return RotationAroundAxis(p, Math.PI);
-                }
-                else //a.Y != 0
-                {
-                    NormalizedVector3D p = new NormalizedVector3D(0, a.Z, -a.Y);
-
-                    return RotationAroundAxis(p, Math.PI);
-                }
-            }
-        }
-
-        public static double[,] RotationAroundY(double theta)
-        {
-            return new double[3, 3]
-            {
-                { Math.Cos(theta), 0, Math.Sin(theta) },
-                { 0, 1, 0 },
-                { -Math.Sin(theta), 0, Math.Cos(theta) }
-            };
-        }
-
-        public static double[,] RotationAroundAxis(NormalizedVector3D axis, double theta)
-        {
-            double cos = Math.Cos(theta);
-            double sin = Math.Sin(theta);
-
-            return new double[3, 3]
-            {
-                { cos + axis.X * axis.X * (1 - cos), axis.X * axis.Y * (1 - cos) - axis.Z * sin, axis.X * axis.Z * (1 - cos) + axis.Y * sin },
-                { axis.Y * axis.X * (1 - cos) + axis.Z * sin, cos + axis.Y * axis.Y * (1 - cos), axis.Y * axis.Z * (1 - cos) - axis.X * sin },
-                { axis.Z * axis.X * (1 - cos) - axis.Y * sin, axis.Z * axis.Y * (1 - cos) + axis.X * sin, cos + axis.Z * axis.Z * (1 - cos) }
-            };
-        }
-
-        public static double Determinant(this double[,] matrix)
-        {
-            return matrix[0, 0] * (matrix[1, 1] * matrix[2, 2] - matrix[1, 2] * matrix[2, 1]) - matrix[0, 1] * (matrix[1, 0] * matrix[2, 2] - matrix[2, 0] * matrix[1, 2]) + matrix[0, 2] * (matrix[1, 0] * matrix[2, 1] - matrix[1, 1] * matrix[2, 0]);
-        }
-
-        public static double Trace(this double[,] matrix)
-        {
-            return matrix[0, 0] + matrix[1, 1] + matrix[2, 2];
-        }
-
-        public static double[,] Inverse(this double[,] matrix)
-        {
-            double det = matrix.Determinant();
-
-            if (det != 0)
-            {
-                double A = matrix[1, 1] * matrix[2, 2] - matrix[1, 2] * matrix[2, 1];
-                double B = -(matrix[1, 0] * matrix[2, 2] - matrix[2, 0] * matrix[1, 2]);
-                double C = matrix[1, 0] * matrix[2, 1] - matrix[1, 1] * matrix[2, 0];
-
-                double D = -(matrix[0, 1] * matrix[2, 2] - matrix[0, 2] * matrix[2, 1]);
-                double E = matrix[0, 0] * matrix[2, 2] - matrix[0, 2] * matrix[2, 0];
-                double F = -(matrix[0, 0] * matrix[2, 1] - matrix[2, 0] * matrix[0, 1]);
-
-                double G = matrix[0, 1] * matrix[1, 2] - matrix[0, 2] * matrix[1, 1];
-                double H = -(matrix[0, 0] * matrix[1, 2] - matrix[1, 0] * matrix[0, 2]);
-                double I = matrix[0, 0] * matrix[1, 1] - matrix[1, 0] * matrix[0, 1];
-
-
-                return new double[3, 3]
-                {
-                    { A / det, D / det, G / det },
-                    { B / det, E / det, H / det },
-                    { C / det, F / det, I / det }
-                };
-            }
-            else
-            {
-                throw new ArgumentException("The matrix is not invertible!");
-            }
-        }
-    }
 
     public readonly struct Point3D : IEquatable<Point3D>
     {
@@ -774,27 +810,16 @@ namespace VectSharp.ThreeD
         public readonly double Y;
         public readonly double Z;
 
-        public readonly bool Is2D;
-
         public Point3D(double x, double y, double z)
         {
             X = x;
             Y = y;
             Z = z;
-
-            Is2D = double.IsNaN(z);
         }
 
         public static implicit operator Vector3D(Point3D point)
         {
-            if (!point.Is2D)
-            {
-                return new Vector3D(point.X, point.Y, point.Z);
-            }
-            else
-            {
-                throw new NotImplementedException("The point is a 2D point!");
-            }
+            return new Vector3D(point.X, point.Y, point.Z);
         }
 
         public static Vector3D operator -(Point3D endPoint, Point3D startPoint)
@@ -823,9 +848,15 @@ namespace VectSharp.ThreeD
         {
             return (Math.Abs(other.X - this.X) <= tolerance || Math.Abs((other.X - this.X) / (other.X + this.X)) <= tolerance * 0.5) && (Math.Abs(other.Y - this.Y) <= tolerance || Math.Abs((other.Y - this.Y) / (other.Y + this.Y)) <= tolerance * 0.5) && (Math.Abs(other.Z - this.Z) <= tolerance || Math.Abs((other.Z - this.Z) / (other.Z + this.Z)) <= tolerance * 0.5);
         }
+
+        public Point DropZ()
+        {
+            return new Point(this.X, this.Y);
+        }
     }
 
-    public readonly struct Vector3D
+
+    public readonly struct Vector3D : IEquatable<Vector3D>
     {
         public readonly double X;
         public readonly double Y;
@@ -850,6 +881,11 @@ namespace VectSharp.ThreeD
             return new Vector3D(vector.X * times, vector.Y * times, vector.Z * times);
         }
 
+        public static Vector3D operator *(double times, Vector3D vector)
+        {
+            return new Vector3D(vector.X * times, vector.Y * times, vector.Z * times);
+        }
+
         public static Vector3D operator +(Vector3D vector1, Vector3D vector2)
         {
             return new Vector3D(vector1.X + vector2.X, vector1.Y + vector2.Y, vector1.Z + vector2.Z);
@@ -861,6 +897,11 @@ namespace VectSharp.ThreeD
         }
 
         public static Point3D operator +(Point3D point, Vector3D vector)
+        {
+            return new Point3D(point.X + vector.X, point.Y + vector.Y, point.Z + vector.Z);
+        }
+
+        public static Point3D operator +(Vector3D vector, Point3D point)
         {
             return new Point3D(point.X + vector.X, point.Y + vector.Y, point.Z + vector.Z);
         }
@@ -880,13 +921,23 @@ namespace VectSharp.ThreeD
             return new Vector3D(vector1.Y * vector2.Z - vector1.Z * vector2.Y, vector1.Z * vector2.X - vector1.X * vector2.Z, vector1.X * vector2.Y - vector1.Y * vector2.X);
         }
 
+        public bool Equals(Vector3D other)
+        {
+            return other.X == this.X && other.Y == this.Y && other.Z == this.Z;
+        }
+
+        public bool Equals(Vector3D other, double tolerance)
+        {
+            return (Math.Abs(other.X - this.X) <= tolerance || Math.Abs((other.X - this.X) / (other.X + this.X)) <= tolerance * 0.5) && (Math.Abs(other.Y - this.Y) <= tolerance || Math.Abs((other.Y - this.Y) / (other.Y + this.Y)) <= tolerance * 0.5) && (Math.Abs(other.Z - this.Z) <= tolerance || Math.Abs((other.Z - this.Z) / (other.Z + this.Z)) <= tolerance * 0.5);
+        }
+
         public override string ToString()
         {
             return this.X.ToString() + "; " + this.Y.ToString() + "; " + this.Z.ToString();
         }
     }
 
-    public readonly struct NormalizedVector3D
+    public readonly struct NormalizedVector3D : IEquatable<NormalizedVector3D>
     {
         public readonly double X;
         public readonly double Y;
@@ -899,6 +950,24 @@ namespace VectSharp.ThreeD
             X = x / modulus;
             Y = y / modulus;
             Z = z / modulus;
+        }
+
+        public NormalizedVector3D(double x, double y, double z, bool normalize)
+        {
+            if (!normalize)
+            {
+                X = x;
+                Y = y;
+                Z = z;
+            }
+            else
+            {
+                double modulus = Math.Sqrt(x * x + y * y + z * z);
+
+                X = x / modulus;
+                Y = y / modulus;
+                Z = z / modulus;
+            }
         }
 
         public static Vector3D operator *(NormalizedVector3D vector, double times)
@@ -930,388 +999,15 @@ namespace VectSharp.ThreeD
         {
             return this.X.ToString() + "; " + this.Y.ToString() + "; " + this.Z.ToString();
         }
-    }
 
-    public interface IElement3D : IReadOnlyList<Point3D>
-    {
-        string Tag { get; set; }
-        int ZIndex { get; set; }
-        void SetProjection(ICamera camera);
-        Point[] GetProjection();
-    }
-
-    public class Triangle : IElement3D
-    {
-        public Point3D Point1 { get; }
-        public Point3D Point2 { get; }
-        public Point3D Point3 { get; }
-
-        public List<IMaterial> Fill { get; }
-
-        public string Tag { get; set; }
-
-        public Point3D Centroid { get; }
-
-        public NormalizedVector3D Normal { get; }
-        public NormalizedVector3D ActualNormal { get; }
-
-        public NormalizedVector3D Point1Normal { get; }
-        public NormalizedVector3D Point2Normal { get; }
-        public NormalizedVector3D Point3Normal { get; }
-
-        public int ZIndex { get; set; } = 0;
-
-        public Triangle(Point3D point1, Point3D point2, Point3D point3)
+        public bool Equals(NormalizedVector3D other)
         {
-            this.Point1 = point1;
-            this.Point2 = point2;
-            this.Point3 = point3;
-            this.Fill = new List<IMaterial>();
-
-            this.Normal = ((this.Point2 - this.Point1) ^ (this.Point3 - this.Point1)).Normalize();
-            this.ActualNormal = this.Normal;
-            this.Centroid = (Point3D)(((Vector3D)point1 + point2 + point3) * (1.0 / 3));
-
-            this.Point1Normal = this.Normal;
-            this.Point2Normal = this.Normal;
-            this.Point3Normal = this.Normal;
+            return this.X == other.X && this.Y == other.Y && this.Z == other.Z;
         }
 
-        public Triangle(Point3D point1, Point3D point2, Point3D point3, NormalizedVector3D point1Normal, NormalizedVector3D point2Normal, NormalizedVector3D point3Normal)
+        public NormalizedVector3D Reverse()
         {
-            this.Point1 = point1;
-            this.Point2 = point2;
-            this.Point3 = point3;
-            this.Fill = new List<IMaterial>();
-
-            this.ActualNormal = ((this.Point2 - this.Point1) ^ (this.Point3 - this.Point1)).Normalize();
-            this.Normal = ((Vector3D)point1Normal + point2Normal + point3Normal).Normalize();
-            this.Centroid = (Point3D)(((Vector3D)point1 + point2 + point3) * (1.0 / 3));
-
-            this.Point1Normal = point1Normal;
-            this.Point2Normal = point2Normal;
-            this.Point3Normal = point3Normal;
-        }
-
-        private Point[] Projection;
-
-        public void SetProjection(ICamera camera)
-        {
-            this.Projection = new Point[]
-            {
-                camera.Project(this.Point1),
-                camera.Project(this.Point2),
-                camera.Project(this.Point3)
-            };
-        }
-
-        public Point[] GetProjection()
-        {
-            return this.Projection;
-        }
-
-        public Point3D this[int index]
-        {
-            get
-            {
-                switch (index)
-                {
-                    case 0:
-                        return Point1;
-                    case 1:
-                        return Point2;
-                    case 2:
-                        return Point3;
-                    default:
-                        throw new IndexOutOfRangeException("The index must be between 0 and 2!");
-                }
-            }
-        }
-
-        public int Count => 3;
-
-        public IEnumerator<Point3D> GetEnumerator()
-        {
-            return new TriangleEnumerator(this);
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return new TriangleEnumerator(this);
-        }
-
-        public class TriangleEnumerator : IEnumerator<Point3D>
-        {
-            public TriangleEnumerator(Triangle triangle)
-            {
-                this.Triangle = triangle;
-            }
-
-            private readonly Triangle Triangle;
-            private int Position = -1;
-
-            public Point3D Current => Triangle[Position];
-
-            object IEnumerator.Current => Triangle[Position];
-
-            public bool MoveNext()
-            {
-                this.Position++;
-                return Position < 3;
-            }
-
-            public void Reset()
-            {
-                Position = -1;
-            }
-
-            public void Dispose()
-            {
-
-            }
-        }
-
-        public bool IsAdjacentTo(Triangle triangle2)
-        {
-            int equalCount = 0;
-
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    if (this[i].Equals(triangle2[j], ThreeDGraphics.Tolerance))
-                    {
-                        equalCount++;
-
-                        if (equalCount >= 2)
-                        {
-                            return true;
-                        }
-
-                        break;
-                    }
-                }
-
-                if (i == 1 && equalCount == 0)
-                {
-                    return false;
-                }
-            }
-
-            return false;
-        }
-
-        public int[] GetCommonSide(Triangle triangle2)
-        {
-            int[] tbr = new int[2];
-            int equalCount = 0;
-
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    if (this[i].Equals(triangle2[j], ThreeDGraphics.Tolerance))
-                    {
-                        tbr[equalCount] = i;
-                        equalCount++;
-
-                        if (equalCount == 2)
-                        {
-                            return tbr;
-                        }
-
-                        break;
-                    }
-                }
-
-                if (i == 1 && equalCount == 0)
-                {
-                    return null;
-                }
-            }
-
-            return null;
-        }
-    }
-
-
-    internal class Line3D : IElement3D
-    {
-        public Point3D Point1 { get; set; }
-        public Point3D Point2 { get; set; }
-        public Colour Colour { get; set; } = Colour.FromRgb(0, 0, 0);
-        public LineCaps LineCap { get; set; }
-        public string Tag { get; set; }
-        public LineDash LineDash { get; set; }
-        public double Thickness { get; set; } = 1;
-        public int ZIndex { get; set; } = 0;
-
-        public Line3D(Point3D point1, Point3D point2)
-        {
-            this.Point1 = point1;
-            this.Point2 = point2;
-        }
-
-        private Point[] Projection;
-
-        public void SetProjection(ICamera camera)
-        {
-            this.Projection = new Point[]
-            {
-                camera.Project(this.Point1),
-                camera.Project(this.Point2)
-            };
-        }
-
-        public Point[] GetProjection()
-        {
-            return this.Projection;
-        }
-
-        public Point3D this[int index]
-        {
-            get
-            {
-                switch (index)
-                {
-                    case 0:
-                        return Point1;
-                    case 1:
-                        return Point2;
-                    default:
-                        throw new IndexOutOfRangeException("The index must be between 0 and 1!");
-                }
-            }
-        }
-
-        public int Count => 2;
-
-        public IEnumerator<Point3D> GetEnumerator()
-        {
-            return new LineEnumerator(this);
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return new LineEnumerator(this);
-        }
-
-        public class LineEnumerator : IEnumerator<Point3D>
-        {
-            public LineEnumerator(Line3D line)
-            {
-                this.Line = line;
-            }
-
-            private readonly Line3D Line;
-            private int Position = -1;
-
-            public Point3D Current => Line[Position];
-
-            object IEnumerator.Current => Line[Position];
-
-            public bool MoveNext()
-            {
-                this.Position++;
-                return Position < 2;
-            }
-
-            public void Reset()
-            {
-                Position = -1;
-            }
-
-            public void Dispose()
-            {
-
-            }
-        }
-    }
-
-
-    internal class Point3DElement : IElement3D
-    {
-        public Point3D Point;
-        public Colour Colour { get; set; } = Colours.Black;
-        public double Diameter { get; set; } = 1;
-        public string Tag { get; set; }
-        public int ZIndex { get; set; } = 0;
-
-        public Point3DElement(Point3D point)
-        {
-            this.Point = point;
-        }
-
-        private Point[] Projection;
-
-        public void SetProjection(ICamera camera)
-        {
-            this.Projection = new Point[]
-            {
-                camera.Project(this.Point),
-            };
-        }
-
-        public Point[] GetProjection()
-        {
-            return this.Projection;
-        }
-
-        public Point3D this[int index]
-        {
-            get
-            {
-                switch (index)
-                {
-                    case 0:
-                        return Point;
-                    default:
-                        throw new IndexOutOfRangeException("The index must be equal to 0!");
-                }
-            }
-        }
-
-        public int Count => 1;
-
-        public IEnumerator<Point3D> GetEnumerator()
-        {
-            return new PointEnumerator(this);
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return new PointEnumerator(this);
-        }
-
-        public class PointEnumerator : IEnumerator<Point3D>
-        {
-            public PointEnumerator(Point3DElement point)
-            {
-                this.Point = point;
-            }
-
-            private readonly Point3DElement Point;
-            private int Position = -1;
-
-            public Point3D Current => Point[Position];
-
-            object IEnumerator.Current => Point[Position];
-
-            public bool MoveNext()
-            {
-                this.Position++;
-                return Position < 1;
-            }
-
-            public void Reset()
-            {
-                Position = -1;
-            }
-
-            public void Dispose()
-            {
-
-            }
+            return new NormalizedVector3D(-X, -Y, -Z, false);
         }
     }
 

@@ -1,33 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using System.Linq;
 
 namespace VectSharp.ThreeD
 {
-    public interface ICamera
+    public sealed class PerspectiveCamera : CameraWithControls
     {
-        Point TopLeft { get; }
-        Size Size { get; }
-
-        double ScaleFactor { get; }
-
-        Point3D ViewPoint { get; }
-
-        Point Project(Point3D point);
-
-        int Compare(IElement3D element1, IElement3D element2, Graphics gpr);
-
-        bool IsCulled(IElement3D element);
-    }
-
-    public class PerspectiveCamera : ICamera
-    {
-        public double ScaleFactor { get; }
+        public override double ScaleFactor { get; }
 
         public Point3D Position { get; private set; }
 
-        public Point3D ViewPoint => Position;
+        public override Point3D ViewPoint => Position;
 
         public NormalizedVector3D Direction { get; private set; }
         public double Distance { get; }
@@ -42,8 +26,8 @@ namespace VectSharp.ThreeD
 
         private NormalizedVector3D RotationReference { get; set; }
 
-        public Point TopLeft { get; }
-        public Size Size { get; }
+        public override Point TopLeft { get; protected set; }
+        public override Size Size { get; protected set; }
 
         public PerspectiveCamera(Point3D position, NormalizedVector3D direction, double distance, Size viewSize, double scaleFactor)
         {
@@ -75,7 +59,7 @@ namespace VectSharp.ThreeD
             this.CameraRotationMatrix = Matrix3D.RotationAroundAxis(new NormalizedVector3D(0, 0, 1), rotationAngle);
         }
 
-        public Point Project(Point3D point)
+        public override Point Project(Point3D point)
         {
             //Vector3D toOrigin = point - this.Origin;
             Vector3D cameraDirection = (this.Position - point).Normalize();
@@ -108,7 +92,7 @@ namespace VectSharp.ThreeD
             return new Point(rotatedPoint.X / (point - this.Origin).Modulus * this.Distance, rotatedPoint.Y / (point - this.Origin).Modulus * this.Distance);*/
         }
 
-        internal Point3D Deproject(Point point, Line3D line)
+        public override Point3D Deproject(Point point, Line3DElement line)
         {
             Point3D rotatedPoint = new Point3D(point.X / ScaleFactor, point.Y / ScaleFactor, 0);
 
@@ -141,14 +125,14 @@ namespace VectSharp.ThreeD
             return pt;
         }
 
-        internal Point3D Deproject(Point point, Triangle triangle)
+        public override Point3D Deproject(Point point, Triangle3DElement triangle)
         {
             Point3D rotatedPoint = new Point3D(point.X / ScaleFactor, point.Y / ScaleFactor, 0);
 
             Point3D projectedPoint = RotationMatrix.Inverse() * (CameraRotationMatrix.Inverse() * rotatedPoint);
             Point3D cameraPlanePoint = projectedPoint + (Vector3D)this.Origin;
 
-            Point3D centroid = (Point3D)(((Vector3D)triangle[0] + triangle[1] + triangle[2]) * (1.0 / 3.0));
+            Point3D centroid = (Point3D)(((Vector3D)triangle[0] + (Vector3D)triangle[1] + (Vector3D)triangle[2]) * (1.0 / 3.0));
 
             Vector3D l = (cameraPlanePoint - this.Position).Normalize();
 
@@ -158,7 +142,7 @@ namespace VectSharp.ThreeD
             return pt;
         }
 
-        public int Compare(IElement3D element1, IElement3D element2, Graphics gpr)
+        /*public int Compare(Element3D element1, Element3D element2, Graphics gpr)
         {
             if (element1.ZIndex != element2.ZIndex)
             {
@@ -178,7 +162,7 @@ namespace VectSharp.ThreeD
                         double dist1 = (pt1[0] - this.Position).Modulus;
                         double dist2 = (pt2[0] - this.Position).Modulus;
 
-                        if (Math.Abs(dist1 - dist2) < ThreeDGraphics.Tolerance)
+                        if (Math.Abs(dist1 - dist2) < Scene.Tolerance)
                         {
                             return 0;
                         }
@@ -190,7 +174,7 @@ namespace VectSharp.ThreeD
                         return 0;
                     }
                 }
-                else if (element2 is Line3D line)
+                else if (element2 is Line3DElement line)
                 {
                     Point p0 = proj1;
 
@@ -219,7 +203,7 @@ namespace VectSharp.ThreeD
                         double dist1 = (pt1[0] - this.Position).Modulus;
                         double dist2 = (pt - this.Position).Modulus;
 
-                        if (Math.Abs(dist1 - dist2) < ThreeDGraphics.Tolerance)
+                        if (Math.Abs(dist1 - dist2) < Scene.Tolerance)
                         {
                             return 0;
                         }
@@ -231,7 +215,7 @@ namespace VectSharp.ThreeD
                         return 0;
                     }
                 }
-                else if (element2 is Triangle triangle)
+                else if (element2 is Triangle3DElement triangle)
                 {
                     Point p0 = proj1;
 
@@ -251,7 +235,7 @@ namespace VectSharp.ThreeD
                         double dist1 = (pt1[0] - this.Position).Modulus;
                         double dist2 = (pt - this.Position).Modulus;
 
-                        if (Math.Abs(dist1 - dist2) < ThreeDGraphics.Tolerance)
+                        if (Math.Abs(dist1 - dist2) < Scene.Tolerance)
                         {
                             return 0;
                         }
@@ -268,13 +252,13 @@ namespace VectSharp.ThreeD
                     throw new NotImplementedException();
                 }
             }
-            else if (element1 is Line3D line1)
+            else if (element1 is Line3DElement line1)
             {
                 if (element2 is Point3DElement)
                 {
                     return -Compare(element2, element1, gpr);
                 }
-                else if (element2 is Line3D line2)
+                else if (element2 is Line3DElement line2)
                 {
                     Point l11 = this.Project(line1[0]);
                     Point l12 = this.Project(line1[1]);
@@ -298,7 +282,7 @@ namespace VectSharp.ThreeD
                             double dist1 = (point1 - this.Position).Modulus;
                             double dist2 = (point2 - this.Position).Modulus;
 
-                            if (Math.Abs(dist1 - dist2) < ThreeDGraphics.Tolerance)
+                            if (Math.Abs(dist1 - dist2) < Scene.Tolerance)
                             {
                                 return 0;
                             }
@@ -315,7 +299,7 @@ namespace VectSharp.ThreeD
                         return 0;
                     }
                 }
-                else if (element2 is Triangle triangle)
+                else if (element2 is Triangle3DElement triangle)
                 {
                     Point l11 = this.Project(line1[0]);
                     Point l12 = this.Project(line1[1]);
@@ -334,9 +318,9 @@ namespace VectSharp.ThreeD
                     Point B = this.Project(triangle[1]);
                     Point C = this.Project(triangle[2]);
 
-                    List<Point> interss1 = Intersections2D.Intersect(l11, l12, A, B, C, line1.Thickness, ThreeDGraphics.Tolerance);
-                    List<Point> interss2 = Intersections2D.Intersect(l21, l22, A, B, C, ThreeDGraphics.Tolerance);
-                    List<Point> interss3 = Intersections2D.Intersect(l31, l32, A, B, C, ThreeDGraphics.Tolerance);
+                    List<Point> interss1 = Intersections2D.Intersect(l11, l12, A, B, C, line1.Thickness, Scene.Tolerance);
+                    List<Point> interss2 = Intersections2D.Intersect(l21, l22, A, B, C, Scene.Tolerance);
+                    List<Point> interss3 = Intersections2D.Intersect(l31, l32, A, B, C, Scene.Tolerance);
 
                     List<Point> interss = new List<Point>();
 
@@ -368,9 +352,14 @@ namespace VectSharp.ThreeD
                             double dist1 = (pt3D1 - this.Position).Modulus;
                             double dist2 = (pt3D2 - this.Position).Modulus;
 
+                            if (double.IsNaN(dist1) || double.IsNaN(dist2))
+                            {
+                                return 0;
+                            }
+
                             int currSign = -Math.Sign(dist1 - dist2);
 
-                            if (Math.Abs(dist1 - dist2) < ThreeDGraphics.Tolerance)
+                            if (Math.Abs(dist1 - dist2) < Scene.Tolerance)
                             {
                                 currSign = 0;
                             }
@@ -386,59 +375,7 @@ namespace VectSharp.ThreeD
                             }
                         }
 
-                        /*if (sign == 0)
-                        {
-                            return 1;
-                        }*/
-
                         return sign;
-
-                        /* Point inters1 = interss[0];
-                         Point inters2 = interss[1];
-
-                         Point3D inters13D = this.Deproject(inters1, line1);
-                         Point3D inters23D = this.Deproject(inters2, line1);
-
-                         Point3D inters1Triangle = this.Deproject(inters1, triangle);
-                         Point3D inters2Triangle = this.Deproject(inters2, triangle);
-
-
-                         double dist11 = (inters13D - this.Position).Modulus;
-                         double dist12 = (inters23D - this.Position).Modulus;
-
-                         double dist21 = (inters1Triangle - this.Position).Modulus;
-                         double dist22 = (inters2Triangle - this.Position).Modulus;
-
-                         int sign1 = -Math.Sign(dist11 - dist21);
-                         int sign2 = -Math.Sign(dist12 - dist22);
-
-                         if (Math.Abs(dist11 - dist21) < Tolerance)
-                         {
-                             sign1 = 0;
-                         }
-
-                         if (Math.Abs(dist12 - dist22) < Tolerance)
-                         {
-                             sign2 = 0;
-                         }
-
-                         if (sign1 == sign2 && sign1 == 0)
-                         {
-                             return 1;
-                         }
-                         else if (sign1 == sign2 || sign2 == 0)
-                         {
-                             return sign1;
-                         }
-                         else if (sign1 == 0)
-                         {
-                             return sign2;
-                         }
-                         else
-                         {
-                             System.Diagnostics.Debug.WriteLine("Line intersects with triangle!");
-                             return 0;
-                         }*/
                     }
                     else
                     {
@@ -450,26 +387,18 @@ namespace VectSharp.ThreeD
                     throw new NotImplementedException();
                 }
             }
-            else if (element1 is Triangle triangle1)
+            else if (element1 is Triangle3DElement triangle1)
             {
-                if (element2 is Point3DElement || element2 is Line3D)
+                if (element2 is Point3DElement || element2 is Line3DElement)
                 {
                     return -Compare(element2, element1, gpr);
                 }
-                else if (element2 is Triangle triangle2)
+                else if (element2 is Triangle3DElement triangle2)
                 {
 
 
                     Point[] triangle1Projection = triangle1.GetProjection();
                     Point[] triangle2Projection = triangle2.GetProjection();
-
-                    /*Point A1 = this.Project(triangle1[0]);
-                    Point B1 = this.Project(triangle1[1]);
-                    Point C1 = this.Project(triangle1[2]);
-
-                    Point A2 = this.Project(triangle2[0]);
-                    Point B2 = this.Project(triangle2[1]);
-                    Point C2 = this.Project(triangle2[2]);*/
 
                     Point A1 = triangle1Projection[0];
                     Point B1 = triangle1Projection[1];
@@ -479,51 +408,7 @@ namespace VectSharp.ThreeD
                     Point B2 = triangle2Projection[1];
                     Point C2 = triangle2Projection[2];
 
-                    /*
-
-                    List<Point> intersections = new List<Point>();
-
-
-                    List<Point>[] allIntersections = new List<Point>[]
-                    {
-                        //Intersections2D.Intersect(A2, B2, A1, B1, C1, Tolerance),
-                        //Intersections2D.Intersect(B2, C2, A1, B1, C1, 0),
-                        //Intersections2D.Intersect(C2, A2, A1, B1, C1, Tolerance),
-                        //Intersections2D.Intersect(A1, B1, A2, B2, C2, Tolerance),
-                        //Intersections2D.Intersect(B1, C1, A2, B2, C2, Tolerance),
-                        //Intersections2D.Intersect(C1, A1, A2, B2, C2, Tolerance)
-                    };
-
-                    foreach (List<Point> points in allIntersections)
-                    {
-                        if (points != null)
-                        {
-                            foreach (Point point in points)
-                            {
-                                bool found = false;
-                                foreach (Point existing in intersections)
-                                {
-                                    if (Intersections2D.AreEqual(existing, point, Tolerance))
-                                    {
-                                        found = true;
-                                        break;
-                                    }
-                                }
-
-                                if (!found)
-                                {
-                                    intersections.Add(point);
-                                }    
-                            }
-                        }
-                    }*/
-
-                    List<Point> intersections = Intersections2D.IntersectTriangles(A1, B1, C1, A2, B2, C2, ThreeDGraphics.Tolerance);
-
-                    /*for (int i = 0; i < intersections.Count; i++)
-                    {
-                        gpr.FillRectangle(intersections[i].X - 1, intersections[i].Y - 1, 2, 2, Colours.Green);
-                    }*/
+                    List<Point> intersections = Intersections2D.IntersectTriangles(A1, B1, C1, A2, B2, C2, Scene.Tolerance);
 
                     if (intersections.Count >= 3)
                     {
@@ -557,42 +442,12 @@ namespace VectSharp.ThreeD
 
                         int sign = -Math.Sign(dist1 - dist2);
 
-                        if (Math.Abs(dist1 - dist2) < ThreeDGraphics.Tolerance)
+                        if (Math.Abs(dist1 - dist2) < Scene.Tolerance)
                         {
                             sign = 0;
                         }
 
                         return sign;
-
-                        /*int sign = 0;
-
-                        foreach (Point pt in intersections)
-                        {
-                            Point3D pt3D1 = this.Deproject(pt, triangle1);
-                            Point3D pt3D2 = this.Deproject(pt, triangle2);
-
-                            double dist1 = (pt3D1 - this.Position).Modulus;
-                            double dist2 = (pt3D2 - this.Position).Modulus;
-
-                            int currSign = -Math.Sign(dist1 - dist2);
-
-                            if (Math.Abs(dist1 - dist2) < Tolerance)
-                            {
-                                currSign = 0;
-                            }
-
-                            if (sign == 0 || currSign == sign || currSign == 0)
-                            {
-                                sign = currSign;
-                            }
-                            else
-                            {
-                                //System.Diagnostics.Debug.WriteLine("Two triangles intersect!");
-                                return 0;
-                            }
-                        }
-
-                        return sign;*/
                     }
                     else
                     {
@@ -608,27 +463,21 @@ namespace VectSharp.ThreeD
             {
                 throw new NotImplementedException();
             }
-
-
-            /*
-
-            double maxDist = 0;
-
-            foreach (Point3D point in element)
-            {
-                maxDist = Math.Max(maxDist, (point - this.Position).Modulus);
-            }
-
-            return maxDist;*/
+        }
+        */
+        public override double ZDepth(Point3D point)
+        {
+            return (point.X - this.Position.X) * (point.X - this.Position.X) + (point.Y - this.Position.Y) * (point.Y - this.Position.Y) + (point.Z - this.Position.Z) * (point.Z - this.Position.Z);
+            //return (point - this.Origin) * this.Direction;
         }
 
-        public bool IsCulled(IElement3D element)
+        public override bool IsCulled(Element3D element)
         {
             if (element is Point3DElement)
             {
                 return (element[0] - this.Origin) * (this.Position - this.Origin) >= 0;
             }
-            else if (element is Line3D)
+            else if (element is Line3DElement)
             {
                 foreach (Point3D pt in element)
                 {
@@ -639,7 +488,7 @@ namespace VectSharp.ThreeD
                 }
                 return true;
             }
-            else if (element is Triangle triangle)
+            else if (element is Triangle3DElement triangle)
             {
                 bool found = false;
 
@@ -666,7 +515,7 @@ namespace VectSharp.ThreeD
             }
         }
 
-        public void Orbit(double theta, double phi)
+        public override void Orbit(double theta, double phi)
         {
             Vector3D vect = this.Position - this.OrbitOrigin;
 
@@ -728,13 +577,13 @@ namespace VectSharp.ThreeD
         }
 
 
-        public void Zoom(double amount)
+        public override void Zoom(double amount)
         {
             this.Position = this.Position + this.Direction * amount;
             this.Origin = this.Position + this.Direction * this.Distance;
         }
 
-        public void Pan(double X, double Y)
+        public override void Pan(double X, double Y)
         {
             Vector3D delta = this.RotationMatrix.Inverse() * new Point3D(-X / ScaleFactor, -Y / ScaleFactor, 0);
 
