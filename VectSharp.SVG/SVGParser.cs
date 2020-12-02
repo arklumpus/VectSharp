@@ -370,12 +370,22 @@ namespace VectSharp.SVG
             textAlign = currObject.Attributes?["text-align"]?.Value ?? textAlign;
 
             bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes, styleSheets);
-
+            
             if (currObject.ChildNodes.OfType<XmlNode>().Any(a => a.NodeType != XmlNodeType.Text))
             {
                 foreach (XmlNode child in currObject.ChildNodes)
                 {
                     InterpretTextObject(child, gpr, width, height, diagonal, currAttributes, styleSheets, x, y, fontSize, fontFamily, textAlign);
+                }
+
+                if (hadClippingPath)
+                {
+                    gpr.Restore();
+                }
+
+                if (currAttributes.NeedsRestore)
+                {
+                    gpr.Restore();
                 }
             }
             else

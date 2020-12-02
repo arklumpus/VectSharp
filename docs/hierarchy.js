@@ -5,8 +5,13 @@ var hierarchy =
     [ "VectSharp.Colours", "class_vect_sharp_1_1_colours.html", null ],
     [ "VectSharp.Font.DetailedFontMetrics", "class_vect_sharp_1_1_font_1_1_detailed_font_metrics.html", null ],
     [ "VectSharp.Document", "class_vect_sharp_1_1_document.html", null ],
+    [ "Exception", null, [
+      [ "VectSharp.UnbalancedStackException", "class_vect_sharp_1_1_unbalanced_stack_exception.html", null ]
+    ] ],
     [ "VectSharp.Font", "class_vect_sharp_1_1_font.html", null ],
-    [ "VectSharp.FontFamily", "class_vect_sharp_1_1_font_family.html", null ],
+    [ "VectSharp.FontFamily", "class_vect_sharp_1_1_font_family.html", [
+      [ "VectSharp.Canvas.ResourceFontFamily", "class_vect_sharp_1_1_canvas_1_1_resource_font_family.html", null ]
+    ] ],
     [ "VectSharp.Graphics", "class_vect_sharp_1_1_graphics.html", null ],
     [ "VectSharp.GraphicsPath", "class_vect_sharp_1_1_graphics_path.html", null ],
     [ "IDisposable", null, [

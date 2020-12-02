@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['square_747',['Square',['../namespace_vect_sharp.html#a6bde58d6aab37ea51e32240503678209aceb46ca115d05c51aa5a16a8867c3304',1,'VectSharp']]],
-  ['subsetfonts_748',['SubsetFonts',['../class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html#a8cd1a292b80db0cce76c229f069899fea95b1690f3d83b90e662eb5f08bcf9f70',1,'VectSharp.PDF.PDFContextInterpreter.SubsetFonts()'],['../class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#ac7b4162096a35c9a1954a0e347f88188a95b1690f3d83b90e662eb5f08bcf9f70',1,'VectSharp.SVG.SVGContextInterpreter.SubsetFonts()']]],
-  ['symbol_749',['Symbol',['../class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780a02c86eb2792f3262c21d030a87e19793',1,'VectSharp::FontFamily']]]
+  ['rasterimage_754',['RasterImage',['../class_vect_sharp_1_1_canvas_1_1_render_action.html#a540142d9a35323a4d5301256c2c804c2a87ee62f0c2390b73f784732a13cce8cb',1,'VectSharp::Canvas::RenderAction']]],
+  ['rgb_755',['RGB',['../namespace_vect_sharp.html#a9ccfe4c0d79758b6c0e2fda8a319125ca889574aebacda6bfd3e534e2b49b8028',1,'VectSharp']]],
+  ['rgba_756',['RGBA',['../namespace_vect_sharp.html#a9ccfe4c0d79758b6c0e2fda8a319125caea3495a278957dc58165e48a8945469f',1,'VectSharp']]],
+  ['right_757',['Right',['../namespace_vect_sharp.html#a3e60bcba440b3af56d63ab44ef1fc5d7a92b09c7c48c520c3c55e497875da437c',1,'VectSharp']]],
+  ['round_758',['Round',['../namespace_vect_sharp.html#a6bde58d6aab37ea51e32240503678209ab7f41fc1412ad2ee75e9b2635d3b9d5c',1,'VectSharp.Round()'],['../namespace_vect_sharp.html#a58a4a36ea254b3d255755654fd9e61f6ab7f41fc1412ad2ee75e9b2635d3b9d5c',1,'VectSharp.Round()']]]
 ];

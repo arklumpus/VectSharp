@@ -52,6 +52,8 @@ var NAVTREEINDEX0 =
 "class_vect_sharp_1_1_canvas_1_1_render_action.html#ae6aefb84f43c2bf00492374c40a95351":[2,0,0,0,1,7],
 "class_vect_sharp_1_1_canvas_1_1_render_action.html#aead4222aca31896910f612a45c1e9347":[2,0,0,0,1,16],
 "class_vect_sharp_1_1_canvas_1_1_render_action.html#aff0494e9ae3c91b46759484a3856bd58":[2,0,0,0,1,8],
+"class_vect_sharp_1_1_canvas_1_1_resource_font_family.html":[2,0,0,0,2],
+"class_vect_sharp_1_1_canvas_1_1_resource_font_family.html#acf8845d979cace624727a1c1aa07e6af":[2,0,0,0,2,0],
 "class_vect_sharp_1_1_colours.html":[2,0,0,6],
 "class_vect_sharp_1_1_colours.html#a00beec5317df122bea4e8b914adcc36c":[2,0,0,6,146],
 "class_vect_sharp_1_1_colours.html#a02174fe360b79cbf263221eba935a236":[2,0,0,6,128],
@@ -247,7 +249,5 @@ var NAVTREEINDEX0 =
 "class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780af4df7bfe79eef34b241c935fa75e8e45":[2,0,0,10,0,9],
 "class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780afa6004157a474ea805414a5b897240ce":[2,0,0,10,0,0],
 "class_vect_sharp_1_1_font_family.html#a93d661f4d34330da759d86018bb33964":[2,0,0,10,5],
-"class_vect_sharp_1_1_font_family.html#aa0c264aba8ca463a35b4a4efd45ccd76":[2,0,0,10,3],
-"class_vect_sharp_1_1_font_family.html#abf750b21f27b68a5f7159888dd293e43":[2,0,0,10,4],
-"class_vect_sharp_1_1_font_family.html#acb12becce36d51d5429e8e478c6e685a":[2,0,0,10,9]
+"class_vect_sharp_1_1_font_family.html#aa0c264aba8ca463a35b4a4efd45ccd76":[2,0,0,10,3]
 };

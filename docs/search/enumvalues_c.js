@@ -1,9 +1,7 @@
 var searchData=
 [
-  ['text_750',['Text',['../class_vect_sharp_1_1_canvas_1_1_render_action.html#a540142d9a35323a4d5301256c2c804c2a9dffbf69ffba8bc38bc4e01abf4b1675',1,'VectSharp::Canvas::RenderAction']]],
-  ['timesbold_751',['TimesBold',['../class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780a92de2f3d11895b35fc3700a6f0b9fc5e',1,'VectSharp::FontFamily']]],
-  ['timesbolditalic_752',['TimesBoldItalic',['../class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780a88588f5c7476077230f94634d2e75fbd',1,'VectSharp::FontFamily']]],
-  ['timesitalic_753',['TimesItalic',['../class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780a0ce01fdd3bf91a4e641b9bf9e9f58335',1,'VectSharp::FontFamily']]],
-  ['timesroman_754',['TimesRoman',['../class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780afa6004157a474ea805414a5b897240ce',1,'VectSharp::FontFamily']]],
-  ['top_755',['Top',['../namespace_vect_sharp.html#acfad2994b272989b9cb471230d95334faa4ffdcf0dc1f31b9acaf295d75b51d00',1,'VectSharp']]]
+  ['silentlyfix_759',['SilentlyFix',['../namespace_vect_sharp.html#a88d2dd0aea021af9a8af889bf292006fa9122a729789e23c144f254536609f41b',1,'VectSharp']]],
+  ['square_760',['Square',['../namespace_vect_sharp.html#a6bde58d6aab37ea51e32240503678209aceb46ca115d05c51aa5a16a8867c3304',1,'VectSharp']]],
+  ['subsetfonts_761',['SubsetFonts',['../class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html#a8cd1a292b80db0cce76c229f069899fea95b1690f3d83b90e662eb5f08bcf9f70',1,'VectSharp.PDF.PDFContextInterpreter.SubsetFonts()'],['../class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#ac7b4162096a35c9a1954a0e347f88188a95b1690f3d83b90e662eb5f08bcf9f70',1,'VectSharp.SVG.SVGContextInterpreter.SubsetFonts()']]],
+  ['symbol_762',['Symbol',['../class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780a02c86eb2792f3262c21d030a87e19793',1,'VectSharp::FontFamily']]]
 ];

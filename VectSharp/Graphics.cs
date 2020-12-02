@@ -2282,10 +2282,44 @@ namespace VectSharp
     }
 
     /// <summary>
+    /// Represents ways to deal with unbalanced graphics state stacks.
+    /// </summary>
+    public enum UnbalancedStackActions
+    {
+        /// <summary>
+        /// If the graphics state stack is unbalanced, an exception will be thrown.
+        /// </summary>
+        Throw,
+
+        /// <summary>
+        /// The graphics state stack will be automatically balanced by adding or removing calls to <see cref="Graphics.Restore"/> as necessary.
+        /// </summary>
+        SilentlyFix,
+
+        /// <summary>
+        /// No attempt will be made at correcting an unbalanced graphics state stack. This may cause issues with some consumers.
+        /// </summary>
+        Ignore
+    }
+
+    /// <summary>
+    /// The exception that is thrown when an unbalanced graphics state stack occurs.
+    /// </summary>
+    public class UnbalancedStackException : Exception
+    {
+        internal UnbalancedStackException(int excessSave, int excessRestore) : base("The graphics state stack is unbalanced!\nThere are " + excessSave + " calls to Graphics.Save() and " + excessRestore + " calls to Graphics.Restore() in excess!") { }
+    }
+
+    /// <summary>
     /// Represents an abstract drawing surface.
     /// </summary>
     public class Graphics
     {
+        /// <summary>
+        /// Determines how an unbalanced graphics state stack (which occurs if the number of calls to <see cref="Save"/> and <see cref="Restore"/> is not equal) will be treated. The default is <see cref="UnbalancedStackActions.Throw"/>.
+        /// </summary>
+        public static UnbalancedStackActions UnbalancedStackAction { get; set; } = UnbalancedStackActions.Throw;
+
         internal List<IGraphicsAction> Actions = new List<IGraphicsAction>();
 
         /// <summary>
@@ -2841,12 +2875,72 @@ namespace VectSharp
             Actions.Add(new StateAction(StateAction.StateActionTypes.Restore));
         }
 
+        private void FixGraphicsStateStack()
+        {
+            if (UnbalancedStackAction == UnbalancedStackActions.Ignore)
+            {
+                return;
+            }
+
+            int count = 0;
+            List<int> toBeRemoved = new List<int>();
+
+            for (int i = 0; i < this.Actions.Count; i++)
+            {
+                if (this.Actions[i] is StateAction st)
+                {
+                    if (st.StateActionType == StateAction.StateActionTypes.Save)
+                    {
+                        count++;
+                    }
+                    else if (st.StateActionType == StateAction.StateActionTypes.Restore)
+                    {
+                        if (count == 0)
+                        {
+                            toBeRemoved.Add(i);
+                        }
+                        else
+                        {
+                            count--;
+                        }
+                    }
+                }
+            }
+
+            if (UnbalancedStackAction == UnbalancedStackActions.Throw)
+            {
+                if (count > 0 || toBeRemoved.Count > 0)
+                {
+                    throw new UnbalancedStackException(count, toBeRemoved.Count);
+                }
+            }
+            else if (UnbalancedStackAction == UnbalancedStackActions.SilentlyFix)
+            {
+                if (count > 0 || toBeRemoved.Count > 0)
+                {
+                    for (int i = toBeRemoved.Count - 1; i >= 0; i--)
+                    {
+                        this.Actions.RemoveAt(toBeRemoved[i]);
+                    }
+
+                    for (int i = 0; i < count; i++)
+                    {
+                        this.Restore();
+                    }
+
+                    this.FixGraphicsStateStack();
+                }
+            }
+        }
+
         /// <summary>
         /// Copy the current graphics to an instance of a class implementing <see cref="IGraphicsContext"/>.
         /// </summary>
         /// <param name="destinationContext">The <see cref="IGraphicsContext"/> on which the graphics are to be copied.</param>
         public void CopyToIGraphicsContext(IGraphicsContext destinationContext)
         {
+            this.FixGraphicsStateStack();
+
             for (int i = 0; i < this.Actions.Count; i++)
             {
                 if (this.Actions[i] is RectangleAction)
@@ -3045,6 +3139,8 @@ namespace VectSharp
         {
             this.Save();
             this.Translate(origin);
+
+            graphics.FixGraphicsStateStack();
 
             this.Actions.AddRange(graphics.Actions);
 
