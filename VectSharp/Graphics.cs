@@ -1409,6 +1409,11 @@ namespace VectSharp
         /// <returns>A collection of tangents at the points in which the segment would be linearised.</returns>
         public abstract IEnumerable<Point> GetLinearisationTangents(Point? previousPoint, double resolution);
 
+        /// <summary>
+        /// Applies an arbitrary transformation to all of the points of the <see cref="Segment"/>.
+        /// </summary>
+        /// <param name="transformationFunction">An arbitrary transformation function.</param>
+        /// <returns>A collection of <see cref="Segment"/>s that have been transformed according to the <paramref name="transformationFunction"/>.</returns>
         public abstract IEnumerable<Segment> Transform(Func<Point, Point> transformationFunction);
     }
 
@@ -3208,6 +3213,12 @@ namespace VectSharp
             };
         }
 
+        /// <summary>
+        /// Creates a new <see cref="Graphics"/> object in which all the graphics actions have been transformed using an arbitrary transformation function. Raster images are replaced by grey rectangles.
+        /// </summary>
+        /// <param name="transformationFunction">An arbitrary transformation function.</param>
+        /// <param name="linearisationResolution">The resolution that will be used to linearise curve segments.</param>
+        /// <returns>A new <see cref="Graphics"/> object in which all graphics actions have been linearised and transformed using the <paramref name="transformationFunction"/>.</returns>
         public Graphics Transform(Func<Point, Point> transformationFunction, double linearisationResolution)
         {
             Graphics destinationGraphics = new Graphics();
@@ -3328,6 +3339,11 @@ namespace VectSharp
             return destinationGraphics;
         }
 
+        /// <summary>
+        /// Creates a new <see cref="Graphics"/> object by linearising all of the elements of the current instance, i.e. replacing curve segments with series of line segments that approximate them. Raster images are left unchanged.
+        /// </summary>
+        /// <param name="resolution">The resolution that will be used to linearise curve segments.</param>
+        /// <returns>A new <see cref="Graphics"/> object containing the linearised elements.</returns>
         public Graphics Linearise(double resolution)
         {
             Graphics destinationGraphics = new Graphics();
@@ -4966,6 +4982,11 @@ internal interface IGraphicsAction
                 }
             }
 
+            if (vertices.Count < 3)
+            {
+                yield break;
+            }
+
             bool isAntiClockwise = area > 0;
 
             int compareVertices(Point a, Point b)
@@ -5871,6 +5892,11 @@ internal interface IGraphicsAction
             }
         }
 
+        /// <summary>
+        /// Transforms all of the <see cref="Point"/>s in the <see cref="GraphicsPath"/> with an arbitrary transformation function.
+        /// </summary>
+        /// <param name="transformationFunction">An arbitrary transformation function.</param>
+        /// <returns>A new <see cref="GraphicsPath"/> in which all points have been replaced using the <paramref name="transformationFunction"/>.</returns>
         public GraphicsPath Transform(Func<Point, Point> transformationFunction)
         {
             GraphicsPath tbr = new GraphicsPath();
