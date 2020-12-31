@@ -140,7 +140,7 @@ namespace VectSharp.MuPDFUtils
                             {
                                 using (MuPDFDocument document = new MuPDFDocument(context, parsed, fileType))
                                 {
-                                    MuPDFDocument.CreateDocument(context, tempFile, DocumentOutputFileTypes.SVG, document.Pages[0]);
+                                    MuPDFDocument.CreateDocument(context, tempFile, DocumentOutputFileTypes.SVG, true, document.Pages[0]);
                                 }
                             }
 
