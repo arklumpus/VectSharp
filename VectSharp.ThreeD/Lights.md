@@ -35,7 +35,7 @@ In addition to the members defined in the `ILightSourceInterface`, this class de
 
 ## The `ParallelLightSource` class
 
-<img src="images/ParallelLight.svg" align="right" style="height: 20em">
+<img src="images/ParallelLight.svg" align="right" style="height: 20em" height="280">
 
 Instances of the `ParallelLightSource` class represent light sources that illuminate the scene with light coming always from the same direction. This is somewhat similar to how the sun works in real life. This class defines the following additional members:
 
@@ -52,7 +52,7 @@ The constructor requires two arguments, corresponding to the intensity of the li
 
 ## The `PointLightSource` class
 
-<img src="images/PointLight.svg" align="right" style="height: 20em">
+<img src="images/PointLight.svg" align="right" style="height: 20em" height="280">
 
 Instances of the `PointLightSource` class represent point light sources, i.e. light that originates from a point <img src="https://render.githubusercontent.com/render/math?math=\boldsymbol{c}"> and expands in all directions from that point. The intensity <img src="https://render.githubusercontent.com/render/math?math=i \left ( \boldsymbol{p} \right )"> of the light at a point <img src="https://render.githubusercontent.com/render/math?math=\boldsymbol{p}"> depends on how distant that point is from <img src="https://render.githubusercontent.com/render/math?math=\boldsymbol{c}">, according to the following equation:
 
@@ -80,11 +80,13 @@ The `GetLightAt` method returns a `LightIntensity` struct whose `Intensity` is c
 
 The figure below shows the effect of various values of <img src="https://render.githubusercontent.com/render/math?math=\alpha"> on the light's decay. The light source and the camera are both directly above the surface (the yellow dot in the centre of each image represents the light source's projection). The contours represent the regions of the surface that receive a light intensity of 0.9 (innermost circle), 0.7, 0.5, 0.3 and 0.1 (outermost circle). The light intensity in each image has been normalised so that the intensity at the point closest to the light source (i.e. the point directly below it) is 1. The surface normals have been altered to remove effects due to the light direction (so that the given light intensity values depend only on the distance of the points from the light source).
 
-<img src="images/PointLightParameters.svg" align="center" style="height: 20em">
+<p align="center">
+    <img src="images/PointLightParameters.svg" align="center" style="height: 20em" height="280">
+</p>
 
 ## The `SpotlightLightSource` class
 
-<img src="images/Spotlight.svg" align="right" style="height: 42em">
+<img src="images/Spotlight.svg" align="right" style="height: 42em" height="588">
 
 Instances of the `SpotlightLightSource` class represent spotlights, i.e. light sources whose light has a point source and expands in a cone with a defined angular amplitude along a specified direction. An additional, larger, cone is also defined such that elements outside the main cone of light but within this second cone also receive light that fades gradually until elements outside the second cone do not receive any light at all.
 
@@ -134,7 +136,7 @@ The `GetLightAt` method returns a `LightIntensity` struct whose `Intensity` is c
 
 ## The `MaskedLightSource` class
 
-<img src="images/MaskedLight.svg" align="right" style="height: 42em">
+<img src="images/MaskedLight.svg" align="right" style="height: 42em" height="588">
 
 Instances of the `MaskedLightSource` represent light sources that are equivalent to a spotlight, in front of which a "mask" (like a stencil) has been placed. The light emitted thus takes the shape of the mask. The mask is placed on a plane <img src="https://render.githubusercontent.com/render/math?math=\Pi"> that is perpendicular to the direction of the light's axis at a specified distance. To determine whether a certain point <img src="https://render.githubusercontent.com/render/math?math=\boldsymbol{p}"> is illuminated or not, the line connecting <img src="https://render.githubusercontent.com/render/math?math=\boldsymbol{p}"> and the light position <img src="https://render.githubusercontent.com/render/math?math=\boldsymbol{c}"> is intersected with <img src="https://render.githubusercontent.com/render/math?math=\Pi">. If the intersected point lies outside the area of the mask, the light intensity <img src="https://render.githubusercontent.com/render/math?math=i\left (\boldsymbol{p} \right)"> is 0; otherwise (as in the spotlight case), let <img src="https://render.githubusercontent.com/render/math?math=\theta"> be the angle between the light source, light direction <img src="https://render.githubusercontent.com/render/math?math=\boldsymbol{\hat{d}}"> and point:
 
@@ -218,16 +220,21 @@ Where <img src="https://render.githubusercontent.com/render/math?math=I"> is the
 
 This value is the amount of light that an _unobstructed_ area light casts on <img src="https://render.githubusercontent.com/render/math?math=\boldsymbol{p}">. If the light can cast a shadow (i.e. its `CastsShadow` property is `true`), how much light actually reaches the point depends on the amount of obstruction. This is computed by considering multiple "sample points" within the light's area (i.e. the circle centred at <img src="https://render.githubusercontent.com/render/math?math=\boldsymbol{o}"> with radius <img src="https://render.githubusercontent.com/render/math?math=r_0">) and determining whether each of these points is visible from <img src="https://render.githubusercontent.com/render/math?math=\boldsymbol{p}">. The amount of obstruction is the proportion of sampling points that are _not_ visible from the target point (e.g. if all the points are visible, the obstruction is `0`; if none of them is visible, the obstruction is `1`). The number of points considered is determined by the `ShadowSamplingPointCount` property of the `AreaLightSource` and has a linear effect on the time required to determine the amount of obstruction for a point. The image below shows which points are sampled for various values of this property (shown above each circle):
 
-<img src="images/AreaLightSamplePoints.svg" style="height: 15em" align="center">
+<p align="center">
+    <img src="images/AreaLightSamplePoints.svg" style="height: 15em" align="center" height="210">
+</p>
 
 Note that, in addition to these points, the point <img src="https://render.githubusercontent.com/render/math?math=\boldsymbol{q}"> is always sampled. If `ShadowSamplingPointCount` is set to `1`, only <img src="https://render.githubusercontent.com/render/math?math=\boldsymbol{q}"> is sampled, which leads to a shadow that looks exactly like the one cast by a spotlight. Otherwise, the multiple points that are sampled contribute to creating a "soft" shadow, with sharper edges close to the objects, and softer edges further away. The images below show the effect of an area light with various values of `ShadowSamplingPointCount` on a cube (shown above each scene; in all cases, the light had an <img src="https://render.githubusercontent.com/render/math?math=r_0"> of about `11.5`).
 
-<img src="images/AreaLightCubeSamplePoints.svg" style="height: 25em" align="center">
+<p align="center">
+    <img src="images/AreaLightCubeSamplePoints.svg" style="height: 25em" align="center" height="350">
+</p>
 
 The images below, instead, show the effect of an area light with various values of <img src="https://render.githubusercontent.com/render/math?math=r_0"> (shown above each scene). The value of <img src="https://render.githubusercontent.com/render/math?math=s"> was altered appropriately to make sure that each light cone the same angular spread. All of these scenes use a `ShadowSamplingPointCount` of `64`.
 
-
-<img src="images/AreaLightCubeRadius.svg" style="height: 25em" align="center">
+<p align="center">
+    <img src="images/AreaLightCubeRadius.svg" style="height: 25em" align="center" height="350">
+</p>
 
 The `AreaLightSource` class defines the following properties:
 

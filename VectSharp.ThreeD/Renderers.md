@@ -125,11 +125,15 @@ The following section shows examples of artifacts that can appear when a `Vector
 
 The following figure shows three examples of artifacts that happen due to the algorithm of the `VectorRenderer`. The numbers above each image are the number of milliseconds that were necessary to render the scene on a PC with a 12-core/24-thread AMD Ryzen 9 3900X processor.
 
-<image src="images/VectorRendererArtifacts.svg" style="height: 16em" align="center">
+<p align="center">
+    <image src="images/VectorRendererArtifacts.svg" style="height: 16em" align="center" height="224">
+</p>
 
 For reference, here is how the scenes look like when rendered using a `RayCastingRenderer` (which does not cause the same kind of artifact) at a 1000x1000 pixel resolution each, with 4X bilinear antialiasing.
 
-<image src="images/VectorRendererArtifacts_reference.svg" style="height: 16em" align="center">
+<p align="center">
+    <image src="images/VectorRendererArtifacts_reference.svg" style="height: 16em" align="center" height="224">
+</p>
 
 * The first figure shows a cube illuminated by a `ParallelLightSource` that casts a shadow on a rectangle. The artifacts here are that:
 
@@ -138,16 +142,22 @@ For reference, here is how the scenes look like when rendered using a `RayCastin
     * The shadow of the cube entirely covers one of the triangles constituting the floor rectangle.
 
     The first issue can be solved by using an appropriate value for the `DefaultOverFill` property of the `VectorRenderer` (or by converting the triangles to `VectorRendererTriangle3DElement`s and setting their `OverFill` property). For example, this is how the scene looks with a `DefaultOverFill` of `0.05`:
-
-    <image src="images/VectorRendererArtifacts_cubeOverfill.svg" style="height: 16em" align="center">
+    
+    <p align="center">
+        <image src="images/VectorRendererArtifacts_cubeOverfill.svg" style="height: 16em" align="center" height="224">
+    </p>
 
     Note that depending on your screen resolution and the program you are using to view the images, you may still notice a bit of a gap. The second issue can be solved by disabling the specular highlights on the cube and the triangle, i.e. by setting the `SpecularReflectionCoefficient` property of their materials to `0` (and increasing the `DiffuseReflectionCoefficient` to compensate):
 
-    <image src="images/VectorRendererArtifacts_cubeOverfillNoSpecular.svg" style="height: 16em" align="center">
+    <p align="center">
+        <image src="images/VectorRendererArtifacts_cubeOverfillNoSpecular.svg" style="height: 16em" align="center" height="224">
+    </p>
 
     However, this still does not solve the shadow problem. The best that we can do here is to use `ResamplingMaxSize` property of the `VectorRenderer`. Here is how the scene looks with various values of this property (indicated by the orange numbers at the bottom):
 
-    <image src="images/VectorRendererArtifacts_cubeOverfillResampling.svg" style="height: 16em" align="center">
+    <p align="center">
+        <image src="images/VectorRendererArtifacts_cubeOverfillResampling.svg" style="height: 16em" align="center" height="224">
+    </p>
 
     Since this approach also solves the specular highlight problem, specular highlights have been re-enabled here. In this case, the `ResamplingTime` property does not have any effect, as the artifact is not due to the sorting algorithm.
     
@@ -157,17 +167,23 @@ For reference, here is how the scenes look like when rendered using a `RayCastin
 
 * The second figure shows two intersecting tetrahedra together with a line that intersects both of them. The artifacts here are that the intersections are mostly wrong, as it is not clear that the two tetrahedra intersect, and the line is overlaid on both of them, instead going through the corner. The only thing that we can do here is again to use the `ResamplingMaxSizeProperty`; in this case we also need to set the `ResamplingTime` property to `ResamplingTimes.BeforeSorting`, because the artifact is due to the sorting algorithm:
 
-    <image src="images/VectorRendererArtifacts_tetrahedraOverfillResampling.svg" style="height: 16em" align="center">
+    <p align="center">
+        <image src="images/VectorRendererArtifacts_tetrahedraOverfillResampling.svg" style="height: 16em" align="center" height="224">
+    </p>
 
     This is better; however, some artifacts still persist around the line. The rendering can be improved further by disabling the line  resampling (i.e. by setting the `ResampleLines` property of the `VectorRenderer` to false) or by removing the line altoghether:
 
-    <image src="images/VectorRendererArtifacts_tetrahedraOverfillResamplingNoLine.svg" style="height: 16em" align="center">
+    <p align="center">
+        <image src="images/VectorRendererArtifacts_tetrahedraOverfillResamplingNoLine.svg" style="height: 16em" align="center" height="224">
+    </p>
 
     However, the scene with the line still shows a bit of an artifact and there really is no way to get definitively rid of that. Also note the great increase in rendering time.
     
 * The third scene shows a "cyclical dependency", i.e. three objects none of which is above all the others. Similarly, we can address this by using the `ResampleMaxSize` property of the `VectorRenderer` with a `ResamplingTime` of `ResamplingTimes.BeforeSorting`:
 
-    <image src="images/VectorRendererArtifacts_cyclicOverfillResampling.svg" style="height: 16em" align="center">
+    <p align="center">
+        <image src="images/VectorRendererArtifacts_cyclicOverfillResampling.svg" style="height: 16em" align="center" height="224">
+    </p>
 
     In this case, even a `ResamplingMaxSize` of `100` is enough to obtain a good result (discounting the patchwork effect that can be addressed by disabling specular highlights).
 
@@ -264,17 +280,23 @@ Note that if the same renderer is used to render different scenes, this will upd
 
 The `RasterRenderer` prevents the artifacts that arise from using a `VectorRenderer`, although the result is no longer a vector image. Furthermore, this renderer does not support anti-aliasing, which means that, when viewed at the wrong size, the images can have an ugly effect. The figure below shows a comparison of a detail of a cube rendered with a `VectorRenderer` (on the left) and with a `RasterRenderer` (on the right).
 
-<img src="images/RasterRendererAliasingExample.svg" style="height: 15em" align="center">
+<p align="center">
+    <img src="images/RasterRendererAliasingExample.svg" style="height: 15em" align="center" height="210">
+</p>
 
 While this effect can be reduced by increasing the resolution (which increases the rendering time and the amount of memory used), it can never be eliminated entirely. Furthermore, this renderer introduces new artifacts due to transparent pixels: since the render does not keep a full stack of the colours behind a transparent pixel, if the elements are processed in the "wrong" order, unexpected results may occur. This can manifest itself first of all as undesirable "edge" effects when `Line3DElement`s or `Point3DElement`s are used (because the primitive antialiasing used for them uses semi-transparent pixels):
 
-<img src="images/RasterRendererPointArtifact.svg" style="height: 15em" align="center">
+<p align="center">
+    <img src="images/RasterRendererPointArtifact.svg" style="height: 15em" align="center" height="210">
+</p>
 
 In the figure above, the colour of the second rectangle in the back "bleeds" through due to the semi-transparent pixels around the point.
 
 However, the issue is much worse when a transparent element has two or more elements behind:
 
-<img src="images/RasterRendererTransparencyArtifact.svg" style="height: 15em" align="center">
+<p align="center">
+    <img src="images/RasterRendererTransparencyArtifact.svg" style="height: 15em" align="center" height="210">
+</p>
 
 In this case, the renderer drew first the solid blue rectangle, then the semi-transparent green rectangle on top of that, but when it was time to render the orange rectangle, the z-buffer at the overlap between the blue rectangle and the green rectangle already had the z-depth of the green rectangle, and the pixel was not transparent because the blue rectangle had already been rendered. This led to the artifact above.
 
@@ -306,11 +328,15 @@ scene.AddRange(ObjectFactory.CreateRectangle(new Point3D(-100, -100, -0), new Po
 scene.AddRange(ObjectFactory.CreateRectangle(new Point3D(-100, -100, -50), new Point3D(100, -100, -50), new Point3D(100, 100, -50), new Point3D(-100, 100, -50), new IMaterial[] { new ColourMaterial(Colour.FromRgba(0, 158, 115, 0.5)) }));
 ```
 
-<img src="images/RasterRendererTransparencyArtifactSolved.svg" style="height: 15em" align="center">
+<p align="center">
+    <img src="images/RasterRendererTransparencyArtifactSolved.svg" style="height: 15em" align="center" height="210">
+</p>
 
 However, this is finicky and should not be relied upon (the order of the elements in the scene, or even the fact that there _is_ an order to them at all, is an implementation detail). In situations like these, it would be best to use another renderer. For comparison, here is how the images look like when rendered using the `VectorRenderer`:
 
-<img src="images/RasterRendererTransparencyArtifactVectorRenderer.svg" style="height: 15em" align="center">
+<p align="center">
+    <img src="images/RasterRendererTransparencyArtifactVectorRenderer.svg" style="height: 15em" align="center" height="210">
+</p>
 
 ### Tips for using the `RasterRenderer`
 
@@ -326,11 +352,15 @@ The `RaycastingRenderer` uses yet a different algorithm, which aims at solving t
 
 This solves the issue with transparent objects lying one over the other, and also makes it trivial (though computationally expensive) to perform anti-aliasing. In a non-antialiased image, a single ray is cast for each pixel, aimed at the centre of the pixel. If 4X bilinear antialiasing (the only kind of antialiasing currently implemented) is enabled, four rays are instead cast for each pixel and the colour of the pixel is computed as the average of the colours obtained through each ray. In the figure below, each square represents a single pixel; the image on the left shows the point in the pixel through which the ray is cast when antialiasing is disabled, while the image on the right shows the points that are used when 4X antialiasing is enabled.
 
-<img src="images/AntiAliasingSamplePositions.svg" style="height: 15em" align="center">
+<p align="center">
+    <img src="images/AntiAliasingSamplePositions.svg" style="height: 15em" align="center" height="210">
+</p>
 
 The figure below shows how antialiasing can be used to reduce the jagged-edge effect. The image on the left is rendered without antialiasing (and is very similar to the `VectorRenderer` example above), while the image on the right has 4X bilinear antialiasing enabled.
 
-<img src="images/RaycastingRendererAntiAliasing.svg" style="height: 15em" align="center">
+<p align="center">
+    <img src="images/RaycastingRendererAntiAliasing.svg" style="height: 15em" align="center" height="210">
+</p>
 
 The main drawback of enabling antialiasing is that, since each pixel needs to be sampled four times, it causes a 400% increase in rendering time.
 

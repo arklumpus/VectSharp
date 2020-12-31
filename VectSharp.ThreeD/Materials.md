@@ -22,7 +22,7 @@ Let <img src="https://render.githubusercontent.com/render/math?math=i_l\left(\bo
 
 Where <img src="https://render.githubusercontent.com/render/math?math=k_a \geq 0"> is the ambient reflection coefficient which can be set through the `AmbientReflectionCoefficient` property of the `PhongMaterial`.
 
-<img src="images/PhongReflection.svg" align="right" style="height: 12em">
+<img src="images/PhongReflection.svg" align="right" style="height: 12em" height="168">
 
 If the light is a "directional" light (e.g. a point light source, a spotlight or a parallel light source), let <img src="https://render.githubusercontent.com/render/math?math=\boldsymbol{\hat{E}}_l \left (\boldsymbol{p} \right)"> be the (normalised) direction of the light and <img src="https://render.githubusercontent.com/render/math?math=\boldsymbol{\hat{N}} \left (\boldsymbol{p} \right)"> the surface normal, as shown in the figure on the right. Then consider the dot product of the light direction and surface normal <img src="https://render.githubusercontent.com/render/math?math=t=\boldsymbol{\hat{E}}_l \left (\boldsymbol{p} \right) \cdot \boldsymbol{\hat{N}} \left (\boldsymbol{p} \right)">.
 
@@ -58,7 +58,9 @@ The light intensity is then used to determine which colour the point should have
 
 Here is an example of how some colours would look at various illumination levels:
 
-<img src="images/ColourPreview.svg" align="center" style="height:12em">
+<p align="center">
+    <img src="images/ColourPreview.svg" align="center" style="height:12em" height="168">
+</p>
 
 This material has the following properties:
 
@@ -84,7 +86,9 @@ This material has the following properties:
 
 The following figures show the effect of different values of these properties on a sphere:
 
-<img src="images/PhongParameters.svg" align="center">
+<p align="center">
+    <img src="images/PhongParameters.svg" align="center">
+</p>
 
 The sharp contour shown in the case <img src="https://render.githubusercontent.com/render/math?math=k_a=k_s=k_d=1,\ \gamma=0"> denotes the points in which <img src="https://render.githubusercontent.com/render/math?math=s=0">.
 

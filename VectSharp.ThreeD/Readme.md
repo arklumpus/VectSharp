@@ -22,19 +22,27 @@ Here are a few examples of 3D graphics produced with VectSharp.ThreeD:
 
 * An indoors scene with moonlight and two lightbulbs.
 
-<img align="center" src="images/Moonlight_2.svg" style="height:25em" height="300">
+<p align="center">
+    <img align="center" src="images/Moonlight_2.svg" style="height:25em" height="300">
+</p>
 
 * The plot of a function of two variables.
 
-<img align="center" src="images/FunctionPlot.svg" style="height:25em" height="300">
+<p align="center">
+    <img align="center" src="images/FunctionPlot.svg" style="height:25em" height="300">
+</p>
 
 * Two visualisations of a _p_ orbital of the Hydrogen atom (_n_=2, _l_=1). On the left, as a point cloud (the probability of finding a point at a certain combination of coordinates is proportional to the squared modulus of the wave function); on the right, as a set of surfaces (the squared modulus of the wave function is constant on each surface; on the outer surface it is 20% of the maximum value and it increases by 10% for each surfance until the inner surface, where it is 90% of the maximum value). The nodal plane is highlighted in grey.
 
-<img align="center" src="images/HydrogenPOrbital.svg" style="height:25em" height="300">
+<p align="center">
+    <img align="center" src="images/HydrogenPOrbital.svg" style="height:25em" height="300">
+</p>
 
 * Two slightly creepy smileys:
 
-<img align="center" src="images/Smileys.svg" style="height:25em" height="300">
+<p align="center">
+    <img align="center" src="images/Smileys.svg" style="height:25em" height="300">
+</p>
 
 ## <a name="gettingStarted"></a> Getting started
 
@@ -77,7 +85,9 @@ using VectSharp.SVG;
 
 The result should be similar to the following:
 
-<img align="center" src="images/Cube.svg" style="height:25em" height="300">
+<p align="center">
+    <img align="center" src="images/Cube.svg" style="height:25em" height="300">
+</p>
 
 More complex scenes can be created by adding multiple elements (either by using methods from the `ObjectFactory` class, or by manually creating the triangles) and/or multiple light sources. The `VectSharp.Demo3D` project shows an example of how a function of two variables can be plotted in 3D, complete with rudimentary camera controls using the mouse (drag while pressing the left mouse button to orbit, drag while pressing the right mouse button to pan, or use the mouse wheel to zoom in/out).
 

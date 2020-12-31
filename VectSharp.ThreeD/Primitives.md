@@ -211,7 +211,9 @@ This class defines two constructors: one taking three `Point3D` arguments repres
 
 The figure below shows the effect of different vertex normals on a triangle. The arrows show the direction of the normal at various points in the triangle. The first triangle on the left is flat - all the normals have the same direction. The other triangles have been assigned vertex normals that go out from a point. All of the triangles are lighted by the same light source (a `ParallelLightSource` that is directed along the true normal of the plane on which the triangle lies). If the vertex normals do not all have the same direction, the light causes a "curved" effect on the triangle, which is useful e.g. when the triangle is an approximation of a sphere or another curved surface.
 
-<img src="images/TriangleNormals.svg" style="height: 20em" align="center">
+<p align="center">
+    <img src="images/TriangleNormals.svg" style="height: 20em" align="center" height="280">
+</p>
 
 ## Creating complex objects
 
@@ -249,7 +251,9 @@ The class defines the following methods:
 
     The figure below shows a 2D polygon (the blue "e") and how it appears when it is rendered in 3D space. The origin (black dot) x and y of the 2D image (red and green) correspond between the 2D image and the 3D image.
 
-    <img src="images/Polygon.svg" style="height: 20em" align="center">
+    <p align="center">
+        <img src="images/Polygon.svg" style="height: 20em" align="center" height="280">
+    </p>
 
 * `List<Element3D> CreatePrism(GraphicsPath polygonBase2D, double triangulationResolution, Point3D bottomOrigin, Point3D topOrigin, NormalizedVector3D baseXAxis, NormalizedVector3D baseYAxis, IEnumerable<IMaterial> fill, string tag = null, int zIndex = 0)`
 
@@ -261,15 +265,18 @@ The class defines the following methods:
 
     The figure below shows a cube on the left and the corresponding points on the right.
 
-    <img src="images/Points.svg" style="height: 15em" align="center">
+    <p align="center">
+        <img src="images/Points.svg" style="height: 15em" align="center" height="210">
+    </p>
 
 * `List<Element3D> CreateWireframe(IEnumerable<Element3D> object3D, Colour colour, double thickness = 1, LineCaps lineCap = LineCaps.Butt, LineDash? lineDash = null, string tag = null, int zIndex = 0)`
 
     This method creates a wireframe from a collection of triangles (which e.g. could have been returned by one of the other methods in this class). The lines will have the specified attributes; duplicate lines (arising from adjacent triangles) are automatically removed. This method returns a list of `Line3DElement`s. Any element in `object3D` that is not a `Triangle3DElement` is ignored.
 
     The figure below shows a cube on the left and the corresponding wireframe on the right.
-
-    <img src="images/Wireframe.svg" style="height: 15em" align="center">
+    <p align="center">
+        <img src="images/Wireframe.svg" style="height: 15em" align="center" height="210">
+    </p>
 
 ## Transforms
 
@@ -348,7 +355,9 @@ cube = (rotation * cube).ToList();
 
 The following figure shows the original cube and the rotated cube:
 
-<img src="images/Transform.svg" style="height: 15em" align="center">
+<p align="center">
+    <img src="images/Transform.svg" style="height: 15em" align="center" height="210">
+</p>
 
 Different transforms can be composed by multiplying them. For example, rotating an object around a point involves first translating the object so that the point corresponds to the origin, then performing the rotation, and finally translating again:
 

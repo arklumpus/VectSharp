@@ -106,7 +106,7 @@ The constructor has 5 arguments, representing the position of the eye of the cam
 
 ### Projection
 
-<img src="images/PerspectiveCamera.svg" align="right" style="height: 40em">
+<img src="images/PerspectiveCamera.svg" align="right" style="height: 40em" height="560">
 
 To obtain the 2D projection of a point <img src="https://render.githubusercontent.com/render/math?math=\boldsymbol{p}">, consider first:
 
@@ -163,7 +163,9 @@ The `Zoom` method, finally, moves the camera forwards or backwards along its dir
 
 This class implements the `IBlurrableCamera` interface. Focus blur is implemented considering a camera lens of a finite size (defined by the `LensWidth` property). The number of cameras returned by the `GetCameras` method is determined by the `SamplingPoints` property of the camera; each of these cameras points in the same direction as the original camera, but has a `Position` that lies on a different point on the lens. The following figure shows which points are sampled with different values for the `SamplingPoints` property (the circle represents the lens, the centre of the circle is the `Position` of the original camera, and the number of `SamplingPoints` is written above each image):
 
-<img src="images/FocusBlurSamplePoints.svg" style="height: 15em" align="center">
+<p align="center">
+    <img src="images/FocusBlurSamplePoints.svg" style="height: 15em" align="center" height="210">
+</p>
 
 Since all of these points lie on the same plane (perpendicular to the camera's `Direction`) and the cameras all have the same `Distance`, points that lie on the camera plane are perfectly in focus, while points that are closer or farther are out of focus. The camera's `Distance` thus represents the focal length of the camera. The amount of blurring (and, thus, the depth of field of the camera) depends instead on the `LensWidth` property: larger values will result in more blurring and thus a smaller depth of field, while smaller values will result in less blurring and a higher depth of field.
 
@@ -171,7 +173,9 @@ By default, focus blur is disabled because the `LensWidth` is 0 (i.e. a point-li
 
 The following figures show the effect of various values for the `LensWidth` property (on the horizontal axis) and the `SamplingPoints` (on the vertical axis) property. The `Distance` property is the same in all cases, and is such that the middle of the sphere in the front is in focus (you may have to zoom to appreciate the effect).
 
-<img src="images/PerspectiveCameraBlur.svg" style="height: 75em" align="center">
+<p align="center">
+    <img src="images/PerspectiveCameraBlur.svg" style="height: 75em" align="center" height="1050">
+</p>
 
 It should be noted that, depending on the renderer, increasing the value of `SamplingPoints` will likely have an adverse effect on computation time, because the scene effectively has to be rendered once for each sampling point. In the current implementation of the `RaycastingRenderer` this effect is approximately a linear in computation time (however, since the sampling is done on a per-pixel basis, it does not have a significant effect on the amount of memory used).
 
@@ -197,7 +201,7 @@ The constructor has 4 arguments, representing the position of the camera, the di
 
 ### Projection
 
-<img src="images/OrthographicCamera.svg" align="right" style="height: 40em">
+<img src="images/OrthographicCamera.svg" align="right" style="height: 40em" height="560">
 
 To obtain the 2D projection of a point <img src="https://render.githubusercontent.com/render/math?math=\boldsymbol{p}">, consider first:
 
