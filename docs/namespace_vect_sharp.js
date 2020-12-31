@@ -5,6 +5,7 @@ var namespace_vect_sharp =
     [ "PDF", "namespace_vect_sharp_1_1_p_d_f.html", "namespace_vect_sharp_1_1_p_d_f" ],
     [ "Raster", "namespace_vect_sharp_1_1_raster.html", "namespace_vect_sharp_1_1_raster" ],
     [ "SVG", "namespace_vect_sharp_1_1_s_v_g.html", "namespace_vect_sharp_1_1_s_v_g" ],
+    [ "ThreeD", "namespace_vect_sharp_1_1_three_d.html", "namespace_vect_sharp_1_1_three_d" ],
     [ "Colour", "struct_vect_sharp_1_1_colour.html", "struct_vect_sharp_1_1_colour" ],
     [ "Colours", "class_vect_sharp_1_1_colours.html", "class_vect_sharp_1_1_colours" ],
     [ "DisposableIntPtr", "class_vect_sharp_1_1_disposable_int_ptr.html", "class_vect_sharp_1_1_disposable_int_ptr" ],

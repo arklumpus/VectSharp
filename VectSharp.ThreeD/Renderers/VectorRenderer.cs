@@ -7,21 +7,58 @@ using System.Threading.Tasks;
 
 namespace VectSharp.ThreeD
 {
+    /// <summary>
+    /// Renders a scene to a 2D vector image using the painter's algorithm.
+    /// </summary>
     public class VectorRenderer : IRenderer
     {
-        public enum ResamplingTimes { BeforeSorting, AfterSorting }
-        public double ResamplingMaxSize { get; set; } = double.NaN;
-        public ResamplingTimes ResamplingTime { get; set; } = ResamplingTimes.BeforeSorting;
+        /// <summary>
+        /// Indicates when should the resampling happen.
+        /// </summary>
+        public enum ResamplingTimes
+        {
+            /// <summary>
+            /// The resampling should happen before the sorting step.
+            /// </summary>
+            BeforeSorting, 
 
+            /// <summary>
+            /// The resampling should happen after the sorting step.
+            /// </summary>
+            AfterSorting
+        }
+
+        /// <summary>
+        /// Determines the maximum area for triangles and maximum length for lines during the resampling step. Setting this to <see cref="double.NaN"/> disables resampling.
+        /// </summary>
+        public double ResamplingMaxSize { get; set; } = double.NaN;
+
+        /// <summary>
+        /// Determines when the resampling happens.
+        /// </summary>
+        public ResamplingTimes ResamplingTime { get; set; } = ResamplingTimes.AfterSorting;
+
+        /// <summary>
+        /// Determines whether lines are resampled alongside triangles or not.
+        /// </summary>
+        public bool ResampleLines { get; set; } = true;
+
+        /// <summary>
+        /// Determines the default overfill value for triangles.
+        /// </summary>
         public double DefaultOverFill { get; set; } = 0;
 
         private object RenderLock = new object();
 
+        /// <summary>
+        /// Creates a new <see cref="VectorRenderer"/>.
+        /// </summary>
         public VectorRenderer()
         {
 
         }
 
+        /// <inheritdoc/>
         public Page Render(IScene scene, IEnumerable<ILightSource> lights, Camera camera)
         {
             Page tbr = new Page(1, 1);
@@ -32,9 +69,6 @@ namespace VectSharp.ThreeD
                 lock (scene.SceneLock)
                 {
                     List<Element3D> sceneElements = new List<Element3D>((scene.SceneElements as IList<Element3D>)?.Count ?? 4);
-
-                    Stopwatch sw = new Stopwatch();
-                    sw.Start();
 
                     foreach (Element3D element in scene.SceneElements)
                     {
@@ -69,9 +103,6 @@ namespace VectSharp.ThreeD
                         }
                     }
 
-                    long cullTime = sw.ElapsedMilliseconds;
-                    sw.Restart();
-
                     Dictionary<Element3D, List<Element3D>> allDependencies = new Dictionary<Element3D, List<Element3D>>();
 
                     foreach (Element3D el in nonCulled)
@@ -79,8 +110,6 @@ namespace VectSharp.ThreeD
                         allDependencies[el] = new List<Element3D>();
                         el.SetProjection(camera);
                     }
-
-                    long projectTime = sw.ElapsedMilliseconds;
 
                     IList<ILightSource> lightList = lights as IList<ILightSource> ?? lights.ToList();
                     bool anyShadows = false;
@@ -94,6 +123,12 @@ namespace VectSharp.ThreeD
                     }
 
                     List<Triangle3DElement> shadowers = null;
+
+                    List<double> noObstructions = new List<double>(lightList.Count);
+                    for (int i = 0; i < lightList.Count; i++)
+                    {
+                        noObstructions.Add(0);
+                    };
 
                     if (anyShadows)
                     {
@@ -110,15 +145,14 @@ namespace VectSharp.ThreeD
                             }
                         }
                     }
-                    sw.Restart();
 
-                    int[] comparisons = new int[nonCulled.Count * (nonCulled.Count - 1) / 2];
+                    sbyte[] comparisons = new sbyte[nonCulled.Count * (nonCulled.Count - 1) / 2];
 
                     Parallel.For(0, comparisons.Length, k =>
                     {
                         int i = (int)Math.Floor((2 * nonCulled.Count - 1 - Math.Sqrt((2 * nonCulled.Count - 1) * (2 * nonCulled.Count - 1) - 8 * k)) / 2);
                         int j = k - i * (nonCulled.Count - 1) + i * (i - 1) / 2 + i + 1;
-                        comparisons[k] = camera.Compare(nonCulled[i], nonCulled[j]);
+                        comparisons[k] = (sbyte)camera.Compare(nonCulled[i], nonCulled[j]);
                     });
 
                     for (int i = 0; i < nonCulled.Count; i++)
@@ -138,9 +172,6 @@ namespace VectSharp.ThreeD
                             }
                         }
                     }
-
-                    long compareTime = sw.ElapsedMilliseconds;
-                    sw.Restart();
 
                     List<Element3D> sortedElements = TopologicalSorter.Sort(nonCulled, (element, elements) =>
                     {
@@ -165,9 +196,6 @@ namespace VectSharp.ThreeD
                             sortedElements[i].SetProjection(camera);
                         });
                     }
-
-                    long sortTime = sw.ElapsedMilliseconds;
-                    sw.Restart();
 
                     foreach (Element3D element in sortedElements)
                     {
@@ -195,39 +223,36 @@ namespace VectSharp.ThreeD
                             }
                             else if (element is Triangle3DElement triangle && element is IVectorRendererTriangle3DElement vectorRendererTriangle)
                             {
-                                IList<ILightSource> triangleLights;
+                                List<double> triangleObstructions;
 
                                 if (!anyShadows)
                                 {
-                                    triangleLights = lightList;
+                                    triangleObstructions = noObstructions;
                                 }
                                 else
                                 {
-                                    triangleLights = new List<ILightSource>();
+                                    triangleObstructions = new List<double>();
 
-                                    foreach (ILightSource light in lightList)
+                                    for (int i = 0; i < lightList.Count; i++)
                                     {
-                                        if (!light.CastsShadow || !light.IsObstructed(triangle.Centroid, from el in shadowers where el != triangle && vectorRendererTriangle.Parent != el select el))
+                                        if (!lightList[i].CastsShadow)
                                         {
-                                            triangleLights.Add(light);
+                                            triangleObstructions.Add(0);
+                                        }
+                                        else
+                                        {
+                                            triangleObstructions.Add(lightList[i].GetObstruction(triangle.Centroid, from el in shadowers where el != triangle && vectorRendererTriangle.Parent != el select el));
                                         }
                                     }
                                 }
 
-
                                 foreach (IMaterial fill in triangle.Fill)
                                 {
-                                    FillTriangle(gpr, element.GetProjection(), fill.GetColour(triangle.Centroid, triangle.Normal, camera, triangleLights), vectorRendererTriangle.OverFill, camera.ScaleFactor, triangle.Tag);
+                                    FillTriangle(gpr, element.GetProjection(), fill.GetColour(triangle.Centroid, triangle.Normal, camera, lightList, triangleObstructions), vectorRendererTriangle.OverFill, camera.ScaleFactor, triangle.Tag);
                                 }
                             }
                         }
                     }
-
-                    long drawTime = sw.ElapsedMilliseconds;
-
-                    sw.Stop();
-
-                    //gpr.FillText(camera.TopLeft, cullTime.ToString() + " / " + projectTime.ToString() + " / " + compareTime.ToString() + " / " + sortTime.ToString() + " / " + drawTime.ToString(), new Font(new FontFamily(FontFamily.StandardFontFamilies.Helvetica), 12 * 10 / camera.ScaleFactor), Colours.Black);
 
                     tbr.Crop(camera.TopLeft, camera.Size);
                 }
@@ -324,24 +349,31 @@ namespace VectSharp.ThreeD
             }
             else if (element is Line3DElement line)
             {
-                Point p1 = camera.Project(line.Point1);
-                Point p2 = camera.Project(line.Point2);
-
-                if ((p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y) > maxSize)
+                if (this.ResampleLines)
                 {
-                    Point3D half = (Point3D)(((Vector3D)line.Point1 + (Vector3D)line.Point2) * 0.5);
+                    Point p1 = camera.Project(line.Point1);
+                    Point p2 = camera.Project(line.Point2);
 
-                    Line3DElement line1 = new Line3DElement(line.Point1, half) { Colour = line.Colour, LineCap = line.LineCap, LineDash = line.LineDash, Tag = line.Tag, Thickness = line.Thickness, ZIndex = line.ZIndex };
-                    Line3DElement line2 = new Line3DElement(half, line.Point2) { Colour = line.Colour, LineCap = line.LineCap, LineDash = line.LineDash, Tag = line.Tag, Thickness = line.Thickness, ZIndex = line.ZIndex };
-
-                    foreach (Element3D el in Resample(camera, line1, maxSize))
+                    if ((p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y) > maxSize)
                     {
-                        yield return el;
+                        Point3D half = (Point3D)(((Vector3D)line.Point1 + (Vector3D)line.Point2) * 0.5);
+
+                        Line3DElement line1 = new Line3DElement(line.Point1, half) { Colour = line.Colour, LineCap = line.LineCap, LineDash = line.LineDash, Tag = line.Tag, Thickness = line.Thickness, ZIndex = line.ZIndex };
+                        Line3DElement line2 = new Line3DElement(half, line.Point2) { Colour = line.Colour, LineCap = line.LineCap, LineDash = line.LineDash, Tag = line.Tag, Thickness = line.Thickness, ZIndex = line.ZIndex };
+
+                        foreach (Element3D el in Resample(camera, line1, maxSize))
+                        {
+                            yield return el;
+                        }
+
+                        foreach (Element3D el in Resample(camera, line2, maxSize))
+                        {
+                            yield return el;
+                        }
                     }
-
-                    foreach (Element3D el in Resample(camera, line2, maxSize))
+                    else
                     {
-                        yield return el;
+                        yield return element;
                     }
                 }
                 else
@@ -409,20 +441,43 @@ namespace VectSharp.ThreeD
 
     }
 
+    /// <summary>
+    /// Represents an extension adding properties to a <see cref="Triangle3DElement"/>.
+    /// </summary>
     public interface IVectorRendererTriangle3DElement
     {
+        /// <summary>
+        /// The amount of overfill that should be applied to the triangle.
+        /// </summary>
         double OverFill { get; }
+
+        /// <summary>
+        /// If the triangle is the result of resampling, this property holds a reference to the original triangle.
+        /// </summary>
         Triangle3DElement Parent { get; }
     }
 
+    /// <summary>
+    /// Represents a <see cref="Triangle3DElement"/> extended to implement additional properties.
+    /// </summary>
     public class VectorRendererTriangle3DElement : Triangle3DElement, IVectorRendererTriangle3DElement
     {
+        /// <inheritdoc/>
         public virtual double OverFill { get; set; } = 0;
+
+        /// <inheritdoc/>
         public virtual Triangle3DElement Parent { get; set; } = null;
 
+        /// <inheritdoc/>
         public VectorRendererTriangle3DElement(Point3D point1, Point3D point2, Point3D point3) : base(point1, point2, point3) { }
+        
+        /// <inheritdoc/>
         public VectorRendererTriangle3DElement(Point3D point1, Point3D point2, Point3D point3, NormalizedVector3D point1Normal, NormalizedVector3D point2Normal, NormalizedVector3D point3Normal) : base(point1, point2, point3, point1Normal, point2Normal, point3Normal) { }
 
+        /// <summary>
+        /// Creates a new <see cref="VectorRendererTriangle3DElement"/> based on the specified base <paramref name="triangle"/>.
+        /// </summary>
+        /// <param name="triangle">The base <see cref="Triangle3DElement"/> from which all property values will be copied.</param>
         public VectorRendererTriangle3DElement(Triangle3DElement triangle) : this(triangle.Point1, triangle.Point2, triangle.Point3, triangle.Point1Normal, triangle.Point2Normal, triangle.Point3Normal)
         {
             this.CastsShadow = triangle.CastsShadow;
@@ -430,6 +485,50 @@ namespace VectSharp.ThreeD
             this.ReceivesShadow = triangle.ReceivesShadow;
             this.Tag = triangle.Tag;
             this.ZIndex = triangle.ZIndex;
+        }
+    }
+
+    internal static class TopologicalSorter
+    {
+        // Adapted from https://www.codeproject.com/Articles/869059/Topological-sorting-in-Csharp
+        public static List<T> Sort<T>(IEnumerable<T> source, Func<T, IEnumerable<T>, IEnumerable<T>> getDependencies)
+        {
+            var sorted = new List<T>();
+            var visited = new Dictionary<T, bool>();
+
+            foreach (var item in source)
+            {
+                Visit(item, source, getDependencies, sorted, visited);
+            }
+
+            return sorted;
+        }
+
+        public static void Visit<T>(T item, IEnumerable<T> source, Func<T, IEnumerable<T>, IEnumerable<T>> getDependencies, List<T> sorted, Dictionary<T, bool> visited)
+        {
+            bool inProcess;
+            var alreadyVisited = visited.TryGetValue(item, out inProcess);
+
+            if (alreadyVisited)
+            {
+                // Cyclic dependency. Ignore it and try your best.
+            }
+            else
+            {
+                visited[item] = true;
+
+                var dependencies = getDependencies(item, source);
+                if (dependencies != null)
+                {
+                    foreach (var dependency in dependencies)
+                    {
+                        Visit(dependency, source, getDependencies, sorted, visited);
+                    }
+                }
+
+                visited[item] = false;
+                sorted.Add(item);
+            }
         }
     }
 }

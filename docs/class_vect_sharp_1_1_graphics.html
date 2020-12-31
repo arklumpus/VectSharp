@@ -28,7 +28,7 @@
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VectSharp
-   &#160;<span id="projectnumber">1.6.0</span>
+   &#160;<span id="projectnumber">1.7.0</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -196,6 +196,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a496cb53eed27923d96b85f771afe1ed4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_graphics.html#a496cb53eed27923d96b85f771afe1ed4">DrawGraphics</a> (double originX, double originY, <a class="el" href="class_vect_sharp_1_1_graphics.html">Graphics</a> graphics)</td></tr>
 <tr class="memdesc:a496cb53eed27923d96b85f771afe1ed4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws a <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object on the current <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object.  <a href="class_vect_sharp_1_1_graphics.html#a496cb53eed27923d96b85f771afe1ed4">More...</a><br /></td></tr>
 <tr class="separator:a496cb53eed27923d96b85f771afe1ed4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeefde81aa7913d97f415615186b713ec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vect_sharp_1_1_graphics.html">Graphics</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_graphics.html#aeefde81aa7913d97f415615186b713ec">Transform</a> (Func&lt; <a class="el" href="struct_vect_sharp_1_1_point.html">Point</a>, <a class="el" href="struct_vect_sharp_1_1_point.html">Point</a> &gt; transformationFunction, double linearisationResolution)</td></tr>
+<tr class="memdesc:aeefde81aa7913d97f415615186b713ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object in which all the graphics actions have been transformed using an arbitrary transformation function. <a class="el" href="namespace_vect_sharp_1_1_raster.html">Raster</a> images are replaced by grey rectangles.  <a href="class_vect_sharp_1_1_graphics.html#aeefde81aa7913d97f415615186b713ec">More...</a><br /></td></tr>
+<tr class="separator:aeefde81aa7913d97f415615186b713ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa932cf37c0ff5356258473bb733def9d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vect_sharp_1_1_graphics.html">Graphics</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_graphics.html#aa932cf37c0ff5356258473bb733def9d">Linearise</a> (double resolution)</td></tr>
+<tr class="memdesc:aa932cf37c0ff5356258473bb733def9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object by linearising all of the elements of the current instance, i.e. replacing curve segments with series of line segments that approximate them. <a class="el" href="namespace_vect_sharp_1_1_raster.html">Raster</a> images are left unchanged.  <a href="class_vect_sharp_1_1_graphics.html#aa932cf37c0ff5356258473bb733def9d">More...</a><br /></td></tr>
+<tr class="separator:aa932cf37c0ff5356258473bb733def9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
 Properties</h2></td></tr>
@@ -206,7 +212,7 @@ Properties</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents an abstract drawing surface. </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01911">1911</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02321">2321</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a545b7fe5cea9fc34b7bd720020a4ce76"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a545b7fe5cea9fc34b7bd720020a4ce76">&#9670;&nbsp;</a></span>CopyToIGraphicsContext()</h2>
@@ -232,7 +238,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02535">2535</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02945">2945</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -278,7 +284,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02751">2751</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03161">3161</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -317,7 +323,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02733">2733</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03143">3143</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -384,7 +390,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02154">2154</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02564">2564</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -437,7 +443,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02129">2129</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02539">2539</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -532,7 +538,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02117">2117</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02527">2527</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -578,7 +584,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02140">2140</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02550">2550</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -631,7 +637,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02166">2166</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02576">2576</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -677,7 +683,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01926">1926</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02336">2336</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -744,7 +750,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02065">2065</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02475">2475</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -797,7 +803,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02051">2051</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02461">2461</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -871,7 +877,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02195">2195</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02605">2605</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -938,7 +944,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02180">2180</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02590">2590</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1019,7 +1025,36 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02248">2248</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02658">2658</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+
+</div>
+</div>
+<a id="aa932cf37c0ff5356258473bb733def9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa932cf37c0ff5356258473bb733def9d">&#9670;&nbsp;</a></span>Linearise()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_vect_sharp_1_1_graphics.html">Graphics</a> VectSharp.Graphics.Linearise </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>resolution</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a new <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object by linearising all of the elements of the current instance, i.e. replacing curve segments with series of line segments that approximate them. <a class="el" href="namespace_vect_sharp_1_1_raster.html">Raster</a> images are left unchanged. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">resolution</td><td>The resolution that will be used to linearise curve segments.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A new <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object containing the linearised elements.</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03347">3347</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1060,7 +1095,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02452">2452</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02862">2862</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1081,7 +1116,7 @@ Properties</h2></td></tr>
 
 <p>Restore the previous transform state (rotation, translation scale). </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02468">2468</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02878">2878</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1109,7 +1144,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01982">1982</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02392">2392</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1148,7 +1183,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01992">1992</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02402">2402</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1169,7 +1204,7 @@ Properties</h2></td></tr>
 
 <p>Save the current transform state (rotation, translation, scale). </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02460">2460</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02870">2870</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1208,7 +1243,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02039">2039</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02449">2449</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1261,7 +1296,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01963">1963</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02373">2373</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1289,7 +1324,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01951">1951</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02361">2361</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1328,7 +1363,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01973">1973</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02383">2383</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1402,7 +1437,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01942">1942</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02352">2352</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1497,7 +1532,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02099">2099</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02509">2509</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1578,7 +1613,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02081">2081</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02491">2491</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1680,7 +1715,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02232">2232</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02642">2642</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1775,7 +1810,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02213">2213</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02623">2623</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1884,12 +1919,12 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02354">2354</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02764">2764</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
 <a id="a2a53438684eb80483e692107575a6834"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a53438684eb80483e692107575a6834">&#9670;&nbsp;</a></span>Transform()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a53438684eb80483e692107575a6834">&#9670;&nbsp;</a></span>Transform() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1951,7 +1986,47 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02009">2009</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02419">2419</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+
+</div>
+</div>
+<a id="aeefde81aa7913d97f415615186b713ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeefde81aa7913d97f415615186b713ec">&#9670;&nbsp;</a></span>Transform() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_vect_sharp_1_1_graphics.html">Graphics</a> VectSharp.Graphics.Transform </td>
+          <td>(</td>
+          <td class="paramtype">Func&lt; <a class="el" href="struct_vect_sharp_1_1_point.html">Point</a>, <a class="el" href="struct_vect_sharp_1_1_point.html">Point</a> &gt;&#160;</td>
+          <td class="paramname"><em>transformationFunction</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>linearisationResolution</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a new <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object in which all the graphics actions have been transformed using an arbitrary transformation function. <a class="el" href="namespace_vect_sharp_1_1_raster.html">Raster</a> images are replaced by grey rectangles. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">transformationFunction</td><td>An arbitrary transformation function.</td></tr>
+    <tr><td class="paramname">linearisationResolution</td><td>The resolution that will be used to linearise curve segments.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A new <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object in which all graphics actions have been linearised and transformed using the <em>transformationFunction</em> .</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03222">3222</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1990,7 +2065,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02020">2020</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02430">2430</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -2018,7 +2093,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02029">2029</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02439">2439</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -2045,7 +2120,7 @@ Properties</h2></td></tr>
 
 <p>Determines how an unbalanced graphics state stack (which occurs if the number of calls to <a class="el" href="class_vect_sharp_1_1_graphics.html#a8a11aecb62edf335bebedc920190b403" title="Save the current transform state (rotation, translation, scale).">Save</a> and <a class="el" href="class_vect_sharp_1_1_graphics.html#a8f2e220bda144c50e515fe1aa0e232de" title="Restore the previous transform state (rotation, translation scale).">Restore</a> is not equal) will be treated. The default is <a class="el" href="namespace_vect_sharp.html#a88d2dd0aea021af9a8af889bf292006fa8ce61dd2505effd96f937fa743b6491f" title="If the graphics state stack is unbalanced, an exception will be thrown.">UnbalancedStackActions.Throw</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01916">1916</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02326">2326</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>

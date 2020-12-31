@@ -28,7 +28,7 @@
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VectSharp
-   &#160;<span id="projectnumber">1.6.0</span>
+   &#160;<span id="projectnumber">1.7.0</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -94,12 +94,13 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 Introduction</h1>
 <p><b><a class="el" href="namespace_vect_sharp.html">VectSharp</a></b> is a library to create vector graphics (including text) in C#, without too many dependencies.</p>
 <p>It includes an abstract layer on top of which output layers can be written. Currently, there are four available output layers: <b><a class="el" href="namespace_vect_sharp_1_1_p_d_f.html">VectSharp.PDF</a></b> produces PDF documents, <b><a class="el" href="namespace_vect_sharp_1_1_canvas.html">VectSharp.Canvas</a></b> produces an <code>Avalonia.Controls.Canvas</code> object (<a href="https://avaloniaui.net/docs/controls/canvas">https://avaloniaui.net/docs/controls/canvas</a>) containing the rendered graphics objects, <b><a class="el" href="namespace_vect_sharp_1_1_raster.html">VectSharp.Raster</a></b> produces raster images in PNG format, and <b><a class="el" href="namespace_vect_sharp_1_1_s_v_g.html">VectSharp.SVG</a></b> produces vector graphics in SVG format.</p>
+<p><a href="https://github.com/arklumpus/VectSharp/tree/master/VectSharp.ThreeD"><b>VectSharp.ThreeD</b></a> adds support for 3D vector and raster graphics.</p>
 <p><a class="el" href="namespace_vect_sharp.html">VectSharp</a> is written using .NET Core, and is available for Mac, Windows and Linux. It is released under a GPLv3 license. It includes 14 standard fonts, also released under a GPL license.</p>
 <p>Since version 2.0.0, <a class="el" href="namespace_vect_sharp_1_1_raster.html">VectSharp.Raster</a> is released under an AGPLv3 license.</p>
-<p><b><a class="el" href="namespace_vect_sharp_1_1_mu_p_d_f_utils.html">VectSharp.MuPDFUtils</a></b>, also released under an AGPLv3 license, contains some utility functions that use [MuPDFCore]() to make it possible to include in <a class="el" href="namespace_vect_sharp.html">VectSharp</a> graphics images in various formats.</p>
+<p><b><a class="el" href="namespace_vect_sharp_1_1_mu_p_d_f_utils.html">VectSharp.MuPDFUtils</a></b>, also released under an AGPLv3 license, contains some utility functions that use <a href="https://github.com/arklumpus/MuPDFCore">MuPDFCore</a> to make it possible to include in <a class="el" href="namespace_vect_sharp.html">VectSharp</a> graphics images in various formats.</p>
 <h1><a class="anchor" id="autotoc_md2"></a>
 Installing VectSharp</h1>
-<p>To include <a class="el" href="namespace_vect_sharp.html">VectSharp</a> in your project, you will need one of the output layer NuGet packages: <a href="https://www.nuget.org/packages/VectSharp.PDF/">VectSharp.PDF</a>, <a href="https://www.nuget.org/packages/VectSharp.Canvas/">VectSharp.Canvas</a>, <a href="https://www.nuget.org/packages/VectSharp.Raster/">VectSharp.Raster</a>, or <a href="https://www.nuget.org/packages/VectSharp.SVG/">VectSharp.SVG</a>. You may want the <a href="https://www.nuget.org/packages/VectSharp.MuPDFUtils/">VectSharp.MuPDFUtils</a> package if you wish to manipulate raster images.</p>
+<p>To include <a class="el" href="namespace_vect_sharp.html">VectSharp</a> in your project, you will need one of the output layer NuGet packages: <a href="https://www.nuget.org/packages/VectSharp.PDF/">VectSharp.PDF</a>, <a href="https://www.nuget.org/packages/VectSharp.Canvas/">VectSharp.Canvas</a>, <a href="https://www.nuget.org/packages/VectSharp.Raster/">VectSharp.Raster</a>, or <a href="https://www.nuget.org/packages/VectSharp.SVG/">VectSharp.SVG</a>. You will need <a href="https://www.nuget.org/packages/VectSharp.ThreeD/">VectSharp.ThreeD</a> to work with 3D graphics. You may want the <a href="https://www.nuget.org/packages/VectSharp.MuPDFUtils/">VectSharp.MuPDFUtils</a> package if you wish to manipulate raster images.</p>
 <h1><a class="anchor" id="autotoc_md3"></a>
 Usage</h1>
 <p>You can find the full documentation for the <a class="el" href="namespace_vect_sharp.html">VectSharp</a> library at the <a href="https://arklumpus.github.io/VectSharp">documentation website</a>. A <a href="https://arklumpus.github.io/VectSharp/VectSharp.pdf">PDF reference manual</a> is also available.</p>
@@ -131,7 +132,7 @@ Usage</h1>
 <div class="line">doc.Pages.Last().SaveAsSVG(@&quot;Sample.svg&quot;);</div>
 </div><!-- fragment --></li>
 </ul>
-<p>The public classes and methods are <a href="https://arklumpus.github.io/VectSharp">fully documented</a>, and you can find a (much) more detailed code example in <a href="https://github.com/arklumpus/VectSharp/blob/master/VectSharp.Demo/MainWindow.xaml.cs">MainWindow.xaml.cs</a>.</p>
+<p>The public classes and methods are <a href="https://arklumpus.github.io/VectSharp">fully documented</a>, and you can find a (much) more detailed code example in <a href="https://github.com/arklumpus/VectSharp/blob/master/VectSharp.Demo/MainWindow.xaml.cs">MainWindow.xaml.cs</a>. A detailed guide about 3D graphics in <a class="el" href="namespace_vect_sharp_1_1_three_d.html">VectSharp.ThreeD</a> is available in the <a href="https://github.com/arklumpus/VectSharp/tree/master/VectSharp.ThreeD"><code>VectSharp.ThreeD</code></a> folder.</p>
 <h1><a class="anchor" id="autotoc_md4"></a>
 Creating new output layers</h1>
 <p><a class="el" href="namespace_vect_sharp.html">VectSharp</a> can be easily extended to provide additional output layers. To do so:</p><ol type="1">
@@ -143,9 +144,9 @@ Creating new output layers</h1>
 <h1><a class="anchor" id="autotoc_md5"></a>
 Compiling VectSharp from source</h1>
 <p>The <a class="el" href="namespace_vect_sharp.html">VectSharp</a> source code includes an example project (<em>VectSharp.Demo</em>) presenting how <a class="el" href="namespace_vect_sharp.html">VectSharp</a> can be used to produce graphics.</p>
-<p>To be able to compile <a class="el" href="namespace_vect_sharp.html">VectSharp</a> from source, you will need to install the <a href="https://dotnet.microsoft.com/download/dotnet-core/3.0">.NET Core 3.0 SDK</a> for your operating system.</p>
+<p>To be able to compile <a class="el" href="namespace_vect_sharp.html">VectSharp</a> from source, you will need to install the latest <a href="https://dotnet.microsoft.com/download/dotnet/current">.NET SDK</a> for your operating system.</p>
 <p>You can use <a href="https://visualstudio.microsoft.com/it/vs/">Microsoft Visual Studio</a> to compile the program. The following instructions will cover compiling <a class="el" href="namespace_vect_sharp.html">VectSharp</a> from the command line, instead.</p>
-<p>First of all, you will need to download the <a class="el" href="namespace_vect_sharp.html">VectSharp</a> source code: <a href="https://github.com/arklumpus/VectSharp/archive/v1.5.0.tar.gz">VectSharp.tar.gz</a> and extract it somewhere.</p>
+<p>First of all, you will need to download the <a class="el" href="namespace_vect_sharp.html">VectSharp</a> source code: <a href="https://github.com/arklumpus/VectSharp/archive/v1.7.0.tar.gz">VectSharp.tar.gz</a> and extract it somewhere.</p>
 <h2><a class="anchor" id="autotoc_md6"></a>
 Windows</h2>
 <p>Open a command-line window in the folder where you have extracted the source code, and type: </p><pre class="fragment">BuildDemo &lt;Target&gt;
@@ -156,7 +157,18 @@ macOS and Linux</h2>
 <p>Open a terminal in the folder where you have extracted the source code, and type: </p><pre class="fragment">./BuildDemo.sh &lt;Target&gt;
 </pre><p>Where <code>&lt;Target&gt;</code> can be one of <code>Win-x64</code>, <code>Linux-x64</code> or <code>Mac-x64</code> depending on which platform you wish to generate executables for.</p>
 <p>In the Release folder and in the appropriate subfolder for the target platform you selected, you will find the compiled program.</p>
-<p>If you receive an error about permissions being denied, try typing <code>chmod +x BuildDemo.sh</code> first. </p>
+<p>If you receive an error about permissions being denied, try typing <code>chmod +x BuildDemo.sh</code> first.</p>
+<h1><a class="anchor" id="autotoc_md8"></a>
+Note about VectSharp.MuPDFUtils and .NET Framework</h1>
+<p>If you wish to use <a class="el" href="namespace_vect_sharp_1_1_mu_p_d_f_utils.html">VectSharp.MuPDFUtils</a> in a .NET Framework project, you will need to manually copy the native MuPDFWrapper library for the platform you are using to the executable directory (this is done automatically if you target .NET core).</p>
+<p>One way to obtain the appropriate library files is:</p>
+<ol type="1">
+<li>Manually download the NuGet package for <a href="https://www.nuget.org/packages/MuPDFCore/">MuPFDCore</a> (click on the "Download package" link on the right).</li>
+<li>Rename the <code>.nupkg</code> file so that it has a <code>.zip</code> extension.</li>
+<li>Extract the zip file.</li>
+<li>Within the extracted folder, the library files are in the <code>runtimes/xxx-x64/native/</code> folder, where <code>xxx</code> is either <code>linux</code>, <code>osx</code> or <code>win</code>, depending on the platform you are using.</li>
+</ol>
+<p>Make sure you copy the appropriate file to the same folder as the executable! </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->

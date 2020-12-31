@@ -28,7 +28,7 @@
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VectSharp
-   &#160;<span id="projectnumber">1.6.0</span>
+   &#160;<span id="projectnumber">1.7.0</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -108,6 +108,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a200cd7ee20d72a0aee2fdcebb7ac4f88"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_vect_sharp_1_1_point.html">Point</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_vect_sharp_1_1_point.html#a200cd7ee20d72a0aee2fdcebb7ac4f88">Normalize</a> ()</td></tr>
 <tr class="memdesc:a200cd7ee20d72a0aee2fdcebb7ac4f88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Normalises a <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a>.  <a href="struct_vect_sharp_1_1_point.html#a200cd7ee20d72a0aee2fdcebb7ac4f88">More...</a><br /></td></tr>
 <tr class="separator:a200cd7ee20d72a0aee2fdcebb7ac4f88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94465cb13d875de961d27a250b4f8477"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_vect_sharp_1_1_point.html#a94465cb13d875de961d27a250b4f8477">IsEqual</a> (<a class="el" href="struct_vect_sharp_1_1_point.html">Point</a> p2, double tolerance)</td></tr>
+<tr class="memdesc:a94465cb13d875de961d27a250b4f8477"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether this <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a> is equal to another <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a>, up to a specified tolerance.  <a href="struct_vect_sharp_1_1_point.html#a94465cb13d875de961d27a250b4f8477">More...</a><br /></td></tr>
+<tr class="separator:a94465cb13d875de961d27a250b4f8477"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -121,7 +124,7 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a point relative to an origin in the top-left corner. </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00956">956</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01228">1228</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ae7f3aca35b6003e9ecb9fca94044bc9b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae7f3aca35b6003e9ecb9fca94044bc9b">&#9670;&nbsp;</a></span>Point()</h2>
@@ -158,11 +161,51 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00973">973</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01245">1245</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a94465cb13d875de961d27a250b4f8477"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94465cb13d875de961d27a250b4f8477">&#9670;&nbsp;</a></span>IsEqual()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool VectSharp.Point.IsEqual </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_vect_sharp_1_1_point.html">Point</a>&#160;</td>
+          <td class="paramname"><em>p2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>tolerance</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Checks whether this <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a> is equal to another <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a>, up to a specified tolerance. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">p2</td><td>The <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a> to compare.</td></tr>
+    <tr><td class="paramname">tolerance</td><td>The tolerance threshold.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if both coordinates of the <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a>s are closer than <em>tolerance</em>  or if their relative difference (i.e. <code>(a - b) / (a + b) * 2</code>) is smaller than <em>tolerance</em> . <code>false</code> otherwise.</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01276">1276</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+
+</div>
+</div>
 <a id="aacc1aee83844f035858ff926e10d42fa"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aacc1aee83844f035858ff926e10d42fa">&#9670;&nbsp;</a></span>Modulus()</h2>
 
@@ -181,7 +224,7 @@ Public Attributes</h2></td></tr>
 <p>Computes the modulus of the vector represented by the <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a>. </p>
 <dl class="section return"><dt>Returns</dt><dd>The modulus of the vector represented by the <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a>.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00983">983</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01255">1255</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -203,7 +246,7 @@ Public Attributes</h2></td></tr>
 <p>Normalises a <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a>. </p>
 <dl class="section return"><dt>Returns</dt><dd>The normalised <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a>.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00992">992</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01264">1264</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -222,7 +265,7 @@ Public Attributes</h2></td></tr>
 
 <p>Horizontal (x) coordinate, measured to the right of the origin. </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00961">961</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01233">1233</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -240,7 +283,7 @@ Public Attributes</h2></td></tr>
 
 <p>Vertical (y) coordinate, measured to the bottom of the origin. </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00966">966</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01238">1238</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>

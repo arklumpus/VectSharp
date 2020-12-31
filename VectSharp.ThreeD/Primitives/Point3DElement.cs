@@ -5,12 +5,30 @@ using System.Text;
 
 namespace VectSharp.ThreeD
 {
+    /// <summary>
+    /// Represents a point.
+    /// </summary>
     public class Point3DElement : Element3D
     {
+        /// <summary>
+        /// The coordinates of the point.
+        /// </summary>
         public virtual Point3D Point { get; }
+
+        /// <summary>
+        /// The colour with which the point should be drawn.
+        /// </summary>
         public virtual Colour Colour { get; set; } = Colours.Black;
+
+        /// <summary>
+        /// The diameter of the point in 2D units.
+        /// </summary>
         public virtual double Diameter { get; set; } = 1;
 
+        /// <summary>
+        /// Creates a new <see cref="Point3DElement"/> instance.
+        /// </summary>
+        /// <param name="point"></param>
         public Point3DElement(Point3D point)
         {
             this.Point = point;
@@ -18,6 +36,7 @@ namespace VectSharp.ThreeD
 
         private Point[] Projection;
 
+        /// <inheritdoc/>
         public override void SetProjection(Camera camera)
         {
             this.Projection = new Point[]
@@ -26,11 +45,13 @@ namespace VectSharp.ThreeD
             };
         }
 
+        /// <inheritdoc/>
         public override Point[] GetProjection()
         {
             return this.Projection;
         }
 
+        /// <inheritdoc/>
         public override Point3D this[int index]
         {
             get
@@ -45,8 +66,10 @@ namespace VectSharp.ThreeD
             }
         }
 
+        /// <inheritdoc/>
         public override int Count => 1;
 
+        /// <inheritdoc/>
         public override IEnumerator<Point3D> GetEnumerator()
         {
             return new PointEnumerator(this);
@@ -83,6 +106,11 @@ namespace VectSharp.ThreeD
             }
         }
 
+        /// <summary>
+        /// Converts a base <see cref="Point3DElement"/> into a derived element, keeping the value of the properties of the base element.
+        /// </summary>
+        /// <typeparam name="T">A type derived from <see cref="Point3DElement"/>.</typeparam>
+        /// <returns>A derived <see cref="Point3DElement"/> of type <typeparamref name="T"/> with the same value for the properties of the base element.</returns>
         public T ToDerivedPoint<T>() where T : Point3DElement
         {
             T t = (T)Activator.CreateInstance(typeof(T), this.Point);

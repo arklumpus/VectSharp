@@ -5,5 +5,6 @@ var files_dup =
     [ "VectSharp.MuPDFUtils", "dir_452a51251142bc7d9d54a0dbe0aed850.html", "dir_452a51251142bc7d9d54a0dbe0aed850" ],
     [ "VectSharp.PDF", "dir_c0a49aad9c77eb50f1b38df9d9b26fde.html", "dir_c0a49aad9c77eb50f1b38df9d9b26fde" ],
     [ "VectSharp.Raster", "dir_664d029dbe81cf7a6e60c51e20570786.html", "dir_664d029dbe81cf7a6e60c51e20570786" ],
-    [ "VectSharp.SVG", "dir_885bba5288a8b333208632535de9ccc7.html", "dir_885bba5288a8b333208632535de9ccc7" ]
+    [ "VectSharp.SVG", "dir_885bba5288a8b333208632535de9ccc7.html", "dir_885bba5288a8b333208632535de9ccc7" ],
+    [ "VectSharp.ThreeD", "dir_1deac940cd320f2578c5eef82fa6dc6a.html", "dir_1deac940cd320f2578c5eef82fa6dc6a" ]
 ];

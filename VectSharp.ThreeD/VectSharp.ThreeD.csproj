@@ -1,36 +1,37 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Giorgio Bianchini</Authors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Company>University of Bristol</Company>
+    <Description>A library to produce vector graphics (including text) without too many dependencies. Extensible to support multiple output formats. This package adds 3D rendering capabilities. For more information, see https://github.com/arklumpus/VectSharp</Description>
     <Version>1.0.1</Version>
+    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/arklumpus/VectSharp</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="icon.png">
+      <Pack>true</Pack>
+      <PackagePath>.</PackagePath>
+    </None>
+  </ItemGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DocumentationFile></DocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="DeletedCode.cs" />
-    <Compile Remove="Intersection3D.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="DeletedCode.cs" />
-    <None Include="Intersection3D.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.Collections.Immutable" Version="1.7.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\VectSharp\VectSharp.csproj" />
+    <PackageReference Include="VectSharp" Version="1.7.0" />
   </ItemGroup>
 
 </Project>

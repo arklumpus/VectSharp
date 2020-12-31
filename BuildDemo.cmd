@@ -28,7 +28,14 @@ echo.
 echo [104;97mBuilding VectSharp.Demo...[0m
 
 cd VectSharp.Demo
-dotnet publish -c Release -f netcoreapp3.0 /p:PublishProfile=Properties\PublishProfiles\%1.pubxml
+dotnet publish -c Release -f netcoreapp3.1 /p:PublishProfile=Properties\PublishProfiles\%1.pubxml
+cd ..
+
+echo.
+echo [104;97mBuilding VectSharp.Demo3D...[0m
+
+cd VectSharp.Demo3D
+dotnet publish -c Release -f netcoreapp3.1 /p:PublishProfile=Properties\PublishProfiles\%1.pubxml
 cd ..
 
 echo.

@@ -33,7 +33,8 @@ var NAVTREE =
       [ "Compiling VectSharp from source", "index.html#autotoc_md5", [
         [ "Windows", "index.html#autotoc_md6", null ],
         [ "macOS and Linux", "index.html#autotoc_md7", null ]
-      ] ]
+      ] ],
+      [ "Note about VectSharp.MuPDFUtils and .NET Framework", "index.html#autotoc_md8", null ]
     ] ],
     [ "Packages", "namespaces.html", [
       [ "Packages", "namespaces.html", "namespaces_dup" ],
@@ -48,7 +49,7 @@ var NAVTREE =
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", null ],
+        [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", null ],
         [ "Enumerations", "functions_enum.html", null ],
         [ "Properties", "functions_prop.html", null ],
@@ -64,8 +65,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_avalonia_context_8cs_source.html",
-"class_vect_sharp_1_1_font_family.html#abf750b21f27b68a5f7159888dd293e43",
-"pages.html"
+"class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780af4df7bfe79eef34b241c935fa75e8e45",
+"class_vect_sharp_1_1_true_type_file.html#abd9c8b6a0adca6684e4bc629a447d849"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['verticalmetrics_426',['VerticalMetrics',['../struct_vect_sharp_1_1_true_type_file_1_1_vertical_metrics.html',1,'VectSharp::TrueTypeFile']]]
+  ['truetypefile_501',['TrueTypeFile',['../class_vect_sharp_1_1_true_type_file.html',1,'VectSharp']]],
+  ['truetypepoint_502',['TrueTypePoint',['../struct_vect_sharp_1_1_true_type_file_1_1_true_type_point.html',1,'VectSharp::TrueTypeFile']]]
 ];

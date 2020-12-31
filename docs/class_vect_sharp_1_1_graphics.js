@@ -14,6 +14,7 @@ var class_vect_sharp_1_1_graphics =
     [ "FillText", "class_vect_sharp_1_1_graphics.html#aaa3deabeb38fa93a08758df9bf2e9b34", null ],
     [ "FillText", "class_vect_sharp_1_1_graphics.html#a5ca8480499fea28786e16c2faf93cb80", null ],
     [ "FillTextOnPath", "class_vect_sharp_1_1_graphics.html#a105b178d5b1bb07f56f68ff2b7f601d1", null ],
+    [ "Linearise", "class_vect_sharp_1_1_graphics.html#aa932cf37c0ff5356258473bb733def9d", null ],
     [ "MeasureText", "class_vect_sharp_1_1_graphics.html#ae359b157d9b5f943846fac7e70ecd522", null ],
     [ "Restore", "class_vect_sharp_1_1_graphics.html#a8f2e220bda144c50e515fe1aa0e232de", null ],
     [ "Rotate", "class_vect_sharp_1_1_graphics.html#a3ad840cbc7893dd9f4089e5abd21ff68", null ],
@@ -30,6 +31,7 @@ var class_vect_sharp_1_1_graphics =
     [ "StrokeText", "class_vect_sharp_1_1_graphics.html#ac13ca6752a33fbb6a4e6cb2c820b1d24", null ],
     [ "StrokeTextOnPath", "class_vect_sharp_1_1_graphics.html#a2a85a98aaa0400b3af0fc51320c5e41a", null ],
     [ "Transform", "class_vect_sharp_1_1_graphics.html#a2a53438684eb80483e692107575a6834", null ],
+    [ "Transform", "class_vect_sharp_1_1_graphics.html#aeefde81aa7913d97f415615186b713ec", null ],
     [ "Translate", "class_vect_sharp_1_1_graphics.html#a1c353f23b9be14358cf8102fbeb2ea1d", null ],
     [ "Translate", "class_vect_sharp_1_1_graphics.html#a675df302f1821806025a0403ee6c2aef", null ],
     [ "UnbalancedStackAction", "class_vect_sharp_1_1_graphics.html#af32ad440108219e8600983cc6d0f6d49", null ]

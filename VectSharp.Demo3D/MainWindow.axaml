@@ -4,8 +4,44 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="VectSharp.Demo3D.MainWindow"
-        Title="VectSharp.Demo3D">
-  <Viewbox Name="ContentBox">
-    <Canvas Name="ContainerCanvas"/>
-  </Viewbox>
+        Title="VectSharp.Demo3D" FontSize="20">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="1*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    <StackPanel Orientation="Horizontal" Margin="5">
+      
+      <TextBlock VerticalAlignment="Center" Margin="0,0,5,0" Text="Renderer:" FontWeight="Bold" />
+      <ComboBox SelectedIndex="0" Name="RendererBox">
+        <ComboBox.Items>
+          <ComboBoxItem>VectorRenderer</ComboBoxItem>
+          <ComboBoxItem>RasterRenderer</ComboBoxItem>
+          <ComboBoxItem>RaycastingRenderer</ComboBoxItem>
+        </ComboBox.Items>
+      </ComboBox>
+      
+      <TextBlock VerticalAlignment="Center" Margin="20,0,5,0" Text="Resolution:" FontWeight="Bold" Name="ResolutionBlock" IsVisible="False"/>
+      
+      <TextBlock VerticalAlignment="Center" Margin="5,0,5,0" Text="Width:" Name="ResolutionWidthBlock" IsVisible="False"/>
+      <NumericUpDown Value="250" Minimum="10" FormatString="0" VerticalAlignment="Center" Name="ResolutionWidthNUD" IsVisible="False"/>
+
+      <TextBlock VerticalAlignment="Center" Margin="10,0,5,0" Text="Height:" Name="ResolutionHeightBlock" IsVisible="False"/>
+      <NumericUpDown Value="250" Minimum="10" FormatString="0" VerticalAlignment="Center" Name="ResolutionHeightNUD" IsVisible="False"/>
+
+      <CheckBox IsChecked="false" Margin="20,0,0,0" Name="AntialiasingBox" IsVisible="False">Anti-aliasing</CheckBox>
+
+      <Button Margin="20, 0, 0, 0" Name="ResetCameraButton">Reset camera</Button>
+      
+    </StackPanel>
+    <Viewbox Name="ContentBox" Grid.Row="1">
+      <Canvas Name="ContainerCanvas"/>
+    </Viewbox>
+    <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Margin="10">
+      <TextBlock VerticalAlignment="Center" >Left click + drag: orbit</TextBlock>
+      <TextBlock VerticalAlignment="Center" Margin="50, 0, 50, 0">Right click + drag: pan</TextBlock>
+      <TextBlock VerticalAlignment="Center">Mouse wheel: zoom</TextBlock>
+    </StackPanel>
+  </Grid>
 </Window>

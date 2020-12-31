@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 150 50" version="1.1" style="font-synthesis: none;" xmlns="http://www.w3.org/2000/svg">
+  <style>
+		@font-face
+		{			font-family: "Nimbus Sans L-2df690a6-8038-499b-b823-0a0838a68f93";
+			src: url("data:font/ttf;charset=utf-8;base64,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");
+		}
+</style>
+  <path d="M 0 0 L 150 0 L 150 50 L 0 50 Z " stroke="none" fill="#FFFFFF" fill-opacity="0" transform="matrix(1,0,0,1,0,0)" />
+  <clipPath id="b69120a0aaac4f869732759ba4997765">
+    <path d="M 0 0 L 50 0 L 50 50 L 0 50 Z " stroke="#000000" stroke-opacity="0" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" fill="none" transform="matrix(1,0,0,1,0,0)" />
+  </clipPath>
+  <g clip-path="url(#b69120a0aaac4f869732759ba4997765)">
+    <path d="M 4.084084820691868 -6.68611843664339 L -14.294296872421663 45.93610999990179 L -28.588593744843283 1.73343811320383 Z " stroke="none" fill="#E6E6E6" fill-opacity="1" transform="matrix(1,0,0,1,25,25)" />
+  </g>
+  <g clip-path="url(#b69120a0aaac4f869732759ba4997765)">
+    <path d="M -17.86787109052704 -13.0007858490288 L -13.19473557454308 -9.600580319282832 L -11.435437497937318 3.6980013081681644 Z " stroke="none" fill="#95C1FF" fill-opacity="1" transform="matrix(1,0,0,1,25,25)" />
+  </g>
+  <g clip-path="url(#b69120a0aaac4f869732759ba4997765)">
+    <path d="M -17.86787109052704 -13.0007858490288 L -11.435437497937318 3.6980013081681644 L -15.882552080468484 -1.5408338784034283 Z " stroke="none" fill="#8EBBFF" fill-opacity="1" transform="matrix(1,0,0,1,25,25)" />
+  </g>
+  <g clip-path="url(#b69120a0aaac4f869732759ba4997765)">
+    <path d="M -6.353020832187426 -14.637921844832487 L -3.952393967665557E-14 -12.018504251546634 L -13.19473557454308 -9.600580319282832 Z " stroke="none" fill="#B0DAFF" fill-opacity="1" transform="matrix(1,0,0,1,25,25)" />
+  </g>
+  <g clip-path="url(#b69120a0aaac4f869732759ba4997765)">
+    <path d="M -6.353020832187426 -14.637921844832487 L -13.19473557454308 -9.600580319282832 L -17.86787109052704 -13.0007858490288 Z " stroke="none" fill="#B9E3FF" fill-opacity="1" transform="matrix(1,0,0,1,25,25)" />
+  </g>
+  <g clip-path="url(#b69120a0aaac4f869732759ba4997765)">
+    <path d="M -3.952393967665557E-14 -12.018504251546634 L 0 0 L -11.435437497937318 3.6980013081681644 Z " stroke="none" fill="#003F8B" fill-opacity="1" transform="matrix(1,0,0,1,25,25)" />
+  </g>
+  <g clip-path="url(#b69120a0aaac4f869732759ba4997765)">
+    <path d="M -3.952393967665557E-14 -12.018504251546634 L -11.435437497937318 3.6980013081681644 L -13.19473557454308 -9.600580319282832 Z " stroke="none" fill="#003F8B" fill-opacity="1" transform="matrix(1,0,0,1,25,25)" />
+  </g>
+  <g clip-path="url(#b69120a0aaac4f869732759ba4997765)">
+    <path d="M 4.084084820691868 -6.68611843664339 L 35.735742181054064 9.100550094320123 L -14.294296872421663 45.93610999990179 Z " stroke="none" fill="#595959" fill-opacity="1" transform="matrix(1,0,0,1,25,25)" />
+  </g>
+  <g clip-path="url(#b69120a0aaac4f869732759ba4997765)">
+    <text stroke="none" fill="#000000" fill-opacity="1" transform="matrix(1,0,0,1,23.877499999999998,5.545)" x="0" y="0" font-size="5" font-family="Nimbus Sans L-2df690a6-8038-499b-b823-0a0838a68f93, sans-serif" font-weight="regular" font-style="normal">1</text>
+  </g>
+  <clipPath id="de4b912ff5c8453f84d6d311c85a57e1">
+    <path d="M 50 0 L 100 0 L 100 50 L 50 50 Z " stroke="#000000" stroke-opacity="0" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" fill="none" transform="matrix(1,0,0,1,0,0)" />
+  </clipPath>
+  <g clip-path="url(#de4b912ff5c8453f84d6d311c85a57e1)">
+    <path d="M -8.881784197001252E-16 -18.032806270159597 L 6.8465836698917535 -0.2229151521049768 L 9.143481153354028 14.064360231014662 Z " stroke="none" fill="#001F53" fill-opacity="1" transform="matrix(1,0,0,1,75,25)" />
+  </g>
+  <g clip-path="url(#de4b912ff5c8453f84d6d311c85a57e1)">
+    <path d="M 8.881784197001252E-16 13.634560838413348 L -16.48261863450816 -5.733212037290806 L 10.367250405961805 0.9829059942915148 Z " stroke="none" fill="#5C0000" fill-opacity="1" transform="matrix(1,0,0,1,75,25)" />
+  </g>
+  <g clip-path="url(#de4b912ff5c8453f84d6d311c85a57e1)">
+    <path d="M 10.367250405961805 0.9829059942915148 L -16.48261863450816 -5.733212037290806 L 7.375728554693703 -8.880977901171185 Z " stroke="none" fill="#FFC570" fill-opacity="1" transform="matrix(1,0,0,1,75,25)" />
+  </g>
+  <g clip-path="url(#de4b912ff5c8453f84d6d311c85a57e1)">
+    <path d="M -8.881784197001252E-16 -18.032806270159597 L 9.143481153354028 14.064360231014662 L -15.048033704793689 4.49673105873232 Z " stroke="none" fill="#57A2E6" fill-opacity="1" transform="matrix(1,0,0,1,75,25)" />
+  </g>
+  <g clip-path="url(#de4b912ff5c8453f84d6d311c85a57e1)">
+    <path d="M -13.066583888195126 -17.9762327602924 L -9.848213472383527 13.98919375086076 " stroke="#008000" stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" fill="none" transform="matrix(1,0,0,1,75,25)" />
+  </g>
+  <g clip-path="url(#de4b912ff5c8453f84d6d311c85a57e1)">
+    <text stroke="none" fill="#000000" fill-opacity="1" transform="matrix(1,0,0,1,73.8775,5.545)" x="0" y="0" font-size="5" font-family="Nimbus Sans L-2df690a6-8038-499b-b823-0a0838a68f93, sans-serif" font-weight="regular" font-style="normal">1</text>
+  </g>
+  <clipPath id="b41348c15c9e460f8272e177092c0bf9">
+    <path d="M 100 0 L 150 0 L 150 50 L 100 50 Z " stroke="#008000" stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" fill="none" transform="matrix(1,0,0,1,0,0)" />
+  </clipPath>
+  <g clip-path="url(#b41348c15c9e460f8272e177092c0bf9)">
+    <path d="M -1.3290395746792396 1.4269826317758891 L 6.835838625348659 -6.62913076367742 L 24.18832942065021 1.3498060400606091 Z " stroke="none" fill="#A23300" fill-opacity="1" transform="matrix(1,0,0,1,125,25)" />
+  </g>
+  <g clip-path="url(#b41348c15c9e460f8272e177092c0bf9)">
+    <path d="M -9.19045725541262 -1.1115649820361722 L -0.3741214189991471 -12.173040875192475 L 13.050972273304447 -4.4975429917133996 Z " stroke="none" fill="#529EE2" fill-opacity="1" transform="matrix(1,0,0,1,125,25)" />
+  </g>
+  <g clip-path="url(#b41348c15c9e460f8272e177092c0bf9)">
+    <path d="M -23.43178723364643 5.362656787588127 L -8.096875974900879 -8.254477714628086 L 6.2785742688423145 5.338786358790699 Z " stroke="none" fill="#2AB083" fill-opacity="1" transform="matrix(1,0,0,1,125,25)" />
+  </g>
+  <g clip-path="url(#b41348c15c9e460f8272e177092c0bf9)">
+    <text stroke="none" fill="#000000" fill-opacity="1" transform="matrix(1,0,0,1,123.8775,5.545)" x="0" y="0" font-size="5" font-family="Nimbus Sans L-2df690a6-8038-499b-b823-0a0838a68f93, sans-serif" font-weight="regular" font-style="normal">1</text>
+  </g>
+</svg>

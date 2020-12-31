@@ -1,0 +1,4 @@
+<map id="VectSharp.ThreeD.ColourMaterial" name="VectSharp.ThreeD.ColourMaterial">
+<area shape="rect" id="node1" title="Represents a material that always has the same colour, regardless of light." alt="" coords="5,80,220,107"/>
+<area shape="rect" id="node2" href="$interface_vect_sharp_1_1_three_d_1_1_i_material.html" title="Represents a material used to the determine the appearance of Triangle3DElement." alt="" coords="77,5,148,32"/>
+</map>

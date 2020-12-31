@@ -28,7 +28,7 @@
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VectSharp
-   &#160;<span id="projectnumber">1.6.0</span>
+   &#160;<span id="projectnumber">1.7.0</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -231,7 +231,7 @@ $(document).ready(function(){initNavTree('_image_u_r_i_parser_8cs_source.html','
 <div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;                            {</div>
 <div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;                                <span class="keyword">using</span> (MuPDFDocument document = <span class="keyword">new</span> MuPDFDocument(context, parsed, fileType))</div>
 <div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;                                {</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;                                    MuPDFDocument.CreateDocument(context, tempFile, DocumentOutputFileTypes.SVG, document.Pages[0]);</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;                                    MuPDFDocument.CreateDocument(context, tempFile, DocumentOutputFileTypes.SVG, <span class="keyword">true</span>, document.Pages[0]);</div>
 <div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;                                }</div>
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;                            }</div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160; </div>
@@ -257,7 +257,7 @@ $(document).ready(function(){initNavTree('_image_u_r_i_parser_8cs_source.html','
 </div><!-- doc-content -->
 <div class="ttc" id="anamespace_vect_sharp_1_1_mu_p_d_f_utils_html"><div class="ttname"><a href="namespace_vect_sharp_1_1_mu_p_d_f_utils.html">VectSharp.MuPDFUtils</a></div><div class="ttdef"><b>Definition:</b> <a href="_image_u_r_i_parser_8cs_source.html#l00024">ImageURIParser.cs:25</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_mu_p_d_f_utils_1_1_image_u_r_i_parser_html"><div class="ttname"><a href="class_vect_sharp_1_1_mu_p_d_f_utils_1_1_image_u_r_i_parser.html">VectSharp.MuPDFUtils.ImageURIParser</a></div><div class="ttdoc">Provides a method to parse an image URI into a page.</div><div class="ttdef"><b>Definition:</b> <a href="_image_u_r_i_parser_8cs_source.html#l00029">ImageURIParser.cs:30</a></div></div>
-<div class="ttc" id="aclass_vect_sharp_1_1_graphics_html_a4fb7e7abe8792e3d16d08482f532006c"><div class="ttname"><a href="class_vect_sharp_1_1_graphics.html#a4fb7e7abe8792e3d16d08482f532006c">VectSharp.Graphics.DrawRasterImage</a></div><div class="ttdeci">void DrawRasterImage(int sourceX, int sourceY, int sourceWidth, int sourceHeight, double destinationX, double destinationY, double destinationWidth, double destinationHeight, RasterImage image, string tag=null)</div><div class="ttdoc">Draw a raster image.</div><div class="ttdef"><b>Definition:</b> <a href="_graphics_8cs_source.html#l02117">Graphics.cs:2117</a></div></div>
+<div class="ttc" id="aclass_vect_sharp_1_1_graphics_html_a4fb7e7abe8792e3d16d08482f532006c"><div class="ttname"><a href="class_vect_sharp_1_1_graphics.html#a4fb7e7abe8792e3d16d08482f532006c">VectSharp.Graphics.DrawRasterImage</a></div><div class="ttdeci">void DrawRasterImage(int sourceX, int sourceY, int sourceWidth, int sourceHeight, double destinationX, double destinationY, double destinationWidth, double destinationHeight, RasterImage image, string tag=null)</div><div class="ttdoc">Draw a raster image.</div><div class="ttdef"><b>Definition:</b> <a href="_graphics_8cs_source.html#l02527">Graphics.cs:2527</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_page_html"><div class="ttname"><a href="class_vect_sharp_1_1_page.html">VectSharp.Page</a></div><div class="ttdoc">Represents a Graphics object with a width and height.</div><div class="ttdef"><b>Definition:</b> <a href="_document_8cs_source.html#l00047">Document.cs:48</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_raster_image_html_a5c022bcd18b4e37c26df5ec67c8c2b71"><div class="ttname"><a href="class_vect_sharp_1_1_raster_image.html#a5c022bcd18b4e37c26df5ec67c8c2b71">VectSharp.RasterImage.Width</a></div><div class="ttdeci">int Width</div><div class="ttdoc">The width in pixels of the image.</div><div class="ttdef"><b>Definition:</b> <a href="_raster_image_8cs_source.html#l00123">RasterImage.cs:123</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_stream_html"><div class="ttname"><a href="class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_stream.html">VectSharp.MuPDFUtils.RasterImageStream</a></div><div class="ttdoc">A RasterImage created from a stream.</div><div class="ttdef"><b>Definition:</b> <a href="_raster_images_8cs_source.html#l00069">RasterImages.cs:70</a></div></div>

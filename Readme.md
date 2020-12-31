@@ -9,14 +9,16 @@
 
 It includes an abstract layer on top of which output layers can be written. Currently, there are four available output layers: **VectSharp.PDF** produces PDF documents, **VectSharp.Canvas** produces an `Avalonia.Controls.Canvas` object ([https://avaloniaui.net/docs/controls/canvas](https://avaloniaui.net/docs/controls/canvas)) containing the rendered graphics objects, **VectSharp.Raster** produces raster images in PNG format, and **VectSharp.SVG** produces vector graphics in SVG format.
 
+[**VectSharp.ThreeD**](https://github.com/arklumpus/VectSharp/tree/master/VectSharp.ThreeD) adds support for 3D vector and raster graphics.
+
 VectSharp is written using .NET Core, and is available for Mac, Windows and Linux. It is released under a GPLv3 license. It includes 14 standard fonts, also released under a GPL license.
 
 Since version 2.0.0, VectSharp.Raster is released under an AGPLv3 license.
 
-**VectSharp.MuPDFUtils**, also released under an AGPLv3 license, contains some utility functions that use [MuPDFCore]() to make it possible to include in VectSharp graphics images in various formats.
+**VectSharp.MuPDFUtils**, also released under an AGPLv3 license, contains some utility functions that use [MuPDFCore](https://github.com/arklumpus/MuPDFCore) to make it possible to include in VectSharp graphics images in various formats.
 
 ## Installing VectSharp
-To include VectSharp in your project, you will need one of the output layer NuGet packages: [VectSharp.PDF](https://www.nuget.org/packages/VectSharp.PDF/), [VectSharp.Canvas](https://www.nuget.org/packages/VectSharp.Canvas/), [VectSharp.Raster](https://www.nuget.org/packages/VectSharp.Raster/), or [VectSharp.SVG](https://www.nuget.org/packages/VectSharp.SVG/). You may want the [VectSharp.MuPDFUtils](https://www.nuget.org/packages/VectSharp.MuPDFUtils/) package if you wish to manipulate raster images.
+To include VectSharp in your project, you will need one of the output layer NuGet packages: [VectSharp.PDF](https://www.nuget.org/packages/VectSharp.PDF/), [VectSharp.Canvas](https://www.nuget.org/packages/VectSharp.Canvas/), [VectSharp.Raster](https://www.nuget.org/packages/VectSharp.Raster/), or [VectSharp.SVG](https://www.nuget.org/packages/VectSharp.SVG/). You will need [VectSharp.ThreeD](https://www.nuget.org/packages/VectSharp.ThreeD/) to work with 3D graphics. You may want the [VectSharp.MuPDFUtils](https://www.nuget.org/packages/VectSharp.MuPDFUtils/) package if you wish to manipulate raster images.
 
 ## Usage
 You can find the full documentation for the VectSharp library at the [documentation website](https://arklumpus.github.io/VectSharp). A [PDF reference manual](https://arklumpus.github.io/VectSharp/VectSharp.pdf) is also available.
@@ -62,7 +64,7 @@ using VectSharp.SVG;
 //...
 doc.Pages.Last().SaveAsSVG(@"Sample.svg");
 ``` 
-The public classes and methods are [fully documented](https://arklumpus.github.io/VectSharp), and you can find a (much) more detailed code example in [MainWindow.xaml.cs](https://github.com/arklumpus/VectSharp/blob/master/VectSharp.Demo/MainWindow.xaml.cs).
+The public classes and methods are [fully documented](https://arklumpus.github.io/VectSharp), and you can find a (much) more detailed code example in [MainWindow.xaml.cs](https://github.com/arklumpus/VectSharp/blob/master/VectSharp.Demo/MainWindow.xaml.cs). A detailed guide about 3D graphics in VectSharp.ThreeD is available in the [`VectSharp.ThreeD`](https://github.com/arklumpus/VectSharp/tree/master/VectSharp.ThreeD) folder.
 
 ## Creating new output layers
 
@@ -76,11 +78,11 @@ VectSharp can be easily extended to provide additional output layers. To do so:
 
 The VectSharp source code includes an example project (*VectSharp.Demo*) presenting how VectSharp can be used to produce graphics.
 
-To be able to compile VectSharp from source, you will need to install the [.NET Core 3.0 SDK](https://dotnet.microsoft.com/download/dotnet-core/3.0) for your operating system.
+To be able to compile VectSharp from source, you will need to install the latest [.NET SDK](https://dotnet.microsoft.com/download/dotnet/current) for your operating system.
 
 You can use [Microsoft Visual Studio](https://visualstudio.microsoft.com/it/vs/) to compile the program. The following instructions will cover compiling VectSharp from the command line, instead.
 
-First of all, you will need to download the VectSharp source code: [VectSharp.tar.gz](https://github.com/arklumpus/VectSharp/archive/v1.5.0.tar.gz) and extract it somewhere.
+First of all, you will need to download the VectSharp source code: [VectSharp.tar.gz](https://github.com/arklumpus/VectSharp/archive/v1.7.0.tar.gz) and extract it somewhere.
 
 ### Windows
 Open a command-line window in the folder where you have extracted the source code, and type:
@@ -101,3 +103,16 @@ Where `<Target>` can be one of `Win-x64`, `Linux-x64` or `Mac-x64` depending on 
 In the Release folder and in the appropriate subfolder for the target platform you selected, you will find the compiled program.
 
 If you receive an error about permissions being denied, try typing `chmod +x BuildDemo.sh` first.
+
+## Note about VectSharp.MuPDFUtils and .NET Framework
+
+If you wish to use VectSharp.MuPDFUtils in a .NET Framework project, you will need to manually copy the native MuPDFWrapper library for the platform you are using to the executable directory (this is done automatically if you target .NET core).
+
+One way to obtain the appropriate library files is:
+
+1. Manually download the NuGet package for [MuPFDCore](https://www.nuget.org/packages/MuPDFCore/) (click on the "Download package" link on the right).
+2. Rename the `.nupkg` file so that it has a `.zip` extension.
+3. Extract the zip file.
+4. Within the extracted folder, the library files are in the `runtimes/xxx-x64/native/` folder, where `xxx` is either `linux`, `osx` or `win`, depending on the platform you are using.
+
+Make sure you copy the appropriate file to the same folder as the executable!

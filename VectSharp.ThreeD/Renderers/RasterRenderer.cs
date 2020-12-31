@@ -8,25 +8,48 @@ using System.Threading.Tasks;
 
 namespace VectSharp.ThreeD
 {
+    /// <summary>
+    /// Renders a scene by rasterisation.
+    /// </summary>
     public class RasterRenderer : IRenderer
     {
         private object RenderLock { get; } = new object();
 
+        /// <summary>
+        /// The width of the <see cref="RenderedImage"/>.
+        /// </summary>
         public int RenderWidth { get; }
+
+        /// <summary>
+        /// The height of the <see cref="RenderedImage"/>.
+        /// </summary>
         public int RenderHeight { get; }
 
+        /// <summary>
+        /// The last rendered image.
+        /// </summary>
         public RasterImage RenderedImage { get; private set; }
 
         private DisposableIntPtr renderedImageData;
-        public DisposableIntPtr RenderedImageData => renderedImageData;
 
-        public double Tolerance { get; set; } = 1e-4;
+        /// <summary>
+        /// A <see cref="DisposableIntPtr"/> to the data contained in the <see cref="RenderedImage"/>.
+        /// </summary>
+        public DisposableIntPtr RenderedImageData => renderedImageData;
 
         private double[] ZBuffer { get; }
         private int[] ZIndexBuffer { get; }
 
+        /// <summary>
+        /// Indicates whether the <see cref="RenderedImage"/> should be interpolated when drawn at a different resolution or not.
+        /// </summary>
         public bool InterpolateImage { get; set; } = true;
 
+        /// <summary>
+        /// Creates a new <see cref="RasterRenderer"/>.
+        /// </summary>
+        /// <param name="renderWidth">The width of the rendered image.</param>
+        /// <param name="renderHeight">The height of the rendered image.</param>
         public RasterRenderer(int renderWidth, int renderHeight)
         {
             this.RenderWidth = renderWidth;
@@ -42,149 +65,119 @@ namespace VectSharp.ThreeD
             this.RenderedImage = new RasterImage(ref this.renderedImageData, this.RenderWidth, this.RenderHeight, true, this.InterpolateImage);
         }
 
+        /// <inheritdoc/>
         public Page Render(IScene scene, IEnumerable<ILightSource> lights, Camera camera)
         {
-            Page pag = new Page(RenderWidth, RenderHeight);
+            Page pag = new Page(camera.Size.Width, camera.Size.Height);
 
             lock (RenderLock)
             {
-                IEnumerable<Element3D> sceneElements = scene.SceneElements;
-
-                Stopwatch sw = new Stopwatch();
-                sw.Start();
-
-                List<Element3D> nonCulled = new List<Element3D>();
-
-                List<ILightSource> lightList = lights as List<ILightSource> ?? lights.ToList();
-                bool anyShadows = false;
-                for (int i = 0; i < lightList.Count; i++)
+                lock (scene.SceneLock)
                 {
-                    if (lightList[i].CastsShadow)
+                    IEnumerable<Element3D> sceneElements = scene.SceneElements;
+
+                    List<Element3D> nonCulled = new List<Element3D>();
+
+                    List<ILightSource> lightList = lights as List<ILightSource> ?? lights.ToList();
+                    bool anyShadows = false;
+                    for (int i = 0; i < lightList.Count; i++)
                     {
-                        anyShadows = true;
-                        break;
+                        if (lightList[i].CastsShadow)
+                        {
+                            anyShadows = true;
+                            break;
+                        }
                     }
-                }
 
-                List<Triangle3DElement> shadowers = null;
+                    List<Triangle3DElement> shadowers = null;
+                    List<double> noObstructions = new List<double>(lightList.Count);
+                    for (int i = 0; i < lightList.Count; i++)
+                    {
+                        noObstructions.Add(0);
+                    };
 
-                if (anyShadows)
-                {
-                    shadowers = new List<Triangle3DElement>();
+                    if (anyShadows)
+                    {
+                        shadowers = new List<Triangle3DElement>();
+
+                        foreach (Element3D element in sceneElements)
+                        {
+                            if (element is Triangle3DElement triangle)
+                            {
+                                if (triangle.CastsShadow)
+                                {
+                                    shadowers.Add(triangle);
+                                }
+                            }
+                        }
+                    }
+
+
 
                     foreach (Element3D element in sceneElements)
                     {
-                        if (element is Triangle3DElement triangle)
-                        {
-                            if (triangle.CastsShadow)
-                            {
-                                shadowers.Add(triangle);
-                            }
-                        }
-                    }
-                }
-
-                foreach (Element3D element in sceneElements)
-                {
-                    if (!camera.IsCulled(element))
-                    {
-                        nonCulled.Add(element);
-                    }
-                }
-
-                long cullTime = sw.ElapsedMilliseconds;
-                sw.Restart();
-
-                //Dictionary<Element3D, List<Element3D>> allDependencies = new Dictionary<Element3D, List<Element3D>>();
-
-                foreach (Element3D el in nonCulled)
-                {
-                    //allDependencies[el] = new List<Element3D>();
-                    el.SetProjection(camera);
-                }
-
-                long projectTime = sw.ElapsedMilliseconds;
-                sw.Restart();
-
-                long compareTime = sw.ElapsedMilliseconds;
-                sw.Restart();
-
-                /*List<Element3D> sortedElements = TopologicalSorter.Sort(nonCulled, (element, elements) =>
-                {
-                    List<Element3D> dependencies = allDependencies[element];
-                    return dependencies;
-                });*/
-
-                long sortTime = sw.ElapsedMilliseconds;
-                sw.Restart();
-
-                unsafe
-                {
-                    byte* imageData = (byte*)this.renderedImageData.InternalPointer;
-
-                    for (int i = 0; i < this.RenderWidth * this.RenderHeight * 4; i++)
-                    {
-                        imageData[i] = 0;
-                    }
-
-                    for (int i = 0; i < ZBuffer.Length; i++)
-                    {
-                        ZBuffer[i] = double.MaxValue;
-                        ZIndexBuffer[i] = int.MinValue;
-                    }
-
-                    foreach (Element3D element in nonCulled)
-                    {
                         if (!camera.IsCulled(element))
                         {
-                            if (element is Point3DElement point)
+                            nonCulled.Add(element);
+                        }
+                    }
+
+                    foreach (Element3D el in nonCulled)
+                    {
+                        el.SetProjection(camera);
+                    }
+
+                    unsafe
+                    {
+                        byte* imageData = (byte*)this.renderedImageData.InternalPointer;
+
+                        for (int i = 0; i < this.RenderWidth * this.RenderHeight * 4; i++)
+                        {
+                            imageData[i] = 0;
+                        }
+
+                        for (int i = 0; i < ZBuffer.Length; i++)
+                        {
+                            ZBuffer[i] = double.MaxValue;
+                            ZIndexBuffer[i] = int.MinValue;
+                        }
+
+                        foreach (Element3D element in nonCulled)
+                        {
+                            if (!camera.IsCulled(element))
                             {
-                                //Point pt = element.GetProjection()[0];
-
-                                //GraphicsPath path = new GraphicsPath();
-                                //path.Arc(pt, point.Diameter * 0.5, 0, 2 * Math.PI);
-
-                                // gpr.FillPath(path, point.Colour, tag: point.Tag);
-
-                                DrawPoint(imageData, point, camera);
-                            }
-                            else if (element is Line3DElement line)
-                            {
-                                /* GraphicsPath path = new GraphicsPath();
-
-                                 foreach (Point pt in element.GetProjection())
-                                 {
-                                     path.LineTo(pt);
-                                 }
-                                */
-                                //  gpr.StrokePath(path, line.Colour, line.Thickness, lineCap: line.LineCap, lineDash: line.LineDash, tag: line.Tag);
-
-                                DrawLine(imageData, line, camera);
-                            }
-                            else if (element is Triangle3DElement triangle)
-                            {
-                                if (!anyShadows || !triangle.ReceivesShadow)
+                                if (element is Point3DElement point)
                                 {
-                                    FillTriangle(imageData, triangle, camera, lightList);
+                                    DrawPoint(imageData, point, camera);
                                 }
-                                else
+                                else if (element is Line3DElement line)
                                 {
-                                    FillTriangleWithShadow(imageData, triangle, camera, lightList, shadowers);
+                                    DrawLine(imageData, line, camera);
+                                }
+                                else if (element is Triangle3DElement triangle)
+                                {
+                                    if (!anyShadows || !triangle.ReceivesShadow)
+                                    {
+                                        FillTriangle(imageData, triangle, camera, lightList, noObstructions);
+                                    }
+                                    else
+                                    {
+                                        FillTriangleWithShadow(imageData, triangle, camera, lightList, shadowers);
+                                    }
                                 }
                             }
                         }
                     }
+
+                    this.RenderedImage = new RasterImage(ref this.renderedImageData, this.RenderWidth, this.RenderHeight, true, this.InterpolateImage);
+
+                    pag.Graphics.Save();
+                    pag.Graphics.Scale(camera.Size.Width / RenderWidth, camera.Size.Height / RenderHeight);
+
+                    pag.Graphics.DrawRasterImage(0, 0, RenderWidth, RenderHeight, this.RenderedImage);
+
+                    pag.Graphics.Restore();
                 }
-
-                long drawTime = sw.ElapsedMilliseconds;
-
-                sw.Stop();
-
-                this.RenderedImage = new RasterImage(ref this.renderedImageData, this.RenderWidth, this.RenderHeight, true, this.InterpolateImage);
-
-                pag.Graphics.DrawRasterImage(0, 0, RenderWidth, RenderHeight, this.RenderedImage);
-
-                //pag.Graphics.FillText(0, 0, cullTime.ToString() + " / " + projectTime.ToString() + " / " + compareTime.ToString() + " / " + sortTime.ToString() + " / " + drawTime.ToString(), new Font(new FontFamily(FontFamily.StandardFontFamilies.Helvetica), 12 * 10 / camera.ScaleFactor), Colours.Black);
             }
 
             return pag;
@@ -192,7 +185,7 @@ namespace VectSharp.ThreeD
 
 
 
-        private unsafe void FillTriangle(byte* imageData, Triangle3DElement triangle, Camera camera, List<ILightSource> lights)
+        private unsafe void FillTriangle(byte* imageData, Triangle3DElement triangle, Camera camera, List<ILightSource> lights, List<double> obstructions)
         {
             Point[] triangle2D = triangle.GetProjection();
 
@@ -243,7 +236,7 @@ namespace VectSharp.ThreeD
 
                         for (int i = 0; i < triangle.Fill.Count; i++)
                         {
-                            Colour col = triangle.Fill[i].GetColour(correspPoint, triangle.GetNormalAt(correspPoint), camera, lights);
+                            Colour col = triangle.Fill[i].GetColour(correspPoint, triangle.GetNormalAt(correspPoint), camera, lights, obstructions);
 
                             if (col.A == 1)
                             {
@@ -282,7 +275,7 @@ namespace VectSharp.ThreeD
 
                         for (int i = 0; i < triangle.Fill.Count; i++)
                         {
-                            Colour col = triangle.Fill[i].GetColour(correspPoint, triangle.GetNormalAt(correspPoint), camera, lights);
+                            Colour col = triangle.Fill[i].GetColour(correspPoint, triangle.GetNormalAt(correspPoint), camera, lights, obstructions);
 
                             if (col.A == 1)
                             {
@@ -342,38 +335,41 @@ namespace VectSharp.ThreeD
 
                 if (howMuch > 0)
                 {
-                    int prevZIndexBuffer = ZIndexBuffer[y * RenderWidth + x];
-
-                    if (prevZIndexBuffer < point.ZIndex || (prevZIndexBuffer == point.ZIndex && ZBuffer[y * RenderWidth + x] >= zDepth))
+                    if (y * RenderWidth + x < ZIndexBuffer.Length)
                     {
-                        byte R = (byte)(point.Colour.R * 255);
-                        byte G = (byte)(point.Colour.G * 255);
-                        byte B = (byte)(point.Colour.B * 255);
-                        byte A = (byte)(point.Colour.A * 255 * howMuch);
+                        int prevZIndexBuffer = ZIndexBuffer[y * RenderWidth + x];
 
-                        if (A == 255)
+                        if (prevZIndexBuffer < point.ZIndex || (prevZIndexBuffer == point.ZIndex && ZBuffer[y * RenderWidth + x] >= zDepth))
                         {
-                            imageData[y * RenderWidth * 4 + x * 4] = R;
-                            imageData[y * RenderWidth * 4 + x * 4 + 1] = G;
-                            imageData[y * RenderWidth * 4 + x * 4 + 2] = B;
-                            imageData[y * RenderWidth * 4 + x * 4 + 3] = A;
+                            byte R = (byte)(point.Colour.R * 255);
+                            byte G = (byte)(point.Colour.G * 255);
+                            byte B = (byte)(point.Colour.B * 255);
+                            byte A = (byte)(point.Colour.A * 255 * howMuch);
+
+                            if (A == 255)
+                            {
+                                imageData[y * RenderWidth * 4 + x * 4] = R;
+                                imageData[y * RenderWidth * 4 + x * 4 + 1] = G;
+                                imageData[y * RenderWidth * 4 + x * 4 + 2] = B;
+                                imageData[y * RenderWidth * 4 + x * 4 + 3] = A;
+                            }
+                            else
+                            {
+                                BlendFront(ref imageData[y * RenderWidth * 4 + x * 4], ref imageData[y * RenderWidth * 4 + x * 4 + 1], ref imageData[y * RenderWidth * 4 + x * 4 + 2], ref imageData[y * RenderWidth * 4 + x * 4 + 3], R, G, B, A);
+                            }
+
+                            ZBuffer[y * RenderWidth + x] = zDepth;
+                            ZIndexBuffer[y * RenderWidth + x] = point.ZIndex;
                         }
-                        else
+                        else if (imageData[y * RenderWidth * 4 + x * 4 + 3] < 255)
                         {
-                            BlendFront(ref imageData[y * RenderWidth * 4 + x * 4], ref imageData[y * RenderWidth * 4 + x * 4 + 1], ref imageData[y * RenderWidth * 4 + x * 4 + 2], ref imageData[y * RenderWidth * 4 + x * 4 + 3], R, G, B, A);
+                            byte R = (byte)(point.Colour.R * 255);
+                            byte G = (byte)(point.Colour.G * 255);
+                            byte B = (byte)(point.Colour.B * 255);
+                            byte A = (byte)(point.Colour.A * 255 * howMuch);
+
+                            BlendBack(R, G, B, A, ref imageData[y * RenderWidth * 4 + x * 4], ref imageData[y * RenderWidth * 4 + x * 4 + 1], ref imageData[y * RenderWidth * 4 + x * 4 + 2], ref imageData[y * RenderWidth * 4 + x * 4 + 3]);
                         }
-
-                        ZBuffer[y * RenderWidth + x] = zDepth;
-                        ZIndexBuffer[y * RenderWidth + x] = point.ZIndex;
-                    }
-                    else if (imageData[y * RenderWidth * 4 + x * 4 + 3] < 255)
-                    {
-                        byte R = (byte)(point.Colour.R * 255);
-                        byte G = (byte)(point.Colour.G * 255);
-                        byte B = (byte)(point.Colour.B * 255);
-                        byte A = (byte)(point.Colour.A * 255 * howMuch);
-
-                        BlendBack(R, G, B, A, ref imageData[y * RenderWidth * 4 + x * 4], ref imageData[y * RenderWidth * 4 + x * 4 + 1], ref imageData[y * RenderWidth * 4 + x * 4 + 2], ref imageData[y * RenderWidth * 4 + x * 4 + 3]);
                     }
                 }
             });
@@ -585,62 +581,6 @@ namespace VectSharp.ThreeD
                 }
             }
 
-
-            /*Point3D[][][] shadows = new Point3D[lights.Count][][];
-
-            double[,] planeRotMat = Matrix3D.RotationToAlignWithZ(triangle.ActualNormal);
-
-            Point[] triangleRotated2D = new Point[3] { (planeRotMat * triangle[0]).DropZ(), (planeRotMat * triangle[1]).DropZ(), (planeRotMat * triangle[2]).DropZ() };
-
-            for (int i = 0; i < lights.Count; i++)
-            {
-                if (lights[i].CastsShadow)
-                {
-                    shadows[i] = new Point3D[shadowers.Count][];
-
-                    for (int j = 0; j < shadowers.Count; j++)
-                    {
-                        if (shadowers[j] != triangle)
-                        {
-                            shadows[i][j] = new Point3D[3];
-
-                            for (int k = 0; k < 3; k++)
-                            {
-                                NormalizedVector3D shadowVector = lights[i].GetShadowVector(shadowers[j][k]);
-
-                                Point3D? projectedOnPlane = triangle.ProjectOnThisPlane(shadowers[j][k], shadowVector, true);
-
-                                if (projectedOnPlane == null)
-                                {
-                                    shadows[i][j] = null;
-                                    break;
-                                }
-
-                                shadows[i][j][k] = projectedOnPlane.Value;
-
-                                //shadows[i][j][k] = camera.Project(projectedOnPlane.Value);
-                                //shadows[i][j][k] = new Point((shadows[i][j][k].X - camera.TopLeft.X) / camera.Size.Width * this.RenderWidth, (shadows[i][j][k].Y - camera.TopLeft.Y) / camera.Size.Height * this.RenderHeight);
-                            }
-
-                            if (shadows[i][j] != null)
-                            {
-                                Point[] shadow2D = new Point[3] { (planeRotMat * shadows[i][j][0]).DropZ(), (planeRotMat * shadows[i][j][1]).DropZ(), (planeRotMat * shadows[i][j][2]).DropZ() };
-
-                                if (!Intersections2D.TrianglesOverlap(triangleRotated2D[0], triangleRotated2D[1], triangleRotated2D[2], shadow2D[0], shadow2D[1], shadow2D[2]))
-                                {
-                                    shadows[i][j] = null;
-                                }
-                            }
-
-                            if (shadows[i][j] != null && !Intersections2D.TrianglesOverlap(triangle2D[0], triangle2D[1], triangle2D[2], shadows[i][j][0], shadows[i][j][1], shadows[i][j][2]))
-                            {
-                                shadows[i][j] = null;
-                            }
-                        }
-                    }
-                }
-            }*/
-
             int totalPixels = (maxX - minX + 1) * (maxY - minY + 1);
 
             Parallel.For(0, totalPixels, index =>
@@ -687,36 +627,20 @@ namespace VectSharp.ThreeD
 
         private static (byte R, byte G, byte B, byte A) GetPixelColorWithShadow(Triangle3DElement triangle, List<ILightSource> lights, IEnumerable<Triangle3DElement> shadowers, int x, int y, Point3D correspPoint, Camera camera)
         {
-            List<ILightSource> pixelLights = new List<ILightSource>(lights.Count());
+            List<double> pixelObstructions = new List<double>(lights.Count);
+
             for (int i = 0; i < lights.Count; i++)
             {
                 if (!lights[i].CastsShadow)
                 {
-                    pixelLights.Add(lights[i]);
+                    pixelObstructions.Add(0);
                 }
                 else
                 {
-                   /* bool obstructed = false;
-
-                    for (int j = 0; j < shadows[i].Length; j++)
-                    {
-                        if (shadows[i][j] != null)
-                        {
-
-                            if (Intersections3D.PointInTriangle(correspPoint, shadows[i][j][0], shadows[i][j][1], shadows[i][j][2]))
-                            {
-                                obstructed = true;
-                                break;
-                            }
-                        }
-                    }
-                   */
-                    if (!lights[i].IsObstructed(correspPoint, shadowers))
-                    {
-                        pixelLights.Add(lights[i]);
-                    }
+                    pixelObstructions.Add(lights[i].GetObstruction(correspPoint, shadowers));
                 }
             }
+
 
             byte R = 0;
             byte G = 0;
@@ -725,7 +649,7 @@ namespace VectSharp.ThreeD
 
             for (int i = 0; i < triangle.Fill.Count; i++)
             {
-                Colour col = triangle.Fill[i].GetColour(correspPoint, triangle.GetNormalAt(correspPoint), camera, pixelLights);
+                Colour col = triangle.Fill[i].GetColour(correspPoint, triangle.GetNormalAt(correspPoint), camera, lights, pixelObstructions);
 
                 if (col.A == 1)
                 {

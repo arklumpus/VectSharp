@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 685 255" version="1.1" style="font-synthesis: none;" xmlns="http://www.w3.org/2000/svg">
+  <style>
+		@font-face
+		{			font-family: "Nimbus Sans L-ba264df1-f73b-4800-a6cf-99c6cd83d9d5";
+			src: url("data:font/ttf;charset=utf-8;base64,AAEAAAAKAIAAAwAgT1MvMmtNx98AAACsAAAAYGNtYXACmQJsAAABDAAAAIRnbHlmCbmc6wAAAZAAAAPcaGVhZBZEgeEAAAVsAAAANmhoZWEHFQKtAAAFpAAAACRobXR4GyQC2wAABcgAAAA8bG9jYQYrBu4AAAYEAAAAIG1heHAAgwDLAAAGJAAAACBuYW1lEd1WAAAABkQAAASmcG9zdP+FADIAAArsAAAAIAADAloBkAAFAAACigJYAAAASwKKAlgAAAFeADIBNQAAAAAFAAAAAAAAAAAAAocAAAAAAAAAAAAAAABVUlcgAEAAIAB1Atn+8QDIBDMBK2AAAJ8AAAAAAgwC2QAAACAAAwAAAAEAAwABAAAADAAEAHgAAAAaABAAAwAKACAALgAxADUAQgBhAGMAZQBsAG8AcwB1//8AAAAgAC4AMAA1AEIAYQBjAGUAbABvAHIAdf///+H/1P/T/9D/xP+m/6X/pP+e/5z/mv+ZAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAFcAAAC/AGgAAwAANxUjNb9oaGhoAAACACv/6QH7AsUADQAVAAABMhcWFRQGIyImNTQ3NhYgERAzMjY1ARNpOkV3cXJ2RTv2/uSMSkYCxU5eyK+5urTDXU5O/t/+3JCXAAEAZgAAAVsCxQAIAAABIzU+ATczESMBA51mPhc6WAH5Pw0uUv07AAABACP/6QIBAsUAHgAAARUhBzYzMhYVFAYjIiYnJiczFjMyNjU0JiMiBgcjEwHc/tkcO0hmf4hrPGYeGxBYH3JIU1NHKjofUTUCxVfGK4NpcI4tKCFPd1hMT1sdJQGCAAADAE8AAAJvAtkADwAZACEAADMRITIXFhUUBx4BFRQHBiMDMzI3NjQnJisBETMyNjQmKwFPAShlOTplRj84OWbstEgiKCgiSLTjPUZFPuMC2TM0UnAvG1RCWDs9AZ8aH3YfGv3LQnZDAAIAKv/pAhcCGwAlADIAACUVBiMiJicGIyImNTQ3PgE3PgE3NTQjIgYHIzY3NjMyFhURFDMyJzUGBw4BFRQWMzI3NgIXJBUpKQRUXk9dXBk4VzMjAXU6PAVUAyE4dmFkLQmJIWVDOzYxSDQhMT8JJShNVEdlJwoLCwcYGxZOLTBIJT1JRv7MKXZeDw4KLSkoLC8eAAABAB//6QHdAhsAGQAAASMuASMiBhUUFjMyNzMOASMiJjU0NjMyFxYB11QIQDRETU5FaxVUCHBea31/anM5HQFcNztvYl1qfmBrlX+Dm04rAAIAKP/pAgECGwAUABsAACUhFhcWMzI3Mw4BIyImEDYzMhYXFgUhNCYjIgYCAf5+ARsrU2YjVBB2Wm9/gm5KcRkV/oABJlBAP1LqSChEaVZglAEEmkpANyxHWVcAAQBEAAAAmALZAAMAABMRIxGYVALZ/ScC2QACACT/6QH+AhsACwAWAAABMhYVFAYjIiY1NDYXIgYUFjMyNjU0JgEQcnx+b3B9fXBGUFBGRVFPAhuUiYGUlIWElU1tvm1sXWFuAAEARQAAAUECGwANAAATMxU+ATMyFxUmBgcRI0VNJEMoCxVWUQFUAgxfOzMDVQJWX/7wAAABACL/6QHLAhsAJQAAASMmIyIGFRQWHwEeARUUBiMiJzMWFxYzMjY1NCYvAS4BNTQ2MhYBtlgDZjM8LjNQTkZ1Y8sGWAYSIUc3QyYrTl1JbrZiAXpUKiUcIwwTE0U6TFqzLxQjLiUcIgoTFkM+SVdUAAABAEH/6QHiAgwAEwAAISM1DgEjIiY1ETMRFBYzMjY1ETMB4kslUDpMW1M6MkFOU0k0LE5BAZT+jS84YVABKQAAAQAAAAEAAAAAAABfDzz1AAsD6AAAAADZ2h76AAAAANnaHvr/af7VBAgEMwAAAAgAAgAAAAAAAAABAAAC2f7xAMgERv9p/2YECAABAAAAAAAAAAAAAAAAAAAADwEWAAABFgAAARYAVwIsACsCLABmAiwAIwKbAE8CLAAqAfQAHwIsACgA3gBEAiwAJAFNAEUB9AAiAiwAQQAAAAAAAAAMADEARQB1AKkA8wEbAUkBVgF7AZUBzgHuAAEAAAAPAMgAMgAAAAAAAgAAAAEAAQAAAEAAAAAAAAAAAAAaAT4AAQAAAAAAAAAzAGgAAQAAAAAAAQAKALIAAQAAAAAAAgAHAM0AAQAAAAAAAwAZAQkAAQAAAAAABAAOAUEAAQAAAAAABQA5AcQAAQAAAAAABgAOAhwAAQAAAAAACAAcAmUAAQAAAAAACwATAqoAAQAAAAAADAAUAugAAQAAAAAAEAANAxkAAQAAAAAAEQAHAzcAAQAAAAAAEgANA1sAAwABBAkAAABmAAAAAwABBAkAAQAUAJwAAwABBAkAAgAOAL0AAwABBAkAAwAyANUAAwABBAkABAAcASMAAwABBAkABQByAVAAAwABBAkABgAcAf4AAwABBAkACAA4AisAAwABBAkACwAmAoIAAwABBAkADAAoAr4AAwABBAkAEAAaAv0AAwABBAkAEQAOAycAAwABBAkAEgAaAz8AQwBvAHAAeQByAGkAZwBoAHQAIAAyADAAMQA0ACAAYgB5ACAAKABVAFIAVwApACsAKwAgAEQAZQBzAGkAZwBuACAAJgAgAEQAZQB2AGUAbABvAHAAbQBlAG4AdAAgAEcAbQBiAEgAAENvcHlyaWdodCAyMDE0IGJ5IChVUlcpKysgRGVzaWduICYgRGV2ZWxvcG1lbnQgR21iSAAATgBpAG0AYgB1AHMAUwBhAG4ATAAATmltYnVzU2FuTAAAUgBlAGcAdQBsAGEAcgAAUmVndWxhcgAAMQAuADAAMAAwADsAVQBSAFcAIAA7AE4AaQBtAGIAdQBzAFMAYQBuAEwALQBSAGUAZwAAMS4wMDA7VVJXIDtOaW1idXNTYW5MLVJlZwAATgBpAG0AYgB1AHMAUwBhAG4ATAAtAFIAZQBnAABOaW1idXNTYW5MLVJlZwAAVgBlAHIAcwBpAG8AbgAgADEALgAwADAAMAA7AFAAUwAgADEALgAwADAAOwBoAG8AdABjAG8AbgB2ACAAMQAuADAALgA1ADcAOwBtAGEAawBlAG8AdABmAC4AbABpAGIAMgAuADAALgAyADEAOAA5ADUAAFZlcnNpb24gMS4wMDA7UFMgMS4wMDtob3Rjb252IDEuMC41NzttYWtlb3RmLmxpYjIuMC4yMTg5NQAATgBpAG0AYgB1AHMAUwBhAG4ATAAtAFIAZQBnAABOaW1idXNTYW5MLVJlZwAAKABVAFIAVwApACsAKwAgAEQAZQBzAGkAZwBuACAAJgAgAEQAZQB2AGUAbABvAHAAbQBlAG4AdAAAKFVSVykrKyBEZXNpZ24gJiBEZXZlbG9wbWVudAAAaAB0AHQAcAA6AC8ALwB3AHcAdwAuAHUAcgB3AHAAcAAuAGQAZQAAaHR0cDovL3d3dy51cndwcC5kZQAAaAB0AHQAcAA6AC8ALwB3AHcAdwAuAHUAcgB3AHAAcAAuAGMAbwBtAABodHRwOi8vd3d3LnVyd3BwLmNvbQAATgBpAG0AYgB1AHMAIABTAGEAbgBzACAATAAATmltYnVzIFNhbnMgTAAAUgBlAGcAdQBsAGEAcgAAUmVndWxhcgAATgBpAG0AYgB1AHMAUwBhAG4ATABSAGUAZwAATmltYnVzU2FuTFJlZwAAAAMAAAAAAAD/ggAyAAAAAAAAAAAAAAAAAAAAAAAAAAA=");
+		}
+</style>
+  <path d="M 0 0 L 685 0 L 685 255 L 0 255 Z " stroke="none" fill="#FFFFFF" fill-opacity="0" transform="matrix(1,0,0,1,0,0)" />
+  <text stroke="none" fill="#000000" fill-opacity="1" transform="matrix(1,0,0,1,11.529999999999992,32.06)" x="0" y="0" font-size="20" font-family="Nimbus Sans L-ba264df1-f73b-4800-a6cf-99c6cd83d9d5, sans-serif" font-weight="regular" font-style="normal">Base colour</text>
+  <text stroke="none" fill="#000000" fill-opacity="1" transform="matrix(1,0,0,1,149.5,29.54)" x="0" y="0" font-size="20" font-family="Nimbus Sans L-ba264df1-f73b-4800-a6cf-99c6cd83d9d5, sans-serif" font-weight="regular" font-style="normal">0</text>
+  <text stroke="none" fill="#000000" fill-opacity="1" transform="matrix(1,0,0,1,675.51,30)" x="0" y="0" font-size="20" font-family="Nimbus Sans L-ba264df1-f73b-4800-a6cf-99c6cd83d9d5, sans-serif" font-weight="regular" font-style="normal">1</text>
+  <text stroke="none" fill="#000000" fill-opacity="1" transform="matrix(1,0,0,1,403.59999999999997,29.54)" x="0" y="0" font-size="20" font-family="Nimbus Sans L-ba264df1-f73b-4800-a6cf-99c6cd83d9d5, sans-serif" font-weight="regular" font-style="normal">0.5</text>
+  <path d="M 155 35 L 155 255 " stroke="#000000" stroke-opacity="1" stroke-width="4" stroke-linecap="butt" stroke-linejoin="miter" fill="none" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 417.5 35 L 417.5 255 " stroke="#000000" stroke-opacity="1" stroke-width="4" stroke-linecap="butt" stroke-linejoin="miter" fill="none" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 680 35 L 680 255 " stroke="#000000" stroke-opacity="1" stroke-width="4" stroke-linecap="butt" stroke-linejoin="miter" fill="none" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 52.5 42.5 L 77.5 42.5 L 77.5 67.5 L 52.5 67.5 Z " stroke="none" fill="#E69F00" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 155 42.5 L 680 42.5 L 680 67.5 L 155 67.5 Z " stroke="#000000" stroke-opacity="1" stroke-width="2" stroke-linecap="butt" stroke-linejoin="miter" fill="none" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 155 42.5 L 180 42.5 L 180 67.5 L 155 67.5 Z " stroke="none" fill="#000000" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 180 42.5 L 205 42.5 L 205 67.5 L 180 67.5 Z " stroke="none" fill="#3A0000" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 205 42.5 L 230 42.5 L 230 67.5 L 205 67.5 Z " stroke="none" fill="#461200" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 230 42.5 L 255 42.5 L 255 67.5 L 230 67.5 Z " stroke="none" fill="#572600" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 255 42.5 L 280 42.5 L 280 67.5 L 255 67.5 Z " stroke="none" fill="#6B3800" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 280 42.5 L 305 42.5 L 305 67.5 L 280 67.5 Z " stroke="none" fill="#7F4900" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 305 42.5 L 330 42.5 L 330 67.5 L 305 67.5 Z " stroke="none" fill="#945B00" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 330 42.5 L 355 42.5 L 355 67.5 L 330 67.5 Z " stroke="none" fill="#A96C00" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 355 42.5 L 380 42.5 L 380 67.5 L 355 67.5 Z " stroke="none" fill="#BD7D00" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 380 42.5 L 405 42.5 L 405 67.5 L 380 67.5 Z " stroke="none" fill="#D28E00" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 405 42.5 L 430 42.5 L 430 67.5 L 405 67.5 Z " stroke="none" fill="#E69F00" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 430 42.5 L 455 42.5 L 455 67.5 L 430 67.5 Z " stroke="none" fill="#FAB022" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 455 42.5 L 480 42.5 L 480 67.5 L 455 67.5 Z " stroke="none" fill="#FFC137" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 480 42.5 L 505 42.5 L 505 67.5 L 480 67.5 Z " stroke="none" fill="#FFD249" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 505 42.5 L 530 42.5 L 530 67.5 L 505 67.5 Z " stroke="none" fill="#FFE35A" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 530 42.5 L 555 42.5 L 555 67.5 L 530 67.5 Z " stroke="none" fill="#FFF16E" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 555 42.5 L 580 42.5 L 580 67.5 L 555 67.5 Z " stroke="none" fill="#FFF48C" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 580 42.5 L 605 42.5 L 605 67.5 L 580 67.5 Z " stroke="none" fill="#FFF7A9" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 605 42.5 L 630 42.5 L 630 67.5 L 605 67.5 Z " stroke="none" fill="#FFF9C6" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 630 42.5 L 655 42.5 L 655 67.5 L 630 67.5 Z " stroke="none" fill="#FFFCE3" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 655 42.5 L 680 42.5 L 680 67.5 L 655 67.5 Z " stroke="none" fill="#FFFFFF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 52.5 72.5 L 77.5 72.5 L 77.5 97.5 L 52.5 97.5 Z " stroke="none" fill="#56B4E9" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 155 72.5 L 680 72.5 L 680 97.5 L 155 97.5 Z " stroke="#000000" stroke-opacity="1" stroke-width="2" stroke-linecap="butt" stroke-linejoin="miter" fill="none" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 155 72.5 L 180 72.5 L 180 97.5 L 155 97.5 Z " stroke="none" fill="#000000" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 180 72.5 L 205 72.5 L 205 97.5 L 180 97.5 Z " stroke="none" fill="#001F46" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 205 72.5 L 230 72.5 L 230 97.5 L 205 97.5 Z " stroke="none" fill="#00345F" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 230 72.5 L 255 72.5 L 255 97.5 L 230 97.5 Z " stroke="none" fill="#004774" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 255 72.5 L 280 72.5 L 280 97.5 L 255 97.5 Z " stroke="none" fill="#005887" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 280 72.5 L 305 72.5 L 305 97.5 L 280 97.5 Z " stroke="none" fill="#006999" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 305 72.5 L 330 72.5 L 330 97.5 L 305 97.5 Z " stroke="none" fill="#0079AA" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 330 72.5 L 355 72.5 L 355 97.5 L 330 97.5 Z " stroke="none" fill="#0D88BB" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 355 72.5 L 380 72.5 L 380 97.5 L 355 97.5 Z " stroke="none" fill="#2F97CB" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 380 72.5 L 405 72.5 L 405 97.5 L 380 97.5 Z " stroke="none" fill="#44A6DA" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 405 72.5 L 430 72.5 L 430 97.5 L 405 97.5 Z " stroke="none" fill="#56B4E9" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 430 72.5 L 455 72.5 L 455 97.5 L 430 97.5 Z " stroke="none" fill="#66C2F8" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 455 72.5 L 480 72.5 L 480 97.5 L 455 97.5 Z " stroke="none" fill="#76D0FF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 480 72.5 L 505 72.5 L 505 97.5 L 480 97.5 Z " stroke="none" fill="#84DDFF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 505 72.5 L 530 72.5 L 530 97.5 L 505 97.5 Z " stroke="none" fill="#92EAFF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 530 72.5 L 555 72.5 L 555 97.5 L 530 97.5 Z " stroke="none" fill="#A0F7FF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 555 72.5 L 580 72.5 L 580 97.5 L 555 97.5 Z " stroke="none" fill="#ADFFFF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 580 72.5 L 605 72.5 L 605 97.5 L 580 97.5 Z " stroke="none" fill="#BFFFFF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 605 72.5 L 630 72.5 L 630 97.5 L 605 97.5 Z " stroke="none" fill="#D5FFFF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 630 72.5 L 655 72.5 L 655 97.5 L 630 97.5 Z " stroke="none" fill="#EAFFFF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 655 72.5 L 680 72.5 L 680 97.5 L 655 97.5 Z " stroke="none" fill="#FFFFFF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 52.5 102.5 L 77.5 102.5 L 77.5 127.5 L 52.5 127.5 Z " stroke="none" fill="#009E73" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 155 102.5 L 680 102.5 L 680 127.5 L 155 127.5 Z " stroke="#000000" stroke-opacity="1" stroke-width="2" stroke-linecap="butt" stroke-linejoin="miter" fill="none" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 155 102.5 L 180 102.5 L 180 127.5 L 155 127.5 Z " stroke="none" fill="#000000" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 180 102.5 L 205 102.5 L 205 127.5 L 180 127.5 Z " stroke="none" fill="#001C00" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 205 102.5 L 230 102.5 L 230 127.5 L 205 127.5 Z " stroke="none" fill="#002600" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 230 102.5 L 255 102.5 L 255 127.5 L 230 127.5 Z " stroke="none" fill="#003010" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 255 102.5 L 280 102.5 L 280 127.5 L 255 127.5 Z " stroke="none" fill="#003E1D" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 280 102.5 L 305 102.5 L 305 127.5 L 280 127.5 Z " stroke="none" fill="#004D2A" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 305 102.5 L 330 102.5 L 330 127.5 L 305 127.5 Z " stroke="none" fill="#005D38" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 330 102.5 L 355 102.5 L 355 127.5 L 330 127.5 Z " stroke="none" fill="#006D46" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 355 102.5 L 380 102.5 L 380 127.5 L 355 127.5 Z " stroke="none" fill="#007D55" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 380 102.5 L 405 102.5 L 405 127.5 L 380 127.5 Z " stroke="none" fill="#008D64" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 405 102.5 L 430 102.5 L 430 127.5 L 405 127.5 Z " stroke="none" fill="#009E73" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 430 102.5 L 455 102.5 L 455 127.5 L 430 127.5 Z " stroke="none" fill="#29AF83" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 455 102.5 L 480 102.5 L 480 127.5 L 455 127.5 Z " stroke="none" fill="#40C093" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 480 102.5 L 505 102.5 L 505 127.5 L 480 127.5 Z " stroke="none" fill="#54D2A3" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 505 102.5 L 530 102.5 L 530 127.5 L 505 127.5 Z " stroke="none" fill="#67E3B4" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 530 102.5 L 555 102.5 L 555 127.5 L 530 127.5 Z " stroke="none" fill="#7AF5C5" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 555 102.5 L 580 102.5 L 580 127.5 L 555 127.5 Z " stroke="none" fill="#8CFFD6" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 580 102.5 L 605 102.5 L 605 127.5 L 580 127.5 Z " stroke="none" fill="#A1FFE6" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 605 102.5 L 630 102.5 L 630 127.5 L 605 127.5 Z " stroke="none" fill="#C0FFEE" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 630 102.5 L 655 102.5 L 655 127.5 L 630 127.5 Z " stroke="none" fill="#E0FFF7" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 655 102.5 L 680 102.5 L 680 127.5 L 655 127.5 Z " stroke="none" fill="#FFFFFF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 52.5 132.5 L 77.5 132.5 L 77.5 157.5 L 52.5 157.5 Z " stroke="none" fill="#F0E442" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 155 132.5 L 680 132.5 L 680 157.5 L 155 157.5 Z " stroke="#000000" stroke-opacity="1" stroke-width="2" stroke-linecap="butt" stroke-linejoin="miter" fill="none" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 155 132.5 L 180 132.5 L 180 157.5 L 155 157.5 Z " stroke="none" fill="#000000" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 180 132.5 L 205 132.5 L 205 157.5 L 180 157.5 Z " stroke="none" fill="#3B3900" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 205 132.5 L 230 132.5 L 230 157.5 L 205 157.5 Z " stroke="none" fill="#555600" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 230 132.5 L 255 132.5 L 255 157.5 L 230 157.5 Z " stroke="none" fill="#6E6E00" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 255 132.5 L 280 132.5 L 280 157.5 L 255 157.5 Z " stroke="none" fill="#858200" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 280 132.5 L 305 132.5 L 305 157.5 L 280 157.5 Z " stroke="none" fill="#9A9500" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 305 132.5 L 330 132.5 L 330 157.5 L 305 157.5 Z " stroke="none" fill="#ADA700" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 330 132.5 L 355 132.5 L 355 157.5 L 330 157.5 Z " stroke="none" fill="#BFB700" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 355 132.5 L 380 132.5 L 380 157.5 L 355 157.5 Z " stroke="none" fill="#D0C71D" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 380 132.5 L 405 132.5 L 405 157.5 L 380 157.5 Z " stroke="none" fill="#E1D632" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 405 132.5 L 430 132.5 L 430 157.5 L 405 157.5 Z " stroke="none" fill="#F0E442" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 430 132.5 L 455 132.5 L 455 157.5 L 430 157.5 Z " stroke="none" fill="#FFF251" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 455 132.5 L 480 132.5 L 480 157.5 L 455 157.5 Z " stroke="none" fill="#FFFF5E" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 480 132.5 L 505 132.5 L 505 157.5 L 480 157.5 Z " stroke="none" fill="#FFFF72" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 505 132.5 L 530 132.5 L 530 157.5 L 505 157.5 Z " stroke="none" fill="#FFFF88" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 530 132.5 L 555 132.5 L 555 157.5 L 530 157.5 Z " stroke="none" fill="#FFFF9E" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 555 132.5 L 580 132.5 L 580 157.5 L 555 157.5 Z " stroke="none" fill="#FFFFB2" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 580 132.5 L 605 132.5 L 605 157.5 L 580 157.5 Z " stroke="none" fill="#FFFFC6" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 605 132.5 L 630 132.5 L 630 157.5 L 605 157.5 Z " stroke="none" fill="#FFFFDA" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 630 132.5 L 655 132.5 L 655 157.5 L 630 157.5 Z " stroke="none" fill="#FFFFED" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 655 132.5 L 680 132.5 L 680 157.5 L 655 157.5 Z " stroke="none" fill="#FFFFFF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 52.5 162.5 L 77.5 162.5 L 77.5 187.5 L 52.5 187.5 Z " stroke="none" fill="#0072B2" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 155 162.5 L 680 162.5 L 680 187.5 L 155 187.5 Z " stroke="#000000" stroke-opacity="1" stroke-width="2" stroke-linecap="butt" stroke-linejoin="miter" fill="none" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 155 162.5 L 180 162.5 L 180 187.5 L 155 187.5 Z " stroke="none" fill="#000000" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 180 162.5 L 205 162.5 L 205 187.5 L 180 187.5 Z " stroke="none" fill="#000318" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 205 162.5 L 230 162.5 L 230 187.5 L 205 187.5 Z " stroke="none" fill="#000733" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 230 162.5 L 255 162.5 L 255 187.5 L 230 187.5 Z " stroke="none" fill="#001345" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 255 162.5 L 280 162.5 L 280 187.5 L 255 187.5 Z " stroke="none" fill="#001F53" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 280 162.5 L 305 162.5 L 305 187.5 L 280 187.5 Z " stroke="none" fill="#002B61" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 305 162.5 L 330 162.5 L 330 187.5 L 305 187.5 Z " stroke="none" fill="#003870" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 330 162.5 L 355 162.5 L 355 187.5 L 330 187.5 Z " stroke="none" fill="#004580" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 355 162.5 L 380 162.5 L 380 187.5 L 355 187.5 Z " stroke="none" fill="#005490" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 380 162.5 L 405 162.5 L 405 187.5 L 380 187.5 Z " stroke="none" fill="#0063A1" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 405 162.5 L 430 162.5 L 430 187.5 L 405 187.5 Z " stroke="none" fill="#0072B2" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 430 162.5 L 455 162.5 L 455 187.5 L 430 187.5 Z " stroke="none" fill="#2B82C4" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 455 162.5 L 480 162.5 L 480 187.5 L 455 187.5 Z " stroke="none" fill="#4493D6" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 480 162.5 L 505 162.5 L 505 187.5 L 480 187.5 Z " stroke="none" fill="#59A4E8" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 505 162.5 L 530 162.5 L 530 187.5 L 505 187.5 Z " stroke="none" fill="#6EB5FB" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 530 162.5 L 555 162.5 L 555 187.5 L 530 187.5 Z " stroke="none" fill="#82C7FF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 555 162.5 L 580 162.5 L 580 187.5 L 555 187.5 Z " stroke="none" fill="#95DAFF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 580 162.5 L 605 162.5 L 605 187.5 L 580 187.5 Z " stroke="none" fill="#A9EDFF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 605 162.5 L 630 162.5 L 630 187.5 L 605 187.5 Z " stroke="none" fill="#BDFFFF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 630 162.5 L 655 162.5 L 655 187.5 L 630 187.5 Z " stroke="none" fill="#DCFFFF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 655 162.5 L 680 162.5 L 680 187.5 L 655 187.5 Z " stroke="none" fill="#FFFFFF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 52.5 192.5 L 77.5 192.5 L 77.5 217.5 L 52.5 217.5 Z " stroke="none" fill="#D55E00" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 155 192.5 L 680 192.5 L 680 217.5 L 155 217.5 Z " stroke="#000000" stroke-opacity="1" stroke-width="2" stroke-linecap="butt" stroke-linejoin="miter" fill="none" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 155 192.5 L 180 192.5 L 180 217.5 L 155 217.5 Z " stroke="none" fill="#000000" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 180 192.5 L 205 192.5 L 205 217.5 L 180 217.5 Z " stroke="none" fill="#200000" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 205 192.5 L 230 192.5 L 230 217.5 L 205 217.5 Z " stroke="none" fill="#420000" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 230 192.5 L 255 192.5 L 255 217.5 L 230 217.5 Z " stroke="none" fill="#4D0000" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 255 192.5 L 280 192.5 L 280 217.5 L 255 217.5 Z " stroke="none" fill="#5C0000" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 280 192.5 L 305 192.5 L 305 217.5 L 280 217.5 Z " stroke="none" fill="#6E0000" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 305 192.5 L 330 192.5 L 330 217.5 L 305 217.5 Z " stroke="none" fill="#811300" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 330 192.5 L 355 192.5 L 355 217.5 L 330 217.5 Z " stroke="none" fill="#952800" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 355 192.5 L 380 192.5 L 380 217.5 L 355 217.5 Z " stroke="none" fill="#AA3A00" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 380 192.5 L 405 192.5 L 405 217.5 L 380 217.5 Z " stroke="none" fill="#BF4C00" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 405 192.5 L 430 192.5 L 430 217.5 L 405 217.5 Z " stroke="none" fill="#D55E00" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 430 192.5 L 455 192.5 L 455 217.5 L 430 217.5 Z " stroke="none" fill="#EB701B" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 455 192.5 L 480 192.5 L 480 217.5 L 455 217.5 Z " stroke="none" fill="#FF832F" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 480 192.5 L 505 192.5 L 505 217.5 L 480 217.5 Z " stroke="none" fill="#FF9542" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 505 192.5 L 530 192.5 L 530 217.5 L 505 217.5 Z " stroke="none" fill="#FFA854" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 530 192.5 L 555 192.5 L 555 217.5 L 530 217.5 Z " stroke="none" fill="#FFBC67" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 555 192.5 L 580 192.5 L 580 217.5 L 555 217.5 Z " stroke="none" fill="#FFD079" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 580 192.5 L 605 192.5 L 605 217.5 L 580 217.5 Z " stroke="none" fill="#FFE093" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 605 192.5 L 630 192.5 L 630 217.5 L 605 217.5 Z " stroke="none" fill="#FFEAB7" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 630 192.5 L 655 192.5 L 655 217.5 L 630 217.5 Z " stroke="none" fill="#FFF4DB" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 655 192.5 L 680 192.5 L 680 217.5 L 655 217.5 Z " stroke="none" fill="#FFFFFF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 52.5 222.5 L 77.5 222.5 L 77.5 247.5 L 52.5 247.5 Z " stroke="none" fill="#CC79A7" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 155 222.5 L 680 222.5 L 680 247.5 L 155 247.5 Z " stroke="#000000" stroke-opacity="1" stroke-width="2" stroke-linecap="butt" stroke-linejoin="miter" fill="none" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 155 222.5 L 180 222.5 L 180 247.5 L 155 247.5 Z " stroke="none" fill="#000000" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 180 222.5 L 205 222.5 L 205 247.5 L 180 247.5 Z " stroke="none" fill="#360020" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 205 222.5 L 230 222.5 L 230 247.5 L 205 247.5 Z " stroke="none" fill="#4B0032" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 230 222.5 L 255 222.5 L 255 247.5 L 230 247.5 Z " stroke="none" fill="#5F1243" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 255 222.5 L 280 222.5 L 280 247.5 L 255 247.5 Z " stroke="none" fill="#702452" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 280 222.5 L 305 222.5 L 305 247.5 L 280 247.5 Z " stroke="none" fill="#813462" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 305 222.5 L 330 222.5 L 330 247.5 L 305 247.5 Z " stroke="none" fill="#914370" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 330 222.5 L 355 222.5 L 355 247.5 L 330 247.5 Z " stroke="none" fill="#A0517E" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 355 222.5 L 380 222.5 L 380 247.5 L 355 247.5 Z " stroke="none" fill="#AF5F8C" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 380 222.5 L 405 222.5 L 405 247.5 L 380 247.5 Z " stroke="none" fill="#BE6C9A" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 405 222.5 L 430 222.5 L 430 247.5 L 405 247.5 Z " stroke="none" fill="#CC79A7" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 430 222.5 L 455 222.5 L 455 247.5 L 430 247.5 Z " stroke="none" fill="#DA86B4" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 455 222.5 L 480 222.5 L 480 247.5 L 455 247.5 Z " stroke="none" fill="#E893C1" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 480 222.5 L 505 222.5 L 505 247.5 L 480 247.5 Z " stroke="none" fill="#F59FCE" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 505 222.5 L 530 222.5 L 530 247.5 L 505 247.5 Z " stroke="none" fill="#FFABDB" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 530 222.5 L 555 222.5 L 555 247.5 L 530 247.5 Z " stroke="none" fill="#FFB8E7" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 555 222.5 L 580 222.5 L 580 247.5 L 555 247.5 Z " stroke="none" fill="#FFC4F4" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 580 222.5 L 605 222.5 L 605 247.5 L 580 247.5 Z " stroke="none" fill="#FFD0FF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 605 222.5 L 630 222.5 L 630 247.5 L 605 247.5 Z " stroke="none" fill="#FFDCFF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 630 222.5 L 655 222.5 L 655 247.5 L 630 247.5 Z " stroke="none" fill="#FFD6EA" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 655 222.5 L 680 222.5 L 680 247.5 L 655 247.5 Z " stroke="none" fill="#FFFFFF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+</svg>

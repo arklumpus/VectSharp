@@ -8,28 +8,57 @@ using System.Text;
 
 namespace VectSharp.ThreeD
 {
+    /// <summary>
+    /// Represents a material used to the determine the appearance of <see cref="Triangle3DElement"/>.
+    /// </summary>
     public interface IMaterial
     {
-        Colour GetColour(Point3D point, NormalizedVector3D surfaceNormal, Camera camera, IEnumerable<ILightSource> lights);
+        /// <summary>
+        /// Obtains the <see cref="Colour"/> at the specified point.
+        /// </summary>
+        /// <param name="point">The point whose colour should be determined.</param>
+        /// <param name="surfaceNormal">The normal to the surface at the specified <paramref name="point"/>.</param>
+        /// <param name="camera">The camera being used to render the scene.</param>
+        /// <param name="lights">A list of light sources that are present in the scene.</param>
+        /// <param name="obstructions">A list of values indicating how obstructed each light source is.</param>
+        /// <returns>The <see cref="Colour"/> of the specified point.</returns>
+        Colour GetColour(Point3D point, NormalizedVector3D surfaceNormal, Camera camera, IList<ILightSource> lights, IList<double> obstructions);
     }
 
+    /// <summary>
+    /// Represents a material that always has the same colour, regardless of light.
+    /// </summary>
     public class ColourMaterial : IMaterial
     {
+        /// <summary>
+        /// The colour of the material.
+        /// </summary>
         public Colour Colour { get; }
 
+        /// <summary>
+        /// Creates a new <see cref="ColourMaterial"/> instance.
+        /// </summary>
+        /// <param name="colour">The colour of the material.</param>
         public ColourMaterial(Colour colour)
         {
             this.Colour = colour;
         }
 
-        public Colour GetColour(Point3D point, NormalizedVector3D surfaceNormal, Camera camera, IEnumerable<ILightSource> lights)
+        /// <inheritdoc/>
+        public Colour GetColour(Point3D point, NormalizedVector3D surfaceNormal, Camera camera, IList<ILightSource> lights, IList<double> obstructions)
         {
             return Colour;
         }
     }
 
+    /// <summary>
+    /// Represents a material that uses a Phong reflection model to determine the colour of the material based on the light sources that hit it.
+    /// </summary>
     public class PhongMaterial : IMaterial
     {
+        /// <summary>
+        /// The base colour of the material.
+        /// </summary>
         public Colour Colour { get; }
 
         private (double L, double a, double b) LabColour;
@@ -38,10 +67,30 @@ namespace VectSharp.ThreeD
         private double IntensityExponent;
         private double TotalLength;
 
+        /// <summary>
+        /// A coefficient determining how much ambient light is reflected by the material.
+        /// </summary>
         public double AmbientReflectionCoefficient { get; set; } = 1;
+
+        /// <summary>
+        /// A coefficient determining how much directional light is reflected by the material.
+        /// </summary>
         public double DiffuseReflectionCoefficient { get; set; } = 1;
+
+        /// <summary>
+        /// A coefficient determining the intensity of specular highlights.
+        /// </summary>
         public double SpecularReflectionCoefficient { get; set; } = 1;
+
+        /// <summary>
+        /// A coefficient determining the extent of specular highlights.
+        /// </summary>
         public double SpecularShininess { get; set; } = 1;
+
+        /// <summary>
+        /// Creates a new <see cref="PhongMaterial"/> instance.
+        /// </summary>
+        /// <param name="colour">The base colour of the material.</param>
         public PhongMaterial(Colour colour)
         {
             this.Colour = colour;
@@ -72,13 +121,15 @@ namespace VectSharp.ThreeD
             }
         }
 
-        public Colour GetColour(Point3D point, NormalizedVector3D surfaceNormal, Camera camera, IEnumerable<ILightSource> lights)
+        /// <inheritdoc/>
+        public Colour GetColour(Point3D point, NormalizedVector3D surfaceNormal, Camera camera, IList<ILightSource> lights, IList<double> obstructions)
         {
             double intensity = 0;
 
-            foreach (ILightSource light in lights)
+            for (int i = 0; i < lights.Count; i++)
             {
-                (double lightIntensity, NormalizedVector3D lightDirection) = light.GetLightAt(point);
+                (double lightIntensity, NormalizedVector3D lightDirection) = lights[i].GetLightAt(point);
+                lightIntensity *= 1 - obstructions[i];
 
                 if (double.IsNaN(lightDirection.X))
                 {

@@ -5,20 +5,65 @@ using System.Text;
 
 namespace VectSharp.ThreeD
 {
+    /// <summary>
+    /// Base class for cameras.
+    /// </summary>
     public abstract class Camera
     {
+        /// <summary>
+        /// Global tolerance for point comparisons.
+        /// </summary>
+        public static double Tolerance { get; } = 1e-4;
+
+        /// <summary>
+        /// The coordinates of the top left corner of the image viewed by the camera, in 2D units.
+        /// </summary>
         public abstract Point TopLeft { get; protected set; }
+
+        /// <summary>
+        /// The size of the image viewed by the camera, in 2D units.
+        /// </summary>
         public abstract Size Size { get; protected set; }
 
+        /// <summary>
+        /// The scale factor used to transform camera plane units into 2D units.
+        /// </summary>
         public abstract double ScaleFactor { get; }
 
+        /// <summary>
+        /// The position of the camera eye.
+        /// </summary>
         public abstract Point3D ViewPoint { get; }
 
+        /// <summary>
+        /// Projects a <see cref="Point3D"/> into a <see cref="Point"/> on the camera plane, in 2D units.
+        /// </summary>
+        /// <param name="point">The 3D point to project.</param>
+        /// <returns>A 2D <see cref="Point"/> object corresponding to the projection of <paramref name="point"/></returns>
         public abstract Point Project(Point3D point);
 
+        /// <summary>
+        /// Projects a <see cref="Point"/> in 2D units to obtain the corresponding <see cref="Point3D"/> on the specified element.
+        /// </summary>
+        /// <param name="point">The <see cref="Point"/> to project.</param>
+        /// <param name="element">The <see cref="Line3DElement"/> on which the point should be projected.</param>
+        /// <returns>A <see cref="Point3D"/> corresponding to the point on <paramref name="element"/> that, when projected with the current camera, corresponds to <paramref name="point"/>.</returns>
         public abstract Point3D Deproject(Point point, Line3DElement element);
+
+        /// <summary>
+        /// Projects a <see cref="Point"/> in 2D units to obtain the corresponding <see cref="Point3D"/> on the specified element.
+        /// </summary>
+        /// <param name="point">The <see cref="Point"/> to project.</param>
+        /// <param name="element">The <see cref="Triangle3DElement"/> on which the point should be projected.</param>
+        /// <returns>A <see cref="Point3D"/> corresponding to the point on <paramref name="element"/> that, when projected with the current camera, corresponds to <paramref name="point"/>.</returns>
         public abstract Point3D Deproject(Point point, Triangle3DElement element);
 
+        /// <summary>
+        /// Compares two <see cref="Element3D"/>s to determine which one lies on top of the other when viewed with the current camera.
+        /// </summary>
+        /// <param name="element1">The first element. If this element is in front, the function returns 1.</param>
+        /// <param name="element2">The second element. If this element is in front, the function returns -1.</param>
+        /// <returns>1 if <paramref name="element1"/> is in front of <paramref name="element2"/>; -1 if <paramref name="element2"/> is in front of <paramref name="element1"/>; 0 if the two elements do not overlap, intersect or if the order could not be determined for other reasons. </returns>
         public virtual int Compare(Element3D element1, Element3D element2)
         {
             if (element1.ZIndex != element2.ZIndex)
@@ -39,7 +84,7 @@ namespace VectSharp.ThreeD
                         double dist1 = this.ZDepth(pt1[0]);
                         double dist2 = this.ZDepth(pt2[0]);
 
-                        if (Math.Abs(dist1 - dist2) < Scene.Tolerance)
+                        if (Math.Abs(dist1 - dist2) < Camera.Tolerance)
                         {
                             return 0;
                         }
@@ -74,18 +119,24 @@ namespace VectSharp.ThreeD
                     if (dotProd >= -Math.Sqrt(maxDistSq) && dotProd <= v2Length + Math.Sqrt(maxDistSq) && distSq < maxDistSq)
                     {
                         Point pointOnLine = new Point(p1.X + dotProd * e2.X, p1.Y + dotProd * e2.Y);
+                        try
+                        {
+                            Point3D pt = this.Deproject(pointOnLine, line);
 
-                        Point3D pt = this.Deproject(pointOnLine, line);
+                            double dist1 = this.ZDepth(pt1[0]);
+                            double dist2 = this.ZDepth(pt);
 
-                        double dist1 = this.ZDepth(pt1[0]);
-                        double dist2 = this.ZDepth(pt);
+                            if (Math.Abs(dist1 - dist2) < Camera.Tolerance)
+                            {
+                                return 0;
+                            }
 
-                        if (Math.Abs(dist1 - dist2) < Scene.Tolerance)
+                            return -Math.Sign(dist1 - dist2);
+                        }
+                        catch
                         {
                             return 0;
                         }
-
-                        return -Math.Sign(dist1 - dist2);
                     }
                     else
                     {
@@ -112,7 +163,7 @@ namespace VectSharp.ThreeD
                         double dist1 = this.ZDepth(pt1[0]);
                         double dist2 = this.ZDepth(pt);
 
-                        if (Math.Abs(dist1 - dist2) < Scene.Tolerance)
+                        if (Math.Abs(dist1 - dist2) < Camera.Tolerance)
                         {
                             return 0;
                         }
@@ -153,18 +204,25 @@ namespace VectSharp.ThreeD
 
                         if (intersection?.t >= -line1.Thickness && intersection?.t <= vLength + line1.Thickness && intersection?.s >= -line1.Thickness && intersection?.s <= lLength + line1.Thickness)
                         {
-                            Point3D point1 = this.Deproject(intersection.Value.inters, line1);
-                            Point3D point2 = this.Deproject(intersection.Value.inters, line2);
+                            try
+                            {
+                                Point3D point1 = this.Deproject(intersection.Value.inters, line1);
+                                Point3D point2 = this.Deproject(intersection.Value.inters, line2);
 
-                            double dist1 = this.ZDepth(point1);
-                            double dist2 = this.ZDepth(point2);
+                                double dist1 = this.ZDepth(point1);
+                                double dist2 = this.ZDepth(point2);
 
-                            if (Math.Abs(dist1 - dist2) < Scene.Tolerance)
+                                if (Math.Abs(dist1 - dist2) < Camera.Tolerance)
+                                {
+                                    return 0;
+                                }
+
+                                return -Math.Sign(dist1 - dist2);
+                            }
+                            catch
                             {
                                 return 0;
                             }
-
-                            return -Math.Sign(dist1 - dist2);
                         }
                         else
                         {
@@ -195,9 +253,9 @@ namespace VectSharp.ThreeD
                     Point B = this.Project(triangle[1]);
                     Point C = this.Project(triangle[2]);
 
-                    List<Point> interss1 = Intersections2D.Intersect(l11, l12, A, B, C, line1.Thickness, Scene.Tolerance);
-                    List<Point> interss2 = Intersections2D.Intersect(l21, l22, A, B, C, Scene.Tolerance);
-                    List<Point> interss3 = Intersections2D.Intersect(l31, l32, A, B, C, Scene.Tolerance);
+                    List<Point> interss1 = Intersections2D.Intersect(l11, l12, A, B, C, line1.Thickness, Camera.Tolerance);
+                    List<Point> interss2 = Intersections2D.Intersect(l21, l22, A, B, C, Camera.Tolerance);
+                    List<Point> interss3 = Intersections2D.Intersect(l31, l32, A, B, C, Camera.Tolerance);
 
                     List<Point> interss = new List<Point>();
 
@@ -223,28 +281,32 @@ namespace VectSharp.ThreeD
 
                         foreach (Point pt in interss)
                         {
-                            Point3D pt3D1 = this.Deproject(pt, line1);
-                            Point3D pt3D2 = this.Deproject(pt, triangle);
-
-                            double dist1 = this.ZDepth(pt3D1);
-                            double dist2 = this.ZDepth(pt3D2);
-
-                            int currSign = -Math.Sign(dist1 - dist2);
-
-                            if (Math.Abs(dist1 - dist2) < Scene.Tolerance)
+                            try
                             {
-                                currSign = 0;
-                            }
+                                Point3D pt3D1 = this.Deproject(pt, line1);
+                                Point3D pt3D2 = this.Deproject(pt, triangle);
 
-                            if (sign == 0 || currSign == sign || currSign == 0)
-                            {
-                                sign = currSign;
+                                double dist1 = this.ZDepth(pt3D1);
+                                double dist2 = this.ZDepth(pt3D2);
+
+                                int currSign = -Math.Sign(dist1 - dist2);
+
+                                if (Math.Abs(dist1 - dist2) < Camera.Tolerance)
+                                {
+                                    currSign = 0;
+                                }
+
+                                if (sign == 0 || currSign == sign || currSign == 0)
+                                {
+                                    sign = currSign;
+                                }
+                                else
+                                {
+                                    //Line intersects with triangle
+                                    return 0;
+                                }
                             }
-                            else
-                            {
-                                //Line intersects with triangle
-                                return 0;
-                            }
+                            catch { }
                         }
 
                         return sign;
@@ -278,7 +340,7 @@ namespace VectSharp.ThreeD
                     Point B2 = triangle2Projection[1];
                     Point C2 = triangle2Projection[2];
 
-                    List<Point> intersections = Intersections2D.IntersectTriangles(A1, B1, C1, A2, B2, C2, Scene.Tolerance);
+                    List<Point> intersections = Intersections2D.IntersectTriangles(A1, B1, C1, A2, B2, C2, Camera.Tolerance);
 
                     if (intersections.Count >= 3)
                     {
@@ -296,27 +358,32 @@ namespace VectSharp.ThreeD
 
                         Point pt = new Point(meanX, meanY);
 
-
-                        Point3D pt3D1 = this.Deproject(pt, triangle1);
-                        Point3D pt3D2 = this.Deproject(pt, triangle2);
-
-                        double dist1 = this.ZDepth(pt3D1);
-                        double dist2 = this.ZDepth(pt3D2);
-
-                        if (double.IsNaN(dist1 - dist2))
+                        try
                         {
-                            return 0;
+
+                            Point3D pt3D1 = this.Deproject(pt, triangle1);
+                            Point3D pt3D2 = this.Deproject(pt, triangle2);
+
+                            double dist1 = this.ZDepth(pt3D1);
+                            double dist2 = this.ZDepth(pt3D2);
+
+                            if (double.IsNaN(dist1 - dist2))
+                            {
+                                return 0;
+                            }
+
+
+                            int sign = -Math.Sign(dist1 - dist2);
+
+                            if (Math.Abs(dist1 - dist2) < Camera.Tolerance)
+                            {
+                                sign = 0;
+                            }
+
+
+                            return sign;
                         }
-
-
-                        int sign = -Math.Sign(dist1 - dist2);
-
-                        if (Math.Abs(dist1 - dist2) < Scene.Tolerance)
-                        {
-                            sign = 0;
-                        }
-
-                        return sign;
+                        catch { return 0; }
                     }
                     else
                     {
@@ -334,23 +401,64 @@ namespace VectSharp.ThreeD
             }
         }
 
+        /// <summary>
+        /// Computes the z-depth of a <see cref="Point3D"/>. The exact meaning of this value depends on the specific camera implementation, but in general points with lower z-depth are in front of objects with higher z-depth.
+        /// </summary>
+        /// <param name="point">The <see cref="Point3D"/> whose z-depth is to be computed.</param>
+        /// <returns>The z-depth of the point.</returns>
         public abstract double ZDepth(Point3D point);
 
+        /// <summary>
+        /// Determines whether an object should be culled (i.e. hidden) when the scene is rendered using the current camera.
+        /// </summary>
+        /// <param name="element">The <see cref="Element3D"/> to test.</param>
+        /// <returns>A boolean value indicating whether the element should be culled or not.</returns>
         public abstract bool IsCulled(Element3D element);
     }
 
-    public interface ICameraWithControls
+    internal interface ICameraWithControls
     {
         void Zoom(double amount);
         void Pan(double x, double y);
         void Orbit(double theta, double phi);
     }
 
+    /// <summary>
+    /// Represents a camera with controls.
+    /// </summary>
     public abstract class CameraWithControls : Camera, ICameraWithControls
     {
+        /// <summary>
+        /// Increases or decreases the field of view of the camera.
+        /// </summary>
+        /// <param name="amount">How much the field of view should be increased or decreased. The meaning of this value depends on the specific camera implementation.</param>
         public abstract void Zoom(double amount);
+
+        /// <summary>
+        /// Moves the camera in the camera plane, without changing the direction.
+        /// </summary>
+        /// <param name="x">How much the camera should be moved horizontally in the camera plane, in 2D units.</param>
+        /// <param name="y">How much the camera should be moved vertically in the camera plane, in 2D units.</param>
         public abstract void Pan(double x, double y);
+
+        /// <summary>
+        /// Rotates the camera, changing the direction so that it is always facing a specific point.
+        /// </summary>
+        /// <param name="theta">Amout of rotation around the vertical axis, in radians.</param>
+        /// <param name="phi">Amount of rotation around the horizontal axis, in radians.</param>
         public abstract void Orbit(double theta, double phi);
+    }
+
+    /// <summary>
+    /// Represents a camera that can render a blurred scene.
+    /// </summary>
+    public interface IBlurrableCamera
+    {
+        /// <summary>
+        /// Creates cameras that can be used to blur the scene. The scene should be rendered once per camera, and the results averaged.
+        /// </summary>
+        /// <returns>An array of <see cref="Camera"/>s.</returns>
+        Camera[] GetCameras();
     }
 
 }

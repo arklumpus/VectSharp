@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['segments_809',['Segments',['../class_vect_sharp_1_1_graphics_path.html#aabd97b02c49fc2de576d76710af8fedc',1,'VectSharp::GraphicsPath']]],
-  ['stroke_810',['Stroke',['../class_vect_sharp_1_1_canvas_1_1_render_action.html#aead4222aca31896910f612a45c1e9347',1,'VectSharp::Canvas::RenderAction']]],
-  ['strokestyle_811',['StrokeStyle',['../interface_vect_sharp_1_1_i_graphics_context.html#aee2ae82d2445e3751321124881224442',1,'VectSharp::IGraphicsContext']]]
+  ['radius_944',['Radius',['../class_vect_sharp_1_1_three_d_1_1_area_light_source.html#a31f4ee050eac024c8a9c46ac9356500e',1,'VectSharp::ThreeD::AreaLightSource']]],
+  ['reversedirection_945',['ReverseDirection',['../class_vect_sharp_1_1_three_d_1_1_parallel_light_source.html#a929b54d55a24eb4b09c2b3617748a778',1,'VectSharp::ThreeD::ParallelLightSource']]],
+  ['rightsidebearing_946',['RightSideBearing',['../class_vect_sharp_1_1_font_1_1_detailed_font_metrics.html#a9e96615d06c0ed23e1f0dca35342cddb',1,'VectSharp::Font::DetailedFontMetrics']]]
 ];

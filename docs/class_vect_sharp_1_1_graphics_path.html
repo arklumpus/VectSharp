@@ -28,7 +28,7 @@
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VectSharp
-   &#160;<span id="projectnumber">1.6.0</span>
+   &#160;<span id="projectnumber">1.7.0</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -162,6 +162,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a375abcfb69b00fe3f57c9e117e2ccc09"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_vect_sharp_1_1_point.html">Point</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_graphics_path.html#a375abcfb69b00fe3f57c9e117e2ccc09">GetNormalAtRelative</a> (double position)</td></tr>
 <tr class="memdesc:a375abcfb69b00fe3f57c9e117e2ccc09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the normal to the point at the relative position specified on the <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>.  <a href="class_vect_sharp_1_1_graphics_path.html#a375abcfb69b00fe3f57c9e117e2ccc09">More...</a><br /></td></tr>
 <tr class="separator:a375abcfb69b00fe3f57c9e117e2ccc09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c356121020c459a88a737e753122661"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vect_sharp_1_1_graphics_path.html">GraphicsPath</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_graphics_path.html#a1c356121020c459a88a737e753122661">Linearise</a> (double resolution)</td></tr>
+<tr class="memdesc:a1c356121020c459a88a737e753122661"><td class="mdescLeft">&#160;</td><td class="mdescRight">Linearises a <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>, replacing curve segments with series of line segments that approximate them.  <a href="class_vect_sharp_1_1_graphics_path.html#a1c356121020c459a88a737e753122661">More...</a><br /></td></tr>
+<tr class="separator:a1c356121020c459a88a737e753122661"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab7a438fa6a317c0b2ee64aeede8b127"><td class="memItemLeft" align="right" valign="top">IEnumerable&lt; List&lt; <a class="el" href="struct_vect_sharp_1_1_point.html">Point</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_graphics_path.html#aab7a438fa6a317c0b2ee64aeede8b127">GetPoints</a> ()</td></tr>
+<tr class="memdesc:aab7a438fa6a317c0b2ee64aeede8b127"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a collection of the end points of all the segments in the <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>, divided by figure.  <a href="class_vect_sharp_1_1_graphics_path.html#aab7a438fa6a317c0b2ee64aeede8b127">More...</a><br /></td></tr>
+<tr class="separator:aab7a438fa6a317c0b2ee64aeede8b127"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5080d51dd3c82a7c8f45df3f49a4b637"><td class="memItemLeft" align="right" valign="top">IEnumerable&lt; List&lt; <a class="el" href="struct_vect_sharp_1_1_point.html">Point</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_graphics_path.html#a5080d51dd3c82a7c8f45df3f49a4b637">GetLinearisationPointsNormals</a> (double resolution)</td></tr>
+<tr class="memdesc:a5080d51dd3c82a7c8f45df3f49a4b637"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a collection of the tangents at the end point of the segments in which the <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a> would be linearised, divided by figure.  <a href="class_vect_sharp_1_1_graphics_path.html#a5080d51dd3c82a7c8f45df3f49a4b637">More...</a><br /></td></tr>
+<tr class="separator:a5080d51dd3c82a7c8f45df3f49a4b637"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6031e2cf0f7b3d45080c8e245fde3ed"><td class="memItemLeft" align="right" valign="top">IEnumerable&lt; <a class="el" href="class_vect_sharp_1_1_graphics_path.html">GraphicsPath</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_graphics_path.html#ae6031e2cf0f7b3d45080c8e245fde3ed">Triangulate</a> (double resolution, bool clockwise)</td></tr>
+<tr class="memdesc:ae6031e2cf0f7b3d45080c8e245fde3ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Divides a <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a> into triangles.  <a href="class_vect_sharp_1_1_graphics_path.html#ae6031e2cf0f7b3d45080c8e245fde3ed">More...</a><br /></td></tr>
+<tr class="separator:ae6031e2cf0f7b3d45080c8e245fde3ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4d2af10a6114152ef417091a5a2cfe7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vect_sharp_1_1_graphics_path.html">GraphicsPath</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_graphics_path.html#af4d2af10a6114152ef417091a5a2cfe7">Transform</a> (Func&lt; <a class="el" href="struct_vect_sharp_1_1_point.html">Point</a>, <a class="el" href="struct_vect_sharp_1_1_point.html">Point</a> &gt; transformationFunction)</td></tr>
+<tr class="memdesc:af4d2af10a6114152ef417091a5a2cfe7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transforms all of the <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a>s in the <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a> with an arbitrary transformation function.  <a href="class_vect_sharp_1_1_graphics_path.html#af4d2af10a6114152ef417091a5a2cfe7">More...</a><br /></td></tr>
+<tr class="separator:af4d2af10a6114152ef417091a5a2cfe7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
 Properties</h2></td></tr>
@@ -172,7 +187,7 @@ Properties</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a graphics path that can be filled or stroked. </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02939">2939</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03583">3583</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="ada2e070a89f252e4a3021ddad200a370"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ada2e070a89f252e4a3021ddad200a370">&#9670;&nbsp;</a></span>AddSmoothSpline()</h2>
@@ -199,7 +214,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>, to allow for chained calls.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03390">3390</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l04034">4034</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -260,7 +275,7 @@ Properties</h2></td></tr>
 </dl>
 <p>/// </p><dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>, to allow for chained calls.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03188">3188</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03832">3832</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -314,7 +329,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>, to allow for chained calls.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03201">3201</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03845">3845</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -382,7 +397,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>, to allow for chained calls.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03278">3278</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03922">3922</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -443,7 +458,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>, to allow for chained calls.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03029">3029</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03673">3673</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -497,7 +512,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>, to allow for chained calls.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03009">3009</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03653">3653</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -519,7 +534,7 @@ Properties</h2></td></tr>
 <p>Trace a segment from the current point to the start point of the figure and flag the figure as closed. </p>
 <dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>, to allow for chained calls.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03173">3173</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03817">3817</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -587,7 +602,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>, to allow for chained calls.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03163">3163</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03807">3807</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -634,7 +649,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>, to allow for chained calls.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03142">3142</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03786">3786</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -695,14 +710,43 @@ Properties</h2></td></tr>
     <tr><td class="paramname">radiusY</td><td>The vertical radius of the ellipse.</td></tr>
     <tr><td class="paramname">axisAngle</td><td>The angle of the horizontal axis of the ellipse with respect to the horizontal axis.</td></tr>
     <tr><td class="paramname">largeArc</td><td>Determines whether the large or the small arc is drawn.</td></tr>
-    <tr><td class="paramname">sweepClockwise</td><td>Determines whether the clockwise or counterclockwise arc is drawn.</td></tr>
+    <tr><td class="paramname">sweepClockwise</td><td>Determines whether the clockwise or anticlockwise arc is drawn.</td></tr>
     <tr><td class="paramname">endPoint</td><td>The end point of the arc.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03045">3045</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03689">3689</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+
+</div>
+</div>
+<a id="a5080d51dd3c82a7c8f45df3f49a4b637"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5080d51dd3c82a7c8f45df3f49a4b637">&#9670;&nbsp;</a></span>GetLinearisationPointsNormals()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">IEnumerable&lt;List&lt;<a class="el" href="struct_vect_sharp_1_1_point.html">Point</a>&gt; &gt; VectSharp.GraphicsPath.GetLinearisationPointsNormals </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>resolution</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets a collection of the tangents at the end point of the segments in which the <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a> would be linearised, divided by figure. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">resolution</td><td>The absolute length between successive samples in curve segments.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A collection of the tangents at the end point of the segments in which the <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a> would be linearised, divided by figure.</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l04828">4828</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -731,7 +775,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The normal to the point at the specified position.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l04089">4089</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l04733">4733</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -760,7 +804,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The normal to the point at the specified position.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l04100">4100</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l04744">4744</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -789,7 +833,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The point at the specified position.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03505">3505</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l04149">4149</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -818,7 +862,29 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The point at the specified position.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03495">3495</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l04139">4139</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+
+</div>
+</div>
+<a id="aab7a438fa6a317c0b2ee64aeede8b127"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab7a438fa6a317c0b2ee64aeede8b127">&#9670;&nbsp;</a></span>GetPoints()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">IEnumerable&lt;List&lt;<a class="el" href="struct_vect_sharp_1_1_point.html">Point</a>&gt; &gt; VectSharp.GraphicsPath.GetPoints </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets a collection of the end points of all the segments in the <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>, divided by figure. </p>
+<dl class="section return"><dt>Returns</dt><dd>A collection of the end points of all the segments in the <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>, divided by figure.</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l04783">4783</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -847,7 +913,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The tangent to the point at the specified position.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03802">3802</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l04446">4446</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -876,7 +942,36 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The tangent to the point at the specified position.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03792">3792</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l04436">4436</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+
+</div>
+</div>
+<a id="a1c356121020c459a88a737e753122661"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c356121020c459a88a737e753122661">&#9670;&nbsp;</a></span>Linearise()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_vect_sharp_1_1_graphics_path.html">GraphicsPath</a> VectSharp.GraphicsPath.Linearise </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>resolution</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Linearises a <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>, replacing curve segments with series of line segments that approximate them. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">resolution</td><td>The absolute length between successive samples in curve segments.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a> composed only of linear segments that approximates the current <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>.</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l04755">4755</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -916,7 +1011,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>, to allow for chained calls.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02994">2994</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03638">3638</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -945,7 +1040,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>, to allow for chained calls.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02975">2975</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03619">3619</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -967,7 +1062,7 @@ Properties</h2></td></tr>
 <p>Measures the length of the <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>. </p>
 <dl class="section return"><dt>Returns</dt><dd>The length of the <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03423">3423</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l04067">4067</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1007,7 +1102,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>, to allow for chained calls.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02964">2964</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03608">3608</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1036,7 +1131,76 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>, to allow for chained calls.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02952">2952</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03596">3596</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+
+</div>
+</div>
+<a id="af4d2af10a6114152ef417091a5a2cfe7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4d2af10a6114152ef417091a5a2cfe7">&#9670;&nbsp;</a></span>Transform()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_vect_sharp_1_1_graphics_path.html">GraphicsPath</a> VectSharp.GraphicsPath.Transform </td>
+          <td>(</td>
+          <td class="paramtype">Func&lt; <a class="el" href="struct_vect_sharp_1_1_point.html">Point</a>, <a class="el" href="struct_vect_sharp_1_1_point.html">Point</a> &gt;&#160;</td>
+          <td class="paramname"><em>transformationFunction</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Transforms all of the <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a>s in the <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a> with an arbitrary transformation function. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">transformationFunction</td><td>An arbitrary transformation function.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A new <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a> in which all points have been replaced using the <em>transformationFunction</em> .</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l05900">5900</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+
+</div>
+</div>
+<a id="ae6031e2cf0f7b3d45080c8e245fde3ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6031e2cf0f7b3d45080c8e245fde3ed">&#9670;&nbsp;</a></span>Triangulate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">IEnumerable&lt;<a class="el" href="class_vect_sharp_1_1_graphics_path.html">GraphicsPath</a>&gt; VectSharp.GraphicsPath.Triangulate </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>resolution</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>clockwise</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Divides a <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a> into triangles. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">resolution</td><td>The resolution that will be used to linearise curve segments in the <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>.</td></tr>
+    <tr><td class="paramname">clockwise</td><td>If this is <code>true</code>, the triangles will have their vertices in a clockwise order, otherwise they will be in anticlockwise order.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A collection of distinct <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>s, each representing one triangle.</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l04911">4911</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1063,7 +1227,7 @@ Properties</h2></td></tr>
 
 <p>The segments that make up the path. </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l02944">2944</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l03588">3588</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>

@@ -1,4 +1,8 @@
 var searchData=
 [
-  ['clippingpath_775',['ClippingPath',['../class_vect_sharp_1_1_canvas_1_1_render_action.html#ae6aefb84f43c2bf00492374c40a95351',1,'VectSharp::Canvas::RenderAction']]]
+  ['castsshadow_898',['CastsShadow',['../interface_vect_sharp_1_1_three_d_1_1_i_light_source.html#a407cca0ec0c94de4cfdce86ee137f208',1,'VectSharp.ThreeD.ILightSource.CastsShadow()'],['../class_vect_sharp_1_1_three_d_1_1_parallel_light_source.html#a684c87523b406f6b346abc52170bbbb0',1,'VectSharp.ThreeD.ParallelLightSource.CastsShadow()'],['../class_vect_sharp_1_1_three_d_1_1_point_light_source.html#af78182d681502fa270130f49f187be64',1,'VectSharp.ThreeD.PointLightSource.CastsShadow()'],['../class_vect_sharp_1_1_three_d_1_1_spotlight_light_source.html#a349e0f31e6c690b41e796767346b50b2',1,'VectSharp.ThreeD.SpotlightLightSource.CastsShadow()'],['../class_vect_sharp_1_1_three_d_1_1_masked_light_source.html#acad9911b7660eacc598c99ddbfc92763',1,'VectSharp.ThreeD.MaskedLightSource.CastsShadow()'],['../class_vect_sharp_1_1_three_d_1_1_area_light_source.html#a9d837e6b1eaf16f2642a0113c61df249',1,'VectSharp.ThreeD.AreaLightSource.CastsShadow()']]],
+  ['center_899',['Center',['../class_vect_sharp_1_1_three_d_1_1_area_light_source.html#ad4a9522a93b10213775b86fb59422fa3',1,'VectSharp::ThreeD::AreaLightSource']]],
+  ['clippingpath_900',['ClippingPath',['../class_vect_sharp_1_1_canvas_1_1_render_action.html#ae6aefb84f43c2bf00492374c40a95351',1,'VectSharp::Canvas::RenderAction']]],
+  ['colour_901',['Colour',['../class_vect_sharp_1_1_three_d_1_1_colour_material.html#a7f1d2d721fbb1234f54bfb548e5e3e9f',1,'VectSharp.ThreeD.ColourMaterial.Colour()'],['../class_vect_sharp_1_1_three_d_1_1_phong_material.html#a32f51b8ad4fc376028537dc45e04c7dc',1,'VectSharp.ThreeD.PhongMaterial.Colour()']]],
+  ['cutoffangle_902',['CutoffAngle',['../class_vect_sharp_1_1_three_d_1_1_spotlight_light_source.html#a28ab7a2281f3ab029237101f3d8f4fe3',1,'VectSharp::ThreeD::SpotlightLightSource']]]
 ];
