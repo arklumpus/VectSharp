@@ -195,11 +195,13 @@ namespace VectSharp.SVG
                 {
                     scaleX = width / viewBox[2];
                     scaleY = scaleX;
+                    height = scaleY * viewBox[3];
                 }
                 else if (double.IsNaN(width) && !double.IsNaN(height))
                 {
                     scaleY = height / viewBox[3];
                     scaleX = scaleY;
+                    width = scaleX * viewBox[2];
                 }
 
                 postTranslateX = -viewBox[0];
@@ -222,7 +224,7 @@ namespace VectSharp.SVG
 
             double diagonal = Math.Sqrt(viewBox[2] * viewBox[2] + viewBox[3] * viewBox[3]) / Math.Sqrt(2);
 
-            Size tbrSize = new Size(viewBox[2], viewBox[3]);
+            Size tbrSize = new Size(width, height);
 
             gpr.Save();
             gpr.Translate(x, y);
