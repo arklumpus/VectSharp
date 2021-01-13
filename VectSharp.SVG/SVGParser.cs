@@ -167,16 +167,16 @@ namespace VectSharp.SVG
 
             string widthAttribute = svgObject.Attributes?["width"]?.Value?.Replace("px", "");
 
-            if (!double.TryParse(widthAttribute, out width)) { width = double.NaN; }
+            if (!double.TryParse(widthAttribute, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out width)) { width = double.NaN; }
 
             string heightAttribute = svgObject.Attributes?["height"]?.Value?.Replace("px", "");
-            if (!double.TryParse(heightAttribute, out height)) { height = double.NaN; }
+            if (!double.TryParse(heightAttribute, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out height)) { height = double.NaN; }
 
             string xAttribute = svgObject.Attributes?["x"]?.Value;
-            double.TryParse(xAttribute, out x);
+            double.TryParse(xAttribute, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out x);
 
             string yAttribute = svgObject.Attributes?["y"]?.Value;
-            double.TryParse(yAttribute, out y);
+            double.TryParse(yAttribute, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out y);
 
             double scaleX = 1;
             double scaleY = 1;
@@ -202,6 +202,11 @@ namespace VectSharp.SVG
                     scaleY = height / viewBox[3];
                     scaleX = scaleY;
                     width = scaleX * viewBox[2];
+                }
+                else if (double.IsNaN(width) && double.IsNaN(height))
+                {
+                    width = viewBox[2];
+                    height = viewBox[3];
                 }
 
                 postTranslateX = -viewBox[0];
@@ -1360,13 +1365,13 @@ namespace VectSharp.SVG
             {
                 char c = d[i];
 
-                if (c >= '0' && c <= '9' || c == '.' || c == 'e')
+                if (c >= '0' && c <= '9' || c == '.' || c == 'e' || c == 'E')
                 {
                     currToken += c;
                 }
                 else if (c == '-' || c == '+')
                 {
-                    if (i > 0 && d[i - 1] == 'e')
+                    if (i > 0 && (d[i - 1] == 'e' || d[i - 1] == 'E'))
                     {
                         currToken += c;
                     }
@@ -1386,6 +1391,16 @@ namespace VectSharp.SVG
                         tbr.Add(currToken);
                     }
                     currToken = "";
+                }
+                else if (i < d.Length - 2 && (c == 'N' || c == 'n') && (d[i + 1] == 'a' || d[i + 1] == 'A') && (d[i + 2] == 'N' || d[i + 2] == 'n'))
+                {
+                    if (!string.IsNullOrEmpty(currToken))
+                    {
+                        tbr.Add(currToken);
+                    }
+                    tbr.Add("NaN");
+                    currToken = "";
+                    i += 2;
                 }
                 else if ("MmLlHhVvCcSsQqTtAaZz".Contains(c))
                 {
@@ -1948,7 +1963,7 @@ namespace VectSharp.SVG
 
             for (int i = 0; i < splitValue.Length; i++)
             {
-                tbr[i] = double.Parse(splitValue[i]);
+                tbr[i] = double.Parse(splitValue[i], System.Globalization.CultureInfo.InvariantCulture);
             }
 
             return tbr;
