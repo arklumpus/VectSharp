@@ -148,8 +148,12 @@ namespace VectSharp.SVG
 
         private bool TextToPaths = false;
 
-        public SVGContext(double width, double height, bool textToPaths)
+        private Dictionary<string, string> linkDestinations;
+
+        public SVGContext(double width, double height, bool textToPaths, Dictionary<string, string> linkDestinations)
         {
+            this.linkDestinations = linkDestinations;
+
             this.Width = width;
             this.Height = height;
 
@@ -276,6 +280,14 @@ namespace VectSharp.SVG
                 path.SetAttribute("id", Tag);
             }
 
+            if (!string.IsNullOrEmpty(this.Tag) && this.linkDestinations.TryGetValue(this.Tag, out string destination) && !string.IsNullOrEmpty(destination))
+            {
+                XmlElement aElement = Document.CreateElement("a", SVGNamespace);
+                aElement.SetAttribute("href", destination);
+                currentElement.AppendChild(aElement);
+                currentElement = aElement;
+            }
+
             currentElement.AppendChild(path);
 
             currentElement = currElement;
@@ -372,6 +384,14 @@ namespace VectSharp.SVG
                 if (!string.IsNullOrEmpty(Tag))
                 {
                     textElement.SetAttribute("id", Tag);
+                }
+
+                if (!string.IsNullOrEmpty(this.Tag) && this.linkDestinations.TryGetValue(this.Tag, out string destination) && !string.IsNullOrEmpty(destination))
+                {
+                    XmlElement aElement = Document.CreateElement("a", SVGNamespace);
+                    aElement.SetAttribute("href", destination);
+                    currentElement.AppendChild(aElement);
+                    currentElement = aElement;
                 }
 
                 currentElement.AppendChild(textElement);
@@ -537,6 +557,14 @@ namespace VectSharp.SVG
                 path.SetAttribute("id", Tag);
             }
 
+            if (!string.IsNullOrEmpty(this.Tag) && this.linkDestinations.TryGetValue(this.Tag, out string destination) && !string.IsNullOrEmpty(destination))
+            {
+                XmlElement aElement = Document.CreateElement("a", SVGNamespace);
+                aElement.SetAttribute("href", destination);
+                currentElement.AppendChild(aElement);
+                currentElement = aElement;
+            }
+
             currentElement.AppendChild(path);
 
             currentElement = currElement;
@@ -666,6 +694,14 @@ namespace VectSharp.SVG
                     textElement.SetAttribute("id", Tag);
                 }
 
+                if (!string.IsNullOrEmpty(this.Tag) && this.linkDestinations.TryGetValue(this.Tag, out string destination) && !string.IsNullOrEmpty(destination))
+                {
+                    XmlElement aElement = Document.CreateElement("a", SVGNamespace);
+                    aElement.SetAttribute("href", destination);
+                    currentElement.AppendChild(aElement);
+                    currentElement = aElement;
+                }
+
                 currentElement.AppendChild(textElement);
 
                 currentElement = currElement;
@@ -753,13 +789,6 @@ namespace VectSharp.SVG
                 "," + _transform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
                 "," + _transform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
 
-
-
-            if (!string.IsNullOrEmpty(Tag))
-            {
-                path.SetAttribute("id", Tag);
-            }
-
             clipPath.AppendChild(path);
 
             currentElement.AppendChild(clipPath);
@@ -832,7 +861,15 @@ namespace VectSharp.SVG
             }
 
             img.SetAttribute("href", "http://www.w3.org/1999/xlink", "data:image/png;base64," + Convert.ToBase64String(image.PNGStream.ToArray()));
-            
+
+            if (!string.IsNullOrEmpty(this.Tag) && this.linkDestinations.TryGetValue(this.Tag, out string destination) && !string.IsNullOrEmpty(destination))
+            {
+                XmlElement aElement = Document.CreateElement("a", SVGNamespace);
+                aElement.SetAttribute("href", destination);
+                currentElement.AppendChild(aElement);
+                currentElement = aElement;
+            }
+
             currentElement.AppendChild(img);
 
             currentElement = currElement;
@@ -854,11 +891,12 @@ namespace VectSharp.SVG
         /// <param name="page">The <see cref="Page"/> to render.</param>
         /// <param name="fileName">The full path to the file to save. If it exists, it will be overwritten.</param>
         /// <param name="textOption">Defines whether the used fonts should be included in the file.</param>
-        public static void SaveAsSVG(this Page page, string fileName, TextOptions textOption = TextOptions.SubsetFonts)
+        /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
+        public static void SaveAsSVG(this Page page, string fileName, TextOptions textOption = TextOptions.SubsetFonts, Dictionary<string, string> linkDestinations = null)
         {
             using (FileStream sr = new FileStream(fileName, FileMode.Create))
             {
-                page.SaveAsSVG(sr, textOption);
+                page.SaveAsSVG(sr, textOption, linkDestinations);
             }
         }
 
@@ -894,11 +932,17 @@ namespace VectSharp.SVG
         /// <param name="page">The <see cref="Page"/> to render.</param>
         /// <param name="stream">The stream to which the SVG data will be written.</param>
         /// <param name="textOption">Defines whether the used fonts should be included in the file.</param>
-        public static void SaveAsSVG(this Page page, Stream stream, TextOptions textOption = TextOptions.SubsetFonts)
+        /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
+        public static void SaveAsSVG(this Page page, Stream stream, TextOptions textOption = TextOptions.SubsetFonts, Dictionary<string, string> linkDestinations = null)
         {
+            if (linkDestinations == null)
+            {
+                linkDestinations = new Dictionary<string, string>();
+            }
+
             bool textToPaths = textOption == TextOptions.ConvertIntoPaths;
 
-            SVGContext ctx = new SVGContext(page.Width, page.Height, textToPaths);
+            SVGContext ctx = new SVGContext(page.Width, page.Height, textToPaths, linkDestinations);
 
             ctx.Rectangle(0, 0, page.Width, page.Height);
             ctx.SetFillStyle(page.Background);

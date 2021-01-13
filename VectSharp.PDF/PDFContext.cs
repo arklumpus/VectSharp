@@ -16,6 +16,7 @@
 */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -126,6 +127,7 @@ namespace VectSharp.PDF
         LineJoins LineJoin { get; }
         LineDash LineDash { get; }
         bool IsClipping { get; }
+        string Tag { get; }
     }
 
     internal class TransformFigure : IFigure
@@ -150,11 +152,13 @@ namespace VectSharp.PDF
         public LineJoins LineJoin { get; }
 
         public LineDash LineDash { get; }
+        public string Tag { get; }
 
-        public TransformFigure(TransformTypes type, double[,] transformationMatrix)
+        public TransformFigure(TransformTypes type, double[,] transformationMatrix, string tag)
         {
             this.TransformType = type;
             this.TransformationMatrix = transformationMatrix;
+            this.Tag = tag;
         }
     }
 
@@ -177,9 +181,12 @@ namespace VectSharp.PDF
 
         public RasterImage Image { get; }
 
-        public RasterImageFigure(RasterImage image)
+        public string Tag { get; }
+
+        public RasterImageFigure(RasterImage image, string tag)
         {
             this.Image = image;
+            this.Tag = tag;
         }
     }
 
@@ -197,7 +204,8 @@ namespace VectSharp.PDF
         public LineDash LineDash { get; }
         public Segment[] Segments { get; }
 
-        public PathFigure(IEnumerable<Segment> segments, Colour? fill, Colour? stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, bool isClipping)
+        public string Tag { get; }
+        public PathFigure(IEnumerable<Segment> segments, Colour? fill, Colour? stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, bool isClipping, string tag)
         {
             List<Segment> segs = new List<Segment>();
 
@@ -215,6 +223,7 @@ namespace VectSharp.PDF
             LineJoin = lineJoin;
             LineDash = lineDash;
             IsClipping = isClipping;
+            this.Tag = tag;
         }
     }
 
@@ -238,7 +247,9 @@ namespace VectSharp.PDF
 
         public TextBaselines TextBaseline { get; }
 
-        public TextFigure(string text, Font font, Point position, TextBaselines textBaseline, Colour? fill, Colour? stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash)
+        public string Tag { get; }
+
+        public TextFigure(string text, Font font, Point position, TextBaselines textBaseline, Colour? fill, Colour? stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, string tag)
         {
             Text = text;
             Font = font;
@@ -251,6 +262,7 @@ namespace VectSharp.PDF
             LineCap = lineCap;
             LineJoin = lineJoin;
             LineDash = lineDash;
+            this.Tag = tag;
         }
     }
 
@@ -424,19 +436,19 @@ namespace VectSharp.PDF
 
         public void Fill()
         {
-            _figures.Add(new PathFigure(_currentFigure, _fillStyle, null, 0, LineCaps.Butt, LineJoins.Bevel, new LineDash(0, 0, 0), false));
+            _figures.Add(new PathFigure(_currentFigure, _fillStyle, null, 0, LineCaps.Butt, LineJoins.Bevel, new LineDash(0, 0, 0), false, this.Tag));
             _currentFigure = new List<Segment>();
         }
 
         public void Stroke()
         {
-            _figures.Add(new PathFigure(_currentFigure, null, _strokeStyle, LineWidth, LineCap, LineJoin, _lineDash, false));
+            _figures.Add(new PathFigure(_currentFigure, null, _strokeStyle, LineWidth, LineCap, LineJoin, _lineDash, false, this.Tag));
             _currentFigure = new List<Segment>();
         }
 
         public void SetClippingPath()
         {
-            _figures.Add(new PathFigure(_currentFigure, null, null, 0, LineCaps.Butt, LineJoins.Bevel, new LineDash(0, 0, 0), true));
+            _figures.Add(new PathFigure(_currentFigure, null, null, 0, LineCaps.Butt, LineJoins.Bevel, new LineDash(0, 0, 0), true, this.Tag));
             _currentFigure = new List<Segment>();
         }
 
@@ -480,7 +492,7 @@ namespace VectSharp.PDF
         {
             if (!_textToPaths)
             {
-                _figures.Add(new TextFigure(text, Font, new Point(x, y), TextBaseline, _fillStyle, null, 0, LineCaps.Butt, LineJoins.Miter, new LineDash(0, 0, 0)));
+                _figures.Add(new TextFigure(text, Font, new Point(x, y), TextBaseline, _fillStyle, null, 0, LineCaps.Butt, LineJoins.Miter, new LineDash(0, 0, 0), this.Tag));
             }
             else
             {
@@ -493,17 +505,17 @@ namespace VectSharp.PDF
 
         public void Restore()
         {
-            _figures.Add(new TransformFigure(TransformFigure.TransformTypes.Restore, null));
+            _figures.Add(new TransformFigure(TransformFigure.TransformTypes.Restore, null, this.Tag));
         }
 
         public void Rotate(double angle)
         {
-            _figures.Add(new TransformFigure(TransformFigure.TransformTypes.Transform, new double[,] { { Math.Cos(angle), Math.Sin(angle), 0 }, { -Math.Sin(angle), Math.Cos(angle), 0 }, { 0, 0, 1 } }));
+            _figures.Add(new TransformFigure(TransformFigure.TransformTypes.Transform, new double[,] { { Math.Cos(angle), Math.Sin(angle), 0 }, { -Math.Sin(angle), Math.Cos(angle), 0 }, { 0, 0, 1 } }, this.Tag));
         }
 
         public void Save()
         {
-            _figures.Add(new TransformFigure(TransformFigure.TransformTypes.Save, null));
+            _figures.Add(new TransformFigure(TransformFigure.TransformTypes.Save, null, this.Tag));
         }
 
 
@@ -511,7 +523,7 @@ namespace VectSharp.PDF
         {
             if (!_textToPaths)
             {
-                _figures.Add(new TextFigure(text, Font, new Point(x, y), TextBaseline, null, _strokeStyle, LineWidth, LineCap, LineJoin, _lineDash));
+                _figures.Add(new TextFigure(text, Font, new Point(x, y), TextBaseline, null, _strokeStyle, LineWidth, LineCap, LineJoin, _lineDash, this.Tag));
             }
             else
             {
@@ -522,17 +534,17 @@ namespace VectSharp.PDF
 
         public void Translate(double x, double y)
         {
-            _figures.Add(new TransformFigure(TransformFigure.TransformTypes.Transform, new double[,] { { 1, 0, x }, { 0, 1, y }, { 0, 0, 1 } }));
+            _figures.Add(new TransformFigure(TransformFigure.TransformTypes.Transform, new double[,] { { 1, 0, x }, { 0, 1, y }, { 0, 0, 1 } }, this.Tag));
         }
 
         public void Scale(double scaleX, double scaleY)
         {
-            _figures.Add(new TransformFigure(TransformFigure.TransformTypes.Transform, new double[,] { { scaleX, 0, 0 }, { 0, scaleY, 0 }, { 0, 0, 1 } }));
+            _figures.Add(new TransformFigure(TransformFigure.TransformTypes.Transform, new double[,] { { scaleX, 0, 0 }, { 0, scaleY, 0 }, { 0, 0, 1 } }, this.Tag));
         }
 
         public void Transform(double a, double b, double c, double d, double e, double f)
         {
-            _figures.Add(new TransformFigure(TransformFigure.TransformTypes.Transform, new double[,] { { a, b, e }, { c, d, f }, { 0, 0, 1 } }));
+            _figures.Add(new TransformFigure(TransformFigure.TransformTypes.Transform, new double[,] { { a, b, e }, { c, d, f }, { 0, 0, 1 } }, this.Tag));
         }
 
         public void DrawRasterImage(int sourceX, int sourceY, int sourceWidth, int sourceHeight, double destinationX, double destinationY, double destinationWidth, double destinationHeight, RasterImage image)
@@ -549,7 +561,7 @@ namespace VectSharp.PDF
             double sourceRectX = (double)sourceX / image.Width;
             double sourceRectY = 1 - (double)sourceY / image.Height;
             double sourceRectWidth = (double)sourceWidth / image.Width;
-            double sourceRectHeight = - (double)sourceHeight / image.Height;
+            double sourceRectHeight = -(double)sourceHeight / image.Height;
 
             double scaleX = destinationWidth / sourceRectWidth;
             double scaleY = destinationHeight / sourceRectHeight;
@@ -561,7 +573,7 @@ namespace VectSharp.PDF
             Scale(scaleX, scaleY);
             Translate(translationX, translationY);
 
-            _figures.Add(new RasterImageFigure(image));
+            _figures.Add(new RasterImageFigure(image, this.Tag));
 
             Restore();
         }
@@ -747,11 +759,12 @@ namespace VectSharp.PDF
         /// <param name="fileName">The full path to the file to save. If it exists, it will be overwritten.</param>
         /// <param name="textOption">Defines whether the used fonts should be included in the file.</param>
         /// <param name="compressStreams">Indicates whether the streams in the PDF file should be compressed.</param>
-        public static void SaveAsPDF(this Document document, string fileName, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true)
+        /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
+        public static void SaveAsPDF(this Document document, string fileName, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null)
         {
             using (FileStream stream = new FileStream(fileName, FileMode.Create))
             {
-                document.SaveAsPDF(stream, textOption, compressStreams);
+                document.SaveAsPDF(stream, textOption, compressStreams, linkDestinations);
             }
         }
 
@@ -780,8 +793,14 @@ namespace VectSharp.PDF
         /// <param name="stream">The stream to which the PDF data will be written.</param>
         /// <param name="textOption">Defines whether the used fonts should be included in the file.</param>
         /// <param name="compressStreams">Indicates whether the streams in the PDF file should be compressed.</param>
-        public static void SaveAsPDF(this Document document, Stream stream, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true)
+        /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
+        public static void SaveAsPDF(this Document document, Stream stream, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null)
         {
+            if (linkDestinations == null)
+            {
+                linkDestinations = new Dictionary<string, string>();
+            }
+
             long position = 0;
 
             List<long> objectPositions = new List<long>();
@@ -1322,14 +1341,48 @@ namespace VectSharp.PDF
 
             int[] pageContentInd = new int[document.Pages.Count];
 
+
+            List<(string, List<(double, double, double, double)>)>[] taggedObjectRectsByPage = new List<(string, List<(double, double, double, double)>)>[document.Pages.Count];
+            Dictionary<string, int>[] taggedObjectRectsIndicesByPage = new Dictionary<string, int>[document.Pages.Count];
+
             for (int pageInd = 0; pageInd < document.Pages.Count; pageInd++)
             {
+                taggedObjectRectsByPage[pageInd] = new List<(string, List<(double, double, double, double)>)>();
+                taggedObjectRectsIndicesByPage[pageInd] = new Dictionary<string, int>();
+
+                double[,] transformationMatrix = new double[3, 3] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
+                Stack<double[,]> savedStates = new Stack<double[,]>();
+
                 MemoryStream contentStream = new MemoryStream();
 
                 using (StreamWriter ctW = new StreamWriter(contentStream, Encoding.ASCII, 1024, true))
                 {
                     for (int i = 0; i < pageContexts[pageInd]._figures.Count; i++)
                     {
+                        bool isTransform = pageContexts[pageInd]._figures[i] is TransformFigure;
+
+                        bool isClip = pageContexts[pageInd]._figures[i] is PathFigure pathFig && pathFig.IsClipping;
+
+                        if (!string.IsNullOrEmpty(pageContexts[pageInd]._figures[i].Tag) && !isTransform && !isClip)
+                        {
+                            (double, double, double, double) boundingRect = MeasureFigure(pageContexts[pageInd]._figures[i], ref transformationMatrix, savedStates);
+
+                            if (!taggedObjectRectsIndicesByPage[pageInd].TryGetValue(pageContexts[pageInd]._figures[i].Tag, out int index))
+                            {
+                                taggedObjectRectsByPage[pageInd].Add((pageContexts[pageInd]._figures[i].Tag, new List<(double, double, double, double)> { boundingRect }));
+                                taggedObjectRectsIndicesByPage[pageInd][pageContexts[pageInd]._figures[i].Tag] = taggedObjectRectsByPage[pageInd].Count - 1;
+                            }
+                            else
+                            {
+                                (string, List<(double, double, double, double)>) previousRect = taggedObjectRectsByPage[pageInd][index];
+                                taggedObjectRectsByPage[pageInd][index].Item2.Add(boundingRect);
+                            }
+                        }
+                        else if (isTransform)
+                        {
+                            MeasureFigure(pageContexts[pageInd]._figures[i], ref transformationMatrix, savedStates);
+                        }
+
                         ctW.Write(FigureAsPDFString(pageContexts[pageInd]._figures[i], nonSymbolFontIDs, symbolFontIDs, symbolGlyphIndices, alphas, imageObjectNums));
                     }
                 }
@@ -1350,10 +1403,6 @@ namespace VectSharp.PDF
                 }
 
                 long streamLength = compressedStream.Length;
-                if (!compressStreams)
-                {
-                    streamLength--;
-                }
 
                 pageContentInd[pageInd] = objectNum;
                 currObject = objectNum.ToString() + " 0 obj\n<< /Length " + streamLength.ToString(System.Globalization.CultureInfo.InvariantCulture);
@@ -1389,28 +1438,106 @@ namespace VectSharp.PDF
             position += currObject.Length;
             objectNum++;
 
-            //Pages
             objectPositions.Add(position);
             int pageParent = objectNum;
-            currObject = objectNum.ToString() + " 0 obj\n<< /Type /Pages /Kids [ ";
-            for (int i = 0; i < document.Pages.Count; i++)
-            {
-                currObject += (objectNum + i + 1).ToString() + " 0 R ";
-            }
-            currObject += "] /Count " + document.Pages.Count + " >>\nendobj\n";
-            sw.Write(currObject);
-            position += currObject.Length;
             objectNum++;
+
+            List<int> pageObjectNums = new List<int>();
+
+            //We do not have enough information to resolve all relative links yet (we need the object number for all the pages).
+            List<(int annotationObjectNum, (double, double, double, double) annotationOrigin, int annotationDestinationPage, (double, double, double, double) annotationDestination)> postponedAnnotations = new List<(int, (double, double, double, double), int, (double, double, double, double))>();
 
             //Page
             for (int i = 0; i < document.Pages.Count; i++)
             {
+                List<int> annotationsToInclude = new List<int>();
+
+                //Annotations
+                for (int j = 0; j < taggedObjectRectsByPage[i].Count; j++)
+                {
+                    if (linkDestinations.TryGetValue(taggedObjectRectsByPage[i][j].Item1, out string destination))
+                    {
+                        if (destination.StartsWith("#"))
+                        {
+                            //Leave these for later, once we have computed the object number for all the pages. But we need to include the annotation number in the page, so we start processing the annotation now.
+                            for (int k = 0; k < taggedObjectRectsIndicesByPage.Length; k++)
+                            {
+                                if (taggedObjectRectsIndicesByPage[k].TryGetValue(destination.Substring(1), out int index))
+                                {
+                                    for (int l = 0; l < taggedObjectRectsByPage[i][j].Item2.Count; l++)
+                                    {
+                                        objectPositions.Add(position);
+                                        annotationsToInclude.Add(objectNum);
+                                        postponedAnnotations.Add((objectNum, taggedObjectRectsByPage[i][j].Item2[l], k, taggedObjectRectsByPage[k][index].Item2[0]));
+                                        objectNum++;
+                                    }
+
+                                    //Only consider the first match for the local destination.
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            for (int l = 0; l < taggedObjectRectsByPage[i][j].Item2.Count; l++)
+                            {
+                                objectPositions.Add(position);
+                                currObject = objectNum.ToString() + " 0 obj\n<< /Type /Annot /Subtype /Link /Rect [" + taggedObjectRectsByPage[i][j].Item2[l].Item1.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + taggedObjectRectsByPage[i][j].Item2[l].Item2.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + taggedObjectRectsByPage[i][j].Item2[l].Item3.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + taggedObjectRectsByPage[i][j].Item2[l].Item4.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + "] " +
+                                    "/A << /Type /Action /S /URI /URI (" + destination + ") >> >>\nendobj\n";
+                                sw.Write(currObject);
+                                annotationsToInclude.Add(objectNum);
+                                objectNum++;
+                                position += currObject.Length;
+                            }
+                        }
+                    }
+                }
+
+                //Page
                 objectPositions.Add(position);
-                currObject = objectNum.ToString() + " 0 obj\n<< /Type /Page /Parent " + pageParent.ToString() + " 0 R /MediaBox [0 0 " + document.Pages[i].Width.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + document.Pages[i].Height.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + "] /Resources " + resourceObject.ToString() + " 0 R /Contents " + pageContentInd[i].ToString() + " 0 R >>\nendobj\n";
+                currObject = objectNum.ToString() + " 0 obj\n<< /Type /Page /Parent " + pageParent.ToString() + " 0 R /MediaBox [0 0 " + document.Pages[i].Width.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + document.Pages[i].Height.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + "] /Resources " + resourceObject.ToString() + " 0 R /Contents " + pageContentInd[i].ToString() + " 0 R ";
+
+                if (annotationsToInclude.Count > 0)
+                {
+                    StringBuilder annotations = new StringBuilder();
+                    annotations.Append("/Annots [ ");
+                    for (int j = 0; j < annotationsToInclude.Count; j++)
+                    {
+                        annotations.Append(annotationsToInclude[j].ToString() + " 0 R ");
+                    }
+                    annotations.Append("] ");
+                    currObject += annotations.ToString();
+                }
+
+                currObject += ">>\nendobj\n";
+
                 sw.Write(currObject);
+                pageObjectNums.Add(objectNum);
                 objectNum++;
                 position += currObject.Length;
             }
+
+            //Now we have enough information for the postponed annotations.
+            foreach ((int annotationObjectNum, (double, double, double, double) annotationOrigin, int annotationDestinationPage, (double, double, double, double) annotationDestination) in postponedAnnotations)
+            {
+                objectPositions[annotationObjectNum - 1] = position;
+                currObject = annotationObjectNum.ToString() + " 0 obj\n<< /Type /Annot /Subtype /Link /Rect [" + annotationOrigin.Item1.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + annotationOrigin.Item2.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + annotationOrigin.Item3.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + annotationOrigin.Item4.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + "] " +
+                    "/Dest [ " + pageObjectNums[annotationDestinationPage].ToString() + " 0 R /XYZ " + annotationDestination.Item1.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + annotationDestination.Item4.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " 0 ] >>\nendobj\n";
+                sw.Write(currObject);
+                position += currObject.Length;
+            }
+
+            //Pages
+            objectPositions[pageParent - 1] = position;
+            currObject = pageParent.ToString() + " 0 obj\n<< /Type /Pages /Kids [ ";
+            for (int i = 0; i < document.Pages.Count; i++)
+            {
+                //currObject += (pageParent + i + 1).ToString() + " 0 R ";
+                currObject += pageObjectNums[i].ToString() + " 0 R ";
+            }
+            currObject += "] /Count " + document.Pages.Count + " >>\nendobj\n\n";
+            sw.Write(currObject);
+            position += currObject.Length;
 
             //XRef
             sw.Write("xref\n0 " + (objectPositions.Count + 1).ToString() + "\n0000000000 65535 f \n");
@@ -1424,6 +1551,180 @@ namespace VectSharp.PDF
 
             sw.Flush();
             sw.Dispose();
+        }
+
+        private static (double, double, double, double) MeasureFigure(IFigure figure, ref double[,] transformationMatrix, Stack<double[,]> savedStates)
+        {
+            if (figure is PathFigure)
+            {
+                PathFigure fig = figure as PathFigure;
+
+                double minX = double.MaxValue;
+                double maxX = double.MinValue;
+                double minY = double.MaxValue;
+                double maxY = double.MinValue;
+
+                for (int i = 0; i < fig.Segments.Length; i++)
+                {
+                    switch (fig.Segments[i].Type)
+                    {
+                        case SegmentType.Move:
+                            {
+                                Point pt = transformationMatrix.Multiply(fig.Segments[i].Point);
+                                minX = Math.Min(minX, pt.X);
+                                minY = Math.Min(minY, pt.Y);
+                                maxX = Math.Max(maxX, pt.X);
+                                maxY = Math.Max(maxY, pt.Y);
+                            }
+                            break;
+                        case SegmentType.Line:
+                            {
+                                Point pt = transformationMatrix.Multiply(fig.Segments[i].Point);
+                                minX = Math.Min(minX, pt.X);
+                                minY = Math.Min(minY, pt.Y);
+                                maxX = Math.Max(maxX, pt.X);
+                                maxY = Math.Max(maxY, pt.Y);
+                            }
+                            break;
+                        case SegmentType.CubicBezier:
+                            for (int j = 0; j < fig.Segments[i].Points.Length; j++)
+                            {
+                                Point pt = transformationMatrix.Multiply(fig.Segments[i].Points[j]);
+                                minX = Math.Min(minX, pt.X);
+                                minY = Math.Min(minY, pt.Y);
+                                maxX = Math.Max(maxX, pt.X);
+                                maxY = Math.Max(maxY, pt.Y);
+                            }
+                            break;
+                        case SegmentType.Close:
+                            break;
+                    }
+                }
+
+                return (minX, minY, maxX, maxY);
+            }
+            else if (figure is TextFigure)
+            {
+                TextFigure fig = figure as TextFigure;
+
+                double realX = fig.Position.X;
+
+                if (fig.Font.FontFamily.TrueTypeFile != null)
+                {
+                    realX = fig.Position.X - fig.Font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(fig.Text[0]).LeftSideBearing * fig.Font.FontSize / 1000;
+                }
+
+                double yMax = 0;
+                double yMin = 0;
+
+                if (fig.Font.FontFamily.TrueTypeFile != null)
+                {
+                    for (int i = 0; i < fig.Text.Length; i++)
+                    {
+                        TrueTypeFile.VerticalMetrics vMet = fig.Font.FontFamily.TrueTypeFile.Get1000EmGlyphVerticalMetrics(fig.Text[i]);
+                        yMin = Math.Min(yMin, vMet.YMin * fig.Font.FontSize / 1000);
+                        yMax = Math.Max(yMax, vMet.YMax * fig.Font.FontSize / 1000);
+                    }
+                }
+
+                double realY = fig.Position.Y;
+
+                if (fig.TextBaseline == TextBaselines.Bottom)
+                {
+                    realY -= yMax;
+                }
+                else if (fig.TextBaseline == TextBaselines.Top)
+                {
+                    realY -= yMin;
+                }
+                else if (fig.TextBaseline == TextBaselines.Middle)
+                {
+                    realY -= (yMax + yMin) * 0.5;
+                }
+                else if (fig.TextBaseline == TextBaselines.Baseline)
+                {
+                    realY -= yMax + yMin;
+                }
+
+                Font.DetailedFontMetrics metrics = fig.Font.MeasureTextAdvanced(fig.Text);
+
+                Point corner1 = new Point(fig.Position.X - metrics.LeftSideBearing, realY + metrics.Top);
+                Point corner2 = new Point(fig.Position.X + metrics.Width, realY + metrics.Top);
+                Point corner3 = new Point(fig.Position.X + metrics.Width, realY + metrics.Bottom);
+                Point corner4 = new Point(fig.Position.X - metrics.LeftSideBearing, realY + metrics.Bottom);
+
+                corner1 = transformationMatrix.Multiply(corner1);
+                corner2 = transformationMatrix.Multiply(corner2);
+                corner3 = transformationMatrix.Multiply(corner3);
+                corner4 = transformationMatrix.Multiply(corner4);
+
+                return (Math.Min(corner1.X, Math.Min(corner2.X, Math.Min(corner3.X, corner4.X))), Math.Min(corner1.Y, Math.Min(corner2.Y, Math.Min(corner3.Y, corner4.Y))), Math.Max(corner1.X, Math.Max(corner2.X, Math.Max(corner3.X, corner4.X))), Math.Max(corner1.Y, Math.Max(corner2.Y, Math.Max(corner3.Y, corner4.Y))));
+            }
+            else if (figure is TransformFigure transf)
+            {
+                if (transf.TransformType == TransformFigure.TransformTypes.Transform)
+                {
+                    transformationMatrix = transformationMatrix.Multiply(transf.TransformationMatrix);
+                }
+                else if (transf.TransformType == TransformFigure.TransformTypes.Save)
+                {
+                    savedStates.Push(transformationMatrix);
+                }
+                else if (transf.TransformType == TransformFigure.TransformTypes.Restore)
+                {
+                    transformationMatrix = savedStates.Pop();
+                }
+
+                return (0, 0, 0, 0);
+            }
+            else if (figure is RasterImageFigure)
+            {
+                Point corner1 = new Point(0, 0);
+                Point corner2 = new Point(0, 1);
+                Point corner3 = new Point(1, 1);
+                Point corner4 = new Point(1, 0);
+
+                corner1 = transformationMatrix.Multiply(corner1);
+                corner2 = transformationMatrix.Multiply(corner2);
+                corner3 = transformationMatrix.Multiply(corner3);
+                corner4 = transformationMatrix.Multiply(corner4);
+
+                return (Math.Min(corner1.X, Math.Min(corner2.X, Math.Min(corner3.X, corner4.X))), Math.Min(corner1.Y, Math.Min(corner2.Y, Math.Min(corner3.Y, corner4.Y))), Math.Max(corner1.X, Math.Max(corner2.X, Math.Max(corner3.X, corner4.X))), Math.Max(corner1.Y, Math.Max(corner2.Y, Math.Max(corner3.Y, corner4.Y))));
+            }
+            else
+            {
+                return (0, 0, 0, 0);
+            }
+        }
+
+        private static double[,] Multiply(this double[,] matrix, double[,] matrix2)
+        {
+            double[,] tbr = new double[3, 3];
+
+            tbr[0, 0] = matrix[0, 0] * matrix2[0, 0] - matrix[0, 1] * matrix2[1, 0] + matrix[0, 2] * matrix2[2, 0];
+            tbr[0, 1] = -matrix[0, 0] * matrix2[0, 1] + matrix[0, 1] * matrix2[1, 1] + matrix[0, 2] * matrix2[2, 1];
+            tbr[0, 2] = matrix[0, 0] * matrix2[0, 2] + matrix[0, 1] * matrix2[1, 2] + matrix[0, 2] * matrix2[2, 2];
+
+            tbr[1, 0] = matrix[1, 0] * matrix2[0, 0] - matrix[1, 1] * matrix2[1, 0] + matrix[1, 2] * matrix2[2, 0];
+            tbr[1, 1] = -matrix[1, 0] * matrix2[0, 1] + matrix[1, 1] * matrix2[1, 1] + matrix[1, 2] * matrix2[2, 1];
+            tbr[1, 2] = matrix[1, 0] * matrix2[0, 2] + matrix[1, 1] * matrix2[1, 2] + matrix[1, 2] * matrix2[2, 2];
+
+            tbr[2, 0] = matrix[2, 0] * matrix2[0, 0] - matrix[2, 1] * matrix2[1, 0] + matrix[2, 2] * matrix2[2, 0];
+            tbr[2, 1] = -matrix[2, 0] * matrix2[0, 1] + matrix[2, 1] * matrix2[1, 1] + matrix[2, 2] * matrix2[2, 1];
+            tbr[2, 2] = matrix[2, 0] * matrix2[0, 2] + matrix[2, 1] * matrix2[1, 2] + matrix[2, 2] * matrix2[2, 2];
+
+            return tbr;
+        }
+
+        private static Point Multiply(this double[,] matrix, Point point)
+        {
+            double[] transPt = new double[3];
+
+            transPt[0] = matrix[0, 0] * point.X + matrix[0, 1] * point.Y + matrix[0, 2];
+            transPt[1] = matrix[1, 0] * point.X + matrix[1, 1] * point.Y + matrix[1, 2];
+            transPt[2] = matrix[2, 0] * point.X + matrix[2, 1] * point.Y + matrix[2, 2];
+
+            return new Point(transPt[0] / transPt[2], transPt[1] / transPt[2]);
         }
 
         private static string FigureAsPDFString(IFigure figure, Dictionary<string, string> nonSymbolFontIds, Dictionary<string, string> symbolFontIds, Dictionary<string, Dictionary<char, int>> symbolGlyphIndices, double[] alphas, Dictionary<string, int> imageObjectNums)
