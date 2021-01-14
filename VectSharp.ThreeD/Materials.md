@@ -48,7 +48,6 @@ To sum it up, let <img src="https://render.githubusercontent.com/render/math?mat
 <img src="https://render.githubusercontent.com/render/math?math=T=\left \{ \begin{array}{ll} t %26 \mathrm{if} \  t > 0 \\ 0 %26 \mathrm{otherwise} \end{array} \right .">
 <br />
 <img src="https://render.githubusercontent.com/render/math?math=S=\left \{ \begin{array}{ll} s %26 \mathrm{if} \  t > 0 \ \ \mathrm{and} \ \ s > 0 \\ 0 %26 \mathrm{otherwise} \end{array} \right .">
-<br />
 
 The total light intensity <img src="https://render.githubusercontent.com/render/math?math=I\left(\boldsymbol{p}\right)"> is then:
 
