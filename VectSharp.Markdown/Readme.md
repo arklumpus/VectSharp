@@ -50,7 +50,7 @@ using VectSharp;
 using VectSharp.Markdown;
 using VectSharp.PDF;
 //...
-    // Enables support for raster images
+    // Enables support for raster images in embedded SVG files
     VectSharp.SVG.Parser.ParseImageURI = VectSharp.MuPDFUtils.ImageURIParser.Parser(VectSharp.SVG.Parser.ParseSVGURI);
 
     using (System.Net.WebClient client = new System.Net.WebClient())
@@ -64,6 +64,9 @@ using VectSharp.PDF;
 
             // This uri will be used to resolve link addresses: in this case, we don't want to point to the raw files, but to the GitHub preview
             BaseLinkUri = new Uri("https://github.com/arklumpus/VectSharp/blob/master/VectSharp.Markdown/"),
+
+            // Adds support for directly embedded raster images
+            RasterImageLoader = imageFile => new VectSharp.MuPDFUtils.RasterImageFile(imageFile, scale: 10)
         };
 
         Document doc = renderer.Render(markdownSource, out Dictionary<string, string> linkDestinations);
@@ -77,7 +80,7 @@ The `MarkdownRenderer` class has many properties that can be used to tweak the r
 
 Note the two different base uris used for images and links: since we are embedding the images, we need relative links to image files to point to the raw image file data. Thanks to the different base uri for links, instead, the GitHub preview is shown e.g. for a link to the VectSharp [`Readme.md`](../Readme.md) document in the parent folder.
 
-The first statement after the `using` directives is neccessary to enable support for raster images. If you remove it, the VectSharp logo below will be replaced by a red crossed box.
+The first statement after the `using` directives is neccessary to enable support for raster images in SVG images. Instead, setting the `RasterImageLoader` property of the `MarkdownRenderer` is necessary for rendering raster images that have been directly embedded. If you remove it, the VectSharp logo below will disappear.
 
 <p align="center">
     <img src="../icon.png" width="256" height="256"/>
