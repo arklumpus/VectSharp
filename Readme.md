@@ -11,6 +11,8 @@ It includes an abstract layer on top of which output layers can be written. Curr
 
 [**VectSharp.ThreeD**](https://github.com/arklumpus/VectSharp/tree/master/VectSharp.ThreeD) adds support for 3D vector and raster graphics.
 
+[**VectSharp.Markdown**](https://github.com/arklumpus/VectSharp/tree/master/VectSharp.Markdown) can be used to transform Markdown documents into VectSharp objects, that can then be exported e.g. as PDF or SVG files, or displayed in an Avalonia `Canvas`.
+
 VectSharp is written using .NET Core, and is available for Mac, Windows and Linux. It is released under a GPLv3 license. It includes 14 standard fonts, also released under a GPL license.
 
 Since version 2.0.0, VectSharp.Raster is released under an AGPLv3 license.
@@ -44,7 +46,7 @@ gpr.FillRectangle(100, 100, 800, 800, Colour.FromRgb(128, 128, 128));
 ```Csharp
 using VectSharp.PDF;
 //...
-doc.SaveAsPDF(@"Test.pdf");
+doc.SaveAsPDF(@"Sample.pdf");
 ``` 
 * Export the graphics to a `Canvas`:
 ```Csharp
@@ -64,6 +66,27 @@ using VectSharp.SVG;
 //...
 doc.Pages.Last().SaveAsSVG(@"Sample.svg");
 ``` 
+* PDF and SVG documents support both internal and external links:
+```CSharp
+using VectSharp;
+using VectSharp.PDF;
+using VectSharp.SVG;
+//...
+Document document = new Document();
+Page page = new Page(1000, 1000);
+document.Pages.Add(page);
+
+page.Graphics.FillRectangle(100, 100, 800, 50, Colour.FromRgb(128, 128, 128), tag: "linkToGitHub");
+page.Graphics.FillRectangle(100, 300, 800, 50, Colour.FromRgb(255, 0, 0), tag: "linkToBlueRectangle");
+page.Graphics.FillRectangle(100, 850, 800, 50, Colour.FromRgb(0, 0, 255), tag: "blueRectangle");
+
+Dictionary<string, string> links = new Dictionary<string, string>() { { "linkToGitHub", "https://github.com/" }, { "linkToBlueRectangle", "#blueRectangle" } };
+
+page.SaveAsSVG(@"Links.svg", linkDestinations: links);
+document.SaveAsPDF(@"Links.pdf", linkDestinations: links);
+``` 
+This code produces a document with three rectangles: the grey one at the top links to the GitHub home page, while the red one in the middle is a hyperlink to the blue one at the bottom. Links in PDF documents can refer to objects that are in a different page than the one containing the link.
+
 The public classes and methods are [fully documented](https://arklumpus.github.io/VectSharp), and you can find a (much) more detailed code example in [MainWindow.xaml.cs](https://github.com/arklumpus/VectSharp/blob/master/VectSharp.Demo/MainWindow.xaml.cs). A detailed guide about 3D graphics in VectSharp.ThreeD is available in the [`VectSharp.ThreeD`](https://github.com/arklumpus/VectSharp/tree/master/VectSharp.ThreeD) folder.
 
 ## Creating new output layers

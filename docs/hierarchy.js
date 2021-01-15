@@ -12,8 +12,10 @@ var hierarchy =
     [ "VectSharp.FontFamily", "class_vect_sharp_1_1_font_family.html", [
       [ "VectSharp.Canvas.ResourceFontFamily", "class_vect_sharp_1_1_canvas_1_1_resource_font_family.html", null ]
     ] ],
+    [ "VectSharp.Markdown.FormattedString", "struct_vect_sharp_1_1_markdown_1_1_formatted_string.html", null ],
     [ "VectSharp.Graphics", "class_vect_sharp_1_1_graphics.html", null ],
     [ "VectSharp.GraphicsPath", "class_vect_sharp_1_1_graphics_path.html", null ],
+    [ "VectSharp.Markdown.HTTPUtils", "class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html", null ],
     [ "IDisposable", null, [
       [ "VectSharp.DisposableIntPtr", "class_vect_sharp_1_1_disposable_int_ptr.html", null ],
       [ "VectSharp.RasterImage", "class_vect_sharp_1_1_raster_image.html", [
@@ -43,6 +45,8 @@ var hierarchy =
     ] ],
     [ "VectSharp.ThreeD.LightIntensity", "struct_vect_sharp_1_1_three_d_1_1_light_intensity.html", null ],
     [ "VectSharp.LineDash", "struct_vect_sharp_1_1_line_dash.html", null ],
+    [ "VectSharp.Markdown.Margins", "class_vect_sharp_1_1_markdown_1_1_margins.html", null ],
+    [ "VectSharp.Markdown.MarkdownRenderer", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html", null ],
     [ "VectSharp.ThreeD.ObjectFactory", "class_vect_sharp_1_1_three_d_1_1_object_factory.html", null ],
     [ "VectSharp.Page", "class_vect_sharp_1_1_page.html", null ],
     [ "VectSharp.SVG.Parser", "class_vect_sharp_1_1_s_v_g_1_1_parser.html", null ],
@@ -53,6 +57,7 @@ var hierarchy =
     [ "VectSharp.Segment", "class_vect_sharp_1_1_segment.html", null ],
     [ "VectSharp.Size", "struct_vect_sharp_1_1_size.html", null ],
     [ "VectSharp.SVG.SVGContextInterpreter", "class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html", null ],
+    [ "VectSharp.Markdown.SyntaxHighlighter", "class_vect_sharp_1_1_markdown_1_1_syntax_highlighter.html", null ],
     [ "VectSharp.TrueTypeFile", "class_vect_sharp_1_1_true_type_file.html", null ],
     [ "VectSharp.TrueTypeFile.TrueTypePoint", "struct_vect_sharp_1_1_true_type_file_1_1_true_type_point.html", null ],
     [ "VectSharp.TrueTypeFile.VerticalMetrics", "struct_vect_sharp_1_1_true_type_file_1_1_vertical_metrics.html", null ]

@@ -1,9 +1,10 @@
 var searchData=
 [
-  ['raster_490',['Raster',['../class_vect_sharp_1_1_raster_1_1_raster.html',1,'VectSharp::Raster']]],
-  ['rasterimage_491',['RasterImage',['../class_vect_sharp_1_1_raster_image.html',1,'VectSharp']]],
-  ['rasterimagefile_492',['RasterImageFile',['../class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_file.html',1,'VectSharp::MuPDFUtils']]],
-  ['rasterimagestream_493',['RasterImageStream',['../class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_stream.html',1,'VectSharp::MuPDFUtils']]],
-  ['renderaction_494',['RenderAction',['../class_vect_sharp_1_1_canvas_1_1_render_action.html',1,'VectSharp::Canvas']]],
-  ['resourcefontfamily_495',['ResourceFontFamily',['../class_vect_sharp_1_1_canvas_1_1_resource_font_family.html',1,'VectSharp::Canvas']]]
+  ['page_555',['Page',['../class_vect_sharp_1_1_page.html',1,'VectSharp']]],
+  ['parallellightsource_556',['ParallelLightSource',['../class_vect_sharp_1_1_three_d_1_1_parallel_light_source.html',1,'VectSharp::ThreeD']]],
+  ['parser_557',['Parser',['../class_vect_sharp_1_1_s_v_g_1_1_parser.html',1,'VectSharp::SVG']]],
+  ['pdfcontextinterpreter_558',['PDFContextInterpreter',['../class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html',1,'VectSharp::PDF']]],
+  ['phongmaterial_559',['PhongMaterial',['../class_vect_sharp_1_1_three_d_1_1_phong_material.html',1,'VectSharp::ThreeD']]],
+  ['point_560',['Point',['../struct_vect_sharp_1_1_point.html',1,'VectSharp']]],
+  ['pointlightsource_561',['PointLightSource',['../class_vect_sharp_1_1_three_d_1_1_point_light_source.html',1,'VectSharp::ThreeD']]]
 ];

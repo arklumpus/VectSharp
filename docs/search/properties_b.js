@@ -1,6 +1,11 @@
 var searchData=
 [
-  ['radius_944',['Radius',['../class_vect_sharp_1_1_three_d_1_1_area_light_source.html#a31f4ee050eac024c8a9c46ac9356500e',1,'VectSharp::ThreeD::AreaLightSource']]],
-  ['reversedirection_945',['ReverseDirection',['../class_vect_sharp_1_1_three_d_1_1_parallel_light_source.html#a929b54d55a24eb4b09c2b3617748a778',1,'VectSharp::ThreeD::ParallelLightSource']]],
-  ['rightsidebearing_946',['RightSideBearing',['../class_vect_sharp_1_1_font_1_1_detailed_font_metrics.html#a9e96615d06c0ed23e1f0dca35342cddb',1,'VectSharp::Font::DetailedFontMetrics']]]
+  ['pagesize_1052',['PageSize',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a587e062de7f7549f3a75bbeaed30c9fe',1,'VectSharp::Markdown::MarkdownRenderer']]],
+  ['parent_1053',['Parent',['../class_vect_sharp_1_1_canvas_1_1_render_action.html#a6e8d94f05f0f24d6a743bcb19ec7432c',1,'VectSharp::Canvas::RenderAction']]],
+  ['penumbraattenuationexponent_1054',['PenumbraAttenuationExponent',['../class_vect_sharp_1_1_three_d_1_1_area_light_source.html#aaab65d0328271c7beb9facc3cfbbbb94',1,'VectSharp::ThreeD::AreaLightSource']]],
+  ['penumbraradius_1055',['PenumbraRadius',['../class_vect_sharp_1_1_three_d_1_1_area_light_source.html#ac6733ad7ade0c156002bfb567e69749b',1,'VectSharp::ThreeD::AreaLightSource']]],
+  ['pngstream_1056',['PNGStream',['../class_vect_sharp_1_1_raster_image.html#a3d97ff610da831b877a50688c1b9e1e1',1,'VectSharp::RasterImage']]],
+  ['point_1057',['Point',['../class_vect_sharp_1_1_segment.html#ad0ba21d6c10d9c9bd0926c46968f651d',1,'VectSharp::Segment']]],
+  ['points_1058',['Points',['../class_vect_sharp_1_1_segment.html#ad7c3d3a529ef22a4e236c254fe22c809',1,'VectSharp::Segment']]],
+  ['position_1059',['Position',['../class_vect_sharp_1_1_three_d_1_1_point_light_source.html#a048531f2cff5f4115d5698d9127d1da8',1,'VectSharp.ThreeD.PointLightSource.Position()'],['../class_vect_sharp_1_1_three_d_1_1_spotlight_light_source.html#a6991a040e66f4c0798dff7910a29f70f',1,'VectSharp.ThreeD.SpotlightLightSource.Position()'],['../class_vect_sharp_1_1_three_d_1_1_masked_light_source.html#aec1e3d72451a22404b5c9477af9764b4',1,'VectSharp.ThreeD.MaskedLightSource.Position()']]]
 ];

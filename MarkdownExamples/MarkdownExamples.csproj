@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="github-markdown.css" />
+    <None Remove="spec.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="github-markdown.css" />
+    <EmbeddedResource Include="spec.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VectSharp.Markdown\VectSharp.Markdown.csproj" />
+  </ItemGroup>
+
+</Project>

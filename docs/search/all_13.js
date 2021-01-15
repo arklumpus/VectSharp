@@ -1,13 +1,9 @@
 var searchData=
 [
-  ['canvas_438',['Canvas',['../namespace_vect_sharp_1_1_canvas.html',1,'VectSharp']]],
-  ['vectsharp_3a_20a_20light_20library_20for_20c_23_20vector_20graphics_439',['VectSharp: a light library for C# vector graphics',['../index.html',1,'']]],
-  ['mupdfutils_440',['MuPDFUtils',['../namespace_vect_sharp_1_1_mu_p_d_f_utils.html',1,'VectSharp']]],
-  ['pdf_441',['PDF',['../namespace_vect_sharp_1_1_p_d_f.html',1,'VectSharp']]],
-  ['raster_442',['Raster',['../namespace_vect_sharp_1_1_raster.html',1,'VectSharp']]],
-  ['svg_443',['SVG',['../namespace_vect_sharp_1_1_s_v_g.html',1,'VectSharp']]],
-  ['threed_444',['ThreeD',['../namespace_vect_sharp_1_1_three_d.html',1,'VectSharp']]],
-  ['vectsharp_445',['VectSharp',['../namespace_vect_sharp.html',1,'']]],
-  ['verticalmetrics_446',['VerticalMetrics',['../struct_vect_sharp_1_1_true_type_file_1_1_vertical_metrics.html',1,'VectSharp::TrueTypeFile']]],
-  ['violet_447',['Violet',['../class_vect_sharp_1_1_colours.html#af4e1a43e224de772907f54ce2393ad64',1,'VectSharp::Colours']]]
+  ['unbalancedstackaction_498',['UnbalancedStackAction',['../class_vect_sharp_1_1_graphics.html#af32ad440108219e8600983cc6d0f6d49',1,'VectSharp::Graphics']]],
+  ['unbalancedstackactions_499',['UnbalancedStackActions',['../namespace_vect_sharp.html#a88d2dd0aea021af9a8af889bf292006f',1,'VectSharp']]],
+  ['unbalancedstackexception_500',['UnbalancedStackException',['../class_vect_sharp_1_1_unbalanced_stack_exception.html',1,'VectSharp']]],
+  ['underlinethickness_501',['UnderlineThickness',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ac91f04f799cbb3f857d1e164d711dc30',1,'VectSharp::Markdown::MarkdownRenderer']]],
+  ['unitsoff_502',['UnitsOff',['../struct_vect_sharp_1_1_line_dash.html#ae7f1ec43760f311d6ab9379309e719b6',1,'VectSharp::LineDash']]],
+  ['unitson_503',['UnitsOn',['../struct_vect_sharp_1_1_line_dash.html#a52d89296026bf3767252434083d5558a',1,'VectSharp::LineDash']]]
 ];
