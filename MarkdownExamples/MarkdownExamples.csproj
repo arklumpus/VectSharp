@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\VectSharp.Markdown\VectSharp.Markdown.csproj" />
+    <PackageReference Include="VectSharp.Markdown" Version="1.0.2" />
   </ItemGroup>
 
 </Project>

@@ -66,7 +66,7 @@ using VectSharp.PDF;
             BaseLinkUri = new Uri("https://github.com/arklumpus/VectSharp/blob/master/VectSharp.Markdown/"),
 
             // Adds support for directly embedded raster images
-            RasterImageLoader = imageFile => new VectSharp.MuPDFUtils.RasterImageFile(imageFile, scale: 10)
+            RasterImageLoader = imageFile => new VectSharp.MuPDFUtils.RasterImageFile(imageFile)
         };
 
         Document doc = renderer.Render(markdownSource, out Dictionary<string, string> linkDestinations);
@@ -80,7 +80,7 @@ The `MarkdownRenderer` class has many properties that can be used to tweak the r
 
 Note the two different base uris used for images and links: since we are embedding the images, we need relative links to image files to point to the raw image file data. Thanks to the different base uri for links, instead, the GitHub preview is shown e.g. for a link to the VectSharp [`Readme.md`](../Readme.md) document in the parent folder.
 
-The first statement after the `using` directives is neccessary to enable support for raster images in SVG images. Instead, setting the `RasterImageLoader` property of the `MarkdownRenderer` is necessary for rendering raster images that have been directly embedded. If you remove it, the VectSharp logo below will disappear.
+The first statement after the `using` directives is necessary to enable support for raster images embedded within SVG images. Instead, setting the `RasterImageLoader` property of the `MarkdownRenderer` is necessary for rendering raster images that have been directly embedded in the Markdown document. If you remove it, the VectSharp logo below will disappear.
 
 <p align="center">
     <img src="../icon.png" width="256" height="256"/>
@@ -219,7 +219,7 @@ using VectSharp.PDF;
 
 ### Supported HTML tags
 
-* `<img>` or `<image>` tags for including images are supported. The tag must contain ab `src` attribute specifying the image file, and can contain an `align` attribute with value `left`, `center` or `right`, specifying the alignment of the image in the page.
+* `<img>` or `<image>` tags for including images are supported. The tag must contain an `src` attribute specifying the image file, and can contain an `align` attribute with value `left`, `center` or `right`, specifying the alignment of the image in the page.
 
     If no `align` attribute is provided, the image is treated as being inline (except if it is the only element in its block). Otherwise:
     
@@ -230,7 +230,7 @@ using VectSharp.PDF;
 
 * `<a>` tags are supported only to provide anchors for regular Markdown links (e.g. `<a name="linkTarget"></a>`). Things like `<a href="https://www.github.com/"></a>` **will not work**!
 
-* `<br>` tags can be used for line breaks and page breaks. A simple `<br/>` tag signifies a line break, while `<br type="page">` can be used to force a page break.
+* `<br>` tags can be used for line breaks and page breaks. A simple `<br/>` tag signifies a line break, while `<br type="page"/>` can be used to force a page break.
 
 ## Single-page rendering
 
