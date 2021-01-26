@@ -40,7 +40,7 @@ namespace VectSharp.Markdown
 
             spaceWidth *= font.FontSize;
 
-            while (word.Metrics.Width + word.Metrics.LeftSideBearing + word.Metrics.RightSideBearing + spaceWidth * word.WhitespaceCount * (word.PrecedingWhitespace == '\t' ? 4 : 1) > maxWidth)
+            while (!string.IsNullOrEmpty(word.Text) && word.Metrics.Width + word.Metrics.LeftSideBearing + word.Metrics.RightSideBearing + spaceWidth * word.WhitespaceCount * (word.PrecedingWhitespace == '\t' ? 4 : 1) > maxWidth)
             {
                 int minIndex = 1;
                 int maxIndex = word.Text.Length;
