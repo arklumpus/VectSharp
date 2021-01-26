@@ -239,7 +239,22 @@ namespace VectSharp.Markdown
         /// <returns>A tuple containing the local path of the image file (either the original image, or a local copy of a remote file) and a boolean value indicating whether the image was fetched from a remote location and should be deleted after the program is done with it.</returns>
         public static (string path, bool wasDownloaded) ResolveImageURI(string uri, string baseUriString)
         {
-            if (File.Exists(Path.Combine(baseUriString, uri)))
+            if (uri.StartsWith("data:"))
+            {
+                string tempFile = Path.GetTempFileName();
+                if (File.Exists(tempFile))
+                {
+                    File.Delete(tempFile);
+                }
+
+                Directory.CreateDirectory(tempFile);
+
+                VectSharp.Page pag = VectSharp.SVG.Parser.ParseImageURI(uri, true);
+                VectSharp.SVG.SVGContextInterpreter.SaveAsSVG(pag, Path.Combine(tempFile, "temp.svg"));
+
+                return (Path.Combine(tempFile, "temp.svg"), true);
+            }
+            else if (File.Exists(Path.Combine(baseUriString, uri)))
             {
                 return (Path.Combine(baseUriString, uri), false);
             }
