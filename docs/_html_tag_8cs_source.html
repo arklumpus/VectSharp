@@ -330,151 +330,173 @@ $(document).ready(function(){initNavTree('_html_tag_8cs_source.html',''); initRe
 <div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;<span class="comment">        /// &lt;returns&gt;A tuple containing the local path of the image file (either the original image, or a local copy of a remote file) and a boolean value indicating whether the image was fetched from a remote location and should be deleted after the program is done with it.&lt;/returns&gt;</span></div>
 <div class="line"><a name="l00240"></a><span class="lineno"><a class="line" href="class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html#a98cbe747bc3733ad4710d5cacf8059fe">  240</a></span>&#160;<span class="comment"></span>        <span class="keyword">public</span> <span class="keyword">static</span> (<span class="keywordtype">string</span> <a class="code" href="class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html#a98cbe747bc3733ad4710d5cacf8059fe">path</a>, <span class="keywordtype">bool</span> wasDownloaded) ResolveImageURI(<span class="keywordtype">string</span> uri, <span class="keywordtype">string</span> baseUriString)</div>
 <div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;        {</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;            <span class="keywordflow">if</span> (File.Exists(Path.Combine(baseUriString, uri)))</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;            <span class="keywordflow">if</span> (uri.StartsWith(<span class="stringliteral">&quot;data:&quot;</span>))</div>
 <div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;            {</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;                <span class="keywordflow">return</span> (Path.Combine(baseUriString, uri), <span class="keyword">false</span>);</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;            }</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;            <span class="keywordflow">else</span> <span class="keywordflow">if</span> (File.Exists(uri))</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;            {</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;                <span class="keywordflow">return</span> (uri, <span class="keyword">false</span>);</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;            }</div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;            <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;            {</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;                Uri absoluteUri;</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;                <span class="keywordtype">bool</span> validUri;</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;                <span class="keywordtype">string</span> tempFile = Path.GetTempFileName();</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;                <span class="keywordflow">if</span> (File.Exists(tempFile))</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;                {</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;                    File.Delete(tempFile);</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;                }</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160; </div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;                Directory.CreateDirectory(tempFile);</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160; </div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;                <a class="code" href="namespace_vect_sharp.html">VectSharp</a>.<a class="code" href="class_vect_sharp_1_1_page.html">Page</a> pag = <a class="code" href="namespace_vect_sharp.html">VectSharp</a>.<a class="code" href="namespace_vect_sharp_1_1_s_v_g.html">SVG</a>.<a class="code" href="class_vect_sharp_1_1_s_v_g_1_1_parser.html">Parser</a>.<a class="code" href="class_vect_sharp_1_1_s_v_g_1_1_parser.html#ab061b23582543541eeeb43896c28689a">ParseImageURI</a>(uri, <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;                <a class="code" href="namespace_vect_sharp.html">VectSharp</a>.<a class="code" href="namespace_vect_sharp_1_1_s_v_g.html">SVG</a>.<a class="code" href="class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html">SVGContextInterpreter</a>.<a class="code" href="class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#a1a4e152c09a5ecdc4cf15a753749d2d1">SaveAsSVG</a>(pag, Path.Combine(tempFile, <span class="stringliteral">&quot;temp.svg&quot;</span>));</div>
 <div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160; </div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;                <span class="keywordflow">if</span> (Uri.TryCreate(baseUriString, UriKind.Absolute, out Uri baseUri))</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;                {</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;                    validUri = Uri.TryCreate(baseUri, uri, out absoluteUri);</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;                }</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;                <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;                {</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;                    validUri = Uri.TryCreate(uri, UriKind.Absolute, out absoluteUri);</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;                }</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160; </div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;                <span class="keywordflow">if</span> (validUri)</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;                {</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;                    <span class="keywordtype">string</span> tempFile = Path.GetTempFileName();</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;                    File.Delete(tempFile);</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;                    Directory.CreateDirectory(tempFile);</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;                <span class="keywordflow">return</span> (Path.Combine(tempFile, <span class="stringliteral">&quot;temp.svg&quot;</span>), <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;            }</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;            <span class="keywordflow">else</span> <span class="keywordflow">if</span> (File.Exists(Path.Combine(baseUriString, uri)))</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;            {</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;                <span class="keywordflow">return</span> (Path.Combine(baseUriString, uri), <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;            }</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;            <span class="keywordflow">else</span> <span class="keywordflow">if</span> (File.Exists(uri))</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;            {</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;                <span class="keywordflow">return</span> (uri, <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;            }</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;            <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;            {</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;                Uri absoluteUri;</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;                <span class="keywordtype">bool</span> validUri;</div>
 <div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160; </div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;                    <span class="keywordtype">string</span> fileDest = Path.Combine(tempFile, Path.GetFileName(absoluteUri.LocalPath));</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160; </div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;                    <span class="keywordflow">try</span></div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;                    {</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;                        <span class="keywordflow">if</span> (<a class="code" href="class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html#a47befa9d0fd3973867287164f317b2b0">LogDownloads</a>)</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;                        {</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;                            Console.Error.WriteLine();</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;                            Console.Error.Write(<span class="stringliteral">&quot;Downloading {0}...&quot;</span>, absoluteUri);</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;                        }</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;                        </div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;                        <span class="keyword">using</span> (WebClient client = <span class="keyword">new</span> WebClient())</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;                        {</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;                            client.DownloadFile(absoluteUri, fileDest);</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;                        }</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;                <span class="keywordflow">if</span> (Uri.TryCreate(baseUriString, UriKind.Absolute, out Uri baseUri))</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;                {</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;                    validUri = Uri.TryCreate(baseUri, uri, out absoluteUri);</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;                }</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;                <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;                {</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;                    validUri = Uri.TryCreate(uri, UriKind.Absolute, out absoluteUri);</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;                }</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160; </div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;                <span class="keywordflow">if</span> (validUri)</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;                {</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;                    <span class="keywordtype">string</span> tempFile = Path.GetTempFileName();</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;                    File.Delete(tempFile);</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;                    Directory.CreateDirectory(tempFile);</div>
 <div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160; </div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;                        <span class="keywordflow">if</span> (<a class="code" href="class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html#a47befa9d0fd3973867287164f317b2b0">LogDownloads</a>)</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;                        {</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;                            Console.Error.WriteLine(<span class="stringliteral">&quot; Done.&quot;</span>);</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;                        }</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160; </div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;                        <span class="keywordtype">string</span> newName = FixFileExtensionBasedOnContent(fileDest);</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160; </div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;                        File.Move(fileDest, newName);</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;                        fileDest = newName;</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160; </div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;                        <span class="keywordflow">return</span> (fileDest, <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;                    }</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;                    <span class="keywordflow">catch</span> (Exception ex)</div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;                    {</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;                        <span class="keywordflow">if</span> (<a class="code" href="class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html#a47befa9d0fd3973867287164f317b2b0">LogDownloads</a>)</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;                        {</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;                            Console.Error.WriteLine(<span class="stringliteral">&quot; Failed!&quot;</span>);</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;                            Console.Error.WriteLine(ex.Message);</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;                    <span class="keywordtype">string</span> fileDest = Path.Combine(tempFile, Path.GetFileName(absoluteUri.LocalPath));</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160; </div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;                    <span class="keywordflow">try</span></div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;                    {</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;                        <span class="keywordflow">if</span> (<a class="code" href="class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html#a47befa9d0fd3973867287164f317b2b0">LogDownloads</a>)</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;                        {</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;                            Console.Error.WriteLine();</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;                            Console.Error.Write(<span class="stringliteral">&quot;Downloading {0}...&quot;</span>, absoluteUri);</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;                        }</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;                        </div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;                        <span class="keyword">using</span> (WebClient client = <span class="keyword">new</span> WebClient())</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;                        {</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;                            client.DownloadFile(absoluteUri, fileDest);</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;                        }</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160; </div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;                        <span class="keywordflow">if</span> (<a class="code" href="class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html#a47befa9d0fd3973867287164f317b2b0">LogDownloads</a>)</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;                        {</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;                            Console.Error.WriteLine(<span class="stringliteral">&quot; Done.&quot;</span>);</div>
 <div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;                        }</div>
 <div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160; </div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;                        Directory.Delete(tempFile, <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;                        <span class="keywordflow">return</span> (<span class="keyword">null</span>, <span class="keyword">false</span>);</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;                    }</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;                }</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;                <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;                {</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;                    <span class="keywordflow">return</span> (<span class="keyword">null</span>, <span class="keyword">false</span>);</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;                }</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;            }</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;        }</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160; </div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keywordtype">string</span> FixFileExtensionBasedOnContent(<span class="keywordtype">string</span> fileName)</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;        {</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;            <span class="keyword">using</span> (FileStream fileStream = File.OpenRead(fileName))</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;            {</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;                <span class="keywordtype">bool</span> isSvg = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160; </div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;                <span class="keywordflow">try</span></div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;                {</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;                    <span class="keyword">using</span> (var xmlReader = System.Xml.XmlReader.Create(fileStream))</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;                    {</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;                        isSvg = xmlReader.MoveToContent() == System.Xml.XmlNodeType.Element &amp;&amp; <span class="stringliteral">&quot;svg&quot;</span>.Equals(xmlReader.Name, StringComparison.OrdinalIgnoreCase);</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;                    }</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;                }</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;                <span class="keywordflow">catch</span></div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;                {</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;                    isSvg = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;                }</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160; </div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;                <span class="keywordflow">if</span> (isSvg)</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;                {</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;                    <span class="keywordflow">return</span> fileName + <span class="stringliteral">&quot;.svg&quot;</span>;</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;                }</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;                <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;                {</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;                    fileStream.Seek(0, SeekOrigin.Begin);</div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;                    <span class="keywordtype">byte</span>[] header = <span class="keyword">new</span> <span class="keywordtype">byte</span>[8];</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160; </div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;                    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; header.Length; i++)</div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;                    {</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;                        header[i] = (byte)fileStream.ReadByte();</div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;                    }</div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160; </div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;                    <span class="keywordflow">if</span> (header[0] == 0x42 &amp;&amp; header[1] == 0x4D)</div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;                    {</div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;                        <span class="keywordflow">return</span> fileName + <span class="stringliteral">&quot;.bmp&quot;</span>;</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;                    }</div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;                    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (header[0] == 0x47 &amp;&amp; header[1] == 0x49 &amp;&amp; header[2] == 0x46 &amp;&amp; header[3] == 0x38)</div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;                    {</div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;                        <span class="keywordflow">return</span> fileName + <span class="stringliteral">&quot;.gif&quot;</span>;</div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;                    }</div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;                    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (header[0] == 0xFF &amp;&amp; header[1] == 0xD8 &amp;&amp; header[2] == 0xFF &amp;&amp; (header[3] == 0xDB || header[3] == 0xE0 || header[3] == 0xEE || header[3] == 0xE1))</div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;                    {</div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;                        <span class="keywordflow">return</span> fileName + <span class="stringliteral">&quot;.jpg&quot;</span>;</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;                    }</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;                    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (header[0] == 0x25 &amp;&amp; header[1] == 0x50 &amp;&amp; header[2] == 0x44 &amp;&amp; header[3] == 0x46 &amp;&amp; header[4] == 0x2D)</div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;                    {</div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;                        <span class="keywordflow">return</span> fileName + <span class="stringliteral">&quot;.pdf&quot;</span>;</div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;                    }</div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;                    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (header[0] == 0x89 &amp;&amp; header[1] == 0x50 &amp;&amp; header[2] == 0x4E &amp;&amp; header[3] == 0x47 &amp;&amp; header[4] == 0x0D &amp;&amp; header[5] == 0x0A &amp;&amp; header[6] == 0x1A &amp;&amp; header[7] == 0x0A)</div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;                    {</div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;                        <span class="keywordflow">return</span> fileName + <span class="stringliteral">&quot;.png&quot;</span>;</div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;                    }</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;                    <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((header[0] == 0x49 &amp;&amp; header[1] == 0x49 &amp;&amp; header[2] == 0x2A &amp;&amp; header[3] == 0x00) || (header[0] == 0x4D &amp;&amp; header[1] == 0x4D &amp;&amp; header[2] == 0x00 &amp;&amp; header[3] == 0x2A))</div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;                    {</div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;                        <span class="keywordflow">return</span> fileName + <span class="stringliteral">&quot;.tif&quot;</span>;</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;                    }</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;                    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;                    {</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;                        <span class="keywordflow">return</span> fileName;</div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;                    }</div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;                }</div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;            }</div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;        }</div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;    }</div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;}</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;                        <span class="keywordtype">string</span> newName = FixFileExtensionBasedOnContent(fileDest);</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160; </div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;                        File.Move(fileDest, newName);</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;                        fileDest = newName;</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160; </div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;                        <span class="keywordflow">return</span> (fileDest, <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;                    }</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;                    <span class="keywordflow">catch</span> (Exception ex)</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;                    {</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;                        <span class="keywordflow">if</span> (<a class="code" href="class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html#a47befa9d0fd3973867287164f317b2b0">LogDownloads</a>)</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;                        {</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;                            Console.Error.WriteLine(<span class="stringliteral">&quot; Failed!&quot;</span>);</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;                            Console.Error.WriteLine(ex.Message);</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;                        }</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160; </div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;                        Directory.Delete(tempFile, <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;                        <span class="keywordflow">return</span> (<span class="keyword">null</span>, <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;                    }</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;                }</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;                <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;                {</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;                    <span class="keywordflow">return</span> (<span class="keyword">null</span>, <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;                }</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;            }</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;        }</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160; </div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keywordtype">string</span> FixFileExtensionBasedOnContent(<span class="keywordtype">string</span> fileName)</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;        {</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;            <span class="keyword">using</span> (FileStream fileStream = File.OpenRead(fileName))</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;            {</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;                <span class="keywordtype">bool</span> isSvg = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160; </div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;                <span class="keywordflow">try</span></div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;                {</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;                    <span class="keyword">using</span> (var xmlReader = System.Xml.XmlReader.Create(fileStream))</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;                    {</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;                        isSvg = xmlReader.MoveToContent() == System.Xml.XmlNodeType.Element &amp;&amp; <span class="stringliteral">&quot;svg&quot;</span>.Equals(xmlReader.Name, StringComparison.OrdinalIgnoreCase);</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;                    }</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;                }</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;                <span class="keywordflow">catch</span></div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;                {</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;                    isSvg = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;                }</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160; </div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;                <span class="keywordflow">if</span> (isSvg)</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;                {</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;                    <span class="keywordflow">return</span> fileName + <span class="stringliteral">&quot;.svg&quot;</span>;</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;                }</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;                <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;                {</div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;                    fileStream.Seek(0, SeekOrigin.Begin);</div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;                    <span class="keywordtype">byte</span>[] header = <span class="keyword">new</span> <span class="keywordtype">byte</span>[8];</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160; </div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;                    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; header.Length; i++)</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;                    {</div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;                        header[i] = (byte)fileStream.ReadByte();</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;                    }</div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160; </div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;                    <span class="keywordflow">if</span> (header[0] == 0x42 &amp;&amp; header[1] == 0x4D)</div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;                    {</div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;                        <span class="keywordflow">return</span> fileName + <span class="stringliteral">&quot;.bmp&quot;</span>;</div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;                    }</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;                    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (header[0] == 0x47 &amp;&amp; header[1] == 0x49 &amp;&amp; header[2] == 0x46 &amp;&amp; header[3] == 0x38)</div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;                    {</div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;                        <span class="keywordflow">return</span> fileName + <span class="stringliteral">&quot;.gif&quot;</span>;</div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;                    }</div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;                    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (header[0] == 0xFF &amp;&amp; header[1] == 0xD8 &amp;&amp; header[2] == 0xFF &amp;&amp; (header[3] == 0xDB || header[3] == 0xE0 || header[3] == 0xEE || header[3] == 0xE1))</div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;                    {</div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;                        <span class="keywordflow">return</span> fileName + <span class="stringliteral">&quot;.jpg&quot;</span>;</div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;                    }</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;                    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (header[0] == 0x25 &amp;&amp; header[1] == 0x50 &amp;&amp; header[2] == 0x44 &amp;&amp; header[3] == 0x46 &amp;&amp; header[4] == 0x2D)</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;                    {</div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;                        <span class="keywordflow">return</span> fileName + <span class="stringliteral">&quot;.pdf&quot;</span>;</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;                    }</div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;                    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (header[0] == 0x89 &amp;&amp; header[1] == 0x50 &amp;&amp; header[2] == 0x4E &amp;&amp; header[3] == 0x47 &amp;&amp; header[4] == 0x0D &amp;&amp; header[5] == 0x0A &amp;&amp; header[6] == 0x1A &amp;&amp; header[7] == 0x0A)</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;                    {</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;                        <span class="keywordflow">return</span> fileName + <span class="stringliteral">&quot;.png&quot;</span>;</div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;                    }</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;                    <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((header[0] == 0x49 &amp;&amp; header[1] == 0x49 &amp;&amp; header[2] == 0x2A &amp;&amp; header[3] == 0x00) || (header[0] == 0x4D &amp;&amp; header[1] == 0x4D &amp;&amp; header[2] == 0x00 &amp;&amp; header[3] == 0x2A))</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;                    {</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;                        <span class="keywordflow">return</span> fileName + <span class="stringliteral">&quot;.tif&quot;</span>;</div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;                    }</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;                    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;                    {</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;                        <span class="keywordflow">return</span> fileName;</div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;                    }</div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;                }</div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;            }</div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;        }</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;    }</div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
+<div class="ttc" id="aclass_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter_html_a1a4e152c09a5ecdc4cf15a753749d2d1"><div class="ttname"><a href="class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#a1a4e152c09a5ecdc4cf15a753749d2d1">VectSharp.SVG.SVGContextInterpreter.SaveAsSVG</a></div><div class="ttdeci">static void SaveAsSVG(this Page page, string fileName, TextOptions textOption=TextOptions.SubsetFonts, Dictionary&lt; string, string &gt; linkDestinations=null)</div><div class="ttdoc">Render the page to an SVG file.</div><div class="ttdef"><b>Definition:</b> <a href="_s_v_g_context_8cs_source.html#l00895">SVGContext.cs:895</a></div></div>
+<div class="ttc" id="aclass_vect_sharp_1_1_s_v_g_1_1_parser_html"><div class="ttname"><a href="class_vect_sharp_1_1_s_v_g_1_1_parser.html">VectSharp.SVG.Parser</a></div><div class="ttdoc">Contains methods to read an SVG image file.</div><div class="ttdef"><b>Definition:</b> <a href="_s_v_g_parser_8cs_source.html#l00032">SVGParser.cs:33</a></div></div>
+<div class="ttc" id="anamespace_vect_sharp_1_1_s_v_g_html"><div class="ttname"><a href="namespace_vect_sharp_1_1_s_v_g.html">VectSharp.SVG</a></div><div class="ttdef"><b>Definition:</b> <a href="_s_v_g_context_8cs_source.html#l00026">SVGContext.cs:27</a></div></div>
+<div class="ttc" id="anamespace_vect_sharp_html"><div class="ttname"><a href="namespace_vect_sharp.html">VectSharp</a></div><div class="ttdef"><b>Definition:</b> <a href="_document_8cs_source.html#l00022">Document.cs:23</a></div></div>
+<div class="ttc" id="aclass_vect_sharp_1_1_page_html"><div class="ttname"><a href="class_vect_sharp_1_1_page.html">VectSharp.Page</a></div><div class="ttdoc">Represents a Graphics object with a width and height.</div><div class="ttdef"><b>Definition:</b> <a href="_document_8cs_source.html#l00047">Document.cs:48</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils_html_a98cbe747bc3733ad4710d5cacf8059fe"><div class="ttname"><a href="class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html#a98cbe747bc3733ad4710d5cacf8059fe">VectSharp.Markdown.HTTPUtils.path</a></div><div class="ttdeci">static string path</div><div class="ttdoc">Resolves an image Uri, by downloading the image file if necessary. It also takes care of ensuring tha...</div><div class="ttdef"><b>Definition:</b> <a href="_html_tag_8cs_source.html#l00240">HtmlTag.cs:240</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils_html_a47befa9d0fd3973867287164f317b2b0"><div class="ttname"><a href="class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html#a47befa9d0fd3973867287164f317b2b0">VectSharp.Markdown.HTTPUtils.LogDownloads</a></div><div class="ttdeci">static bool LogDownloads</div><div class="ttdoc">Determines whether every file that is downloaded should be logged to the standard error stream.</div><div class="ttdef"><b>Definition:</b> <a href="_html_tag_8cs_source.html#l00232">HtmlTag.cs:232</a></div></div>
+<div class="ttc" id="aclass_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter_html"><div class="ttname"><a href="class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html">VectSharp.SVG.SVGContextInterpreter</a></div><div class="ttdoc">Contains methods to render a Page as an SVG file.</div><div class="ttdef"><b>Definition:</b> <a href="_s_v_g_context_8cs_source.html#l00885">SVGContext.cs:886</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils_html"><div class="ttname"><a href="class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html">VectSharp.Markdown.HTTPUtils</a></div><div class="ttdoc">Contains utilities to resolve absolute and relative URIs.</div><div class="ttdef"><b>Definition:</b> <a href="_html_tag_8cs_source.html#l00227">HtmlTag.cs:228</a></div></div>
 <div class="ttc" id="anamespace_vect_sharp_1_1_markdown_html"><div class="ttname"><a href="namespace_vect_sharp_1_1_markdown.html">VectSharp.Markdown</a></div><div class="ttdef"><b>Definition:</b> <a href="_html_tag_8cs_source.html#l00008">HtmlTag.cs:9</a></div></div>
+<div class="ttc" id="aclass_vect_sharp_1_1_s_v_g_1_1_parser_html_ab061b23582543541eeeb43896c28689a"><div class="ttname"><a href="class_vect_sharp_1_1_s_v_g_1_1_parser.html#ab061b23582543541eeeb43896c28689a">VectSharp.SVG.Parser.ParseImageURI</a></div><div class="ttdeci">static Func&lt; string, bool, Page &gt; ParseImageURI</div><div class="ttdoc">A function that takes as input an image URI and a boolean value indicating whether the image should b...</div><div class="ttdef"><b>Definition:</b> <a href="_s_v_g_parser_8cs_source.html#l00045">SVGParser.cs:45</a></div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

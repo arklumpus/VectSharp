@@ -65,9 +65,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_avalonia_context_8cs_source.html",
-"class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780a9b846c60f2b2d24b350f55077e4dd894",
-"class_vect_sharp_1_1_three_d_1_1_masked_light_source.html#a57f148002613d253aa352aedb7bb4ab4",
-"struct_vect_sharp_1_1_colour.html#a611fe30e3066c79106d7b7aeaec38f57"
+"class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780a88588f5c7476077230f94634d2e75fbd",
+"class_vect_sharp_1_1_three_d_1_1_area_light_source.html#ac6733ad7ade0c156002bfb567e69749b",
+"pages.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -60,5 +60,8 @@ var hierarchy =
     [ "VectSharp.Markdown.SyntaxHighlighter", "class_vect_sharp_1_1_markdown_1_1_syntax_highlighter.html", null ],
     [ "VectSharp.TrueTypeFile", "class_vect_sharp_1_1_true_type_file.html", null ],
     [ "VectSharp.TrueTypeFile.TrueTypePoint", "struct_vect_sharp_1_1_true_type_file_1_1_true_type_point.html", null ],
+    [ "UserControl", null, [
+      [ "VectSharp.MarkdownCanvas.MarkdownCanvasControl", "class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html", null ]
+    ] ],
     [ "VectSharp.TrueTypeFile.VerticalMetrics", "struct_vect_sharp_1_1_true_type_file_1_1_vertical_metrics.html", null ]
 ];

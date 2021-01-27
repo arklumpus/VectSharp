@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Giorgio Bianchini</Authors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Company>University of Bristol</Company>
+    <Description>A library to produce vector graphics (including text) without too many dependencies. Extensible to support multiple output formats. This package contains a control to display Markdown documents in Avalonia applications. For more information, see https://github.com/arklumpus/VectSharp</Description>
+    <Version>1.0.0</Version>
+    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/arklumpus/VectSharp</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\icon.png">
+      <Pack>true</Pack>
+      <PackagePath>.</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="VectSharp.Canvas" Version="2.1.7" />
+    <PackageReference Include="VectSharp.Markdown" Version="1.0.3" />
+  </ItemGroup>
+
+</Project>

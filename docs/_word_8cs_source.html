@@ -131,7 +131,7 @@ $(document).ready(function(){initNavTree('_word_8cs_source.html',''); initResiza
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;            spaceWidth *= font.FontSize;</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            <span class="keywordflow">while</span> (word.Metrics.Width + word.Metrics.LeftSideBearing + word.Metrics.RightSideBearing + spaceWidth * word.WhitespaceCount * (word.PrecedingWhitespace == <span class="charliteral">&#39;\t&#39;</span> ? 4 : 1) &gt; maxWidth)</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            <span class="keywordflow">while</span> (!<span class="keywordtype">string</span>.IsNullOrEmpty(word.Text) &amp;&amp; word.Metrics.Width + word.Metrics.LeftSideBearing + word.Metrics.RightSideBearing + spaceWidth * word.WhitespaceCount * (word.PrecedingWhitespace == <span class="charliteral">&#39;\t&#39;</span> ? 4 : 1) &gt; maxWidth)</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            {</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                <span class="keywordtype">int</span> minIndex = 1;</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                <span class="keywordtype">int</span> maxIndex = word.Text.Length;</div>
