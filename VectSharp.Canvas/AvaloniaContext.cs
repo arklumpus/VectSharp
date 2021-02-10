@@ -115,6 +115,86 @@ namespace VectSharp.Canvas
         public static double[,] Identity = new double[,] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
     }
 
+    internal static class Utils
+    {
+        public static void CoerceNaNAndInfinityToZero(ref double val)
+        {
+            if (double.IsNaN(val) || double.IsInfinity(val) || val == double.MinValue || val == double.MaxValue)
+            {
+                val = 0;
+            }
+        }
+
+        public static void CoerceNaNAndInfinityToZero(ref double val1, ref double val2)
+        {
+            if (double.IsNaN(val1) || double.IsInfinity(val1) || val1 == double.MinValue || val1 == double.MaxValue)
+            {
+                val1 = 0;
+            }
+
+            if (double.IsNaN(val2) || double.IsInfinity(val2) || val2 == double.MinValue || val2 == double.MaxValue)
+            {
+                val2 = 0;
+            }
+        }
+
+        public static void CoerceNaNAndInfinityToZero(ref double val1, ref double val2, ref double val3, ref double val4)
+        {
+            if (double.IsNaN(val1) || double.IsInfinity(val1) || val1 == double.MinValue || val1 == double.MaxValue)
+            {
+                val1 = 0;
+            }
+
+            if (double.IsNaN(val2) || double.IsInfinity(val2) || val2 == double.MinValue || val2 == double.MaxValue)
+            {
+                val2 = 0;
+            }
+
+            if (double.IsNaN(val3) || double.IsInfinity(val3) || val3 == double.MinValue || val3 == double.MaxValue)
+            {
+                val3 = 0;
+            }
+
+            if (double.IsNaN(val4) || double.IsInfinity(val4) || val4 == double.MinValue || val4 == double.MaxValue)
+            {
+                val4 = 0;
+            }
+        }
+
+        public static void CoerceNaNAndInfinityToZero(ref double val1, ref double val2, ref double val3, ref double val4, ref double val5, ref double val6)
+        {
+            if (double.IsNaN(val1) || double.IsInfinity(val1) || val1 == double.MinValue || val1 == double.MaxValue)
+            {
+                val1 = 0;
+            }
+
+            if (double.IsNaN(val2) || double.IsInfinity(val2) || val2 == double.MinValue || val2 == double.MaxValue)
+            {
+                val2 = 0;
+            }
+
+            if (double.IsNaN(val3) || double.IsInfinity(val3) || val3 == double.MinValue || val3 == double.MaxValue)
+            {
+                val3 = 0;
+            }
+
+            if (double.IsNaN(val4) || double.IsInfinity(val4) || val4 == double.MinValue || val4 == double.MaxValue)
+            {
+                val4 = 0;
+            }
+
+            if (double.IsNaN(val5) || double.IsInfinity(val5) || val5 == double.MinValue || val5 == double.MaxValue)
+            {
+                val5 = 0;
+            }
+
+            if (double.IsNaN(val6) || double.IsInfinity(val6) || val6 == double.MinValue || val6 == double.MaxValue)
+            {
+                val6 = 0;
+            }
+        }
+    }
+
     internal class AvaloniaContext : IGraphicsContext
     {
         public Dictionary<string, Delegate> TaggedActions { get; set; } = new Dictionary<string, Delegate>();
@@ -159,6 +239,8 @@ namespace VectSharp.Canvas
 
         public void Translate(double x, double y)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref x, ref y);
+
             _transform = MatrixUtils.Translate(_transform, x, y);
 
             currentPath = new PathGeometry();
@@ -170,6 +252,8 @@ namespace VectSharp.Canvas
 
         private void PathText(string text, double x, double y)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref x, ref y);
+
             GraphicsPath textPath = new GraphicsPath().AddText(x, y, text, Font, TextBaseline);
 
             for (int j = 0; j < textPath.Segments.Count; j++)
@@ -194,12 +278,16 @@ namespace VectSharp.Canvas
 
         public void StrokeText(string text, double x, double y)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref x, ref y);
+
             PathText(text, x, y);
             Stroke();
         }
 
         public void FillText(string text, double x, double y)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref x, ref y);
+
             if (_textOption == AvaloniaContextInterpreter.TextOptions.NeverConvert || (_textOption == AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary && Font.FontFamily.IsStandardFamily))
             {
                 TextBlock blk = new TextBlock() { ClipToBounds = false, Text = text, Foreground = new SolidColorBrush(Color.FromArgb(FillAlpha, (byte)(FillStyle.R * 255), (byte)(FillStyle.G * 255), (byte)(FillStyle.B * 255))), FontFamily = Avalonia.Media.FontFamily.Parse(FontFamily), FontSize = Font.FontSize, FontStyle = (Font.FontFamily.IsOblique ? FontStyle.Oblique : Font.FontFamily.IsItalic ? FontStyle.Italic : FontStyle.Normal), FontWeight = (Font.FontFamily.IsBold ? FontWeight.Bold : FontWeight.Regular) };
@@ -351,6 +439,8 @@ namespace VectSharp.Canvas
 
         public void Rotate(double angle)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref angle);
+
             _transform = MatrixUtils.Rotate(_transform, angle);
 
             currentPath = new PathGeometry();
@@ -360,6 +450,8 @@ namespace VectSharp.Canvas
 
         public void Transform(double a, double b, double c, double d, double e, double f)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref a, ref b, ref c, ref d, ref e, ref f);
+
             double[,] transfMatrix = new double[3, 3] { { a, c, e }, { b, d, f }, { 0, 0, 1 } };
             _transform = MatrixUtils.Multiply(_transform, transfMatrix);
 
@@ -370,6 +462,8 @@ namespace VectSharp.Canvas
 
         public void Scale(double x, double y)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref x, ref y);
+
             _transform = MatrixUtils.Scale(_transform, x, y);
 
             currentPath = new PathGeometry();
@@ -449,6 +543,8 @@ namespace VectSharp.Canvas
 
         public void MoveTo(double x, double y)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref x, ref y);
+
             if (figureInitialised)
             {
                 currentPath.Figures.Add(currentFigure);
@@ -460,6 +556,8 @@ namespace VectSharp.Canvas
 
         public void LineTo(double x, double y)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref x, ref y);
+
             if (figureInitialised)
             {
                 currentFigure.Segments.Add(new Avalonia.Media.LineSegment() { Point = new Avalonia.Point(x, y) });
@@ -473,6 +571,8 @@ namespace VectSharp.Canvas
 
         public void Rectangle(double x0, double y0, double width, double height)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref x0, ref y0, ref width, ref height);
+
             if (currentFigure != null && figureInitialised)
             {
                 currentPath.Figures.Add(currentFigure);
@@ -490,6 +590,8 @@ namespace VectSharp.Canvas
 
         public void CubicBezierTo(double p1X, double p1Y, double p2X, double p2Y, double p3X, double p3Y)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref p1X, ref p1Y, ref p2X, ref p2Y, ref p3X, ref p3Y);
+
             if (figureInitialised)
             {
                 currentFigure.Segments.Add(new Avalonia.Media.BezierSegment() { Point1 = new Avalonia.Point(p1X, p1Y), Point2 = new Avalonia.Point(p2X, p2Y), Point3 = new Avalonia.Point(p3X, p3Y) });
@@ -634,6 +736,8 @@ namespace VectSharp.Canvas
 
         public void DrawRasterImage(int sourceX, int sourceY, int sourceWidth, int sourceHeight, double destinationX, double destinationY, double destinationWidth, double destinationHeight, RasterImage image)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref destinationX, ref destinationY, ref destinationWidth, ref destinationHeight);
+
             Image img = new Image() { Source = new CroppedBitmap(new Bitmap(image.PNGStream), new Avalonia.PixelRect(sourceX, sourceY, sourceWidth, sourceHeight)), Width = destinationWidth, Height = destinationHeight };
 
             if (image.Interpolate)
@@ -1313,6 +1417,8 @@ namespace VectSharp.Canvas
 
         private void PathText(string text, double x, double y)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref x, ref y);
+
             GraphicsPath textPath = new GraphicsPath().AddText(x, y, text, Font, TextBaseline);
 
             for (int j = 0; j < textPath.Segments.Count; j++)
@@ -1337,12 +1443,16 @@ namespace VectSharp.Canvas
 
         public void StrokeText(string text, double x, double y)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref x, ref y);
+
             PathText(text, x, y);
             Stroke();
         }
 
         public void FillText(string text, double x, double y)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref x, ref y);
+
             if (_textOption == AvaloniaContextInterpreter.TextOptions.NeverConvert || (_textOption == AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary && Font.FontFamily.IsStandardFamily))
             {
                 FormattedText txt = new FormattedText()
@@ -1513,6 +1623,8 @@ namespace VectSharp.Canvas
 
         public void Rotate(double angle)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref angle);
+
             _transform = MatrixUtils.Rotate(_transform, angle);
 
             currentPath = new PathGeometry();
@@ -1522,6 +1634,8 @@ namespace VectSharp.Canvas
 
         public void Transform(double a, double b, double c, double d, double e, double f)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref a, ref b, ref c, ref d, ref e, ref f);
+
             double[,] transfMatrix = new double[3, 3] { { a, c, e }, { b, d, f }, { 0, 0, 1 } };
             _transform = MatrixUtils.Multiply(_transform, transfMatrix);
 
@@ -1532,6 +1646,8 @@ namespace VectSharp.Canvas
 
         public void Scale(double x, double y)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref x, ref y);
+
             _transform = MatrixUtils.Scale(_transform, x, y);
 
             currentPath = new PathGeometry();
@@ -1611,6 +1727,8 @@ namespace VectSharp.Canvas
 
         public void MoveTo(double x, double y)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref x, ref y);
+
             if (figureInitialised)
             {
                 currentPath.Figures.Add(currentFigure);
@@ -1622,6 +1740,8 @@ namespace VectSharp.Canvas
 
         public void LineTo(double x, double y)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref x, ref y);
+
             if (figureInitialised)
             {
                 currentFigure.Segments.Add(new Avalonia.Media.LineSegment() { Point = new Avalonia.Point(x, y) });
@@ -1635,6 +1755,8 @@ namespace VectSharp.Canvas
 
         public void Rectangle(double x0, double y0, double width, double height)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref x0, ref y0, ref width, ref height);
+
             if (currentFigure != null && figureInitialised)
             {
                 currentPath.Figures.Add(currentFigure);
@@ -1652,6 +1774,8 @@ namespace VectSharp.Canvas
 
         public void CubicBezierTo(double p1X, double p1Y, double p2X, double p2Y, double p3X, double p3Y)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref p1X, ref p1Y, ref p2X, ref p2Y, ref p3X, ref p3Y);
+
             if (figureInitialised)
             {
                 currentFigure.Segments.Add(new Avalonia.Media.BezierSegment() { Point1 = new Avalonia.Point(p1X, p1Y), Point2 = new Avalonia.Point(p2X, p2Y), Point3 = new Avalonia.Point(p3X, p3Y) });
@@ -1853,6 +1977,8 @@ namespace VectSharp.Canvas
 
         public void DrawRasterImage(int sourceX, int sourceY, int sourceWidth, int sourceHeight, double destinationX, double destinationY, double destinationWidth, double destinationHeight, RasterImage image)
         {
+            Utils.CoerceNaNAndInfinityToZero(ref destinationX, ref destinationY, ref destinationWidth, ref destinationHeight);
+
             if (!this.Images.ContainsKey(image.Id))
             {
                 Bitmap bmp = new Bitmap(image.PNGStream);
