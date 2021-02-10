@@ -87,6 +87,21 @@ namespace VectSharp.MarkdownCanvas
         }
 
         /// <summary>
+        /// Defines the <see cref="TextConversionOption"/> property.
+        /// </summary>
+        public static readonly StyledProperty<AvaloniaContextInterpreter.TextOptions> TextConversionOptionsProperty = AvaloniaProperty.Register<MarkdownCanvasControl, AvaloniaContextInterpreter.TextOptions>(nameof(TextConversionOption), AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary);
+
+        /// <summary>
+        /// Gets or sets the value that determines whether text items should be converted into paths when drawing.
+        /// Setting this to <see cref="AvaloniaContextInterpreter.TextOptions.NeverConvert"/> will improve performance if you are using custom fonts, but may cause unexpected results unless the font families being used are of type <see cref="ResourceFontFamily"/>.
+        /// </summary>
+        public AvaloniaContextInterpreter.TextOptions TextConversionOption
+        {
+            get { return GetValue(TextConversionOptionsProperty); }
+            set { SetValue(TextConversionOptionsProperty, value); }
+        }
+
+        /// <summary>
         /// The <see cref="MarkdownRenderer"/> used to render the <see cref="Document"/>. You can use the properties of this object to customise the rendering. Note that setting the <see cref="Avalonia.Controls.Primitives.TemplatedControl.FontSize"/> of the <see cref="MarkdownCanvasControl"/> will propagate to the <see cref="Renderer"/>'s <see cref="MarkdownRenderer.BaseFontSize"/>.
         /// </summary>
         public MarkdownRenderer Renderer { get; }
@@ -233,7 +248,7 @@ namespace VectSharp.MarkdownCanvas
                         }
                     }
 
-                    Avalonia.Controls.Canvas can = pag.PaintToCanvas(false, taggedActions, false);
+                    Avalonia.Controls.Canvas can = pag.PaintToCanvas(false, taggedActions, false, this.TextConversionOption);
 
                     this.FindControl<ScrollViewer>("ScrollViewer").Content = can;
                     this.FindControl<ScrollViewer>("ScrollViewer").Padding = new Thickness(0, 0, 0, 0);
