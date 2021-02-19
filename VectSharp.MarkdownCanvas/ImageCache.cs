@@ -68,6 +68,11 @@ namespace VectSharp.MarkdownCanvas
 
                     if (wasDownloaded)
                     {
+                        if (!Directory.Exists(imageCacheFolder))
+                        {
+                            Directory.CreateDirectory(imageCacheFolder);
+                        }
+
                         File.Move(imagePath, cachedImage);
                         Directory.Delete(Path.GetDirectoryName(imagePath));
                     }
