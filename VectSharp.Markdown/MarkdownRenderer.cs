@@ -2177,20 +2177,59 @@ namespace VectSharp.Markdown
 
                 if (table.IsValid() && table.ColumnDefinitions?.Count > 0)
                 {
-                    int maxColumns = 0;
+                    bool isGridTable = false;
 
-                    foreach (TableRow row in table)
+                    foreach (TableColumnDefinition def in table.ColumnDefinitions)
                     {
-                        maxColumns = Math.Max(maxColumns, ((TableCell)row.Last()).ColumnIndex + 1);
+                        if (def.Width > 0)
+                        {
+                            isGridTable = true;
+                            break;
+                        }
                     }
 
-                    if (table.ColumnDefinitions.Count > maxColumns)
+                    if (isGridTable)
                     {
-                        table.ColumnDefinitions.RemoveRange(maxColumns, table.ColumnDefinitions.Count - maxColumns);
-                    }
+                        int maxColumns = 0;
 
+                        foreach (TableRow row in table)
+                        {
+                            maxColumns = Math.Max(maxColumns, ((TableCell)row.Last()).ColumnIndex + 1);
+                        }
+
+                        if (table.ColumnDefinitions.Count > maxColumns)
+                        {
+                            table.ColumnDefinitions.RemoveRange(maxColumns, table.ColumnDefinitions.Count - maxColumns);
+                        }
+                    }
+                    else
+                    {
+                        int maxColumns = 0;
+
+                        foreach (TableRow row in table)
+                        {
+                            maxColumns = Math.Max(maxColumns, row.Count);
+                        }
+
+                        if (table.ColumnDefinitions.Count > maxColumns)
+                        {
+                            table.ColumnDefinitions.RemoveRange(maxColumns, table.ColumnDefinitions.Count - maxColumns);
+                        }
+                    }
 
                     double[] columnWidths = new double[table.ColumnDefinitions.Count];
+
+                    if (table.ColumnDefinitions.Count == 0)
+                    {
+                        int columnCount = 0;
+                        foreach (TableRow row in table)
+                        {
+                            columnCount = Math.Max(row.Count, columnCount);
+                        }
+
+                        columnWidths = new double[columnCount];
+                    }
+
                     int missingColumns = columnWidths.Length;
 
                     for (int i = 0; i < columnWidths.Length; i++)
