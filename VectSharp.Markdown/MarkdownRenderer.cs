@@ -2318,7 +2318,7 @@ namespace VectSharp.Markdown
             {
                 double cellWidth = 0;
 
-                for (int i = 0; i < cell.ColumnSpan; i++)
+                for (int i = 0; i < cell.ColumnSpan && cell.ColumnIndex + i < columnWidths.Length; i++)
                 {
                     cellWidth += columnWidths[cell.ColumnIndex + i];
                 }

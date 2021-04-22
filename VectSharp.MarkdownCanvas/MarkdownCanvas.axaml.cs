@@ -169,7 +169,18 @@ namespace VectSharp.MarkdownCanvas
 
                 if (forcedRerender || double.IsNaN(lastRenderedWidth) || width != lastRenderedWidth && width < lastRenderedWidth - MinVariation || width > lastRenderedWidth + MinVariation)
                 {
-                    Page pag = Renderer.RenderSinglePage(this.Document, width, out Dictionary<string, string> linkDestinations);
+                    Page pag;
+                    Dictionary<string, string> linkDestinations;
+
+                    try
+                    {
+                        pag = Renderer.RenderSinglePage(this.Document, width, out linkDestinations);
+                    }
+                    catch
+                    {
+                        pag = new Page(width, 0);
+                        linkDestinations = new Dictionary<string, string>();
+                    }
 
                     Dictionary<string, Delegate> taggedActions = new Dictionary<string, Delegate>();
                     Dictionary<string, Avalonia.Point> linkDestinationPoints = new Dictionary<string, Avalonia.Point>();
