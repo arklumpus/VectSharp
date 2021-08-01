@@ -25,9 +25,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectSharp.Markdown", "VectS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkdownExamples", "MarkdownExamples\MarkdownExamples.csproj", "{E677BD7C-827E-466F-B9EE-E46755F2AB18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectSharp.MarkdownCanvas", "VectSharp.MarkdownCanvas\VectSharp.MarkdownCanvas.csproj", "{14DD9C38-AD4C-4406-AE42-0EDC28C4866A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectSharp.MarkdownCanvas", "VectSharp.MarkdownCanvas\VectSharp.MarkdownCanvas.csproj", "{14DD9C38-AD4C-4406-AE42-0EDC28C4866A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkdownViewerDemo", "MarkdownViewerDemo\MarkdownViewerDemo.csproj", "{2A445826-7054-413B-A63B-1086D7EF25C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkdownViewerDemo", "MarkdownViewerDemo\MarkdownViewerDemo.csproj", "{2A445826-7054-413B-A63B-1086D7EF25C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGradients", "TestGradients\TestGradients.csproj", "{1DCE9702-18BA-400A-B622-25D1AA9B4E85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +89,10 @@ Global
 		{2A445826-7054-413B-A63B-1086D7EF25C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A445826-7054-413B-A63B-1086D7EF25C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A445826-7054-413B-A63B-1086D7EF25C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DCE9702-18BA-400A-B622-25D1AA9B4E85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DCE9702-18BA-400A-B622-25D1AA9B4E85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DCE9702-18BA-400A-B622-25D1AA9B4E85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DCE9702-18BA-400A-B622-25D1AA9B4E85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

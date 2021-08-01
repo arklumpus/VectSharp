@@ -140,9 +140,9 @@ namespace VectSharp
         void SetClippingPath();
 
         /// <summary>
-        /// Current colour used to fill paths.
+        /// Current brush used to fill paths.
         /// </summary>
-        Colour FillStyle { get; }
+        Brush FillStyle { get; }
 
         /// <summary>
         /// Set the current <see cref="FillStyle"/>.
@@ -154,12 +154,12 @@ namespace VectSharp
         /// Set the current <see cref="FillStyle"/>.
         /// </summary>
         /// <param name="style">The new fill style.</param>
-        void SetFillStyle(Colour style);
+        void SetFillStyle(Brush style);
 
         /// <summary>
-        /// Current colour used to stroke paths.
+        /// Current brush used to stroke paths.
         /// </summary>
-        Colour StrokeStyle { get; }
+        Brush StrokeStyle { get; }
 
         /// <summary>
         /// Set the current <see cref="StrokeStyle"/>.
@@ -171,7 +171,7 @@ namespace VectSharp
         /// Set the current <see cref="StrokeStyle"/>.
         /// </summary>
         /// <param name="style">The new stroke style.</param>
-        void SetStrokeStyle(Colour style);
+        void SetStrokeStyle(Brush style);
 
         /// <summary>
         /// Add to the current figure a cubic Bezier from the current point to a destination point, with two control points.
@@ -263,9 +263,9 @@ namespace VectSharp
         /// Fill a <see cref="GraphicsPath"/>.
         /// </summary>
         /// <param name="path">The <see cref="GraphicsPath"/> to fill.</param>
-        /// <param name="fillColour">The <see cref="Colour"/> with which to fill the <see cref="GraphicsPath"/>.</param>
+        /// <param name="fillColour">The <see cref="Brush"/> with which to fill the <see cref="GraphicsPath"/>.</param>
         /// <param name="tag">A tag to identify the filled path.</param>
-        public void FillPath(GraphicsPath path, Colour fillColour, string tag = null)
+        public void FillPath(GraphicsPath path, Brush fillColour, string tag = null)
         {
             Actions.Add(new PathAction(path, fillColour, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, tag, false));
         }
@@ -275,13 +275,13 @@ namespace VectSharp
         /// Stroke a <see cref="GraphicsPath"/>.
         /// </summary>
         /// <param name="path">The <see cref="GraphicsPath"/> to stroke.</param>
-        /// <param name="strokeColour">The <see cref="Colour"/> with which to stroke the <see cref="GraphicsPath"/>.</param>
+        /// <param name="strokeColour">The <see cref="Brush"/> with which to stroke the <see cref="GraphicsPath"/>.</param>
         /// <param name="lineWidth">The width of the line with which the path is stroked.</param>
         /// <param name="lineCap">The line cap to use to stroke the path.</param>
         /// <param name="lineJoin">The line join to use to stroke the path.</param>
         /// <param name="lineDash">The line dash to use to stroke the path.</param>
         /// <param name="tag">A tag to identify the stroked path.</param>
-        public void StrokePath(GraphicsPath path, Colour strokeColour, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
+        public void StrokePath(GraphicsPath path, Brush strokeColour, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
         {
             Actions.Add(new PathAction(path, null, strokeColour, lineWidth, lineCap, lineJoin, lineDash ?? LineDash.SolidLine, tag, false));
         }
@@ -390,7 +390,7 @@ namespace VectSharp
         /// <param name="size">The size of the rectangle.</param>
         /// <param name="fillColour">The colour with which to fill the rectangle.</param>
         /// <param name="tag">A tag to identify the filled rectangle.</param>
-        public void FillRectangle(Point topLeft, Size size, Colour fillColour, string tag = null)
+        public void FillRectangle(Point topLeft, Size size, Brush fillColour, string tag = null)
         {
             Actions.Add(new RectangleAction(topLeft, size, fillColour, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, tag));
         }
@@ -404,7 +404,7 @@ namespace VectSharp
         /// <param name="height">The height of the rectangle.</param>
         /// <param name="fillColour">The colour with which to fill the rectangle.</param>
         /// <param name="tag">A tag to identify the filled rectangle.</param>
-        public void FillRectangle(double leftX, double topY, double width, double height, Colour fillColour, string tag = null)
+        public void FillRectangle(double leftX, double topY, double width, double height, Brush fillColour, string tag = null)
         {
             Actions.Add(new RectangleAction(new Point(leftX, topY), new Size(width, height), fillColour, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, tag));
         }
@@ -420,7 +420,7 @@ namespace VectSharp
         /// <param name="lineJoin">The line join to use to stroke the rectangle.</param>
         /// <param name="lineDash">The line dash to use to stroke the rectangle.</param>
         /// <param name="tag">A tag to identify the filled rectangle.</param>
-        public void StrokeRectangle(Point topLeft, Size size, Colour strokeColour, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
+        public void StrokeRectangle(Point topLeft, Size size, Brush strokeColour, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
         {
             Actions.Add(new RectangleAction(topLeft, size, null, strokeColour, lineWidth, lineCap, lineJoin, lineDash ?? LineDash.SolidLine, tag));
         }
@@ -438,7 +438,7 @@ namespace VectSharp
         /// <param name="lineJoin">The line join to use to stroke the rectangle.</param>
         /// <param name="lineDash">The line dash to use to stroke the rectangle.</param>
         /// <param name="tag">A tag to identify the filled rectangle.</param>
-        public void StrokeRectangle(double leftX, double topY, double width, double height, Colour strokeColour, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
+        public void StrokeRectangle(double leftX, double topY, double width, double height, Brush strokeColour, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
         {
             Actions.Add(new RectangleAction(new Point(leftX, topY), new Size(width, height), null, strokeColour, lineWidth, lineCap, lineJoin, lineDash ?? LineDash.SolidLine, tag));
         }
@@ -519,7 +519,7 @@ namespace VectSharp
         /// <param name="fillColour">The colour to use to fill the text.</param>
         /// <param name="textBaseline">The text baseline (determines what the vertical component of <paramref name="origin"/> represents).</param>
         /// <param name="tag">A tag to identify the filled text.</param>
-        public void FillText(Point origin, string text, Font font, Colour fillColour, TextBaselines textBaseline = TextBaselines.Top, string tag = null)
+        public void FillText(Point origin, string text, Font font, Brush fillColour, TextBaselines textBaseline = TextBaselines.Top, string tag = null)
         {
             Actions.Add(new TextAction(origin, text, font, textBaseline, fillColour, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, tag));
         }
@@ -534,7 +534,7 @@ namespace VectSharp
         /// <param name="fillColour">The colour to use to fill the text.</param>
         /// <param name="textBaseline">The text baseline (determines what <paramref name="originY"/> represents).</param>
         /// <param name="tag">A tag to identify the filled text.</param>
-        public void FillText(double originX, double originY, string text, Font font, Colour fillColour, TextBaselines textBaseline = TextBaselines.Top, string tag = null)
+        public void FillText(double originX, double originY, string text, Font font, Brush fillColour, TextBaselines textBaseline = TextBaselines.Top, string tag = null)
         {
             Actions.Add(new TextAction(new Point(originX, originY), text, font, textBaseline, fillColour, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, tag));
         }
@@ -552,7 +552,7 @@ namespace VectSharp
         /// <param name="lineDash">The line dash to use to stroke the text.</param>
         /// <param name="textBaseline">The text baseline (determines what the vertical component of <paramref name="origin"/> represents).</param>
         /// <param name="tag">A tag to identify the stroked text.</param>
-        public void StrokeText(Point origin, string text, Font font, Colour strokeColour, TextBaselines textBaseline = TextBaselines.Top, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
+        public void StrokeText(Point origin, string text, Font font, Brush strokeColour, TextBaselines textBaseline = TextBaselines.Top, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
         {
             Actions.Add(new TextAction(origin, text, font, textBaseline, null, strokeColour, lineWidth, lineCap, lineJoin, lineDash ?? LineDash.SolidLine, tag));
         }
@@ -571,7 +571,7 @@ namespace VectSharp
         /// <param name="lineDash">The line dash to use to stroke the text.</param>
         /// <param name="textBaseline">The text baseline (determines what <paramref name="originY"/> represents).</param>
         /// <param name="tag">A tag to identify the stroked text.</param>
-        public void StrokeText(double originX, double originY, string text, Font font, Colour strokeColour, TextBaselines textBaseline = TextBaselines.Top, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
+        public void StrokeText(double originX, double originY, string text, Font font, Brush strokeColour, TextBaselines textBaseline = TextBaselines.Top, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
         {
             Actions.Add(new TextAction(new Point(originX, originY), text, font, textBaseline, null, strokeColour, lineWidth, lineCap, lineJoin, lineDash ?? LineDash.SolidLine, tag));
         }
@@ -587,7 +587,7 @@ namespace VectSharp
         /// <param name="anchor">The anchor in the text string that will correspond to the point specified by the <paramref name="reference"/>.</param>
         /// <param name="textBaseline">The text baseline (determines which the position of the text in relation to the <paramref name="path"/>.</param>
         /// <param name="tag">A tag to identify the filled text.</param>
-        public void FillTextOnPath(GraphicsPath path, string text, Font font, Colour fillColour, double reference = 0, TextAnchors anchor = TextAnchors.Left, TextBaselines textBaseline = TextBaselines.Top, string tag = null)
+        public void FillTextOnPath(GraphicsPath path, string text, Font font, Brush fillColour, double reference = 0, TextAnchors anchor = TextAnchors.Left, TextBaselines textBaseline = TextBaselines.Top, string tag = null)
         {
             double currDelta = 0;
             double pathLength = path.MeasureLength();
@@ -693,7 +693,7 @@ namespace VectSharp
         /// <param name="anchor">The anchor in the text string that will correspond to the point specified by the <paramref name="reference"/>.</param>
         /// <param name="textBaseline">The text baseline (determines which the position of the text in relation to the <paramref name="path"/>.</param>
         /// <param name="tag">A tag to identify the stroked text.</param>
-        public void StrokeTextOnPath(GraphicsPath path, string text, Font font, Colour strokeColour, double reference = 0, TextAnchors anchor = TextAnchors.Left, TextBaselines textBaseline = TextBaselines.Top, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
+        public void StrokeTextOnPath(GraphicsPath path, string text, Font font, Brush strokeColour, double reference = 0, TextAnchors anchor = TextAnchors.Left, TextBaselines textBaseline = TextBaselines.Top, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
         {
             double currDelta = 0;
             double pathLength = path.MeasureLength();
@@ -891,7 +891,7 @@ namespace VectSharp
                     {
                         if (destinationContext.FillStyle != rec.Fill)
                         {
-                            destinationContext.SetFillStyle((Colour)rec.Fill);
+                            destinationContext.SetFillStyle(rec.Fill);
                         }
                         destinationContext.Fill();
                     }
@@ -899,7 +899,7 @@ namespace VectSharp
                     {
                         if (destinationContext.StrokeStyle != rec.Stroke)
                         {
-                            destinationContext.SetStrokeStyle((Colour)rec.Stroke);
+                            destinationContext.SetStrokeStyle(rec.Stroke);
                         }
                         if (destinationContext.LineWidth != rec.LineWidth)
                         {
@@ -968,7 +968,7 @@ namespace VectSharp
                         {
                             if (destinationContext.FillStyle != pth.Fill)
                             {
-                                destinationContext.SetFillStyle((Colour)pth.Fill);
+                                destinationContext.SetFillStyle(pth.Fill);
                             }
                             destinationContext.Fill();
                         }
@@ -976,7 +976,7 @@ namespace VectSharp
                         {
                             if (destinationContext.StrokeStyle != pth.Stroke)
                             {
-                                destinationContext.SetStrokeStyle((Colour)pth.Stroke);
+                                destinationContext.SetStrokeStyle(pth.Stroke);
                             }
                             if (destinationContext.LineWidth != pth.LineWidth)
                             {
@@ -1005,7 +1005,7 @@ namespace VectSharp
                     {
                         if (destinationContext.FillStyle != txt.Fill)
                         {
-                            destinationContext.SetFillStyle((Colour)txt.Fill);
+                            destinationContext.SetFillStyle(txt.Fill);
                         }
                         destinationContext.FillText(txt.Text, txt.Origin.X, txt.Origin.Y);
                     }
@@ -1013,7 +1013,7 @@ namespace VectSharp
                     {
                         if (destinationContext.StrokeStyle != txt.Stroke)
                         {
-                            destinationContext.SetStrokeStyle((Colour)txt.Stroke);
+                            destinationContext.SetStrokeStyle(txt.Stroke);
                         }
                         if (destinationContext.LineWidth != txt.LineWidth)
                         {
@@ -1096,7 +1096,7 @@ namespace VectSharp
         }
 
 
-        private static Point Multiply(double[,] matrix, Point pt)
+        internal static Point Multiply(double[,] matrix, Point pt)
         {
             double x = matrix[0, 0] * pt.X + matrix[0, 1] * pt.Y + matrix[0, 2];
             double y = matrix[1, 0] * pt.X + matrix[1, 1] * pt.Y + matrix[1, 2];
@@ -1105,7 +1105,7 @@ namespace VectSharp
             return new Point(x / z, y / z);
         }
 
-        private static double[,] Multiply(double[,] m1, double[,] m2)
+        internal static double[,] Multiply(double[,] m1, double[,] m2)
         {
             return new double[3, 3]
             {
@@ -1115,7 +1115,7 @@ namespace VectSharp
             };
         }
 
-        private static double[,] TranslationMatrix(double dx, double dy)
+        internal static double[,] TranslationMatrix(double dx, double dy)
         {
             return new double[3, 3]
             {
@@ -1125,7 +1125,7 @@ namespace VectSharp
             };
         }
 
-        private static double[,] ScaleMatrix(double sx, double sy)
+        internal static double[,] ScaleMatrix(double sx, double sy)
         {
             return new double[3, 3]
             {
@@ -1135,7 +1135,7 @@ namespace VectSharp
             };
         }
 
-        private static double[,] RotationMatrix(double theta)
+        internal static double[,] RotationMatrix(double theta)
         {
             return new double[3, 3]
             {
@@ -1143,6 +1143,23 @@ namespace VectSharp
                 {Math.Sin(theta), Math.Cos(theta), 0 },
                 {0, 0, 1 }
             };
+        }
+
+        internal static double[,] Invert(double[,] m)
+        {
+            double[,] tbr = new double[3, 3];
+
+            tbr[0, 0] = (m[1, 1] * m[2, 2] - m[1, 2] * m[2, 1]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[0, 1] = -(m[0, 1] * m[2, 2] - m[0, 2] * m[2, 1]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[0, 2] = (m[0, 1] * m[1, 2] - m[0, 2] * m[1, 1]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[1, 0] = -(m[1, 0] * m[2, 2] - m[1, 2] * m[2, 0]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[1, 1] = (m[0, 0] * m[2, 2] - m[0, 2] * m[2, 0]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[1, 2] = -(m[0, 0] * m[1, 2] - m[0, 2] * m[1, 0]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[2, 0] = (m[1, 0] * m[2, 1] - m[1, 1] * m[2, 0]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[2, 1] = -(m[0, 0] * m[2, 1] - m[0, 1] * m[2, 0]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[2, 2] = (m[0, 0] * m[1, 1] - m[0, 1] * m[1, 0]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+
+            return tbr;
         }
 
         /// <summary>
@@ -1175,11 +1192,11 @@ namespace VectSharp
 
                     if (rec.Fill != null)
                     {
-                        destinationGraphics.FillPath(rectanglePath, rec.Fill.Value, rec.Tag);
+                        destinationGraphics.FillPath(rectanglePath, rec.Fill, rec.Tag);
                     }
                     else if (rec.Stroke != null)
                     {
-                        destinationGraphics.StrokePath(rectanglePath, rec.Stroke.Value, rec.LineWidth, rec.LineCap, rec.LineJoin, rec.LineDash, rec.Tag);
+                        destinationGraphics.StrokePath(rectanglePath, rec.Stroke, rec.LineWidth, rec.LineCap, rec.LineJoin, rec.LineDash, rec.Tag);
                     }
                 }
                 else if (this.Actions[i] is PathAction)
@@ -1196,11 +1213,11 @@ namespace VectSharp
                     {
                         if (pth.Fill != null)
                         {
-                            destinationGraphics.FillPath(newPath, pth.Fill.Value, pth.Tag);
+                            destinationGraphics.FillPath(newPath, pth.Fill, pth.Tag);
                         }
                         else if (pth.Stroke != null)
                         {
-                            destinationGraphics.StrokePath(newPath, pth.Stroke.Value, pth.LineWidth, pth.LineCap, pth.LineJoin, pth.LineDash, pth.Tag);
+                            destinationGraphics.StrokePath(newPath, pth.Stroke, pth.LineWidth, pth.LineCap, pth.LineJoin, pth.LineDash, pth.Tag);
                         }
                     }
                 }
@@ -1212,11 +1229,11 @@ namespace VectSharp
 
                     if (txt.Fill != null)
                     {
-                        destinationGraphics.FillPath(textPath, txt.Fill.Value, txt.Tag);
+                        destinationGraphics.FillPath(textPath, txt.Fill, txt.Tag);
                     }
                     else if (txt.Stroke != null)
                     {
-                        destinationGraphics.StrokePath(textPath, txt.Stroke.Value, txt.LineWidth, txt.LineCap, txt.LineJoin, txt.LineDash, txt.Tag);
+                        destinationGraphics.StrokePath(textPath, txt.Stroke, txt.LineWidth, txt.LineCap, txt.LineJoin, txt.LineDash, txt.Tag);
                     }
                 }
                 else if (this.Actions[i] is TransformAction)
@@ -1300,11 +1317,11 @@ namespace VectSharp
                     {
                         if (pth.Fill != null)
                         {
-                            destinationGraphics.FillPath(newPath, pth.Fill.Value, pth.Tag);
+                            destinationGraphics.FillPath(newPath, pth.Fill, pth.Tag);
                         }
                         else if (pth.Stroke != null)
                         {
-                            destinationGraphics.StrokePath(newPath, pth.Stroke.Value, pth.LineWidth, pth.LineCap, pth.LineJoin, pth.LineDash, pth.Tag);
+                            destinationGraphics.StrokePath(newPath, pth.Stroke, pth.LineWidth, pth.LineCap, pth.LineJoin, pth.LineDash, pth.Tag);
                         }
                     }
                 }
@@ -1316,11 +1333,11 @@ namespace VectSharp
 
                     if (txt.Fill != null)
                     {
-                        destinationGraphics.FillPath(textPath, txt.Fill.Value, txt.Tag);
+                        destinationGraphics.FillPath(textPath, txt.Fill, txt.Tag);
                     }
                     else if (txt.Stroke != null)
                     {
-                        destinationGraphics.StrokePath(textPath, txt.Stroke.Value, txt.LineWidth, txt.LineCap, txt.LineJoin, txt.LineDash, txt.Tag);
+                        destinationGraphics.StrokePath(textPath, txt.Stroke, txt.LineWidth, txt.LineCap, txt.LineJoin, txt.LineDash, txt.Tag);
                     }
                 }
             }

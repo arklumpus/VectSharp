@@ -7,7 +7,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Company>University of Bristol</Company>
     <Product>VectSharp</Product>
-    <Version>2.1.8</Version>
+    <Version>2.1.9-a1</Version>
     <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/arklumpus/VectSharp</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.10.0" />
-    <PackageReference Include="VectSharp" Version="1.7.0" />
+    <PackageReference Include="VectSharp" Version="1.7.1-a1" />
   </ItemGroup>
 
 </Project>

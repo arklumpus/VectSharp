@@ -90,6 +90,23 @@ namespace VectSharp.SVG
         }
 
         public static double[,] Identity = new double[,] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
+
+        public static double[,] Invert(double[,] m)
+        {
+            double[,] tbr = new double[3, 3];
+
+            tbr[0, 0] = (m[1, 1] * m[2, 2] - m[1, 2] * m[2, 1]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[0, 1] = -(m[0, 1] * m[2, 2] - m[0, 2] * m[2, 1]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[0, 2] = (m[0, 1] * m[1, 2] - m[0, 2] * m[1, 1]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[1, 0] = -(m[1, 0] * m[2, 2] - m[1, 2] * m[2, 0]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[1, 1] = (m[0, 0] * m[2, 2] - m[0, 2] * m[2, 0]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[1, 2] = -(m[0, 0] * m[1, 2] - m[0, 2] * m[1, 0]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[2, 0] = (m[1, 0] * m[2, 1] - m[1, 1] * m[2, 0]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[2, 1] = -(m[0, 0] * m[2, 1] - m[0, 1] * m[2, 0]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[2, 2] = (m[0, 0] * m[1, 1] - m[0, 1] * m[1, 0]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+
+            return tbr;
+        }
     }
 
     internal class SVGFigure
@@ -122,9 +139,9 @@ namespace VectSharp.SVG
         public Font Font { get; set; }
         public TextBaselines TextBaseline { get; set; }
 
-        public Colour FillStyle { get; private set; }
+        public Brush FillStyle { get; private set; }
 
-        public Colour StrokeStyle { get; private set; }
+        public Brush StrokeStyle { get; private set; }
 
         public double LineWidth { get; set; }
         public LineCaps LineCap { private get; set; }
@@ -149,6 +166,9 @@ namespace VectSharp.SVG
         private bool TextToPaths = false;
 
         private Dictionary<string, string> linkDestinations;
+
+        XmlElement definitions;
+        Dictionary<Brush, string> gradients;
 
         public SVGContext(double width, double height, bool textToPaths, Dictionary<string, string> linkDestinations)
         {
@@ -196,6 +216,10 @@ namespace VectSharp.SVG
             currentElement.SetAttribute("viewBox", "0 0 " + width.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + height.ToString(System.Globalization.CultureInfo.InvariantCulture));
             currentElement.SetAttribute("version", "1.1");
             Document.AppendChild(currentElement);
+
+            definitions = Document.CreateElement("defs", SVGNamespace);
+            gradients = new Dictionary<Brush, string>();
+            currentElement.AppendChild(definitions);
 
             this.TextToPaths = textToPaths;
         }
@@ -269,8 +293,45 @@ namespace VectSharp.SVG
             XmlElement path = Document.CreateElement("path", SVGNamespace);
             path.SetAttribute("d", currentPath.Figures.Aggregate("", (a, b) => a + b.Data));
             path.SetAttribute("stroke", "none");
-            path.SetAttribute("fill", FillStyle.ToCSSString(false));
-            path.SetAttribute("fill-opacity", FillStyle.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+            if (FillStyle is SolidColourBrush solid)
+            {
+                path.SetAttribute("fill", solid.Colour.ToCSSString(false));
+                path.SetAttribute("fill-opacity", solid.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            }
+            else if (FillStyle is LinearGradientBrush linearGradient)
+            {
+                string gradientName;
+
+                if (!gradients.TryGetValue(linearGradient, out gradientName))
+                {
+                    gradientName = "gradient" + (gradients.Count + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+                    XmlElement gradientElement = linearGradient.ToLinearGradient(Document, gradientName);
+                    this.definitions.AppendChild(gradientElement);
+
+                    gradients.Add(linearGradient, gradientName);
+                }
+
+                path.SetAttribute("fill", "url(#" + gradientName + ")");
+            }
+            else if (FillStyle is RadialGradientBrush radialGradient)
+            {
+                string gradientName;
+
+                if (!gradients.TryGetValue(radialGradient, out gradientName))
+                {
+                    gradientName = "gradient" + (gradients.Count + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+                    XmlElement gradientElement = radialGradient.ToRadialGradient(Document, gradientName);
+                    this.definitions.AppendChild(gradientElement);
+
+                    gradients.Add(radialGradient, gradientName);
+                }
+
+                path.SetAttribute("fill", "url(#" + gradientName + ")");
+            }
+
             path.SetAttribute("transform", "matrix(" + _transform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
                 "," + _transform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
                 "," + _transform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
@@ -313,23 +374,29 @@ namespace VectSharp.SVG
                 Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
 
                 double[,] currTransform = null;
+                double[,] deltaTransform = MatrixUtils.Identity;
 
                 switch (TextBaseline)
                 {
                     case TextBaselines.Baseline:
                         currTransform = MatrixUtils.Translate(_transform, x - metrics.LeftSideBearing, y);
+                        deltaTransform = MatrixUtils.Translate(deltaTransform, x - metrics.LeftSideBearing, y);
                         break;
                     case TextBaselines.Top:
                         currTransform = MatrixUtils.Translate(_transform, x - metrics.LeftSideBearing, y + metrics.Top);
+                        deltaTransform = MatrixUtils.Translate(deltaTransform, x - metrics.LeftSideBearing, y + metrics.Top);
                         break;
                     case TextBaselines.Bottom:
                         currTransform = MatrixUtils.Translate(_transform, x - metrics.LeftSideBearing, y + metrics.Bottom);
+                        deltaTransform = MatrixUtils.Translate(deltaTransform, x - metrics.LeftSideBearing, y + metrics.Bottom);
                         break;
                     case TextBaselines.Middle:
                         currTransform = MatrixUtils.Translate(_transform, x - metrics.LeftSideBearing, y + (metrics.Top + metrics.Bottom) * 0.5);
+                        deltaTransform = MatrixUtils.Translate(deltaTransform, x - metrics.LeftSideBearing, y + (metrics.Top + metrics.Bottom) * 0.5);
                         break;
                     default:
                         currTransform = MatrixUtils.Translate(_transform, x - metrics.LeftSideBearing, y);
+                        deltaTransform = MatrixUtils.Translate(deltaTransform, x - metrics.LeftSideBearing, y);
                         break;
                 }
 
@@ -345,8 +412,45 @@ namespace VectSharp.SVG
                 XmlElement textElement = Document.CreateElement("text", SVGNamespace);
 
                 textElement.SetAttribute("stroke", "none");
-                textElement.SetAttribute("fill", FillStyle.ToCSSString(false));
-                textElement.SetAttribute("fill-opacity", FillStyle.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+                if (FillStyle is SolidColourBrush solid)
+                {
+                    textElement.SetAttribute("fill", solid.Colour.ToCSSString(false));
+                    textElement.SetAttribute("fill-opacity", solid.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                }
+                else if (FillStyle is LinearGradientBrush linearGradient)
+                {
+                    string gradientName = "g" + Guid.NewGuid().ToString("N");
+
+                    XmlElement gradientElement = linearGradient.ToLinearGradient(Document, gradientName);
+
+                    deltaTransform = MatrixUtils.Invert(deltaTransform);
+
+                    gradientElement.SetAttribute("gradientTransform", "matrix(" + deltaTransform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + deltaTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + deltaTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
+
+                    this.definitions.AppendChild(gradientElement);
+
+                    textElement.SetAttribute("fill", "url(#" + gradientName + ")");
+                }
+                else if (FillStyle is RadialGradientBrush radialGradient)
+                {
+                    string gradientName = "g" + Guid.NewGuid().ToString("N");
+
+                    XmlElement gradientElement = radialGradient.ToRadialGradient(Document, gradientName);
+
+                    deltaTransform = MatrixUtils.Invert(deltaTransform);
+
+                    gradientElement.SetAttribute("gradientTransform", "matrix(" + deltaTransform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + deltaTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + deltaTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
+
+                    this.definitions.AppendChild(gradientElement);
+
+                    textElement.SetAttribute("fill", "url(#" + gradientName + ")");
+                }
+
                 textElement.SetAttribute("transform", "matrix(" + currTransform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + currTransform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
                     "," + currTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + currTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
                     "," + currTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + currTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
@@ -473,7 +577,7 @@ namespace VectSharp.SVG
             FillStyle = Colour.FromRgba(style);
         }
 
-        public void SetFillStyle(Colour style)
+        public void SetFillStyle(Brush style)
         {
             FillStyle = style;
         }
@@ -488,7 +592,7 @@ namespace VectSharp.SVG
             StrokeStyle = Colour.FromRgba(style);
         }
 
-        public void SetStrokeStyle(Colour style)
+        public void SetStrokeStyle(Brush style)
         {
             StrokeStyle = style;
         }
@@ -511,8 +615,45 @@ namespace VectSharp.SVG
 
             XmlElement path = Document.CreateElement("path", SVGNamespace);
             path.SetAttribute("d", currentPath.Figures.Aggregate("", (a, b) => a + b.Data));
-            path.SetAttribute("stroke", StrokeStyle.ToCSSString(false));
-            path.SetAttribute("stroke-opacity", StrokeStyle.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+            if (StrokeStyle is SolidColourBrush solid)
+            {
+                path.SetAttribute("stroke", solid.Colour.ToCSSString(false));
+                path.SetAttribute("stroke-opacity", solid.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            }
+            else if (StrokeStyle is LinearGradientBrush linearGradient)
+            {
+                string gradientName;
+
+                if (!gradients.TryGetValue(linearGradient, out gradientName))
+                {
+                    gradientName = "gradient" + (gradients.Count + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+                    XmlElement gradientElement = linearGradient.ToLinearGradient(Document, gradientName);
+                    this.definitions.AppendChild(gradientElement);
+
+                    gradients.Add(linearGradient, gradientName);
+                }
+
+                path.SetAttribute("stroke", "url(#" + gradientName + ")");
+            }
+            else if (StrokeStyle is RadialGradientBrush radialGradient)
+            {
+                string gradientName;
+
+                if (!gradients.TryGetValue(radialGradient, out gradientName))
+                {
+                    gradientName = "gradient" + (gradients.Count + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+                    XmlElement gradientElement = radialGradient.ToRadialGradient(Document, gradientName);
+                    this.definitions.AppendChild(gradientElement);
+
+                    gradients.Add(radialGradient, gradientName);
+                }
+
+                path.SetAttribute("stroke", "url(#" + gradientName + ")");
+            }
+
             path.SetAttribute("stroke-width", LineWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
             switch (LineCap)
@@ -588,23 +729,29 @@ namespace VectSharp.SVG
                 Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
 
                 double[,] currTransform = null;
+                double[,] deltaTransform = MatrixUtils.Identity;
 
                 switch (TextBaseline)
                 {
                     case TextBaselines.Baseline:
                         currTransform = MatrixUtils.Translate(_transform, x - metrics.LeftSideBearing, y);
+                        deltaTransform = MatrixUtils.Translate(deltaTransform, x - metrics.LeftSideBearing, y);
                         break;
                     case TextBaselines.Top:
                         currTransform = MatrixUtils.Translate(_transform, x - metrics.LeftSideBearing, y + metrics.Top);
+                        deltaTransform = MatrixUtils.Translate(deltaTransform, x - metrics.LeftSideBearing, y + metrics.Top);
                         break;
                     case TextBaselines.Bottom:
                         currTransform = MatrixUtils.Translate(_transform, x - metrics.LeftSideBearing, y + metrics.Bottom);
+                        deltaTransform = MatrixUtils.Translate(deltaTransform, x - metrics.LeftSideBearing, y + metrics.Bottom);
                         break;
                     case TextBaselines.Middle:
                         currTransform = MatrixUtils.Translate(_transform, x - metrics.LeftSideBearing, y + (metrics.Top + metrics.Bottom) * 0.5);
+                        deltaTransform = MatrixUtils.Translate(deltaTransform, x - metrics.LeftSideBearing, y + (metrics.Top + metrics.Bottom) * 0.5);
                         break;
                     default:
                         currTransform = MatrixUtils.Translate(_transform, x - metrics.LeftSideBearing, y);
+                        deltaTransform = MatrixUtils.Translate(deltaTransform, x - metrics.LeftSideBearing, y);
                         break;
                 }
 
@@ -619,8 +766,44 @@ namespace VectSharp.SVG
 
                 XmlElement textElement = Document.CreateElement("text", SVGNamespace);
 
-                textElement.SetAttribute("stroke", StrokeStyle.ToCSSString(false));
-                textElement.SetAttribute("stroke-opacity", StrokeStyle.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                if (StrokeStyle is SolidColourBrush solid)
+                {
+                    textElement.SetAttribute("stroke", solid.Colour.ToCSSString(false));
+                    textElement.SetAttribute("stroke-opacity", solid.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                }
+                else if (StrokeStyle is LinearGradientBrush linearGradient)
+                {
+                    string gradientName = "g" + Guid.NewGuid().ToString("N");
+
+                    XmlElement gradientElement = linearGradient.ToLinearGradient(Document, gradientName);
+
+                    deltaTransform = MatrixUtils.Invert(deltaTransform);
+
+                    gradientElement.SetAttribute("gradientTransform", "matrix(" + deltaTransform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + deltaTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + deltaTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
+
+                    this.definitions.AppendChild(gradientElement);
+
+                    textElement.SetAttribute("stroke", "url(#" + gradientName + ")");
+                }
+                else if (StrokeStyle is RadialGradientBrush radialGradient)
+                {
+                    string gradientName = "g" + Guid.NewGuid().ToString("N");
+
+                    XmlElement gradientElement = radialGradient.ToRadialGradient(Document, gradientName);
+
+                    deltaTransform = MatrixUtils.Invert(deltaTransform);
+
+                    gradientElement.SetAttribute("gradientTransform", "matrix(" + deltaTransform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + deltaTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + deltaTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
+
+                    this.definitions.AppendChild(gradientElement);
+
+                    textElement.SetAttribute("stroke", "url(#" + gradientName + ")");
+                }
+
                 textElement.SetAttribute("stroke-width", LineWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
                 switch (LineCap)
@@ -740,7 +923,7 @@ namespace VectSharp.SVG
             XmlElement clipPath = Document.CreateElement("clipPath", SVGNamespace);
             string id = Guid.NewGuid().ToString("N");
             clipPath.SetAttribute("id", id);
-            
+
             if (!string.IsNullOrEmpty(_currClipPath))
             {
                 clipPath.SetAttribute("clip-path", _currClipPath);
@@ -748,8 +931,45 @@ namespace VectSharp.SVG
 
             XmlElement path = Document.CreateElement("path", SVGNamespace);
             path.SetAttribute("d", currentPath.Figures.Aggregate("", (a, b) => a + b.Data));
-            path.SetAttribute("stroke", StrokeStyle.ToCSSString(false));
-            path.SetAttribute("stroke-opacity", StrokeStyle.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+            if (StrokeStyle is SolidColourBrush solid)
+            {
+                path.SetAttribute("stroke", solid.Colour.ToCSSString(false));
+                path.SetAttribute("stroke-opacity", solid.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            }
+            else if (StrokeStyle is LinearGradientBrush linearGradient)
+            {
+                string gradientName;
+
+                if (!gradients.TryGetValue(linearGradient, out gradientName))
+                {
+                    gradientName = "gradient" + (gradients.Count + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+                    XmlElement gradientElement = linearGradient.ToLinearGradient(Document, gradientName);
+                    this.definitions.AppendChild(gradientElement);
+
+                    gradients.Add(linearGradient, gradientName);
+                }
+
+                path.SetAttribute("stroke", "url(#" + gradientName + ")");
+            }
+            else if (StrokeStyle is RadialGradientBrush radialGradient)
+            {
+                string gradientName;
+
+                if (!gradients.TryGetValue(radialGradient, out gradientName))
+                {
+                    gradientName = "gradient" + (gradients.Count + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+                    XmlElement gradientElement = radialGradient.ToRadialGradient(Document, gradientName);
+                    this.definitions.AppendChild(gradientElement);
+
+                    gradients.Add(radialGradient, gradientName);
+                }
+
+                path.SetAttribute("stroke", "url(#" + gradientName + ")");
+            }
+
             path.SetAttribute("stroke-width", LineWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
             switch (LineCap)
@@ -1112,6 +1332,61 @@ namespace VectSharp.SVG
             ctx.Document.DocumentElement.SetAttribute("style", "font-synthesis: none;");
 
             ctx.Document.Save(stream);
+        }
+
+        internal static XmlElement ToLinearGradient(this LinearGradientBrush brush, XmlDocument document, string gradientId)
+        {
+            XmlElement gradient = document.CreateElement("linearGradient", SVGContext.SVGNamespace);
+
+            gradient.SetAttribute("id", gradientId);
+
+            gradient.SetAttribute("gradientUnits", "userSpaceOnUse");
+
+            gradient.SetAttribute("x1", brush.StartPoint.X.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            gradient.SetAttribute("y1", brush.StartPoint.Y.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            gradient.SetAttribute("x2", brush.EndPoint.X.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            gradient.SetAttribute("y2", brush.EndPoint.Y.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+            foreach (GradientStop stop in brush.GradientStops)
+            {
+                XmlElement gradientStop = document.CreateElement("stop", SVGContext.SVGNamespace);
+
+                gradientStop.SetAttribute("offset", stop.Offset.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                gradientStop.SetAttribute("stop-color", stop.Colour.ToCSSString(false));
+                gradientStop.SetAttribute("stop-opacity", stop.Colour.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+                gradient.AppendChild(gradientStop);
+            }
+
+            return gradient;
+        }
+
+        internal static XmlElement ToRadialGradient(this RadialGradientBrush brush, XmlDocument document, string gradientId)
+        {
+            XmlElement gradient = document.CreateElement("radialGradient", SVGContext.SVGNamespace);
+
+            gradient.SetAttribute("id", gradientId);
+
+            gradient.SetAttribute("gradientUnits", "userSpaceOnUse");
+
+            gradient.SetAttribute("cx", brush.Centre.X.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            gradient.SetAttribute("cy", brush.Centre.Y.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            gradient.SetAttribute("r", brush.Radius.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            gradient.SetAttribute("fx", brush.FocalPoint.X.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            gradient.SetAttribute("fy", brush.FocalPoint.Y.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+            foreach (GradientStop stop in brush.GradientStops)
+            {
+                XmlElement gradientStop = document.CreateElement("stop", SVGContext.SVGNamespace);
+
+                gradientStop.SetAttribute("offset", stop.Offset.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                gradientStop.SetAttribute("stop-color", stop.Colour.ToCSSString(false));
+                gradientStop.SetAttribute("stop-opacity", stop.Colour.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+                gradient.AppendChild(gradientStop);
+            }
+
+            return gradient;
         }
     }
 }

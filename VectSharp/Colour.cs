@@ -629,5 +629,6 @@ namespace VectSharp
 
             return Colour.FromRgb(r1 + m, g1 + m, b1 + m);
         }
+
     }
 }

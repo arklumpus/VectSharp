@@ -49,13 +49,20 @@ namespace VectSharp.Demo
             gpr.FillText(200, 1140, "Helvetica-Oblique", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaOblique), 120), Colour.FromRgb(255, 242, 0));
             gpr.FillText(200, 1280, "Helvetica-BoldOblique", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBoldOblique), 120), Colour.FromRgb(181, 230, 29));
 
-            gpr.FillText(200, 1520, "Courier", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.Courier), 120), Colour.FromRgb(34, 177, 76));
-            gpr.FillText(200, 1660, "Courier-Bold", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.CourierBold), 120), Colour.FromRgb(0, 162, 232));
-            gpr.FillText(200, 1800, "Courier-Oblique", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.CourierOblique), 120), Colour.FromRgb(112, 146, 190));
-            gpr.FillText(200, 1940, "Courier-BoldOblique", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.CourierBoldOblique), 120), Colour.FromRgb(63, 72, 204));
+            //Using a RadialGradientBrush
+            //Note that in Avalonia (and thus, VectSharp.Canvas), weird things may happen if the centre and the focal point do not coincide (https://github.com/AvaloniaUI/Avalonia/issues/6017)
+            RadialGradientBrush radialGradient = new RadialGradientBrush(new Point(200, 1520), new Point(200, 1520), 800, new GradientStop(Colour.FromRgb(237, 28, 36), 0), new GradientStop(Colour.FromRgb(34, 177, 76), 0.33), new GradientStop(Colour.FromRgb(0, 162, 232), 0.66), new GradientStop(Colour.FromRgb(255, 127, 39), 1));
 
-            gpr.FillText(200, 2180, "Σψμβολ", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.Symbol), 120), Colour.FromRgb(163, 73, 204));
-            gpr.FillText(200, 2320, "✺❁❐❆✤❉■❇❂❁▼▲", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.ZapfDingbats), 120), Colour.FromRgb(200, 191, 231));
+            gpr.FillText(200, 1520, "Courier", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.Courier), 120), radialGradient);
+            gpr.FillText(200, 1660, "Courier-Bold", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.CourierBold), 120), radialGradient);
+            gpr.FillText(200, 1800, "Courier-Oblique", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.CourierOblique), 120), radialGradient);
+            gpr.FillText(200, 1940, "Courier-BoldOblique", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.CourierBoldOblique), 120), radialGradient);
+
+            //Using a LinearGradientBrush
+            LinearGradientBrush linearGradient = new LinearGradientBrush(new Point(200, 2180), new Point(1320, 2400), new GradientStop(Colour.FromRgb(63, 72, 204), 0), new GradientStop(Colour.FromRgb(163, 73, 204), 1));
+
+            gpr.FillText(200, 2180, "Σψμβολ", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.Symbol), 120), linearGradient);
+            gpr.FillText(200, 2320, "✺❁❐❆✤❉■❇❂❁▼▲", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.ZapfDingbats), 120), linearGradient);
 
 
             //Text metrics sample

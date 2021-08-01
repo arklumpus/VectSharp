@@ -21,6 +21,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace VectSharp.Canvas
@@ -113,6 +114,22 @@ namespace VectSharp.Canvas
         }
 
         public static double[,] Identity = new double[,] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
+        public static double[,] Invert(double[,] m)
+        {
+            double[,] tbr = new double[3, 3];
+
+            tbr[0, 0] = (m[1, 1] * m[2, 2] - m[1, 2] * m[2, 1]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[0, 1] = -(m[0, 1] * m[2, 2] - m[0, 2] * m[2, 1]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[0, 2] = (m[0, 1] * m[1, 2] - m[0, 2] * m[1, 1]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[1, 0] = -(m[1, 0] * m[2, 2] - m[1, 2] * m[2, 0]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[1, 1] = (m[0, 0] * m[2, 2] - m[0, 2] * m[2, 0]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[1, 2] = -(m[0, 0] * m[1, 2] - m[0, 2] * m[1, 0]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[2, 0] = (m[1, 0] * m[2, 1] - m[1, 1] * m[2, 0]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[2, 1] = -(m[0, 0] * m[2, 1] - m[0, 1] * m[2, 0]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+            tbr[2, 2] = (m[0, 0] * m[1, 1] - m[0, 1] * m[1, 0]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
+
+            return tbr;
+        }
     }
 
     internal static class Utils
@@ -290,21 +307,23 @@ namespace VectSharp.Canvas
 
             if (_textOption == AvaloniaContextInterpreter.TextOptions.NeverConvert || (_textOption == AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary && Font.FontFamily.IsStandardFamily))
             {
-                TextBlock blk = new TextBlock() { ClipToBounds = false, Text = text, Foreground = new SolidColorBrush(Color.FromArgb(FillAlpha, (byte)(FillStyle.R * 255), (byte)(FillStyle.G * 255), (byte)(FillStyle.B * 255))), FontFamily = Avalonia.Media.FontFamily.Parse(FontFamily), FontSize = Font.FontSize, FontStyle = (Font.FontFamily.IsOblique ? FontStyle.Oblique : Font.FontFamily.IsItalic ? FontStyle.Italic : FontStyle.Normal), FontWeight = (Font.FontFamily.IsBold ? FontWeight.Bold : FontWeight.Regular) };
+                TextBlock blk = new TextBlock() { ClipToBounds = false, Text = text, FontFamily = Avalonia.Media.FontFamily.Parse(FontFamily), FontSize = Font.FontSize, FontStyle = (Font.FontFamily.IsOblique ? FontStyle.Oblique : Font.FontFamily.IsItalic ? FontStyle.Italic : FontStyle.Normal), FontWeight = (Font.FontFamily.IsBold ? FontWeight.Bold : FontWeight.Regular) };
 
                 double top = y;
                 double left = x;
 
                 double[,] currTransform = null;
+                double[,] deltaTransform = MatrixUtils.Identity;
 
                 if (Font.FontFamily.TrueTypeFile != null)
                 {
                     currTransform = MatrixUtils.Translate(_transform, x, y);
                 }
 
+                Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
+
                 if (TextBaseline == TextBaselines.Top)
                 {
-                    Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
                     blk.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top;
 
                     if (Font.FontFamily.TrueTypeFile != null)
@@ -312,17 +331,17 @@ namespace VectSharp.Canvas
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.YMax);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top - Font.YMax);
                         }
                         else
                         {
                             currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.Ascent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top - Font.Ascent);
                         }
                     }
                 }
                 else if (TextBaseline == TextBaselines.Middle)
                 {
-                    Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
-
                     blk.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top;
 
                     if (Font.FontFamily.TrueTypeFile != null)
@@ -330,10 +349,12 @@ namespace VectSharp.Canvas
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.YMax);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.YMax);
                         }
                         else
                         {
                             currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
                         }
 
                     }
@@ -349,17 +370,17 @@ namespace VectSharp.Canvas
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.YMax);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - lsb, top - Font.YMax);
                         }
                         else
                         {
                             currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.Ascent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - lsb, top - Font.YMax);
                         }
                     }
                 }
                 else if (TextBaseline == TextBaselines.Bottom)
                 {
-                    Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
-
                     blk.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Bottom;
 
                     if (Font.FontFamily.TrueTypeFile != null)
@@ -367,16 +388,35 @@ namespace VectSharp.Canvas
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.YMax + metrics.Bottom);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top - Font.YMax + metrics.Bottom);
                         }
                         else
                         {
                             currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.Ascent + metrics.Bottom);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top - Font.Ascent + metrics.Bottom);
                         }
                     }
                 }
 
                 blk.RenderTransform = new MatrixTransform(currTransform.ToAvaloniaMatrix());
                 blk.RenderTransformOrigin = new Avalonia.RelativePoint(0, 0, Avalonia.RelativeUnit.Absolute);
+
+                Avalonia.Media.Brush foreground = null;
+
+                if (this.FillStyle is SolidColourBrush solid)
+                {
+                    foreground = new SolidColorBrush(Color.FromArgb(FillAlpha, (byte)(solid.R * 255), (byte)(solid.G * 255), (byte)(solid.B * 255)));
+                }
+                else if (this.FillStyle is LinearGradientBrush linearGradient)
+                {
+                    foreground = linearGradient.ToLinearGradientBrush(deltaTransform);
+                }
+                else if (this.FillStyle is RadialGradientBrush radialGradient)
+                {
+                    foreground = radialGradient.ToRadialGradientBrush(metrics.Width + metrics.LeftSideBearing + metrics.RightSideBearing, deltaTransform);
+                }
+
+                blk.Foreground = foreground;
 
                 currControlElement.Children.Add(blk);
 
@@ -400,10 +440,10 @@ namespace VectSharp.Canvas
             }
         }
 
-        public Colour StrokeStyle { get; private set; } = Colour.FromRgb(0, 0, 0);
+        public Brush StrokeStyle { get; private set; } = Colour.FromRgb(0, 0, 0);
         private byte StrokeAlpha = 255;
 
-        public Colour FillStyle { get; private set; } = Colour.FromRgb(0, 0, 0);
+        public Brush FillStyle { get; private set; } = Colour.FromRgb(0, 0, 0);
         private byte FillAlpha = 255;
 
         public void SetFillStyle((int r, int g, int b, double a) style)
@@ -412,10 +452,18 @@ namespace VectSharp.Canvas
             FillAlpha = (byte)(style.a * 255);
         }
 
-        public void SetFillStyle(Colour style)
+        public void SetFillStyle(Brush style)
         {
             FillStyle = style;
-            FillAlpha = (byte)(style.A * 255);
+
+            if (style is SolidColourBrush solid)
+            {
+                FillAlpha = (byte)(solid.A * 255);
+            }
+            else
+            {
+                FillAlpha = 255;
+            }
         }
 
         public void SetStrokeStyle((int r, int g, int b, double a) style)
@@ -424,10 +472,18 @@ namespace VectSharp.Canvas
             StrokeAlpha = (byte)(style.a * 255);
         }
 
-        public void SetStrokeStyle(Colour style)
+        public void SetStrokeStyle(Brush style)
         {
             StrokeStyle = style;
-            StrokeAlpha = (byte)(style.A * 255);
+
+            if (style is SolidColourBrush solid)
+            {
+                StrokeAlpha = (byte)(solid.A * 255);
+            }
+            else
+            {
+                StrokeAlpha = 255;
+            }
         }
 
         private double[] LineDash;
@@ -618,7 +674,23 @@ namespace VectSharp.Canvas
                 currentPath.Figures.Add(currentFigure);
             }
 
-            Path pth = new Path() { Fill = null, Stroke = new SolidColorBrush(Color.FromArgb(StrokeAlpha, (byte)(StrokeStyle.R * 255), (byte)(StrokeStyle.G * 255), (byte)(StrokeStyle.B * 255))), StrokeThickness = LineWidth, StrokeDashArray = new Avalonia.Collections.AvaloniaList<double> { (LineDash[0] + (LineCap == LineCaps.Butt ? 0 : LineWidth)) / LineWidth, (LineDash[1] - (LineCap == LineCaps.Butt ? 0 : LineWidth)) / LineWidth }, StrokeDashOffset = LineDash[2] / LineWidth };
+            Avalonia.Media.Brush stroke = null;
+
+            if (this.StrokeStyle is SolidColourBrush solid)
+            {
+                stroke = new SolidColorBrush(Color.FromArgb(StrokeAlpha, (byte)(solid.R * 255), (byte)(solid.G * 255), (byte)(solid.B * 255)));
+            }
+            else if (this.StrokeStyle is LinearGradientBrush linearGradient)
+            {
+                stroke = linearGradient.ToLinearGradientBrush();
+            }
+            else if (this.StrokeStyle is RadialGradientBrush radialGradient)
+            {
+                stroke = radialGradient.ToRadialGradientBrush(currentPath.Bounds.Width);
+            }
+
+
+            Path pth = new Path() { Fill = null, Stroke = stroke, StrokeThickness = LineWidth, StrokeDashArray = new Avalonia.Collections.AvaloniaList<double> { (LineDash[0] + (LineCap == LineCaps.Butt ? 0 : LineWidth)) / LineWidth, (LineDash[1] - (LineCap == LineCaps.Butt ? 0 : LineWidth)) / LineWidth }, StrokeDashOffset = LineDash[2] / LineWidth };
 
             switch (LineCap)
             {
@@ -678,7 +750,22 @@ namespace VectSharp.Canvas
                 currentPath.Figures.Add(currentFigure);
             }
 
-            Path pth = new Path() { Fill = new SolidColorBrush(Color.FromArgb(FillAlpha, (byte)(FillStyle.R * 255), (byte)(FillStyle.G * 255), (byte)(FillStyle.B * 255))), Stroke = null };
+            Avalonia.Media.Brush fill = null;
+
+            if (this.FillStyle is SolidColourBrush solid)
+            {
+                fill = new SolidColorBrush(Color.FromArgb(FillAlpha, (byte)(solid.R * 255), (byte)(solid.G * 255), (byte)(solid.B * 255)));
+            }
+            else if (this.FillStyle is LinearGradientBrush linearGradient)
+            {
+                fill = linearGradient.ToLinearGradientBrush();
+            }
+            else if (this.FillStyle is RadialGradientBrush radialGradient)
+            {
+                fill = radialGradient.ToRadialGradientBrush(currentPath.Bounds.Width);
+            }
+
+            Path pth = new Path() { Fill = fill, Stroke = null };
 
             pth.Data = currentPath;
 
@@ -1468,42 +1555,45 @@ namespace VectSharp.Canvas
                 double left = x;
 
                 double[,] currTransform = null;
+                double[,] deltaTransform = MatrixUtils.Identity;
 
                 if (Font.FontFamily.TrueTypeFile != null)
                 {
                     currTransform = MatrixUtils.Translate(_transform, x, y);
                 }
 
+                Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
+
                 if (TextBaseline == TextBaselines.Top)
                 {
-                    Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
-
                     if (Font.FontFamily.TrueTypeFile != null)
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.YMax);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top - Font.YMax);
                         }
                         else
                         {
                             currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.Ascent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top - Font.Ascent);
                         }
 
                     }
                 }
                 else if (TextBaseline == TextBaselines.Middle)
                 {
-                    Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
-
                     if (Font.FontFamily.TrueTypeFile != null)
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.YMax);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.YMax);
                         }
                         else
                         {
                             currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
                         }
                     }
                 }
@@ -1516,31 +1606,48 @@ namespace VectSharp.Canvas
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.YMax);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - lsb, top - Font.YMax);
                         }
                         else
                         {
                             currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.Ascent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - lsb, top - Font.YMax);
                         }
                     }
                 }
                 else if (TextBaseline == TextBaselines.Bottom)
                 {
-                    Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
-
                     if (Font.FontFamily.TrueTypeFile != null)
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.YMax + metrics.Bottom);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top - Font.YMax + metrics.Bottom);
                         }
                         else
                         {
                             currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.Ascent + metrics.Bottom);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top - Font.Ascent + metrics.Bottom);
                         }
                     }
                 }
 
-                RenderAction act = RenderAction.TextAction(txt, new SolidColorBrush(Color.FromArgb(FillAlpha, (byte)(FillStyle.R * 255), (byte)(FillStyle.G * 255), (byte)(FillStyle.B * 255))), currTransform.ToAvaloniaMatrix(), _clippingPath?.Clone(), Tag);
+                Avalonia.Media.Brush fill = null;
+
+                if (this.FillStyle is SolidColourBrush solid)
+                {
+                    fill = new SolidColorBrush(Color.FromArgb(FillAlpha, (byte)(solid.R * 255), (byte)(solid.G * 255), (byte)(solid.B * 255)));
+                }
+                else if (this.FillStyle is LinearGradientBrush linearGradient)
+                {
+                    fill = linearGradient.ToLinearGradientBrush(deltaTransform);
+                }
+                else if (this.FillStyle is RadialGradientBrush radialGradient)
+                {
+                    fill = radialGradient.ToRadialGradientBrush(metrics.Width + metrics.LeftSideBearing + metrics.RightSideBearing, deltaTransform);
+                }
+
+                RenderAction act = RenderAction.TextAction(txt, fill, currTransform.ToAvaloniaMatrix(), _clippingPath?.Clone(), Tag);
 
                 if (!string.IsNullOrEmpty(Tag))
                 {
@@ -1584,10 +1691,10 @@ namespace VectSharp.Canvas
             }
         }
 
-        public Colour StrokeStyle { get; private set; } = Colour.FromRgb(0, 0, 0);
+        public Brush StrokeStyle { get; private set; } = Colour.FromRgb(0, 0, 0);
         private byte StrokeAlpha = 255;
 
-        public Colour FillStyle { get; private set; } = Colour.FromRgb(0, 0, 0);
+        public Brush FillStyle { get; private set; } = Colour.FromRgb(0, 0, 0);
         private byte FillAlpha = 255;
 
         public void SetFillStyle((int r, int g, int b, double a) style)
@@ -1596,10 +1703,18 @@ namespace VectSharp.Canvas
             FillAlpha = (byte)(style.a * 255);
         }
 
-        public void SetFillStyle(Colour style)
+        public void SetFillStyle(Brush style)
         {
             FillStyle = style;
-            FillAlpha = (byte)(style.A * 255);
+
+            if (style is SolidColourBrush solid)
+            {
+                FillAlpha = (byte)(solid.A * 255);
+            }
+            else
+            {
+                FillAlpha = 255;
+            }
         }
 
         public void SetStrokeStyle((int r, int g, int b, double a) style)
@@ -1608,10 +1723,18 @@ namespace VectSharp.Canvas
             StrokeAlpha = (byte)(style.a * 255);
         }
 
-        public void SetStrokeStyle(Colour style)
+        public void SetStrokeStyle(Brush style)
         {
             StrokeStyle = style;
-            StrokeAlpha = (byte)(style.A * 255);
+
+            if (style is SolidColourBrush solid)
+            {
+                StrokeAlpha = (byte)(solid.A * 255);
+            }
+            else
+            {
+                StrokeAlpha = 255;
+            }
         }
 
         private double[] LineDash;
@@ -1802,7 +1925,22 @@ namespace VectSharp.Canvas
                 currentPath.Figures.Add(currentFigure);
             }
 
-            Pen pen = new Pen(new SolidColorBrush(Color.FromArgb(StrokeAlpha, (byte)(StrokeStyle.R * 255), (byte)(StrokeStyle.G * 255), (byte)(StrokeStyle.B * 255))),
+            Avalonia.Media.Brush stroke = null;
+
+            if (this.StrokeStyle is SolidColourBrush solid)
+            {
+                stroke = new SolidColorBrush(Color.FromArgb(StrokeAlpha, (byte)(solid.R * 255), (byte)(solid.G * 255), (byte)(solid.B * 255)));
+            }
+            else if (this.StrokeStyle is LinearGradientBrush linearGradient)
+            {
+                stroke = linearGradient.ToLinearGradientBrush();
+            }
+            else if (this.StrokeStyle is RadialGradientBrush radialGradient)
+            {
+                stroke = radialGradient.ToRadialGradientBrush(currentPath.Bounds.Width);
+            }
+
+            Pen pen = new Pen(stroke,
                     LineWidth,
                     new DashStyle(new double[] { (LineDash[0] + (LineCap == LineCaps.Butt ? 0 : LineWidth)) / LineWidth, (LineDash[1] - (LineCap == LineCaps.Butt ? 0 : LineWidth)) / LineWidth }, LineDash[2] / LineWidth));
 
@@ -1881,7 +2019,22 @@ namespace VectSharp.Canvas
                 currentPath.Figures.Add(currentFigure);
             }
 
-            RenderAction act = RenderAction.PathAction(currentPath, null, new SolidColorBrush(Color.FromArgb(FillAlpha, (byte)(FillStyle.R * 255), (byte)(FillStyle.G * 255), (byte)(FillStyle.B * 255))), _transform.ToAvaloniaMatrix(), _clippingPath?.Clone(), Tag);
+            Avalonia.Media.Brush fill = null;
+
+            if (this.FillStyle is SolidColourBrush solid)
+            {
+                fill = new SolidColorBrush(Color.FromArgb(FillAlpha, (byte)(solid.R * 255), (byte)(solid.G * 255), (byte)(solid.B * 255)));
+            }
+            else if (this.FillStyle is LinearGradientBrush linearGradient)
+            {
+                fill = linearGradient.ToLinearGradientBrush();
+            }
+            else if (this.FillStyle is RadialGradientBrush radialGradient)
+            {
+                fill = radialGradient.ToRadialGradientBrush(currentPath.Bounds.Width);
+            }
+
+            RenderAction act = RenderAction.PathAction(currentPath, null, fill, _transform.ToAvaloniaMatrix(), _clippingPath?.Clone(), Tag);
 
             if (!string.IsNullOrEmpty(Tag))
             {
@@ -2128,6 +2281,68 @@ namespace VectSharp.Canvas
             page.Graphics.CopyToIGraphicsContext(ctx);
             ctx.ControlItem.Background = new SolidColorBrush(Color.FromArgb((byte)(page.Background.A * 255), (byte)(page.Background.R * 255), (byte)(page.Background.G * 255), (byte)(page.Background.B * 255)));
             return ctx.ControlItem;
+        }
+
+        internal static Avalonia.Media.LinearGradientBrush ToLinearGradientBrush(this LinearGradientBrush brush, double[,] transformMatrix = null)
+        {
+            Point start = brush.StartPoint;
+            Point end = brush.EndPoint;
+
+            if (transformMatrix != null)
+            {
+                double[,] inverse = MatrixUtils.Invert(transformMatrix);
+
+                double[] startVec = MatrixUtils.Multiply(inverse, new double[] { start.X, start.Y });
+                double[] endVec = MatrixUtils.Multiply(inverse, new double[] { end.X, end.Y });
+
+                start = new Point(startVec[0], startVec[1]);
+                end = new Point(endVec[0], endVec[1]);
+            }
+
+            Avalonia.Media.LinearGradientBrush tbr = new Avalonia.Media.LinearGradientBrush()
+            {
+                SpreadMethod = GradientSpreadMethod.Pad,
+                StartPoint = new Avalonia.RelativePoint(start.X, start.Y, Avalonia.RelativeUnit.Absolute),
+                EndPoint = new Avalonia.RelativePoint(end.X, end.Y, Avalonia.RelativeUnit.Absolute)
+            };
+
+            Avalonia.Media.GradientStops stops = new Avalonia.Media.GradientStops();
+            stops.AddRange(from el in brush.GradientStops select new Avalonia.Media.GradientStop(Color.FromArgb((byte)(el.Colour.A * 255), (byte)(el.Colour.R * 255), (byte)(el.Colour.G * 255), (byte)(el.Colour.B * 255)), el.Offset));
+
+            tbr.GradientStops = stops;
+
+            return tbr;
+        }
+
+        internal static Avalonia.Media.RadialGradientBrush ToRadialGradientBrush(this RadialGradientBrush brush, double objectWidth, double[,] transformMatrix = null)
+        {
+            Point focus = brush.FocalPoint;
+            Point centre = brush.Centre;
+
+            if (transformMatrix != null)
+            {
+                double[,] inverse = MatrixUtils.Invert(transformMatrix);
+
+                double[] focusVec = MatrixUtils.Multiply(inverse, new double[] { focus.X, focus.Y });
+                double[] centreVec = MatrixUtils.Multiply(inverse, new double[] { centre.X, centre.Y });
+
+                focus = new Point(focusVec[0], focusVec[1]);
+                centre = new Point(centreVec[0], centreVec[1]);
+            }
+
+            Avalonia.Media.RadialGradientBrush tbr = new Avalonia.Media.RadialGradientBrush()
+            {
+                SpreadMethod = GradientSpreadMethod.Pad,
+                Center = new Avalonia.RelativePoint(centre.X, centre.Y, Avalonia.RelativeUnit.Absolute),
+                GradientOrigin = new Avalonia.RelativePoint(focus.X, focus.Y, Avalonia.RelativeUnit.Absolute),
+                Radius = brush.Radius / objectWidth
+            };
+
+            Avalonia.Media.GradientStops stops = new Avalonia.Media.GradientStops();
+            stops.AddRange(from el in brush.GradientStops select new Avalonia.Media.GradientStop(Color.FromArgb((byte)(el.Colour.A * 255), (byte)(el.Colour.R * 255), (byte)(el.Colour.G * 255), (byte)(el.Colour.B * 255)), el.Offset));
+            tbr.GradientStops = stops;
+
+            return tbr;
         }
     }
 }

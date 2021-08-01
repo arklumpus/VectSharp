@@ -24,8 +24,8 @@ namespace VectSharp
 
     internal interface IPrintableAction
     {
-        Colour? Fill { get; }
-        Colour? Stroke { get; }
+        Brush Fill { get; }
+        Brush Stroke { get; }
         double LineWidth { get; }
         LineCaps LineCap { get; }
         LineJoins LineJoin { get; }
@@ -81,8 +81,8 @@ namespace VectSharp
 
     internal class TextAction : IGraphicsAction, IPrintableAction
     {
-        public Colour? Fill { get; }
-        public Colour? Stroke { get; }
+        public Brush Fill { get; }
+        public Brush Stroke { get; }
         public double LineWidth { get; }
         public LineCaps LineCap { get; }
         public LineJoins LineJoin { get; }
@@ -93,7 +93,7 @@ namespace VectSharp
         public TextBaselines TextBaseline { get; }
         public Font Font { get; }
 
-        public TextAction(Point origin, string text, Font font, TextBaselines textBaseLine, Colour? fill, Colour? stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, string tag)
+        public TextAction(Point origin, string text, Font font, TextBaselines textBaseLine, Brush fill, Brush stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, string tag)
         {
             this.Origin = origin;
             this.Text = text;
@@ -111,8 +111,8 @@ namespace VectSharp
 
     internal class RectangleAction : IGraphicsAction, IPrintableAction
     {
-        public Colour? Fill { get; }
-        public Colour? Stroke { get; }
+        public Brush Fill { get; }
+        public Brush Stroke { get; }
         public double LineWidth { get; }
         public LineCaps LineCap { get; }
         public LineJoins LineJoin { get; }
@@ -121,7 +121,7 @@ namespace VectSharp
         public Point TopLeft { get; }
         public Size Size { get; }
 
-        public RectangleAction(Point topLeft, Size size, Colour? fill, Colour? stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, string tag)
+        public RectangleAction(Point topLeft, Size size, Brush fill, Brush stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, string tag)
         {
             this.TopLeft = topLeft;
             this.Size = size;
@@ -138,15 +138,15 @@ namespace VectSharp
     internal class PathAction : IGraphicsAction, IPrintableAction
     {
         public GraphicsPath Path { get; }
-        public Colour? Fill { get; }
-        public Colour? Stroke { get; }
+        public Brush Fill { get; }
+        public Brush Stroke { get; }
         public string Tag { get; }
         public double LineWidth { get; }
         public LineCaps LineCap { get; }
         public LineJoins LineJoin { get; }
         public LineDash LineDash { get; }
         public bool IsClipping { get; }
-        public PathAction(GraphicsPath path, Colour? fill, Colour? stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, string tag, bool isClipping)
+        public PathAction(GraphicsPath path, Brush fill, Brush stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, string tag, bool isClipping)
         {
             this.Path = path;
             this.Fill = fill;
@@ -162,8 +162,8 @@ namespace VectSharp
 
     internal class RasterImageAction : IGraphicsAction, IPrintableAction
     {
-        public Colour? Fill { get; }
-        public Colour? Stroke { get; }
+        public Brush Fill { get; }
+        public Brush Stroke { get; }
         public string Tag { get; }
         public double LineWidth { get; }
         public LineCaps LineCap { get; }

@@ -6,7 +6,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Company>University of Bristol</Company>
     <Description>A library to produce vector graphics (including text) without too many dependencies. Extensible to support multiple output formats. This is the base package, and does not provide any output formats. For more information, see https://github.com/arklumpus/VectSharp</Description>
-    <Version>1.7.0</Version>
+    <Version>1.7.1-a1</Version>
     <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/arklumpus/VectSharp</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
@@ -45,6 +45,10 @@
     <EmbeddedResource Include="StandardFonts\NimbusSanL-Reg.ttf" />
     <EmbeddedResource Include="StandardFonts\NimbusSanL-RegIta.ttf" />
     <EmbeddedResource Include="StandardFonts\StandardSymbolsPS.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
   </ItemGroup>
 
 </Project>

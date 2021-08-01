@@ -120,8 +120,8 @@ namespace VectSharp.PDF
 
     internal interface IFigure
     {
-        Colour? Fill { get; }
-        Colour? Stroke { get; }
+        Brush Fill { get; }
+        Brush Stroke { get; }
         double LineWidth { get; }
         LineCaps LineCap { get; }
         LineJoins LineJoin { get; }
@@ -139,8 +139,8 @@ namespace VectSharp.PDF
 
         public TransformTypes TransformType { get; }
 
-        public Colour? Fill { get; }
-        public Colour? Stroke { get; }
+        public Brush Fill { get; }
+        public Brush Stroke { get; }
 
         public bool IsClipping { get; }
         public double LineWidth { get; }
@@ -165,8 +165,8 @@ namespace VectSharp.PDF
     internal class RasterImageFigure : IFigure
     {
 
-        public Colour? Fill { get; }
-        public Colour? Stroke { get; }
+        public Brush Fill { get; }
+        public Brush Stroke { get; }
 
         public bool IsClipping { get; }
         public double LineWidth { get; }
@@ -192,8 +192,8 @@ namespace VectSharp.PDF
 
     internal class PathFigure : IFigure
     {
-        public Colour? Fill { get; }
-        public Colour? Stroke { get; }
+        public Brush Fill { get; }
+        public Brush Stroke { get; }
         public bool IsClipping { get; }
         public double LineWidth { get; }
 
@@ -205,7 +205,7 @@ namespace VectSharp.PDF
         public Segment[] Segments { get; }
 
         public string Tag { get; }
-        public PathFigure(IEnumerable<Segment> segments, Colour? fill, Colour? stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, bool isClipping, string tag)
+        public PathFigure(IEnumerable<Segment> segments, Brush fill, Brush stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, bool isClipping, string tag)
         {
             List<Segment> segs = new List<Segment>();
 
@@ -229,8 +229,8 @@ namespace VectSharp.PDF
 
     internal class TextFigure : IFigure
     {
-        public Colour? Fill { get; }
-        public Colour? Stroke { get; }
+        public Brush Fill { get; }
+        public Brush Stroke { get; }
         public double LineWidth { get; }
         public bool IsClipping { get; }
         public LineCaps LineCap { get; }
@@ -249,7 +249,7 @@ namespace VectSharp.PDF
 
         public string Tag { get; }
 
-        public TextFigure(string text, Font font, Point position, TextBaselines textBaseline, Colour? fill, Colour? stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, string tag)
+        public TextFigure(string text, Font font, Point position, TextBaselines textBaseline, Brush fill, Brush stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, string tag)
         {
             Text = text;
             Font = font;
@@ -343,8 +343,8 @@ namespace VectSharp.PDF
 
         internal List<IFigure> _figures;
 
-        private Colour _strokeStyle;
-        private Colour _fillStyle;
+        private Brush _strokeStyle;
+        private Brush _fillStyle;
         private LineDash _lineDash;
 
         private readonly bool _textToPaths;
@@ -410,7 +410,7 @@ namespace VectSharp.PDF
             _strokeStyle = Colour.FromRgba(style.r, style.g, style.b, style.a);
         }
 
-        public void SetStrokeStyle(Colour style)
+        public void SetStrokeStyle(Brush style)
         {
             _strokeStyle = style;
         }
@@ -420,14 +420,14 @@ namespace VectSharp.PDF
             _fillStyle = Colour.FromRgba(style.r, style.g, style.b, style.a);
         }
 
-        public void SetFillStyle(Colour style)
+        public void SetFillStyle(Brush style)
         {
             _fillStyle = style;
         }
 
 
-        public Colour FillStyle { get { return _fillStyle; } }
-        public Colour StrokeStyle { get { return _strokeStyle; } }
+        public Brush FillStyle { get { return _fillStyle; } }
+        public Brush StrokeStyle { get { return _strokeStyle; } }
 
         public double LineWidth { get; set; }
 
@@ -716,14 +716,35 @@ namespace VectSharp.PDF
             {
                 foreach (IFigure act in ctx._figures)
                 {
-                    if (act.Stroke.HasValue)
+                    if (act.Stroke != null)
                     {
-                        tbr.Add((double)act.Stroke?.A);
+                        if (act.Stroke is SolidColourBrush solid)
+                        {
+                            tbr.Add(solid.A);
+                        }
+                        else if (act.Stroke is GradientBrush gradient)
+                        {
+                            foreach (GradientStop stop in gradient.GradientStops)
+                            {
+                                tbr.Add(stop.Colour.A);
+                            }
+                        }
+
                     }
 
-                    if (act.Fill.HasValue)
+                    if (act.Fill != null)
                     {
-                        tbr.Add((double)act.Fill?.A);
+                        if (act.Fill is SolidColourBrush solid)
+                        {
+                            tbr.Add(solid.A);
+                        }
+                        else if (act.Fill is GradientBrush gradient)
+                        {
+                            foreach (GradientStop stop in gradient.GradientStops)
+                            {
+                                tbr.Add(stop.Colour.A);
+                            }
+                        }
                     }
                 }
             }
@@ -1247,12 +1268,13 @@ namespace VectSharp.PDF
                 imageObjectNums.Add(img.Key, imageObjectNum);
             }
 
+            int fontListObject = -1;
+
             if (allFontFamilies.Count > 0)
             {
-
                 //Fonts
                 objectPositions.Add(position);
-                int fontListObject = objectNum;
+                fontListObject = objectNum;
                 currObject = objectNum.ToString() + " 0 obj\n<< ";
                 foreach (KeyValuePair<string, string> kvp in nonSymbolFontIDs)
                 {
@@ -1266,84 +1288,16 @@ namespace VectSharp.PDF
                 sw.Write(currObject);
                 position += currObject.Length;
                 objectNum++;
-
-
-                //Resources
-                objectPositions.Add(position);
-                resourceObject = objectNum;
-                currObject = objectNum.ToString() + " 0 obj\n<< /Font " + fontListObject.ToString() + " 0 R";
-
-                if (alphas.Length > 0)
-                {
-                    currObject += " /ExtGState <<\n";
-
-                    for (int i = 0; i < alphas.Length; i++)
-                    {
-                        currObject += "/a" + i.ToString() + " << /CA " + alphas[i].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " /ca " + alphas[i].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " >>\n";
-                    }
-
-                    currObject += ">>";
-                }
-
-                if (imageObjectNums.Count > 0)
-                {
-                    currObject += " /XObject <<";
-
-                    foreach (KeyValuePair<string, int> kvp in imageObjectNums)
-                    {
-                        currObject += " /Img" + kvp.Value.ToString() + " " + kvp.Value.ToString() + " 0 R";
-                    }
-
-                    currObject += " >>";
-                }
-
-                currObject += " >>\nendobj\n";
-                sw.Write(currObject);
-                position += currObject.Length;
-                objectNum++;
             }
-            else
-            {
-                //Resources
-                objectPositions.Add(position);
-                resourceObject = objectNum;
-                currObject = objectNum.ToString() + " 0 obj\n<<";
 
-                if (alphas.Length > 0)
-                {
-                    currObject += " /ExtGState <<\n";
-
-                    for (int i = 0; i < alphas.Length; i++)
-                    {
-                        currObject += "/a" + i.ToString() + " << /CA " + alphas[i].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " /ca " + alphas[i].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " >>\n";
-                    }
-
-                    currObject += ">>";
-                }
-
-                if (imageObjectNums.Count > 0)
-                {
-                    currObject += " /XObject <<";
-
-                    foreach (KeyValuePair<string, int> kvp in imageObjectNums)
-                    {
-                        currObject += " /Img" + kvp.Value.ToString() + " " + kvp.Value.ToString() + " 0 R";
-                    }
-
-                    currObject += " >>";
-                }
-
-                currObject += " >>\nendobj\n";
-                sw.Write(currObject);
-                position += currObject.Length;
-                objectNum++;
-            }
 
             int[] pageContentInd = new int[document.Pages.Count];
 
 
             List<(string, List<(double, double, double, double)>)>[] taggedObjectRectsByPage = new List<(string, List<(double, double, double, double)>)>[document.Pages.Count];
             Dictionary<string, int>[] taggedObjectRectsIndicesByPage = new Dictionary<string, int>[document.Pages.Count];
+            List<(GradientBrush, double[,])> gradients = new System.Collections.Generic.List<(GradientBrush, double[,])>();
+
 
             for (int pageInd = 0; pageInd < document.Pages.Count; pageInd++)
             {
@@ -1383,7 +1337,7 @@ namespace VectSharp.PDF
                             MeasureFigure(pageContexts[pageInd]._figures[i], ref transformationMatrix, savedStates);
                         }
 
-                        ctW.Write(FigureAsPDFString(pageContexts[pageInd]._figures[i], nonSymbolFontIDs, symbolFontIDs, symbolGlyphIndices, alphas, imageObjectNums));
+                        ctW.Write(FigureAsPDFString(pageContexts[pageInd]._figures[i], nonSymbolFontIDs, symbolFontIDs, symbolGlyphIndices, alphas, imageObjectNums, transformationMatrix, gradients));
                     }
                 }
 
@@ -1427,6 +1381,230 @@ namespace VectSharp.PDF
                 sw.Write(currObject);
                 position += currObject.Length;
 
+                objectNum++;
+            }
+
+            List<int> gradientIndices = new List<int>(gradients.Count);
+
+            if (gradients.Count > 0)
+            {
+                for (int i = 0; i < gradients.Count; i++)
+                {
+                    (GradientBrush gradient, double[,] matrix) = gradients[i];
+
+                    int functionObject = -1;
+
+                    if (gradient.GradientStops.Count == 2)
+                    {
+                        objectPositions.Add(position);
+
+                        currObject = objectNum.ToString() + " 0 obj\n<< /FunctionType 2 /Domain [ 0 1 ] /C0 [ " + gradient.GradientStops[0].Colour.R.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + gradient.GradientStops[0].Colour.G.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + gradient.GradientStops[0].Colour.B.ToString(System.Globalization.CultureInfo.InvariantCulture) + " ] ";
+                        currObject += "/C1 [ " + gradient.GradientStops[1].Colour.R.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + gradient.GradientStops[1].Colour.G.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + gradient.GradientStops[1].Colour.B.ToString(System.Globalization.CultureInfo.InvariantCulture) + " ] /N 1 >>\nendobj\n";
+                        sw.Write(currObject);
+                        functionObject = objectNum;
+
+                        position += currObject.Length;
+                        objectNum++;
+                    }
+                    else
+                    {
+                        List<double> bounds = new List<double>();
+                        List<int> functionIndices = new List<int>();
+
+                        for (int j = 0; j < gradient.GradientStops.Count - 1; j++)
+                        {
+                            objectPositions.Add(position);
+
+                            currObject = objectNum.ToString() + " 0 obj\n<< /FunctionType 2 /Domain [ 0 1 ] /C0 [ " + gradient.GradientStops[j].Colour.R.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + gradient.GradientStops[j].Colour.G.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + gradient.GradientStops[j].Colour.B.ToString(System.Globalization.CultureInfo.InvariantCulture) + " ] ";
+                            currObject += "/C1 [ " + gradient.GradientStops[j + 1].Colour.R.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + gradient.GradientStops[j + 1].Colour.G.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + gradient.GradientStops[j + 1].Colour.B.ToString(System.Globalization.CultureInfo.InvariantCulture) + " ] /N 1 >>\nendobj\n";
+                            sw.Write(currObject);
+                            functionIndices.Add(objectNum);
+
+                            if (j < gradient.GradientStops.Count - 2)
+                            {
+                                bounds.Add(gradient.GradientStops[j + 1].Offset);
+                            }
+
+                            position += currObject.Length;
+                            objectNum++;
+                        }
+
+                        objectPositions.Add(position);
+                        
+                        currObject = objectNum.ToString() + " 0 obj\n<< /FunctionType 3 /Domain [ 0 1 ] /Functions [ ";
+
+                        for (int j = 0; j < functionIndices.Count; j++)
+                        {
+                            currObject += functionIndices[j].ToString(System.Globalization.CultureInfo.InvariantCulture) + " 0 R ";
+                        }
+
+                        currObject += "] /Bounds [ ";
+
+                        for (int j = 0; j < bounds.Count; j++)
+                        {
+                            currObject += bounds[j].ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
+                        }
+
+                        currObject += "] /Encode [ ";
+
+                        for (int j = 0; j < functionIndices.Count; j++)
+                        {
+                            currObject += "0 1 ";
+                        }
+
+                        currObject += "] >>\nendobj\n";
+
+
+                        sw.Write(currObject);
+                        functionObject = objectNum;
+
+                        position += currObject.Length;
+                        objectNum++;
+
+                    }
+
+                    if (gradient is LinearGradientBrush linear)
+                    {
+                        objectPositions.Add(position);
+
+                        currObject = objectNum.ToString() + " 0 obj\n<< /Type /Pattern /PatternType 2 /Matrix [ " +
+
+                        matrix[0, 0].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                        matrix[0, 1].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                        matrix[1, 0].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                        matrix[1, 1].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                        matrix[0, 2].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                        matrix[1, 2].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " ] ";
+
+                        currObject += "/Shading << /ShadingType 2 /ColorSpace /DeviceRGB /Coords [ " + linear.StartPoint.X.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + linear.StartPoint.Y.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + linear.EndPoint.X.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + linear.EndPoint.Y.ToString(System.Globalization.CultureInfo.InvariantCulture) + " ] ";
+
+                        currObject += "/Domain [ 0 1 ] /Extend [ true true ] /Function " + functionObject.ToString(System.Globalization.CultureInfo.InvariantCulture) + " 0 R >> >>\nendobj\n";
+                        sw.Write(currObject);
+                        gradientIndices.Add(objectNum);
+
+                        position += currObject.Length;
+                        objectNum++;
+                    }
+                    else if (gradient is RadialGradientBrush radial)
+                    {
+                        objectPositions.Add(position);
+
+                        currObject = objectNum.ToString() + " 0 obj\n<< /Type /Pattern /PatternType 2 /Matrix [ " +
+
+                        matrix[0, 0].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                        matrix[0, 1].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                        matrix[1, 0].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                        matrix[1, 1].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                        matrix[0, 2].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                        matrix[1, 2].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " ] ";
+
+                        currObject += "/Shading << /ShadingType 3 /ColorSpace /DeviceRGB /Coords [ " + radial.FocalPoint.X.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + radial.FocalPoint.Y.ToString(System.Globalization.CultureInfo.InvariantCulture) + " 0 " + radial.Centre.X.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + radial.Centre.Y.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + radial.Radius.ToString(System.Globalization.CultureInfo.InvariantCulture) + " ] ";
+
+                        currObject += "/Domain [ 0 1 ] /Extend [ true true ] /Function " + functionObject.ToString(System.Globalization.CultureInfo.InvariantCulture) + " 0 R >> >>\nendobj\n";
+                        sw.Write(currObject);
+                        gradientIndices.Add(objectNum);
+
+                        position += currObject.Length;
+                        objectNum++;
+                    }
+                }
+            }
+
+            if (allFontFamilies.Count > 0)
+            {
+
+                //Resources
+                objectPositions.Add(position);
+                resourceObject = objectNum;
+                currObject = objectNum.ToString() + " 0 obj\n<< /Font " + fontListObject.ToString() + " 0 R";
+
+                if (alphas.Length > 0)
+                {
+                    currObject += " /ExtGState <<\n";
+
+                    for (int i = 0; i < alphas.Length; i++)
+                    {
+                        currObject += "/a" + i.ToString() + " << /CA " + alphas[i].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " /ca " + alphas[i].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " >>\n";
+                    }
+
+                    currObject += ">>";
+                }
+
+                if (imageObjectNums.Count > 0)
+                {
+                    currObject += " /XObject <<";
+
+                    foreach (KeyValuePair<string, int> kvp in imageObjectNums)
+                    {
+                        currObject += " /Img" + kvp.Value.ToString() + " " + kvp.Value.ToString() + " 0 R";
+                    }
+
+                    currObject += " >>";
+                }
+
+                if (gradientIndices.Count > 0)
+                {
+                    currObject += " /Pattern << ";
+
+                    for (int i = 0; i < gradientIndices.Count; i++)
+                    {
+                        currObject += "/p" + i.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + gradientIndices[i].ToString(System.Globalization.CultureInfo.InvariantCulture) + " 0 R ";
+                    }
+
+                    currObject += ">>";
+                }
+
+                currObject += " >>\nendobj\n";
+                sw.Write(currObject);
+                position += currObject.Length;
+                objectNum++;
+            }
+            else
+            {
+                //Resources
+                objectPositions.Add(position);
+                resourceObject = objectNum;
+                currObject = objectNum.ToString() + " 0 obj\n<<";
+
+                if (alphas.Length > 0)
+                {
+                    currObject += " /ExtGState <<\n";
+
+                    for (int i = 0; i < alphas.Length; i++)
+                    {
+                        currObject += "/a" + i.ToString() + " << /CA " + alphas[i].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " /ca " + alphas[i].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " >>\n";
+                    }
+
+                    currObject += ">>";
+                }
+
+                if (imageObjectNums.Count > 0)
+                {
+                    currObject += " /XObject <<";
+
+                    foreach (KeyValuePair<string, int> kvp in imageObjectNums)
+                    {
+                        currObject += " /Img" + kvp.Value.ToString() + " " + kvp.Value.ToString() + " 0 R";
+                    }
+
+                    currObject += " >>";
+                }
+
+                if (gradientIndices.Count > 0)
+                {
+                    currObject += " /Pattern << ";
+
+                    for (int i = 0; i < gradientIndices.Count; i++)
+                    {
+                        currObject += "/p" + i.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + gradientIndices[i].ToString(System.Globalization.CultureInfo.InvariantCulture) + " 0 R ";
+                    }
+
+                    currObject += ">>";
+                }
+
+                currObject += " >>\nendobj\n";
+                sw.Write(currObject);
+                position += currObject.Length;
                 objectNum++;
             }
 
@@ -1727,21 +1905,37 @@ namespace VectSharp.PDF
             return new Point(transPt[0] / transPt[2], transPt[1] / transPt[2]);
         }
 
-        private static string FigureAsPDFString(IFigure figure, Dictionary<string, string> nonSymbolFontIds, Dictionary<string, string> symbolFontIds, Dictionary<string, Dictionary<char, int>> symbolGlyphIndices, double[] alphas, Dictionary<string, int> imageObjectNums)
+        private static string FigureAsPDFString(IFigure figure, Dictionary<string, string> nonSymbolFontIds, Dictionary<string, string> symbolFontIds, Dictionary<string, Dictionary<char, int>> symbolGlyphIndices, double[] alphas, Dictionary<string, int> imageObjectNums, double[,] transformationMatrix, List<(GradientBrush, double[,])> gradients)
         {
 
             StringBuilder sb = new StringBuilder();
 
             if (figure.Fill != null)
             {
-                sb.Append(figure.Fill?.R.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + figure.Fill?.G.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + figure.Fill?.B.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " rg\n");
-                sb.Append("/a" + Array.IndexOf(alphas, figure.Fill?.A).ToString() + " gs\n");
+                if (figure.Fill is SolidColourBrush solid)
+                {
+                    sb.Append(solid.R.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + solid.G.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + solid.B.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " rg\n");
+                    sb.Append("/a" + Array.IndexOf(alphas, solid.A).ToString() + " gs\n");
+                }
+                else if (figure.Fill is GradientBrush gradient)
+                {
+                    int brushIndex = gradients.Count;
+                    double[,] clonedMatrix = new double[3, 3] { { transformationMatrix[0, 0], transformationMatrix[0, 1], transformationMatrix[0, 2] }, { transformationMatrix[1, 0], transformationMatrix[1, 1], transformationMatrix[1, 2] }, { transformationMatrix[2, 0], transformationMatrix[2, 1], transformationMatrix[2, 2] } };
+
+                    gradients.Add((gradient, clonedMatrix));
+
+                    sb.Append("/Pattern cs /p" + brushIndex.ToString(System.Globalization.CultureInfo.InvariantCulture) + " scn /a" + Array.IndexOf(alphas, 1.0).ToString() + " gs\n");
+                }
             }
 
             if (figure.Stroke != null)
             {
-                sb.Append(figure.Stroke?.R.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + figure.Stroke?.G.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + figure.Stroke?.B.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " RG\n");
-                sb.Append("/a" + Array.IndexOf(alphas, figure.Stroke?.A).ToString() + " gs\n");
+                if (figure.Stroke is SolidColourBrush solid)
+                {
+                    sb.Append(solid.R.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + solid.G.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + solid.B.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " RG\n");
+                    sb.Append("/a" + Array.IndexOf(alphas, solid.A).ToString() + " gs\n");
+                }
+
                 sb.Append(figure.LineWidth.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " w\n");
                 sb.Append(((int)figure.LineCap).ToString() + " J\n");
                 sb.Append(((int)figure.LineJoin).ToString() + " j\n");
