@@ -588,7 +588,7 @@ namespace VectSharp.Canvas
 
         public (double Width, double Height) MeasureText(string text)
         {
-            FormattedText txt = new FormattedText() { Text = text, Typeface = new Typeface(FontFamily), FontSize = Font.FontSize };
+            Avalonia.Media.FormattedText txt = new Avalonia.Media.FormattedText() { Text = text, Typeface = new Typeface(FontFamily), FontSize = Font.FontSize };
             return (txt.Bounds.Width, txt.Bounds.Height);
         }
 
@@ -1237,7 +1237,7 @@ namespace VectSharp.Canvas
         /// <summary>
         /// Text that needs to be rendered (null if the action type is <see cref="ActionTypes.Path"/>). If you change this, you need to invalidate the <see cref="Parent"/>'s visual.
         /// </summary>
-        public FormattedText Text { get; set; }
+        public Avalonia.Media.FormattedText Text { get; set; }
 
         /// <summary>
         /// Rendering stroke (null if the action type is <see cref="ActionTypes.Text"/> or if the rendered action only has a <see cref="Fill"/>). If you change this, you need to invalidate the <see cref="Parent"/>'s visual.
@@ -1386,7 +1386,7 @@ namespace VectSharp.Canvas
         /// <param name="clippingPath">The clipping path.</param>
         /// <param name="tag">A tag to access the <see cref="RenderAction"/>. If this is null this <see cref="RenderAction"/> is not visible in the hit test.</param>
         /// <returns></returns>
-        public static RenderAction TextAction(FormattedText text, IBrush fill, Avalonia.Matrix transform, Geometry clippingPath, string tag = null)
+        public static RenderAction TextAction(Avalonia.Media.FormattedText text, IBrush fill, Avalonia.Matrix transform, Geometry clippingPath, string tag = null)
         {
             return new RenderAction()
             {
@@ -1542,7 +1542,7 @@ namespace VectSharp.Canvas
 
             if (_textOption == AvaloniaContextInterpreter.TextOptions.NeverConvert || (_textOption == AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary && Font.FontFamily.IsStandardFamily))
             {
-                FormattedText txt = new FormattedText()
+                Avalonia.Media.FormattedText txt = new Avalonia.Media.FormattedText()
                 {
                     Text = text,
                     Typeface = new Typeface(Avalonia.Media.FontFamily.Parse(FontFamily), (Font.FontFamily.IsOblique ? FontStyle.Oblique : Font.FontFamily.IsItalic ? FontStyle.Italic : FontStyle.Normal), (Font.FontFamily.IsBold ? FontWeight.Bold : FontWeight.Regular)),
@@ -1839,7 +1839,7 @@ namespace VectSharp.Canvas
 
         public (double Width, double Height) MeasureText(string text)
         {
-            FormattedText txt = new FormattedText() { Text = text, Typeface = new Typeface(FontFamily), FontSize = Font.FontSize };
+            Avalonia.Media.FormattedText txt = new Avalonia.Media.FormattedText() { Text = text, Typeface = new Typeface(FontFamily), FontSize = Font.FontSize };
             return (txt.Bounds.Width, txt.Bounds.Height);
         }
 

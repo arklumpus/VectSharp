@@ -139,6 +139,22 @@ namespace VectSharp.Demo
             gpr.FillText(2700, 1200, "q", biggerTimes, Colour.FromRgb(0, 0, 0), textBaseline: TextBaselines.Baseline);
 
 
+            //Formatted text sample
+            IEnumerable<FormattedText> formattedText = FormattedText.Format("This is an <i>example</i><sub>1</sub> of <b>formatted<sup><b>2</b></sup> <i>text</i></b>.", VectSharp.FontFamily.StandardFontFamilies.Helvetica, 70);
+            gpr.FillText(1850, 800, formattedText, Colours.Black);
+
+            //A more complex example, using different fonts. You can also associate a different colour to each element.
+            List<FormattedText> reaction = new List<FormattedText>()
+            {
+                new FormattedText("NO", new Font(new VectSharp.FontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesRoman), 70)),
+                new FormattedText("2", new Font(new VectSharp.FontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesRoman), 70), Script.Subscript),
+                new FormattedText(" + ", new Font(new VectSharp.FontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesRoman), 70)),
+                new FormattedText("hν", new Font(new VectSharp.FontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesItalic), 70)),
+                new FormattedText(" ", new Font(new VectSharp.FontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesRoman), 70)),
+                new FormattedText("→", new Font(new VectSharp.FontFamily(VectSharp.FontFamily.StandardFontFamilies.ZapfDingbats), 70)),
+                new FormattedText(" NO + O", new Font(new VectSharp.FontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesRoman), 70))
+            };
+            gpr.FillText(3100, 700, reaction, Colours.Black);
 
             //Create a new graphics object
             Graphics faceGraphics = new Graphics();
