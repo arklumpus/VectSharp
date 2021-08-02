@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['b_22',['B',['../struct_vect_sharp_1_1_colour.html#af8fa726997f5d224f447571818fd9054',1,'VectSharp::Colour']]],
+  ['b_22',['B',['../class_vect_sharp_1_1_solid_colour_brush.html#a8c1ea74983bff46b1617e626c56c056b',1,'VectSharp.SolidColourBrush.B()'],['../struct_vect_sharp_1_1_colour.html#af8fa726997f5d224f447571818fd9054',1,'VectSharp.Colour.B()']]],
   ['background_23',['Background',['../class_vect_sharp_1_1_page.html#ad4758fd1d5dac8e8f3b3402b92afe368',1,'VectSharp::Page']]],
   ['backgroundcolour_24',['BackgroundColour',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a705b87a48e9440a1cdbfd0aa0ad68d17',1,'VectSharp::Markdown::MarkdownRenderer']]],
   ['basefontsize_25',['BaseFontSize',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a526e8cc443eacebd5945764a8dee28df',1,'VectSharp::Markdown::MarkdownRenderer']]],
@@ -24,7 +24,8 @@ var searchData=
   ['bottom_43',['Bottom',['../class_vect_sharp_1_1_font_1_1_detailed_font_metrics.html#a88411a7c57bc6613e62198c3cb8f2058',1,'VectSharp.Font.DetailedFontMetrics.Bottom()'],['../class_vect_sharp_1_1_markdown_1_1_margins.html#a2b4136972b8db8056d07e254b2c56982',1,'VectSharp.Markdown.Margins.Bottom()'],['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a0e91c7ffd72d8f036d5c592e0e86c4dda2ad9d63b69c4a10a5cc9cad923133bc4',1,'VectSharp.Markdown.MarkdownRenderer.Bottom()'],['../namespace_vect_sharp.html#acfad2994b272989b9cb471230d95334fa2ad9d63b69c4a10a5cc9cad923133bc4',1,'VectSharp.Bottom()']]],
   ['bringtofront_44',['BringToFront',['../class_vect_sharp_1_1_canvas_1_1_render_action.html#ac85d376a974c9efce429ef95985ec918',1,'VectSharp::Canvas::RenderAction']]],
   ['brown_45',['Brown',['../class_vect_sharp_1_1_colours.html#af6ac42c69d7f8eea2daef83f0420a77a',1,'VectSharp::Colours']]],
-  ['bullets_46',['Bullets',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a826c08ed75d817f6523b33f4b0920dfe',1,'VectSharp::Markdown::MarkdownRenderer']]],
-  ['burlywood_47',['BurlyWood',['../class_vect_sharp_1_1_colours.html#ad8735d1a3ad97f657de1f62ee5c920b7',1,'VectSharp::Colours']]],
-  ['butt_48',['Butt',['../namespace_vect_sharp.html#a6bde58d6aab37ea51e32240503678209ab2635ed1075287dea1eb1598a90df1fe',1,'VectSharp']]]
+  ['brush_46',['Brush',['../class_vect_sharp_1_1_brush.html',1,'VectSharp.Brush'],['../class_vect_sharp_1_1_formatted_text.html#a04a80d0c9d59aeea79c8dadc104e82c0',1,'VectSharp.FormattedText.Brush()']]],
+  ['bullets_47',['Bullets',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a826c08ed75d817f6523b33f4b0920dfe',1,'VectSharp::Markdown::MarkdownRenderer']]],
+  ['burlywood_48',['BurlyWood',['../class_vect_sharp_1_1_colours.html#ad8735d1a3ad97f657de1f62ee5c920b7',1,'VectSharp::Colours']]],
+  ['butt_49',['Butt',['../namespace_vect_sharp.html#a6bde58d6aab37ea51e32240503678209ab2635ed1075287dea1eb1598a90df1fe',1,'VectSharp']]]
 ];

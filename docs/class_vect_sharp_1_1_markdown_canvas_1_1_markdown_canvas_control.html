@@ -28,7 +28,7 @@
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VectSharp
-   &#160;<span id="projectnumber">1.7.0</span>
+   &#160;<span id="projectnumber">1.8.0</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -130,6 +130,9 @@ Static Public Attributes</h2></td></tr>
 <tr class="memitem:a11ae77a5de28c8a955709fe46f50d540"><td class="memItemLeft" align="right" valign="top">static readonly StyledProperty&lt; MarkdownDocument &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#a11ae77a5de28c8a955709fe46f50d540">DocumentProperty</a> = AvaloniaProperty.Register&lt;<a class="el" href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html">MarkdownCanvasControl</a>, MarkdownDocument&gt;(nameof(<a class="el" href="class_vect_sharp_1_1_document.html">Document</a>))</td></tr>
 <tr class="memdesc:a11ae77a5de28c8a955709fe46f50d540"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the <a class="el" href="class_vect_sharp_1_1_document.html" title="Represents a collection of pages.">Document</a> property.  <a href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#a11ae77a5de28c8a955709fe46f50d540">More...</a><br /></td></tr>
 <tr class="separator:a11ae77a5de28c8a955709fe46f50d540"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9a1fbea19470ff176ac79a4cac23d58"><td class="memItemLeft" align="right" valign="top">static readonly StyledProperty&lt; <a class="el" href="class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html#ab1be8c4c6246dad9c92fcc3f2b3cdd77">AvaloniaContextInterpreter.TextOptions</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#ae9a1fbea19470ff176ac79a4cac23d58">TextConversionOptionsProperty</a> = AvaloniaProperty.Register&lt;<a class="el" href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html">MarkdownCanvasControl</a>, <a class="el" href="class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html#ab1be8c4c6246dad9c92fcc3f2b3cdd77">AvaloniaContextInterpreter.TextOptions</a>&gt;(nameof(<a class="el" href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#a7b94cf5c027705ce8293ddd33bb1b020">TextConversionOption</a>), AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary)</td></tr>
+<tr class="memdesc:ae9a1fbea19470ff176ac79a4cac23d58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the <a class="el" href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#a7b94cf5c027705ce8293ddd33bb1b020" title="Gets or sets the value that determines whether text items should be converted into paths when drawing...">TextConversionOption</a> property.  <a href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#ae9a1fbea19470ff176ac79a4cac23d58">More...</a><br /></td></tr>
+<tr class="separator:ae9a1fbea19470ff176ac79a4cac23d58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
 Properties</h2></td></tr>
@@ -148,6 +151,9 @@ Properties</h2></td></tr>
 <tr class="memitem:a8f9872b5dd0f47854b29afb365acd87b"><td class="memItemLeft" align="right" valign="top">MarkdownDocument&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#a8f9872b5dd0f47854b29afb365acd87b">Document</a><code> [get, set]</code></td></tr>
 <tr class="memdesc:a8f9872b5dd0f47854b29afb365acd87b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets the currently displayed MarkdownDocument.  <a href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#a8f9872b5dd0f47854b29afb365acd87b">More...</a><br /></td></tr>
 <tr class="separator:a8f9872b5dd0f47854b29afb365acd87b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b94cf5c027705ce8293ddd33bb1b020"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html#ab1be8c4c6246dad9c92fcc3f2b3cdd77">AvaloniaContextInterpreter.TextOptions</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#a7b94cf5c027705ce8293ddd33bb1b020">TextConversionOption</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a7b94cf5c027705ce8293ddd33bb1b020"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets the value that determines whether text items should be converted into paths when drawing. Setting this to AvaloniaContextInterpreter.TextOptions.NeverConvert will improve performance if you are using custom fonts, but may cause unexpected results unless the font families being used are of type ResourceFontFamily.  <a href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#a7b94cf5c027705ce8293ddd33bb1b020">More...</a><br /></td></tr>
+<tr class="separator:a7b94cf5c027705ce8293ddd33bb1b020"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3d22cb649c35362950340822ec683bd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html">MarkdownRenderer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#ac3d22cb649c35362950340822ec683bd">Renderer</a><code> [get]</code></td></tr>
 <tr class="memdesc:ac3d22cb649c35362950340822ec683bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">The MarkdownRenderer used to render the <a class="el" href="class_vect_sharp_1_1_document.html" title="Represents a collection of pages.">Document</a>. You can use the properties of this object to customise the rendering. Note that setting the Avalonia.Controls.Primitives.TemplatedControl.FontSize of the <a class="el" href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html" title="A control to display a Markdown document in an Avalonia application.">MarkdownCanvasControl</a> will propagate to the <a class="el" href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#ac3d22cb649c35362950340822ec683bd" title="The MarkdownRenderer used to render the Document. You can use the properties of this object to custom...">Renderer</a>'s MarkdownRenderer.BaseFontSize.  <a href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#ac3d22cb649c35362950340822ec683bd">More...</a><br /></td></tr>
 <tr class="separator:ac3d22cb649c35362950340822ec683bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -174,7 +180,7 @@ Properties</h2></td></tr>
 
 <p>Initialises a new <a class="el" href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html" title="A control to display a Markdown document in an Avalonia application.">MarkdownCanvasControl</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_canvas_8axaml_8cs_source.html#l00101">101</a> of file <a class="el" href="_markdown_canvas_8axaml_8cs_source.html">MarkdownCanvas.axaml.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_canvas_8axaml_8cs_source.html#l00116">116</a> of file <a class="el" href="_markdown_canvas_8axaml_8cs_source.html">MarkdownCanvas.axaml.cs</a>.</p>
 
 </div>
 </div>
@@ -306,6 +312,32 @@ Properties</h2></td></tr>
 <p>Defines the <a class="el" href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#ab1f00188981c4bec1be8b016d8b8c3a7" title="The minimum width variation that triggers a document reflow. If the control is resized,...">MinVariation</a> property. </p>
 
 <p class="definition">Definition at line <a class="el" href="_markdown_canvas_8axaml_8cs_source.html#l00051">51</a> of file <a class="el" href="_markdown_canvas_8axaml_8cs_source.html">MarkdownCanvas.axaml.cs</a>.</p>
+
+</div>
+</div>
+<a id="ae9a1fbea19470ff176ac79a4cac23d58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9a1fbea19470ff176ac79a4cac23d58">&#9670;&nbsp;</a></span>TextConversionOptionsProperty</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">readonly StyledProperty&lt;<a class="el" href="class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html#ab1be8c4c6246dad9c92fcc3f2b3cdd77">AvaloniaContextInterpreter.TextOptions</a>&gt; VectSharp.MarkdownCanvas.MarkdownCanvasControl.TextConversionOptionsProperty = AvaloniaProperty.Register&lt;<a class="el" href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html">MarkdownCanvasControl</a>, <a class="el" href="class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html#ab1be8c4c6246dad9c92fcc3f2b3cdd77">AvaloniaContextInterpreter.TextOptions</a>&gt;(nameof(<a class="el" href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#a7b94cf5c027705ce8293ddd33bb1b020">TextConversionOption</a>), AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Defines the <a class="el" href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#a7b94cf5c027705ce8293ddd33bb1b020" title="Gets or sets the value that determines whether text items should be converted into paths when drawing...">TextConversionOption</a> property. </p>
+
+<p class="definition">Definition at line <a class="el" href="_markdown_canvas_8axaml_8cs_source.html#l00092">92</a> of file <a class="el" href="_markdown_canvas_8axaml_8cs_source.html">MarkdownCanvas.axaml.cs</a>.</p>
 
 </div>
 </div>
@@ -462,7 +494,33 @@ Properties</h2></td></tr>
 
 <p>The MarkdownRenderer used to render the <a class="el" href="class_vect_sharp_1_1_document.html" title="Represents a collection of pages.">Document</a>. You can use the properties of this object to customise the rendering. Note that setting the Avalonia.Controls.Primitives.TemplatedControl.FontSize of the <a class="el" href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html" title="A control to display a Markdown document in an Avalonia application.">MarkdownCanvasControl</a> will propagate to the <a class="el" href="class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#ac3d22cb649c35362950340822ec683bd" title="The MarkdownRenderer used to render the Document. You can use the properties of this object to custom...">Renderer</a>'s MarkdownRenderer.BaseFontSize. </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_canvas_8axaml_8cs_source.html#l00092">92</a> of file <a class="el" href="_markdown_canvas_8axaml_8cs_source.html">MarkdownCanvas.axaml.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_canvas_8axaml_8cs_source.html#l00107">107</a> of file <a class="el" href="_markdown_canvas_8axaml_8cs_source.html">MarkdownCanvas.axaml.cs</a>.</p>
+
+</div>
+</div>
+<a id="a7b94cf5c027705ce8293ddd33bb1b020"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b94cf5c027705ce8293ddd33bb1b020">&#9670;&nbsp;</a></span>TextConversionOption</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html#ab1be8c4c6246dad9c92fcc3f2b3cdd77">AvaloniaContextInterpreter.TextOptions</a> VectSharp.MarkdownCanvas.MarkdownCanvasControl.TextConversionOption</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets or sets the value that determines whether text items should be converted into paths when drawing. Setting this to AvaloniaContextInterpreter.TextOptions.NeverConvert will improve performance if you are using custom fonts, but may cause unexpected results unless the font families being used are of type ResourceFontFamily. </p>
+
+<p class="definition">Definition at line <a class="el" href="_markdown_canvas_8axaml_8cs_source.html#l00098">98</a> of file <a class="el" href="_markdown_canvas_8axaml_8cs_source.html">MarkdownCanvas.axaml.cs</a>.</p>
 
 </div>
 </div>

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['a_0',['A',['../struct_vect_sharp_1_1_colour.html#a782d99b814c42de20e4ab90422752788',1,'VectSharp::Colour']]],
+  ['a_0',['A',['../class_vect_sharp_1_1_solid_colour_brush.html#a34eb102bf152fc1c643a543be3ee7ebe',1,'VectSharp.SolidColourBrush.A()'],['../struct_vect_sharp_1_1_colour.html#a782d99b814c42de20e4ab90422752788',1,'VectSharp.Colour.A()']]],
   ['actiontype_1',['ActionType',['../class_vect_sharp_1_1_canvas_1_1_render_action.html#a329a2dc57743fb4de13b16b8cf49a3af',1,'VectSharp::Canvas::RenderAction']]],
   ['actiontypes_2',['ActionTypes',['../class_vect_sharp_1_1_canvas_1_1_render_action.html#a540142d9a35323a4d5301256c2c804c2',1,'VectSharp::Canvas::RenderAction']]],
   ['addelement_3',['AddElement',['../interface_vect_sharp_1_1_three_d_1_1_i_scene.html#a647c50887c6b734c5a9459e84d4408ff',1,'VectSharp.ThreeD.IScene.AddElement()'],['../class_vect_sharp_1_1_three_d_1_1_scene.html#a7553a8dba0c8a9a33fa21bd0d2f927e1',1,'VectSharp.ThreeD.Scene.AddElement()']]],

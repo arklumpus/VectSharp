@@ -1,8 +1,11 @@
 var searchData=
 [
-  ['margins_1071',['Margins',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a79e09c80bacaf0b1bf9eef9423218684',1,'VectSharp::Markdown::MarkdownRenderer']]],
-  ['markedcolour_1072',['MarkedColour',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ab8934b60d1c1a6d6e4321fffc970a0b7',1,'VectSharp::Markdown::MarkdownRenderer']]],
-  ['maxrenderwidth_1073',['MaxRenderWidth',['../class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#a73f02128e07c07d25731ee123b292e79',1,'VectSharp::MarkdownCanvas::MarkdownCanvasControl']]],
-  ['minrenderwidth_1074',['MinRenderWidth',['../class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#a8eb03e5be960647f290963bf8ede0329',1,'VectSharp::MarkdownCanvas::MarkdownCanvasControl']]],
-  ['minvariation_1075',['MinVariation',['../class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#ab1f00188981c4bec1be8b016d8b8c3a7',1,'VectSharp::MarkdownCanvas::MarkdownCanvasControl']]]
+  ['left_1126',['Left',['../class_vect_sharp_1_1_markdown_1_1_margins.html#a8972ee112d96fb8a4f2ebeb934196c4a',1,'VectSharp::Markdown::Margins']]],
+  ['leftsidebearing_1127',['LeftSideBearing',['../class_vect_sharp_1_1_font_1_1_detailed_font_metrics.html#aa9e8e4fb7dc06c51997f27ae28896a2d',1,'VectSharp::Font::DetailedFontMetrics']]],
+  ['linecap_1128',['LineCap',['../interface_vect_sharp_1_1_i_graphics_context.html#a69b7f61c8ac148cb3fef636599f5348c',1,'VectSharp::IGraphicsContext']]],
+  ['linejoin_1129',['LineJoin',['../interface_vect_sharp_1_1_i_graphics_context.html#a33b2001dc05c27d15faeae12e9c85e43',1,'VectSharp::IGraphicsContext']]],
+  ['linewidth_1130',['LineWidth',['../interface_vect_sharp_1_1_i_graphics_context.html#a5cb8b6c1d74dc7d1057ddedbbc7add98',1,'VectSharp::IGraphicsContext']]],
+  ['linkcolour_1131',['LinkColour',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a7a1f81289fccf9beb40f37da296ce8c9',1,'VectSharp::Markdown::MarkdownRenderer']]],
+  ['linkuriresolver_1132',['LinkUriResolver',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a4b729ac905d1cbde014ac519cc0709da',1,'VectSharp::Markdown::MarkdownRenderer']]],
+  ['logdownloads_1133',['LogDownloads',['../class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html#a47befa9d0fd3973867287164f317b2b0',1,'VectSharp::Markdown::HTTPUtils']]]
 ];

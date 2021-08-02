@@ -2,6 +2,13 @@ var hierarchy =
 [
     [ "VectSharp.Canvas.AvaloniaContextInterpreter", "class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html", null ],
     [ "VectSharp.TrueTypeFile.Bearings", "struct_vect_sharp_1_1_true_type_file_1_1_bearings.html", null ],
+    [ "VectSharp.Brush", "class_vect_sharp_1_1_brush.html", [
+      [ "VectSharp.GradientBrush", "class_vect_sharp_1_1_gradient_brush.html", [
+        [ "VectSharp.LinearGradientBrush", "class_vect_sharp_1_1_linear_gradient_brush.html", null ],
+        [ "VectSharp.RadialGradientBrush", "class_vect_sharp_1_1_radial_gradient_brush.html", null ]
+      ] ],
+      [ "VectSharp.SolidColourBrush", "class_vect_sharp_1_1_solid_colour_brush.html", null ]
+    ] ],
     [ "VectSharp.Colours", "class_vect_sharp_1_1_colours.html", null ],
     [ "VectSharp.Font.DetailedFontMetrics", "class_vect_sharp_1_1_font_1_1_detailed_font_metrics.html", null ],
     [ "VectSharp.Document", "class_vect_sharp_1_1_document.html", null ],
@@ -13,6 +20,9 @@ var hierarchy =
       [ "VectSharp.Canvas.ResourceFontFamily", "class_vect_sharp_1_1_canvas_1_1_resource_font_family.html", null ]
     ] ],
     [ "VectSharp.Markdown.FormattedString", "struct_vect_sharp_1_1_markdown_1_1_formatted_string.html", null ],
+    [ "VectSharp.FormattedText", "class_vect_sharp_1_1_formatted_text.html", null ],
+    [ "VectSharp.FormattedTextExtensions", "class_vect_sharp_1_1_formatted_text_extensions.html", null ],
+    [ "VectSharp.GradientStop", "struct_vect_sharp_1_1_gradient_stop.html", null ],
     [ "VectSharp.Graphics", "class_vect_sharp_1_1_graphics.html", null ],
     [ "VectSharp.GraphicsPath", "class_vect_sharp_1_1_graphics_path.html", null ],
     [ "VectSharp.Markdown.HTTPUtils", "class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html", null ],
@@ -39,6 +49,9 @@ var hierarchy =
     [ "VectSharp.ThreeD.IMaterial", "interface_vect_sharp_1_1_three_d_1_1_i_material.html", [
       [ "VectSharp.ThreeD.ColourMaterial", "class_vect_sharp_1_1_three_d_1_1_colour_material.html", null ],
       [ "VectSharp.ThreeD.PhongMaterial", "class_vect_sharp_1_1_three_d_1_1_phong_material.html", null ]
+    ] ],
+    [ "IReadOnlyList", null, [
+      [ "VectSharp.GradientStops", "class_vect_sharp_1_1_gradient_stops.html", null ]
     ] ],
     [ "VectSharp.ThreeD.IScene", "interface_vect_sharp_1_1_three_d_1_1_i_scene.html", [
       [ "VectSharp.ThreeD.Scene", "class_vect_sharp_1_1_three_d_1_1_scene.html", null ]

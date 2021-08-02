@@ -1,21 +1,10 @@
 var searchData=
 [
-  ['sceneelements_1096',['SceneElements',['../interface_vect_sharp_1_1_three_d_1_1_i_scene.html#a4b622e02ef329c62ed39d17536d9d15a',1,'VectSharp::ThreeD::IScene']]],
-  ['scenelock_1097',['SceneLock',['../interface_vect_sharp_1_1_three_d_1_1_i_scene.html#a288eece277d1b4a377dcdf3a5637c0f3',1,'VectSharp.ThreeD.IScene.SceneLock()'],['../class_vect_sharp_1_1_three_d_1_1_scene.html#a1127aa03ec51824eeb2f60fe9af7794e',1,'VectSharp.ThreeD.Scene.SceneLock()']]],
-  ['segments_1098',['Segments',['../class_vect_sharp_1_1_graphics_path.html#aabd97b02c49fc2de576d76710af8fedc',1,'VectSharp::GraphicsPath']]],
-  ['shadowsamplingpointcount_1099',['ShadowSamplingPointCount',['../class_vect_sharp_1_1_three_d_1_1_area_light_source.html#a331229e5fe64af0e5efbe38d9a2216da',1,'VectSharp::ThreeD::AreaLightSource']]],
-  ['sourcedistance_1100',['SourceDistance',['../class_vect_sharp_1_1_three_d_1_1_area_light_source.html#a21e9c219b36d363fbea41c4b753a99d5',1,'VectSharp::ThreeD::AreaLightSource']]],
-  ['spaceafterheading_1101',['SpaceAfterHeading',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#aab70373a6e930602b0e7fbb00709e0bd',1,'VectSharp::Markdown::MarkdownRenderer']]],
-  ['spaceafterline_1102',['SpaceAfterLine',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ae3313b0765f024e4f7761ef96d2db349',1,'VectSharp::Markdown::MarkdownRenderer']]],
-  ['spaceafterparagraph_1103',['SpaceAfterParagraph',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a3258f1f15d6d84e3236446c6d0f94e0e',1,'VectSharp::Markdown::MarkdownRenderer']]],
-  ['spacebeforeheading_1104',['SpaceBeforeHeading',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a604ead66e73bb0a0707511c4d589981e',1,'VectSharp::Markdown::MarkdownRenderer']]],
-  ['spacebeforeparagaph_1105',['SpaceBeforeParagaph',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#aeb00d78eec0ec1f40e56e08367412277',1,'VectSharp::Markdown::MarkdownRenderer']]],
-  ['specularreflectioncoefficient_1106',['SpecularReflectionCoefficient',['../class_vect_sharp_1_1_three_d_1_1_phong_material.html#a08974b73ea9114a8cc03d2aadfbebae8',1,'VectSharp::ThreeD::PhongMaterial']]],
-  ['specularshininess_1107',['SpecularShininess',['../class_vect_sharp_1_1_three_d_1_1_phong_material.html#adf1921529f41afafe1371376dc0aab96',1,'VectSharp::ThreeD::PhongMaterial']]],
-  ['stroke_1108',['Stroke',['../class_vect_sharp_1_1_canvas_1_1_render_action.html#aead4222aca31896910f612a45c1e9347',1,'VectSharp::Canvas::RenderAction']]],
-  ['strokestyle_1109',['StrokeStyle',['../interface_vect_sharp_1_1_i_graphics_context.html#aee2ae82d2445e3751321124881224442',1,'VectSharp::IGraphicsContext']]],
-  ['subscriptshift_1110',['SubscriptShift',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a6dc6656bdcacd61de9fb47070300d36a',1,'VectSharp::Markdown::MarkdownRenderer']]],
-  ['subsuperscriptfontsize_1111',['SubSuperscriptFontSize',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#aea127aeaa4822645002656e59f906ef5',1,'VectSharp::Markdown::MarkdownRenderer']]],
-  ['superscriptshift_1112',['SuperscriptShift',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a0ac73ff29551a9ca040c899c49e9c666',1,'VectSharp::Markdown::MarkdownRenderer']]],
-  ['syntaxhighlighter_1113',['SyntaxHighlighter',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a70520fd88733887dfd2b1aa9497c2c9b',1,'VectSharp::Markdown::MarkdownRenderer']]]
+  ['radius_1153',['Radius',['../class_vect_sharp_1_1_radial_gradient_brush.html#a274f9ab977041e8c4e8d8977a2d8d294',1,'VectSharp.RadialGradientBrush.Radius()'],['../class_vect_sharp_1_1_three_d_1_1_area_light_source.html#a31f4ee050eac024c8a9c46ac9356500e',1,'VectSharp.ThreeD.AreaLightSource.Radius()']]],
+  ['rasterimageloader_1154',['RasterImageLoader',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ab93a4039135d6e34b6f9d478968e3f63',1,'VectSharp::Markdown::MarkdownRenderer']]],
+  ['regularfontfamily_1155',['RegularFontFamily',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a708b8264454c11050b95d43fa1523d5f',1,'VectSharp::Markdown::MarkdownRenderer']]],
+  ['renderer_1156',['Renderer',['../class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#ac3d22cb649c35362950340822ec683bd',1,'VectSharp::MarkdownCanvas::MarkdownCanvasControl']]],
+  ['reversedirection_1157',['ReverseDirection',['../class_vect_sharp_1_1_three_d_1_1_parallel_light_source.html#a929b54d55a24eb4b09c2b3617748a778',1,'VectSharp::ThreeD::ParallelLightSource']]],
+  ['right_1158',['Right',['../class_vect_sharp_1_1_markdown_1_1_margins.html#afca3380ba0d9a38f6e92eb35ec73df1b',1,'VectSharp::Markdown::Margins']]],
+  ['rightsidebearing_1159',['RightSideBearing',['../class_vect_sharp_1_1_font_1_1_detailed_font_metrics.html#a9e96615d06c0ed23e1f0dca35342cddb',1,'VectSharp::Font::DetailedFontMetrics']]]
 ];
