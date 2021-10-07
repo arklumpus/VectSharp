@@ -242,6 +242,7 @@ namespace VectSharp
     /// </summary>
     public class FontFamily
     {
+        private static object fontFamilyLock = new object();
         private static readonly Dictionary<string, Stream> manifestResources = new Dictionary<string, Stream>();
 
         private static Stream GetManifestResourceStream(string name)
@@ -384,20 +385,83 @@ namespace VectSharp
         /// <param name="fileName">The full path to the TrueType font file for this font family or the name of a standard font family.</param>
         public FontFamily(string fileName)
         {
-            if (StandardFamilies.Contains(fileName))
+            lock (fontFamilyLock)
             {
-                IsStandardFamily = true;
+                if (StandardFamilies.Contains(fileName))
+                {
+                    IsStandardFamily = true;
+                }
+                else
+                {
+                    IsStandardFamily = false;
+                }
+
+                FileName = fileName;
+
+                if (IsStandardFamily)
+                {
+                    TrueTypeFile = TrueTypeFile.CreateTrueTypeFile(GetManifestResourceStream(StandardFontFamilyResources[Array.IndexOf(StandardFamilies, fileName)]));
+                    this.IsBold = TrueTypeFile.IsBold();
+
+                    if (FileName == "Times-Italic" || FileName == "Times-BoldItalic" || FileName == "Helvetica-Oblique" || FileName == "Helvetica-BoldOblique" || FileName == "Courier-Oblique" || FileName == "Courier-BoldOblique")
+                    {
+                        this.IsItalic = true;
+                        this.IsOblique = (FileName == "Courier-Oblique" || FileName == "Courier-BoldOblique");
+                    }
+                    else
+                    {
+                        this.IsItalic = false;
+                        this.IsOblique = false;
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        TrueTypeFile = TrueTypeFile.CreateTrueTypeFile(fileName);
+                        this.IsBold = TrueTypeFile.IsBold();
+                        this.IsItalic = TrueTypeFile.IsItalic();
+                        this.IsOblique = TrueTypeFile.IsOblique();
+                    }
+                    catch
+                    {
+                        TrueTypeFile = null;
+                    }
+                }
             }
-            else
+        }
+
+        /// <summary>
+        /// Create a new <see cref="FontFamily"/>.
+        /// </summary>
+        /// <param name="ttfStream">A stream containing a file in TTF format.</param>
+        public FontFamily(Stream ttfStream)
+        {
+            lock (fontFamilyLock)
             {
                 IsStandardFamily = false;
+
+                TrueTypeFile = TrueTypeFile.CreateTrueTypeFile(ttfStream);
+
+                FileName = TrueTypeFile.GetFontFamilyName();
+                this.IsBold = TrueTypeFile.IsBold();
+                this.IsItalic = TrueTypeFile.IsItalic();
+                this.IsOblique = TrueTypeFile.IsOblique();
             }
+        }
 
-            FileName = fileName;
-
-            if (IsStandardFamily)
+        /// <summary>
+        /// Create a new standard <see cref="FontFamily"/>.
+        /// </summary>
+        /// <param name="standardFontFamily">The standard font family.</param>
+        public FontFamily(StandardFontFamilies standardFontFamily)
+        {
+            lock (fontFamilyLock)
             {
-                TrueTypeFile = TrueTypeFile.CreateTrueTypeFile(GetManifestResourceStream(StandardFontFamilyResources[Array.IndexOf(StandardFamilies, fileName)]));
+                IsStandardFamily = true;
+
+                FileName = StandardFamilies[(int)standardFontFamily];
+                TrueTypeFile = TrueTypeFile.CreateTrueTypeFile(GetManifestResourceStream(StandardFontFamilyResources[(int)standardFontFamily]));
                 this.IsBold = TrueTypeFile.IsBold();
 
                 if (FileName == "Times-Italic" || FileName == "Times-BoldItalic" || FileName == "Helvetica-Oblique" || FileName == "Helvetica-BoldOblique" || FileName == "Courier-Oblique" || FileName == "Courier-BoldOblique")
@@ -410,60 +474,6 @@ namespace VectSharp
                     this.IsItalic = false;
                     this.IsOblique = false;
                 }
-            }
-            else
-            {
-                try
-                {
-                    TrueTypeFile = TrueTypeFile.CreateTrueTypeFile(fileName);
-                    this.IsBold = TrueTypeFile.IsBold();
-                    this.IsItalic = TrueTypeFile.IsItalic();
-                    this.IsOblique = TrueTypeFile.IsOblique();
-                }
-                catch
-                {
-                    TrueTypeFile = null;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Create a new <see cref="FontFamily"/>.
-        /// </summary>
-        /// <param name="ttfStream">A stream containing a file in TTF format.</param>
-        public FontFamily(Stream ttfStream)
-        {
-            IsStandardFamily = false;
-
-            TrueTypeFile = TrueTypeFile.CreateTrueTypeFile(ttfStream);
-
-            FileName = TrueTypeFile.GetFontFamilyName();
-            this.IsBold = TrueTypeFile.IsBold();
-            this.IsItalic = TrueTypeFile.IsItalic();
-            this.IsOblique = TrueTypeFile.IsOblique();
-        }
-
-        /// <summary>
-        /// Create a new standard <see cref="FontFamily"/>.
-        /// </summary>
-        /// <param name="standardFontFamily">The standard font family.</param>
-        public FontFamily(StandardFontFamilies standardFontFamily)
-        {
-            IsStandardFamily = true;
-
-            FileName = StandardFamilies[(int)standardFontFamily];
-            TrueTypeFile = TrueTypeFile.CreateTrueTypeFile(GetManifestResourceStream(StandardFontFamilyResources[(int)standardFontFamily]));
-            this.IsBold = TrueTypeFile.IsBold();
-
-            if (FileName == "Times-Italic" || FileName == "Times-BoldItalic" || FileName == "Helvetica-Oblique" || FileName == "Helvetica-BoldOblique" || FileName == "Courier-Oblique" || FileName == "Courier-BoldOblique")
-            {
-                this.IsItalic = true;
-                this.IsOblique = (FileName == "Courier-Oblique" || FileName == "Courier-BoldOblique");
-            }
-            else
-            {
-                this.IsItalic = false;
-                this.IsOblique = false;
             }
         }
     }

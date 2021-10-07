@@ -31,6 +31,7 @@ namespace VectSharp
     {
         private static readonly Dictionary<string, TrueTypeFile> FontCache = new Dictionary<string, TrueTypeFile>();
         private static readonly Dictionary<Stream, TrueTypeFile> StreamFontCache = new Dictionary<Stream, TrueTypeFile>();
+        private static object FontCacheLock = new object();
         internal uint ScalarType { get; }
         internal ushort NumTables { get; }
         internal ushort SearchRange { get; }
@@ -53,33 +54,38 @@ namespace VectSharp
         {
             string keyString = null;
 
-            foreach (KeyValuePair<string, TrueTypeFile> kvp in FontCache)
+
+            lock (FontCacheLock)
             {
-                if (kvp.Value == this)
+                foreach (KeyValuePair<string, TrueTypeFile> kvp in FontCache)
                 {
-                    keyString = kvp.Key;
-                    break;
+                    if (kvp.Value == this)
+                    {
+                        keyString = kvp.Key;
+                        break;
+                    }
                 }
-            }
 
-            if (!string.IsNullOrEmpty(keyString))
-            {
-                FontCache.Remove(keyString);
-            }
 
-            Stream keyStream = null;
-
-            foreach (KeyValuePair<Stream, TrueTypeFile> kvp in StreamFontCache)
-            {
-                if (kvp.Value == this)
+                if (!string.IsNullOrEmpty(keyString))
                 {
-                    keyStream = kvp.Key;
+                    FontCache.Remove(keyString);
                 }
-            }
 
-            if (keyStream != null)
-            {
-                StreamFontCache.Remove(keyStream);
+                Stream keyStream = null;
+
+                foreach (KeyValuePair<Stream, TrueTypeFile> kvp in StreamFontCache)
+                {
+                    if (kvp.Value == this)
+                    {
+                        keyStream = kvp.Key;
+                    }
+                }
+
+                if (keyStream != null)
+                {
+                    StreamFontCache.Remove(keyStream);
+                }
             }
 
             this.FontStream.Dispose();
@@ -204,22 +210,28 @@ namespace VectSharp
 
         internal static TrueTypeFile CreateTrueTypeFile(string fileName)
         {
-            if (!FontCache.ContainsKey(fileName))
+            lock (FontCacheLock)
             {
-                FontCache.Add(fileName, new TrueTypeFile(fileName));
-            }
+                if (!FontCache.ContainsKey(fileName))
+                {
+                    FontCache.Add(fileName, new TrueTypeFile(fileName));
+                }
 
-            return FontCache[fileName];
+                return FontCache[fileName];
+            }
         }
 
         internal static TrueTypeFile CreateTrueTypeFile(Stream fontStream)
         {
-            if (!StreamFontCache.ContainsKey(fontStream))
+            lock (FontCacheLock)
             {
-                StreamFontCache.Add(fontStream, new TrueTypeFile(fontStream));
-            }
+                if (!StreamFontCache.ContainsKey(fontStream))
+                {
+                    StreamFontCache.Add(fontStream, new TrueTypeFile(fontStream));
+                }
 
-            return StreamFontCache[fontStream];
+                return StreamFontCache[fontStream];
+            }
         }
 
         private TrueTypeFile(string fileName) : this(new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
