@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['withalpha_800',['WithAlpha',['../struct_vect_sharp_1_1_colour.html#aa13c5ba1a5131ecaf5cae5c4504b728f',1,'VectSharp.Colour.WithAlpha(Colour original, double alpha)'],['../struct_vect_sharp_1_1_colour.html#a101beca37dee249c59d615aac6943c89',1,'VectSharp.Colour.WithAlpha(Colour original, byte alpha)'],['../struct_vect_sharp_1_1_colour.html#afccab5755d0a369205b1af623b088495',1,'VectSharp.Colour.WithAlpha(double alpha)'],['../struct_vect_sharp_1_1_colour.html#ad2de8feb0735ee2b49cb79604f3c1e98',1,'VectSharp.Colour.WithAlpha(byte alpha)']]]
+  ['updatelayer_858',['UpdateLayer',['../class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a2afc05715ff7c9e4cb273943d70939ed',1,'VectSharp::Canvas::SKMultiLayerRenderCanvas']]],
+  ['updatewith_859',['UpdateWith',['../class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a84c5f8dc4c4351723414e55fa01eafe7',1,'VectSharp::Canvas::SKMultiLayerRenderCanvas']]]
 ];

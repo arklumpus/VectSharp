@@ -124,6 +124,14 @@ Usage</h1>
 <div class="line">//...</div>
 <div class="line">Avalonia.Controls.Canvas can = doc.Pages.Last().PaintToCanvas();</div>
 </div><!-- fragment --></li>
+<li>Export the graphics to a <code>Canvas</code>, using a multi-layer, multi-threaded, triple-buffered renderer based on SkiaSharp (which provides the best performance if you wish e.g. to place the canvas within a <a href="https://github.com/wieslawsoltes/PanAndZoom"><code>ZoomBorder</code></a>): <div class="fragment"><div class="line">using VectSharp.Canvas;</div>
+<div class="line">//...</div>
+<div class="line">// A single page</div>
+<div class="line">Avalonia.Controls.Canvas can = doc.Pages.Last().PaintToSKCanvas();</div>
+<div class="line"> </div>
+<div class="line">// The whole document - each page will correspond to a layer</div>
+<div class="line">Avalonia.Controls.Canvas can = doc.PaintToSKCanvas();</div>
+</div><!-- fragment --></li>
 <li>Save as a PNG image: <div class="fragment"><div class="line">using VectSharp.Raster;</div>
 <div class="line">//...</div>
 <div class="line">doc.Pages.Last().SaveAsPNG(@&quot;Sample.png&quot;);</div>

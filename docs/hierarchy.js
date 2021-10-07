@@ -9,6 +9,9 @@ var hierarchy =
       ] ],
       [ "VectSharp.SolidColourBrush", "class_vect_sharp_1_1_solid_colour_brush.html", null ]
     ] ],
+    [ "Canvas", null, [
+      [ "VectSharp.Canvas.SKMultiLayerRenderCanvas", "class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html", null ]
+    ] ],
     [ "VectSharp.Colours", "class_vect_sharp_1_1_colours.html", null ],
     [ "VectSharp.Font.DetailedFontMetrics", "class_vect_sharp_1_1_font_1_1_detailed_font_metrics.html", null ],
     [ "VectSharp.Document", "class_vect_sharp_1_1_document.html", null ],
@@ -27,6 +30,8 @@ var hierarchy =
     [ "VectSharp.GraphicsPath", "class_vect_sharp_1_1_graphics_path.html", null ],
     [ "VectSharp.Markdown.HTTPUtils", "class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html", null ],
     [ "IDisposable", null, [
+      [ "VectSharp.Canvas.SKMultiLayerRenderCanvas", "class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html", null ],
+      [ "VectSharp.Canvas.SKRenderAction", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html", null ],
       [ "VectSharp.DisposableIntPtr", "class_vect_sharp_1_1_disposable_int_ptr.html", null ],
       [ "VectSharp.RasterImage", "class_vect_sharp_1_1_raster_image.html", [
         [ "VectSharp.MuPDFUtils.RasterImageFile", "class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_file.html", null ],
@@ -69,6 +74,8 @@ var hierarchy =
     [ "VectSharp.Canvas.RenderAction", "class_vect_sharp_1_1_canvas_1_1_render_action.html", null ],
     [ "VectSharp.Segment", "class_vect_sharp_1_1_segment.html", null ],
     [ "VectSharp.Size", "struct_vect_sharp_1_1_size.html", null ],
+    [ "VectSharp.Canvas.SKRenderContext", "class_vect_sharp_1_1_canvas_1_1_s_k_render_context.html", null ],
+    [ "VectSharp.Canvas.SKRenderContextInterpreter", "class_vect_sharp_1_1_canvas_1_1_s_k_render_context_interpreter.html", null ],
     [ "VectSharp.SVG.SVGContextInterpreter", "class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html", null ],
     [ "VectSharp.Markdown.SyntaxHighlighter", "class_vect_sharp_1_1_markdown_1_1_syntax_highlighter.html", null ],
     [ "VectSharp.TrueTypeFile", "class_vect_sharp_1_1_true_type_file.html", null ],

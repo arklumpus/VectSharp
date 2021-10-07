@@ -1,4 +1,10 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,88,32"/>
-<area shape="rect" id="node2" href="$struct_vect_sharp_1_1_colour.html" title="Represents an RGB colour." alt="" coords="136,5,260,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="18,13,82,39"/>
+<area shape="rect" id="node2" href="$class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html" title="Represents a multi&#45;threaded, triple&#45;buffered canvas on which the image is drawn using SkiaSharp." alt="" coords="149,5,328,47"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,107,95,134"/>
+<area shape="rect" id="node4" href="$class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html" title="Represents a light&#45;weight rendering action." alt="" coords="143,71,335,112"/>
+<area shape="rect" id="node5" href="$class_vect_sharp_1_1_disposable_int_ptr.html" title="An IDisposable wrapper around an IntPtr that frees the allocated memory when it is disposed." alt="" coords="147,137,330,163"/>
+<area shape="rect" id="node6" href="$class_vect_sharp_1_1_raster_image.html" title="Represents a raster image, created from raw pixel data. Consider using the derived classes included i..." alt="" coords="159,187,319,214"/>
+<area shape="rect" id="node7" href="$class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_file.html" title="A RasterImage created from a file." alt="" coords="383,147,581,188"/>
+<area shape="rect" id="node8" href="$class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_stream.html" title="A RasterImage created from a stream." alt="" coords="383,212,581,253"/>
 </map>

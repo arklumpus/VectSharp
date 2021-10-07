@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$class_vect_sharp_1_1_formatted_text_extensions.html" title="Contains extension methods for collections of FormattedText objects." alt="" coords="5,5,241,32"/>
+<area shape="rect" id="node1" href="$class_vect_sharp_1_1_font_family.html" title="Represents a typeface." alt="" coords="5,13,157,39"/>
+<area shape="rect" id="node2" href="$class_vect_sharp_1_1_canvas_1_1_resource_font_family.html" title="Represents a FontFamily created from a resource stream." alt="" coords="205,5,393,47"/>
 </map>

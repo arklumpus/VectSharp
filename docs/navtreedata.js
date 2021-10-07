@@ -52,7 +52,7 @@ var NAVTREE =
         [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", null ],
         [ "Enumerations", "functions_enum.html", null ],
-        [ "Properties", "functions_prop.html", null ],
+        [ "Properties", "functions_prop.html", "functions_prop" ],
         [ "Events", "functions_evnt.html", null ]
       ] ]
     ] ],
@@ -65,9 +65,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_avalonia_context_8cs_source.html",
-"class_vect_sharp_1_1_font_1_1_detailed_font_metrics.html#aa5aebb76cef45fc769bf9d896c6b37b7",
-"class_vect_sharp_1_1_raster_image.html#a07a7d81044a8a90b2499b6af9acf8de0",
-"interface_vect_sharp_1_1_i_graphics_context.html#a0f37773cee69920f73d2e49cd8fcb1d1"
+"class_vect_sharp_1_1_colours.html#a9b9c1a41d727385556560ee73c473a0c",
+"class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a9299eed73bdf07e38bef45c499d1befc",
+"class_vect_sharp_1_1_true_type_file.html#acd6fac0c1556a58be91ddfcda2f40963"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
