@@ -1354,7 +1354,7 @@ namespace VectSharp.Canvas
         }
 
         /// <summary>
-        /// Creates a new <see cref="RenderAction"/> representing a Path.
+        /// Creates a new <see cref="RenderAction"/> representing a path.
         /// </summary>
         /// <param name="geometry">The geometry to be rendered.</param>
         /// <param name="stroke">The stroke of the path (can be null).</param>
@@ -1362,7 +1362,7 @@ namespace VectSharp.Canvas
         /// <param name="transform">The transform that will be applied to the path.</param>
         /// <param name="clippingPath">The clipping path.</param>
         /// <param name="tag">A tag to access the <see cref="RenderAction"/>. If this is null this <see cref="RenderAction"/> is not visible in the hit test.</param>
-        /// <returns>A new <see cref="RenderAction"/> representing a Path.</returns>
+        /// <returns>A new <see cref="RenderAction"/> representing a path.</returns>
         public static RenderAction PathAction(Geometry geometry, Pen stroke, IBrush fill, Avalonia.Matrix transform, Geometry clippingPath, string tag = null)
         {
             return new RenderAction()
@@ -1385,7 +1385,7 @@ namespace VectSharp.Canvas
         /// <param name="transform">The transform that will be applied to the text.</param>
         /// <param name="clippingPath">The clipping path.</param>
         /// <param name="tag">A tag to access the <see cref="RenderAction"/>. If this is null this <see cref="RenderAction"/> is not visible in the hit test.</param>
-        /// <returns></returns>
+        /// <returns>A new <see cref="RenderAction"/> representing text.</returns>
         public static RenderAction TextAction(Avalonia.Media.FormattedText text, IBrush fill, Avalonia.Matrix transform, Geometry clippingPath, string tag = null)
         {
             return new RenderAction()
@@ -1409,7 +1409,7 @@ namespace VectSharp.Canvas
         /// <param name="transform">The transform that will be applied to the image.</param>
         /// <param name="clippingPath">The clipping path.</param>
         /// <param name="tag">A tag to access the <see cref="RenderAction"/>. If this is null this <see cref="RenderAction"/> is not visible in the hit test.</param>
-        /// <returns></returns>
+        /// <returns>A new <see cref="RenderAction"/> representing an image.</returns>
         public static RenderAction ImageAction(string imageId, Avalonia.Rect sourceRect, Avalonia.Rect destinationRect, Avalonia.Matrix transform, Geometry clippingPath, string tag = null)
         {
             return new RenderAction()

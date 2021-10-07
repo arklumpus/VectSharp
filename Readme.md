@@ -54,6 +54,16 @@ using VectSharp.Canvas;
 //...
 Avalonia.Controls.Canvas can = doc.Pages.Last().PaintToCanvas();
 ``` 
+* Export the graphics to a `Canvas`, using a multi-layer, multi-threaded, triple-buffered renderer based on SkiaSharp (which provides the best performance if you wish e.g. to place the canvas within a [`ZoomBorder`](https://github.com/wieslawsoltes/PanAndZoom)):
+```Csharp
+using VectSharp.Canvas;
+//...
+// A single page
+Avalonia.Controls.Canvas can = doc.Pages.Last().PaintToSKCanvas();
+
+// The whole document - each page will correspond to a layer
+Avalonia.Controls.Canvas can = doc.PaintToSKCanvas();
+``` 
 * Save as a PNG image:
 ```Csharp
 using VectSharp.Raster;
