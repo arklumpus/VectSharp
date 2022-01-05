@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netcoreapp6.0</TargetFramework>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <PlatformTarget>x64</PlatformTarget>
@@ -10,10 +10,10 @@
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.10.0" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.10.0" />
-    <PackageReference Include="VectSharp" Version="1.7.0" />
-    <PackageReference Include="VectSharp.Canvas" Version="2.1.7" />
-    <PackageReference Include="VectSharp.ThreeD" Version="1.0.1" />
+    <PackageReference Include="Avalonia" Version="0.10.11" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.10.11" />
+    <PackageReference Include="VectSharp" Version="1.9.0-a2" />
+    <PackageReference Include="VectSharp.Canvas" Version="2.4.0-a2" />
+    <PackageReference Include="VectSharp.ThreeD" Version="1.1.0-a2" />
   </ItemGroup>
 </Project>

@@ -13,7 +13,7 @@ It includes an abstract layer on top of which output layers can be written. Curr
 
 [**VectSharp.Markdown**](https://github.com/arklumpus/VectSharp/tree/master/VectSharp.Markdown) can be used to transform Markdown documents into VectSharp objects, that can then be exported e.g. as PDF or SVG files, or displayed in an Avalonia `Canvas`. **VectSharp.MarkdownCanvas** uses VectSharp.Markdown to render Markdown documents in Avalonia applications (an example of this is in the [MarkdownViewerDemo project](https://github.com/arklumpus/VectSharp/tree/master/MarkdownViewerDemo)).
 
-VectSharp is written using .NET Core, and is available for Mac, Windows and Linux. It is released under a GPLv3 license. It includes 14 standard fonts, also released under a GPL license.
+VectSharp is written using .NET Core, and is available for Mac, Windows and Linux. Since version 1.9.0, it is released under an LGPLv3 license. It includes 14 standard fonts, originally released under an ASL-2.0 license.
 
 Since version 2.0.0, VectSharp.Raster is released under an AGPLv3 license.
 

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netcoreapp6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="VectSharp.Markdown" Version="1.0.3" />
+    <PackageReference Include="VectSharp.Markdown" Version="1.1.0-a2" />
   </ItemGroup>
 
 </Project>

@@ -6,8 +6,8 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Company>University of Bristol</Company>
     <Description>A library to produce vector graphics (including text) without too many dependencies. Extensible to support multiple output formats. This is the base package, and does not provide any output formats. For more information, see https://github.com/arklumpus/VectSharp</Description>
-    <Version>1.8.1</Version>
-    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+    <Version>1.9.0-a2</Version>
+    <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/arklumpus/VectSharp</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
@@ -31,20 +31,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="StandardFonts\D050000L.ttf" />
-    <EmbeddedResource Include="StandardFonts\NimbusMono-Bold.ttf" />
-    <EmbeddedResource Include="StandardFonts\NimbusMono-BoldOblique.ttf" />
-    <EmbeddedResource Include="StandardFonts\NimbusMono-Oblique.ttf" />
-    <EmbeddedResource Include="StandardFonts\NimbusMono-Regular.ttf" />
-    <EmbeddedResource Include="StandardFonts\NimbusRomNo9L-Med.ttf" />
-    <EmbeddedResource Include="StandardFonts\NimbusRomNo9L-MedIta.ttf" />
-    <EmbeddedResource Include="StandardFonts\NimbusRomNo9L-Reg.ttf" />
-    <EmbeddedResource Include="StandardFonts\NimbusRomNo9L-RegIta.ttf" />
-    <EmbeddedResource Include="StandardFonts\NimbusSanL-Bol.ttf" />
-    <EmbeddedResource Include="StandardFonts\NimbusSanL-BolIta.ttf" />
-    <EmbeddedResource Include="StandardFonts\NimbusSanL-Reg.ttf" />
-    <EmbeddedResource Include="StandardFonts\NimbusSanL-RegIta.ttf" />
-    <EmbeddedResource Include="StandardFonts\StandardSymbolsPS.ttf" />
+    <EmbeddedResource Include="StandardFonts\Arimo-Bold.ttf" />
+    <EmbeddedResource Include="StandardFonts\Arimo-BoldItalic.ttf" />
+    <EmbeddedResource Include="StandardFonts\Arimo-Italic.ttf" />
+    <EmbeddedResource Include="StandardFonts\Arimo-Regular.ttf" />
+    <EmbeddedResource Include="StandardFonts\Cousine-Bold.ttf" />
+    <EmbeddedResource Include="StandardFonts\Cousine-BoldItalic.ttf" />
+    <EmbeddedResource Include="StandardFonts\Cousine-Italic.ttf" />
+    <EmbeddedResource Include="StandardFonts\Cousine-Regular.ttf" />
+    <EmbeddedResource Include="StandardFonts\Levibats-Regular.ttf" />
+    <EmbeddedResource Include="StandardFonts\Levibats-Regular_GB.ttf" />
+    <EmbeddedResource Include="StandardFonts\SymbolNeu.ttf" />
+    <EmbeddedResource Include="StandardFonts\SymbolNeu_GB.ttf" />
+    <EmbeddedResource Include="StandardFonts\Tinos-Bold.ttf" />
+    <EmbeddedResource Include="StandardFonts\Tinos-BoldItalic.ttf" />
+    <EmbeddedResource Include="StandardFonts\Tinos-Italic.ttf" />
+    <EmbeddedResource Include="StandardFonts\Tinos-Regular.ttf" />
   </ItemGroup>
 
   <ItemGroup>
