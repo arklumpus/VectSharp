@@ -585,6 +585,11 @@ namespace VectSharp
                     }
                 }
 
+                if (cmap4 == null)
+                {
+                    return this;
+                }
+
                 List<int> characterCodes = new List<int>();
 
                 for (int i = 0; i < charactersToInclude.Length; i++)
