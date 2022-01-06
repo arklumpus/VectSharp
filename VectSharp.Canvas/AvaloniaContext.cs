@@ -26,24 +26,6 @@ using System.Runtime.InteropServices;
 
 namespace VectSharp.Canvas
 {
-    /// <summary>
-    /// Represents a FontFamily created from a resource stream.
-    /// </summary>
-    public class ResourceFontFamily : FontFamily
-    {
-        internal string ResourceName;
-
-        /// <summary>
-        /// Create a new <see cref="ResourceFontFamily"/> from the specified <paramref name="resourceStream"/> containing a TTF file, passing the specified <paramref name="resourceName"/> to the <see cref="Avalonia.Media.FontFamily.Parse(string, Uri)"/> method.
-        /// </summary>
-        /// <param name="resourceStream">A resource stream containing a TTF file.</param>
-        /// <param name="resourceName">The name of the embedded resource, which will be parsed using <see cref="Avalonia.Media.FontFamily.Parse(string, Uri)"/>.</param>
-        public ResourceFontFamily(System.IO.Stream resourceStream, string resourceName) : base(resourceStream)
-        {
-            this.ResourceName = resourceName;
-        }
-    }
-
     internal static class MatrixUtils
     {
         public static Avalonia.Matrix ToAvaloniaMatrix(this double[,] matrix)
@@ -330,8 +312,8 @@ namespace VectSharp.Canvas
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.Ascent);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top - Font.Ascent);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.WinAscent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top - Font.WinAscent);
                         }
                         else
                         {
@@ -348,8 +330,8 @@ namespace VectSharp.Canvas
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.WinAscent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.WinAscent);
                         }
                         else
                         {
@@ -369,7 +351,7 @@ namespace VectSharp.Canvas
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.Ascent);
+                            currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.WinAscent);
                             deltaTransform = MatrixUtils.Translate(deltaTransform, left - lsb, top - Font.YMax);
                         }
                         else
@@ -387,8 +369,8 @@ namespace VectSharp.Canvas
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.Ascent + metrics.Bottom);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top - Font.Ascent + metrics.Bottom);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.WinAscent + metrics.Bottom);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top - Font.WinAscent + metrics.Bottom);
                         }
                         else
                         {
@@ -561,13 +543,13 @@ namespace VectSharp.Canvas
             {
                 _Font = value;
 
-                if (!Font.FontFamily.IsStandardFamily)
+                if (Font.FontFamily is ResourceFontFamily fam)
                 {
-                    if (Font.FontFamily is ResourceFontFamily fam)
-                    {
-                        FontFamily = fam.ResourceName;
-                    }
-                    else
+                    FontFamily = fam.ResourceName;
+                }
+                else
+                {
+                    if (!Font.FontFamily.IsStandardFamily)
                     {
                         if (Font.FontFamily.TrueTypeFile != null)
                         {
@@ -578,10 +560,10 @@ namespace VectSharp.Canvas
                             FontFamily = Font.FontFamily.FileName;
                         }
                     }
-                }
-                else
-                {
-                    FontFamily = "resm:VectSharp.StandardFonts.?assembly=VectSharp#" + Font.FontFamily.TrueTypeFile.GetFontFamilyName();
+                    else
+                    {
+                        FontFamily = "resm:VectSharp.StandardFonts.?assembly=VectSharp#" + Font.FontFamily.TrueTypeFile.GetFontFamilyName();
+                    }
                 }
             }
         }
@@ -1570,8 +1552,8 @@ namespace VectSharp.Canvas
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.Ascent);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top - Font.Ascent);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.WinAscent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top - Font.WinAscent);
                         }
                         else
                         {
@@ -1587,8 +1569,8 @@ namespace VectSharp.Canvas
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.WinAscent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.WinAscent);
                         }
                         else
                         {
@@ -1605,7 +1587,7 @@ namespace VectSharp.Canvas
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.Ascent);
+                            currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.WinAscent);
                             deltaTransform = MatrixUtils.Translate(deltaTransform, left - lsb, top - Font.YMax);
                         }
                         else
@@ -1621,8 +1603,8 @@ namespace VectSharp.Canvas
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.Ascent + metrics.Bottom);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top - Font.Ascent + metrics.Bottom);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.WinAscent + metrics.Bottom);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top - Font.WinAscent + metrics.Bottom);
                         }
                         else
                         {

@@ -56,76 +56,75 @@ namespace VectSharp.Demo
 
             //Text samples using default fonts
             //To use a custom font in TTF format, supply the path to the font's TTF file to the FontFamily(string) constructor
-            gpr.FillText(200, 200, "Times-Roman", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesRoman), 120), Colour.FromRgb(0, 0, 0));
-            gpr.FillText(200, 340, "Times-Bold", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesBold), 120), Colour.FromRgb(127, 127, 127));
-            gpr.FillText(200, 480, "Times-Italic", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesItalic), 120), Colour.FromRgb(136, 0, 21));
-            gpr.FillText(200, 620, "Times-BoldItalic", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesBoldItalic), 120), Colour.FromRgb(237, 28, 36));
+            gpr.FillText(200, 200, "Times-Roman", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesRoman), 120), Colour.FromRgb(0, 0, 0));
+            gpr.FillText(200, 340, "Times-Bold", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesBold), 120), Colour.FromRgb(127, 127, 127));
+            gpr.FillText(200, 480, "Times-Italic", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesItalic), 120), Colour.FromRgb(136, 0, 21));
+            gpr.FillText(200, 620, "Times-BoldItalic", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesBoldItalic), 120), Colour.FromRgb(237, 28, 36));
 
-            gpr.FillText(200, 860, "Helvetica", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 120), Colour.FromRgb(255, 174, 201));
-            gpr.FillText(200, 1000, "Helvetica-Bold", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBold), 120), Colour.FromRgb(255, 127, 39));
-            gpr.FillText(200, 1140, "Helvetica-Oblique", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaOblique), 120), Colour.FromRgb(255, 242, 0));
-            gpr.FillText(200, 1280, "Helvetica-BoldOblique", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBoldOblique), 120), Colour.FromRgb(181, 230, 29));
+            gpr.FillText(200, 860, "Helvetica", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 120), Colour.FromRgb(255, 174, 201));
+            gpr.FillText(200, 1000, "Helvetica-Bold", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBold), 120), Colour.FromRgb(255, 127, 39));
+            gpr.FillText(200, 1140, "Helvetica-Oblique", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaOblique), 120), Colour.FromRgb(255, 242, 0));
+            gpr.FillText(200, 1280, "Helvetica-BoldOblique", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBoldOblique), 120), Colour.FromRgb(181, 230, 29));
 
             //Using a RadialGradientBrush
             //Note that in Avalonia (and thus, VectSharp.Canvas), weird things may happen if the centre and the focal point do not coincide (https://github.com/AvaloniaUI/Avalonia/issues/6017)
             RadialGradientBrush radialGradient = new RadialGradientBrush(new Point(200, 1520), new Point(200, 1520), 800, new GradientStop(Colour.FromRgb(237, 28, 36), 0), new GradientStop(Colour.FromRgb(34, 177, 76), 0.33), new GradientStop(Colour.FromRgb(0, 162, 232), 0.66), new GradientStop(Colour.FromRgb(255, 127, 39), 1));
 
-            gpr.FillText(200, 1520, "Courier", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.Courier), 120), radialGradient);
-            gpr.FillText(200, 1660, "Courier-Bold", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.CourierBold), 120), radialGradient);
-            gpr.FillText(200, 1800, "Courier-Oblique", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.CourierOblique), 120), radialGradient);
-            gpr.FillText(200, 1940, "Courier-BoldOblique", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.CourierBoldOblique), 120), radialGradient);
+            gpr.FillText(200, 1520, "Courier", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.Courier), 120), radialGradient);
+            gpr.FillText(200, 1660, "Courier-Bold", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.CourierBold), 120), radialGradient);
+            gpr.FillText(200, 1800, "Courier-Oblique", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.CourierOblique), 120), radialGradient);
+            gpr.FillText(200, 1940, "Courier-BoldOblique", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.CourierBoldOblique), 120), radialGradient);
 
             //Using a LinearGradientBrush
             LinearGradientBrush linearGradient = new LinearGradientBrush(new Point(200, 2180), new Point(1320, 2400), new GradientStop(Colour.FromRgb(63, 72, 204), 0), new GradientStop(Colour.FromRgb(163, 73, 204), 1));
 
-            gpr.FillText(200, 2180, "Σψμβολ", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.Symbol), 120), linearGradient);
-            gpr.FillText(200, 2320, "✺❁❐❆✤❉■❇❂❁▼▲", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.ZapfDingbats), 120), linearGradient);
-
+            gpr.FillText(200, 2180, "Σψμβολ", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.Symbol), 120), linearGradient);
+            gpr.FillText(200, 2320, "✺❁❐❆✤❉■❇❂❁▼▲", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.ZapfDingbats), 120), linearGradient);
 
             //Text metrics sample
             string testString = "VectSharp";
-            Font timesBI = new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesBoldItalic), 240);
+            Font timesBI = new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesBoldItalic), 240);
             Font.DetailedFontMetrics metrics = timesBI.MeasureTextAdvanced(testString);
             gpr.FillText(2000, 500, testString, timesBI, Colour.FromRgb(0, 0, 0), textBaseline: TextBaselines.Baseline);
 
             //Text baseline
             gpr.StrokePath(new GraphicsPath().MoveTo(1900, 500).LineTo(2050 + metrics.Width, 500), Colour.FromRgb(237, 28, 36), lineWidth: 5);
-            gpr.FillText(1880 - gpr.MeasureText("Baseline", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50)).Width, 500, "Baseline", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50), Colour.FromRgb(237, 28, 36), textBaseline: TextBaselines.Middle);
+            gpr.FillText(1880 - gpr.MeasureText("Baseline", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50)).Width, 500, "Baseline", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50), Colour.FromRgb(237, 28, 36), textBaseline: TextBaselines.Middle);
 
             //Font ascent and descent
             gpr.StrokePath(new GraphicsPath().MoveTo(1900, 500 - timesBI.Ascent).LineTo(2100 + metrics.Width, 500 - timesBI.Ascent), Colour.FromRgb(255, 127, 39), lineWidth: 5);
-            gpr.FillText(2120 + metrics.Width, 500 - timesBI.Ascent, "Ascent", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50), Colour.FromRgb(255, 127, 39), textBaseline: TextBaselines.Middle);
+            gpr.FillText(2120 + metrics.Width, 500 - timesBI.Ascent, "Ascent", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50), Colour.FromRgb(255, 127, 39), textBaseline: TextBaselines.Middle);
 
             gpr.StrokePath(new GraphicsPath().MoveTo(1900, 500 - timesBI.Descent).LineTo(2100 + metrics.Width, 500 - timesBI.Descent), Colour.FromRgb(255, 127, 39), lineWidth: 5);
-            gpr.FillText(2120 + metrics.Width, 500 - timesBI.Descent, "Descent", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50), Colour.FromRgb(255, 127, 39), textBaseline: TextBaselines.Middle);
+            gpr.FillText(2120 + metrics.Width, 500 - timesBI.Descent, "Descent", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50), Colour.FromRgb(255, 127, 39), textBaseline: TextBaselines.Middle);
 
 
             //Text top and bottom
             gpr.StrokePath(new GraphicsPath().MoveTo(1900, 500 - metrics.Top).LineTo(2050 + metrics.Width, 500 - metrics.Top), Colour.FromRgb(0, 162, 232), lineWidth: 5);
-            gpr.FillText(1880 - gpr.MeasureText("Top", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50)).Width, 500 - metrics.Top, "Top", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50), Colour.FromRgb(0, 162, 232), textBaseline: TextBaselines.Middle);
+            gpr.FillText(1880 - gpr.MeasureText("Top", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50)).Width, 500 - metrics.Top, "Top", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50), Colour.FromRgb(0, 162, 232), textBaseline: TextBaselines.Middle);
 
             gpr.StrokePath(new GraphicsPath().MoveTo(1900, 500 - metrics.Bottom).LineTo(2050 + metrics.Width, 500 - metrics.Bottom), Colour.FromRgb(0, 162, 232), lineWidth: 5);
-            gpr.FillText(1880 - gpr.MeasureText("Bottom", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50)).Width, 500 - metrics.Bottom, "Bottom", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50), Colour.FromRgb(0, 162, 232), textBaseline: TextBaselines.Middle);
+            gpr.FillText(1880 - gpr.MeasureText("Bottom", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50)).Width, 500 - metrics.Bottom, "Bottom", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50), Colour.FromRgb(0, 162, 232), textBaseline: TextBaselines.Middle);
 
             gpr.StrokePath(new GraphicsPath().MoveTo(2065 + metrics.Width, 520 - metrics.Top).LineTo(2075 + metrics.Width, 500 - metrics.Top).LineTo(2085 + metrics.Width, 520 - metrics.Top).MoveTo(2075 + metrics.Width, 500 - metrics.Top).LineTo(2075 + metrics.Width, 500 - metrics.Bottom).MoveTo(2065 + metrics.Width, 480 - metrics.Bottom).LineTo(2075 + metrics.Width, 500 - metrics.Bottom).LineTo(2085 + metrics.Width, 480 - metrics.Bottom), Colour.FromRgb(0, 162, 232), lineWidth: 5);
 
             //Text width
             gpr.StrokePath(new GraphicsPath().MoveTo(2000, 425 - timesBI.Ascent).LineTo(2000, 550 - timesBI.Descent).MoveTo(2000 + metrics.Width, 425 - timesBI.Ascent).LineTo(2000 + metrics.Width, 550 - timesBI.Descent), Colour.FromRgb(63, 72, 204), lineWidth: 5);
             gpr.StrokePath(new GraphicsPath().MoveTo(2020, 390 - timesBI.Ascent).LineTo(2000, 400 - timesBI.Ascent).LineTo(2020, 410 - timesBI.Ascent).MoveTo(2000, 400 - timesBI.Ascent).LineTo(2000 + metrics.Width, 400 - timesBI.Ascent).MoveTo(1980 + metrics.Width, 390 - timesBI.Ascent).LineTo(2000 + metrics.Width, 400 - timesBI.Ascent).LineTo(1980 + metrics.Width, 410 - timesBI.Ascent), Colour.FromRgb(63, 72, 204), lineWidth: 5);
-            gpr.FillText(2000 + metrics.Width / 2 - gpr.MeasureText("Width", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50)).Width / 2, 380 - timesBI.Ascent, "Width", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50), Colour.FromRgb(63, 72, 204), textBaseline: TextBaselines.Bottom);
+            gpr.FillText(2000 + metrics.Width / 2 - gpr.MeasureText("Width", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50)).Width / 2, 380 - timesBI.Ascent, "Width", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50), Colour.FromRgb(63, 72, 204), textBaseline: TextBaselines.Bottom);
 
             //Left- and right-side bearing
             gpr.StrokePath(new GraphicsPath().MoveTo(2000 - metrics.LeftSideBearing, 450 - timesBI.Ascent).LineTo(2000 - metrics.LeftSideBearing, 550 - timesBI.Descent).MoveTo(2000 + metrics.Width + metrics.RightSideBearing, 450 - timesBI.Ascent).LineTo(2000 + metrics.Width + metrics.RightSideBearing, 550 - timesBI.Descent), Colour.FromRgb(163, 73, 204), lineWidth: 5);
             gpr.StrokePath(new GraphicsPath().MoveTo(2000, 565 - timesBI.Descent).LineTo(2000, 585 - timesBI.Descent).MoveTo(2000, 575 - timesBI.Descent).LineTo(2000 - metrics.LeftSideBearing, 575 - timesBI.Descent).MoveTo(2000 - metrics.LeftSideBearing, 565 - timesBI.Descent).LineTo(2000 - metrics.LeftSideBearing, 585 - timesBI.Descent), Colour.FromRgb(163, 73, 204), lineWidth: 5);
             gpr.StrokePath(new GraphicsPath().MoveTo(2000 + metrics.Width + metrics.RightSideBearing, 565 - timesBI.Descent).LineTo(2000 + metrics.Width + metrics.RightSideBearing, 585 - timesBI.Descent).MoveTo(2000 + metrics.Width + metrics.RightSideBearing, 575 - timesBI.Descent).LineTo(2000 + metrics.Width, 575 - timesBI.Descent).MoveTo(2000 + metrics.Width, 565 - timesBI.Descent).LineTo(2000 + metrics.Width, 585 - timesBI.Descent), Colour.FromRgb(163, 73, 204), lineWidth: 5);
 
-            gpr.FillText(2000, 600 - timesBI.Descent, "Left-side bearing", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50), Colour.FromRgb(163, 73, 164));
-            gpr.FillText(2000 + metrics.Width - gpr.MeasureText("Right-side bearing", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50)).Width, 600 - timesBI.Descent, "Right-side bearing", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50), Colour.FromRgb(163, 73, 164));
+            gpr.FillText(2000, 600 - timesBI.Descent, "Left-side bearing", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50), Colour.FromRgb(163, 73, 164));
+            gpr.FillText(2000 + metrics.Width - gpr.MeasureText("Right-side bearing", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50)).Width, 600 - timesBI.Descent, "Right-side bearing", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 50), Colour.FromRgb(163, 73, 164));
 
 
 
             //Text metrics sample #2
-            Font biggerTimes = new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesBoldItalic), 300);
+            Font biggerTimes = new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesBoldItalic), 300);
 
             Font.DetailedFontMetrics fMetrics = biggerTimes.MeasureTextAdvanced("f");
             Font.DetailedFontMetrics qMetrics = biggerTimes.MeasureTextAdvanced("q");
@@ -163,13 +162,13 @@ namespace VectSharp.Demo
             //A more complex example, using different fonts. You can also associate a different colour to each element.
             List<FormattedText> reaction = new List<FormattedText>()
             {
-                new FormattedText("NO", new Font(new VectSharp.FontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesRoman), 70)),
-                new FormattedText("2", new Font(new VectSharp.FontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesRoman), 70), Script.Subscript),
-                new FormattedText(" + ", new Font(new VectSharp.FontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesRoman), 70)),
-                new FormattedText("hν", new Font(new VectSharp.FontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesItalic), 70)),
-                new FormattedText(" ", new Font(new VectSharp.FontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesRoman), 70)),
-                new FormattedText("→", new Font(new VectSharp.FontFamily(VectSharp.FontFamily.StandardFontFamilies.ZapfDingbats), 70)),
-                new FormattedText(" NO + O", new Font(new VectSharp.FontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesRoman), 70))
+                new FormattedText("NO", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesRoman), 70)),
+                new FormattedText("2", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesRoman), 70), Script.Subscript),
+                new FormattedText(" + ", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesRoman), 70)),
+                new FormattedText("hν", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesItalic), 70)),
+                new FormattedText(" ", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesRoman), 70)),
+                new FormattedText("→", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.ZapfDingbats), 70)),
+                new FormattedText(" NO + O", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesRoman), 70))
             };
             gpr.FillText(3100, 700, reaction, Colours.Black);
 
@@ -284,7 +283,7 @@ namespace VectSharp.Demo
             for (int i = 0; i < 12; i++)
             {
                 gpr.StrokePath(new GraphicsPath().MoveTo(3400, 1150).LineTo(3550, 1150), Colour.FromRgb(0, 0, 0), lineWidth: 5);
-                gpr.FillText(3600, 1150, angles[i], new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesBold), 60), Colour.FromRgb(0, 0, 0), textBaseline: TextBaselines.Middle);
+                gpr.FillText(3600, 1150, angles[i], new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.TimesBold), 60), Colour.FromRgb(0, 0, 0), textBaseline: TextBaselines.Middle);
 
                 //Rotate around a point
                 gpr.RotateAt(Math.PI / 6, new VectSharp.Point(3400, 1150));
@@ -307,7 +306,7 @@ namespace VectSharp.Demo
             }
 
             //Transparent text
-            gpr.FillText(3400 - gpr.MeasureText("Transparent", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBoldOblique), 80)).Width / 2, 1925, "Transparent", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBoldOblique), 80), Colour.FromRgba(255, 127, 39, 85), textBaseline: TextBaselines.Bottom);
+            gpr.FillText(3400 - gpr.MeasureText("Transparent", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBoldOblique), 80)).Width / 2, 1925, "Transparent", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBoldOblique), 80), Colour.FromRgba(255, 127, 39, 85), textBaseline: TextBaselines.Bottom);
 
             //Transparent stroke
             gpr.StrokePath(new GraphicsPath().MoveTo(3175, 1950).LineTo(3625, 1950), Colour.FromRgba(163, 73, 164, 128), lineWidth: 30);
@@ -319,11 +318,11 @@ namespace VectSharp.Demo
 
 
             //Text fill vs stroke
-            gpr.FillText(1925, 1450, "Fill", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBoldOblique), 150), Colour.FromRgb(203, 245, 216));
-            gpr.StrokeText(2325, 1450, "Stroke", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBoldOblique), 150), Colour.FromRgb(34, 177, 76), lineWidth: 6, lineJoin: LineJoins.Round);
+            gpr.FillText(1925, 1450, "Fill", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBoldOblique), 150), Colour.FromRgb(203, 245, 216));
+            gpr.StrokeText(2325, 1450, "Stroke", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBoldOblique), 150), Colour.FromRgb(34, 177, 76), lineWidth: 6, lineJoin: LineJoins.Round);
 
             //Text can be also added to a graphics path.
-            GraphicsPath textPath = new GraphicsPath().AddText(1925, 1650, "Fill & stroke", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBoldOblique), 150));
+            GraphicsPath textPath = new GraphicsPath().AddText(1925, 1650, "Fill & stroke", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBoldOblique), 150));
             gpr.FillPath(textPath, Colour.FromRgb(203, 245, 216));
             gpr.StrokePath(textPath, Colour.FromRgb(34, 177, 76), lineWidth: 6, lineJoin: LineJoins.Round);
 
@@ -344,7 +343,7 @@ namespace VectSharp.Demo
             rasterGpr.FillRectangle(22, 4, 4, 4, Colour.FromRgb(181, 230, 29));
             rasterGpr.FillRectangle(26, 4, 4, 4, Colour.FromRgb(128, 128, 128));
 
-            rasterGpr.FillText(2, 10, "Raster", new Font(new VectSharp.FontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 12), Colours.Black);
+            rasterGpr.FillText(2, 10, "Raster", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 12), Colours.Black);
 
             //Save the raster image to a stream in PNG format
             System.IO.MemoryStream rasterStream = new System.IO.MemoryStream();
@@ -389,12 +388,12 @@ namespace VectSharp.Demo
             gpr.StrokeRectangle(3100, 1550, 600, 200, Colour.FromRgb(80, 80, 80), lineWidth: 20, lineDash: new LineDash(60, 60, 0));
 
             //Text
-            gpr.FillText(3400 - gpr.MeasureText("Click me!", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBold), 80)).Width / 2, 1650, "Click me!", new Font(new FontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBold), 80), Colour.FromRgb(0, 0, 0), textBaseline: TextBaselines.Middle, tag: "ClickMeText");
+            gpr.FillText(3400 - gpr.MeasureText("Click me!", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBold), 80)).Width / 2, 1650, "Click me!", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBold), 80), Colour.FromRgb(0, 0, 0), textBaseline: TextBaselines.Middle, tag: "ClickMeText");
 
             //Text along a path
             GraphicsPath flowPath = new GraphicsPath().Arc(1550, 1100, 300, -7 * Math.PI / 8, -Math.PI / 8);
             gpr.StrokePath(flowPath, Colour.FromRgb(220, 220, 220), lineWidth: 10);
-            gpr.FillTextOnPath(flowPath, "Text on a path!", new Font(new VectSharp.FontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBold), 80), Colour.FromRgb(34, 177, 76), reference: 0.5, anchor: TextAnchors.Center, textBaseline: TextBaselines.Baseline);
+            gpr.FillTextOnPath(flowPath, "Text on a path!", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBold), 80), Colour.FromRgb(34, 177, 76), reference: 0.5, anchor: TextAnchors.Center, textBaseline: TextBaselines.Baseline);
 
             //Dictionary associating each tag to the action to perform on the object (Avalonia only)
             Dictionary<string, Delegate> taggedActions = new Dictionary<string, Delegate>()
@@ -442,7 +441,7 @@ namespace VectSharp.Demo
             doc.Pages.Add(new Page(480, 100));
 
             //Write some text on the second page
-            doc.Pages.Last().Graphics.FillText(20, 50, "This is the second page!", new Font(new VectSharp.FontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 40), Colour.FromRgb(0, 0, 0), textBaseline: TextBaselines.Middle);
+            doc.Pages.Last().Graphics.FillText(20, 50, "This is the second page!", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.Helvetica), 40), Colour.FromRgb(0, 0, 0), textBaseline: TextBaselines.Middle);
 
             //Create a PDF document
             doc.SaveAsPDF(@"Sample.pdf");

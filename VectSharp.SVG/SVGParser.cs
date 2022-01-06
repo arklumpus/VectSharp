@@ -511,22 +511,22 @@ namespace VectSharp.SVG
             {
                 case "Times-Roman":
                 case "Times-Bold":
-                    return new FontFamily(FontFamily.StandardFontFamilies.TimesBold);
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBold);
                 case "Times-Italic":
                 case "Times-BoldItalic":
-                    return new FontFamily(FontFamily.StandardFontFamilies.TimesBoldItalic);
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBoldItalic);
                 case "Helvetica":
                 case "Helvetica-Bold":
-                    return new FontFamily(FontFamily.StandardFontFamilies.HelveticaBold);
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBold);
                 case "Helvetica-Oblique":
                 case "Helvetica-BoldOblique":
-                    return new FontFamily(FontFamily.StandardFontFamilies.HelveticaBoldOblique);
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBoldOblique);
                 case "Courier":
                 case "Courier-Bold":
-                    return new FontFamily(FontFamily.StandardFontFamilies.CourierBold);
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBold);
                 case "Courier-Oblique":
                 case "Courier-BoldOblique":
-                    return new FontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique);
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique);
                 default:
                     return fontFamily;
             }
@@ -538,22 +538,22 @@ namespace VectSharp.SVG
             {
                 case "Times-Roman":
                 case "Times-Italic":
-                    return new FontFamily(FontFamily.StandardFontFamilies.TimesItalic);
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesItalic);
                 case "Times-Bold":
                 case "Times-BoldItalic":
-                    return new FontFamily(FontFamily.StandardFontFamilies.TimesBoldItalic);
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBoldItalic);
                 case "Helvetica":
                 case "Helvetica-Oblique":
-                    return new FontFamily(FontFamily.StandardFontFamilies.HelveticaOblique);
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaOblique);
                 case "Helvetica-Bold":
                 case "Helvetica-BoldOblique":
-                    return new FontFamily(FontFamily.StandardFontFamilies.HelveticaBoldOblique);
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBoldOblique);
                 case "Courier":
                 case "Courier-Oblique":
-                    return new FontFamily(FontFamily.StandardFontFamilies.CourierOblique);
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierOblique);
                 case "Courier-Bold":
                 case "Courier-BoldOblique":
-                    return new FontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique);
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique);
                 default:
                     return fontFamily;
             }
@@ -584,54 +584,54 @@ namespace VectSharp.SVG
 
                 if (matchedFamilies.Count > 0)
                 {
-                    return new FontFamily((from el in matchedFamilies orderby el.Item2 descending select el.Item1).First());
+                    return FontFamily.ResolveFontFamily((from el in matchedFamilies orderby el.Item2 descending select el.Item1).First());
                 }
                 else
                 {
                     if (family.Equals("serif", StringComparison.OrdinalIgnoreCase))
                     {
-                        return new FontFamily(FontFamily.StandardFontFamilies.TimesRoman);
+                        return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesRoman);
                     }
                     else if (family.Equals("sans-serif", StringComparison.OrdinalIgnoreCase))
                     {
-                        return new FontFamily(FontFamily.StandardFontFamilies.Helvetica);
+                        return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica);
                     }
                     else if (family.Equals("monospace", StringComparison.OrdinalIgnoreCase))
                     {
-                        return new FontFamily(FontFamily.StandardFontFamilies.Courier);
+                        return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Courier);
                     }
                     else if (family.Equals("cursive", StringComparison.OrdinalIgnoreCase))
                     {
-                        return new FontFamily(FontFamily.StandardFontFamilies.TimesItalic);
+                        return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesItalic);
                     }
                     else if (family.Equals("system-ui", StringComparison.OrdinalIgnoreCase))
                     {
-                        return new FontFamily(FontFamily.StandardFontFamilies.Helvetica);
+                        return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica);
                     }
                     else if (family.Equals("ui-serif", StringComparison.OrdinalIgnoreCase))
                     {
-                        return new FontFamily(FontFamily.StandardFontFamilies.TimesRoman);
+                        return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesRoman);
                     }
                     else if (family.Equals("ui-sans-serif", StringComparison.OrdinalIgnoreCase))
                     {
-                        return new FontFamily(FontFamily.StandardFontFamilies.Helvetica);
+                        return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica);
                     }
                     else if (family.Equals("ui-monospace", StringComparison.OrdinalIgnoreCase))
                     {
-                        return new FontFamily(FontFamily.StandardFontFamilies.Courier);
+                        return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Courier);
                     }
                     else if (family.Equals("StandardSymbolsPS", StringComparison.OrdinalIgnoreCase))
                     {
-                        return new FontFamily(FontFamily.StandardFontFamilies.Symbol);
+                        return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Symbol);
                     }
                     else if (family.Equals("D050000L", StringComparison.OrdinalIgnoreCase))
                     {
-                        return new FontFamily(FontFamily.StandardFontFamilies.ZapfDingbats);
+                        return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.ZapfDingbats);
                     }
                 }
             }
 
-            return new FontFamily(FontFamily.StandardFontFamilies.Helvetica);
+            return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica);
         }
 
         private static void InterpretGObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients)
@@ -2509,7 +2509,7 @@ namespace VectSharp.SVG
 
                 File.WriteAllBytes(tempFile, fontBytes);
 
-                FontFamily family = new FontFamily(tempFile);
+                FontFamily family = FontFamily.ResolveFontFamily(tempFile);
                 return new KeyValuePair<string, FontFamily>(fontFamilyName, family);
             }
 

@@ -113,6 +113,24 @@ namespace VectSharp
         }
 
         /// <summary>
+        /// Height above the baseline for a clipping region (Windows ascent). Always &gt;= 0.
+        /// </summary>
+        public double WinAscent
+        {
+            get
+            {
+                if (this.FontFamily.TrueTypeFile == null)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return this.FontFamily.TrueTypeFile.Get1000EmWinAscent() * this.FontSize / 1000;
+                }
+            }
+        }
+
+        /// <summary>
         /// Maximum depth below the baseline of the usual glyphs in the font (there may be glyphs deeper than this). Always &lt;= 0.
         /// </summary>
         public double Descent
@@ -242,10 +260,49 @@ namespace VectSharp
     /// </summary>
     public class FontFamily
     {
-        private static object fontFamilyLock = new object();
-        private static readonly Dictionary<string, Stream> manifestResources = new Dictionary<string, Stream>();
+        /// <summary>
+        /// The default font library used to resolve font family names.
+        /// </summary>
+        public static IFontLibrary DefaultFontLibrary { get; set; } = new DefaultFontLibrary();
 
-        private static Stream GetManifestResourceStream(string name)
+        /// <summary>
+        /// Create a new font family from the specified family name or true type file. If the family name or the true type file are not valid, an exception might be raised. Equivalent to DefaultFontLibrary.ResolveFontFamily.
+        /// </summary>
+        /// <param name="fontFamily">The name of the font family to create, or the path to a TTF file.</param>
+        /// <returns>If the font family name or the true type file is valid, a <see cref="FontFamily"/> object corresponding to the specified font family.</returns>
+        public static FontFamily ResolveFontFamily(string fontFamily) => DefaultFontLibrary.ResolveFontFamily(fontFamily);
+
+
+        /// <summary>
+        /// Create a new font family from the specified standard font family name. Equivalent to DefaultFontLibrary.ResolveFontFamily.
+        /// </summary>
+        /// <param name="standardFontFamily">The standard name of the font family.</param>
+        /// <returns>A <see cref="FontFamily"/> object corresponding to the specified font family.</returns>
+        public static FontFamily ResolveFontFamily(StandardFontFamilies standardFontFamily) => DefaultFontLibrary.ResolveFontFamily(standardFontFamily);
+
+        /// <summary>
+        /// Create a new font family from the specified family name or true type file. If the family name or the true type file are not valid, try to instantiate the font family using
+        /// the <paramref name="fallback"/>. If none of the fallback family names or true type files are valid, an exception might be raised. Equivalent to DefaultFontLibrary.ResolveFontFamily.
+        /// </summary>
+        /// <param name="fontFamily">The name of the font family to create, or the path to a TTF file.</param>
+        /// <param name="fallback">Names of additional font families or TTF files, which will be tried if the first <paramref name="fontFamily"/> is not valid.</param>
+        /// <returns>A <see cref="FontFamily"/> object corresponding to the first of the specified font families that is valid.</returns>
+        public static FontFamily ResolveFontFamily(string fontFamily, params string[] fallback) => DefaultFontLibrary.ResolveFontFamily(fontFamily, fallback);
+
+        /// <summary>
+        /// Create a new font family from the specified family name or true type file. If the family name or the true type file are not valid, try to instantiate the font family using
+        /// the <paramref name="fallback"/>. If none of the fallback family names or true type files are valid, instantiate a standard font family using the <paramref name="finalFallback"/>. Equivalent to DefaultFontLibrary.ResolveFontFamily.
+        /// </summary>
+        /// <param name="fontFamily">The name of the font family to create, or the path to a TTF file.</param>
+        /// <param name="fallback">Names of additional font families or TTF files, which will be tried if the first <paramref name="fontFamily"/> is not valid.</param>
+        /// <param name="finalFallback">The standard name of the font family that will be used if none of the fallback families are valid.</param>
+        /// <returns>A <see cref="FontFamily"/> object corresponding to the first of the specified font families that is valid.</returns>
+        public static FontFamily ResolveFontFamily(string fontFamily, StandardFontFamilies finalFallback, params string[] fallback) => DefaultFontLibrary.ResolveFontFamily(fontFamily, finalFallback, fallback);
+
+        internal static object fontFamilyLock = new object();
+        internal static readonly Dictionary<string, Stream> manifestResources = new Dictionary<string, Stream>();
+
+        internal static Stream GetManifestResourceStream(string name)
         {
             if (!manifestResources.ContainsKey(name))
             {
@@ -275,7 +332,7 @@ namespace VectSharp
         /// <summary>
         /// Whether this is one of the 14 standard font families or not.
         /// </summary>
-        public bool IsStandardFamily { get; }
+        public bool IsStandardFamily { get; internal set; }
 
         /// <summary>
         /// The 14 standard font families.
@@ -356,7 +413,7 @@ namespace VectSharp
         /// <summary>
         /// Full path to the TrueType font file for this font family (or, if this is a standard font family, name of the font family).
         /// </summary>
-        public string FileName { get; }
+        public string FileName { get; internal set; }
 
         /// <summary>
         /// Parsed TrueType font file for this font family.
@@ -367,68 +424,41 @@ namespace VectSharp
         /// <summary>
         /// Whether this font is bold or not. This is set based on the information included in the OS/2 table of the TrueType file.
         /// </summary>
-        public bool IsBold { get; }
+        public bool IsBold { get; internal set; }
 
         /// <summary>
         /// Whether this font is italic or oblique or not. This is set based on the information included in the OS/2 table of the TrueType file.
         /// </summary>
-        public bool IsItalic { get; }
+        public bool IsItalic { get; internal set; }
 
         /// <summary>
         /// Whether this font is oblique or not. This is set based on the information included in the OS/2 table of the TrueType file.
         /// </summary>
-        public bool IsOblique { get; }
+        public bool IsOblique { get; internal set; }
 
         /// <summary>
         /// Create a new <see cref="FontFamily"/>.
         /// </summary>
         /// <param name="fileName">The full path to the TrueType font file for this font family or the name of a standard font family.</param>
+        [Obsolete("Please use the FontFamily.ResolveFontFamily(string) method instead!", true)]
         public FontFamily(string fileName)
         {
             lock (fontFamilyLock)
             {
-                if (StandardFamilies.Contains(fileName))
-                {
-                    IsStandardFamily = true;
-                }
-                else
-                {
-                    IsStandardFamily = false;
-                }
+                FontFamily resolved = DefaultFontLibrary.ResolveFontFamily(fileName);
 
-                FileName = fileName;
-
-                if (IsStandardFamily)
-                {
-                    TrueTypeFile = TrueTypeFile.CreateTrueTypeFile(GetManifestResourceStream(StandardFontFamilyResources[Array.IndexOf(StandardFamilies, fileName)]));
-                    this.IsBold = TrueTypeFile.IsBold();
-
-                    if (FileName == "Times-Italic" || FileName == "Times-BoldItalic" || FileName == "Helvetica-Oblique" || FileName == "Helvetica-BoldOblique" || FileName == "Courier-Oblique" || FileName == "Courier-BoldOblique")
-                    {
-                        this.IsItalic = true;
-                        this.IsOblique = (FileName == "Courier-Oblique" || FileName == "Courier-BoldOblique");
-                    }
-                    else
-                    {
-                        this.IsItalic = false;
-                        this.IsOblique = false;
-                    }
-                }
-                else
-                {
-                    try
-                    {
-                        TrueTypeFile = TrueTypeFile.CreateTrueTypeFile(fileName);
-                        this.IsBold = TrueTypeFile.IsBold();
-                        this.IsItalic = TrueTypeFile.IsItalic();
-                        this.IsOblique = TrueTypeFile.IsOblique();
-                    }
-                    catch
-                    {
-                        TrueTypeFile = null;
-                    }
-                }
+                this.FileName = resolved.FileName;
+                this.TrueTypeFile = resolved.TrueTypeFile;
+                this.IsOblique = resolved.IsOblique;
+                this.IsBold = resolved.IsBold;
+                this.IsItalic = resolved.IsItalic;
+                this.IsStandardFamily = resolved.IsStandardFamily;
             }
+        }
+
+        internal FontFamily()
+        {
+
         }
 
         /// <summary>
@@ -451,30 +481,63 @@ namespace VectSharp
         }
 
         /// <summary>
+        /// Create a new <see cref="FontFamily"/>.
+        /// </summary>
+        /// <param name="ttf">A font file in TTF format.</param>
+        public FontFamily(TrueTypeFile ttf)
+        {
+            lock (fontFamilyLock)
+            {
+                IsStandardFamily = false;
+
+                TrueTypeFile = ttf;
+
+                FileName = TrueTypeFile.GetFontFamilyName();
+                this.IsBold = TrueTypeFile.IsBold();
+                this.IsItalic = TrueTypeFile.IsItalic();
+                this.IsOblique = TrueTypeFile.IsOblique();
+            }
+        }
+
+        /// <summary>
         /// Create a new standard <see cref="FontFamily"/>.
         /// </summary>
         /// <param name="standardFontFamily">The standard font family.</param>
+        [Obsolete("Please use the FontFamily.ResolveFontFamily(StandardFontFamilies) method instead!", true)]
         public FontFamily(StandardFontFamilies standardFontFamily)
         {
             lock (fontFamilyLock)
             {
-                IsStandardFamily = true;
+                FontFamily resolved = DefaultFontLibrary.ResolveFontFamily(standardFontFamily);
 
-                FileName = StandardFamilies[(int)standardFontFamily];
-                TrueTypeFile = TrueTypeFile.CreateTrueTypeFile(GetManifestResourceStream(StandardFontFamilyResources[(int)standardFontFamily]));
-                this.IsBold = TrueTypeFile.IsBold();
-
-                if (FileName == "Times-Italic" || FileName == "Times-BoldItalic" || FileName == "Helvetica-Oblique" || FileName == "Helvetica-BoldOblique" || FileName == "Courier-Oblique" || FileName == "Courier-BoldOblique")
-                {
-                    this.IsItalic = true;
-                    this.IsOblique = (FileName == "Courier-Oblique" || FileName == "Courier-BoldOblique");
-                }
-                else
-                {
-                    this.IsItalic = false;
-                    this.IsOblique = false;
-                }
+                this.FileName = resolved.FileName;
+                this.TrueTypeFile = resolved.TrueTypeFile;
+                this.IsOblique = resolved.IsOblique;
+                this.IsBold = resolved.IsBold;
+                this.IsItalic = resolved.IsItalic;
+                this.IsStandardFamily = resolved.IsStandardFamily;
             }
+        }
+    }
+
+    /// <summary>
+    /// Represents a FontFamily created from a resource stream.
+    /// </summary>
+    public class ResourceFontFamily : FontFamily
+    {
+        /// <summary>
+        /// The name of the embedded resource, which will be parsed using <code>Avalonia.Media.FontFamily.Parse(string, Uri)</code>.
+        /// </summary>
+        public string ResourceName;
+
+        /// <summary>
+        /// Create a new <see cref="ResourceFontFamily"/> from the specified <paramref name="resourceStream"/> containing a TTF file, passing the specified <paramref name="resourceName"/> to the <code>Avalonia.Media.FontFamily.Parse(string, Uri)"</code> method.
+        /// </summary>
+        /// <param name="resourceStream">A resource stream containing a TTF file.</param>
+        /// <param name="resourceName">The name of the embedded resource, which will be parsed using <code>Avalonia.Media.FontFamily.Parse(string, Uri)</code>.</param>
+        public ResourceFontFamily(System.IO.Stream resourceStream, string resourceName) : base(resourceStream)
+        {
+            this.ResourceName = resourceName;
         }
     }
 

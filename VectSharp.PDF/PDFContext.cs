@@ -367,7 +367,7 @@ namespace VectSharp.PDF
 
             _textToPaths = textToPaths;
 
-            Font = new Font(new FontFamily(FontFamily.StandardFontFamilies.Helvetica), 12);
+            Font = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica), 12);
 
             TextBaseline = TextBaselines.Top;
 
@@ -671,7 +671,7 @@ namespace VectSharp.PDF
                 {
                     if (act is TextFigure figure && !tbr.ContainsKey(figure.Font.FontFamily.FileName))
                     {
-                        tbr.Add(figure.Font.FontFamily.FileName, new FontFamily(figure.Font.FontFamily.FileName));
+                        tbr.Add(figure.Font.FontFamily.FileName, FontFamily.ResolveFontFamily(figure.Font.FontFamily.FileName));
                     }
                 }
             }

@@ -2072,6 +2072,26 @@ namespace VectSharp
         }
 
         /// <summary>
+        /// Computes the font's Win ascent, in thousandths of em unit.
+        /// </summary>
+        /// <returns>The font's Win ascent in thousandths of em unit.</returns>
+        public double Get1000EmWinAscent()
+        {
+            TrueTypeOS2Table os2 = ((TrueTypeOS2Table)this.Tables["OS/2"]);
+
+            bool useTypoMetrics = (os2.FsSelection & 128) != 0;
+
+            if (!useTypoMetrics)
+            {
+                return ((TrueTypeOS2Table)this.Tables["OS/2"]).UsWinAscent * 1000.0 / ((TrueTypeHeadTable)this.Tables["head"]).UnitsPerEm;
+            }
+            else
+            {
+                return ((TrueTypeOS2Table)this.Tables["OS/2"]).STypoAscender * 1000.0 / ((TrueTypeHeadTable)this.Tables["head"]).UnitsPerEm;
+            }
+        }
+
+        /// <summary>
         /// Computes the font ascent, in thousandths of em unit.
         /// </summary>
         /// <returns>The font ascent in thousandths of em unit.</returns>

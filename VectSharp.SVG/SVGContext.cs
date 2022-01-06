@@ -188,7 +188,7 @@ namespace VectSharp.SVG
             LineJoin = LineJoins.Miter;
             _lineDash = new LineDash(0, 0, 0);
 
-            Font = new Font(new FontFamily(FontFamily.StandardFontFamilies.Helvetica), 12);
+            Font = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica), 12);
 
             TextBaseline = TextBaselines.Top;
 

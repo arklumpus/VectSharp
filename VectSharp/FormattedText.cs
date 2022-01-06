@@ -258,7 +258,7 @@ namespace VectSharp
         /// <returns>A lazy collection of <see cref="FormattedText"/> objects. Note that every enumeration of this collection causes the text to be parsed again; if you need to enumerate this collection more than once, you should probably convert it e.g. to a <see cref="List{T}"/>.</returns>
         public static IEnumerable<FormattedText> Format(string text, FontFamily.StandardFontFamilies fontFamily, double fontSize, Brush defaultBrush = null)
         {
-            Font normalFont = new Font(new FontFamily(fontFamily), fontSize);
+            Font normalFont = new Font(FontFamily.ResolveFontFamily(fontFamily), fontSize);
 
             Font boldFont = normalFont;
             Font italicFont = normalFont;
@@ -267,66 +267,66 @@ namespace VectSharp
             switch (fontFamily)
             {
                 case FontFamily.StandardFontFamilies.Courier:
-                    boldFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.CourierBold), fontSize);
-                    italicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.CourierOblique), fontSize);
-                    boldItalicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBold), fontSize);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierOblique), fontSize);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique), fontSize);
                     break;
                 case FontFamily.StandardFontFamilies.CourierBold:
-                    boldFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.Courier), fontSize);
-                    italicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique), fontSize);
-                    boldItalicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.CourierOblique), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Courier), fontSize);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique), fontSize);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierOblique), fontSize);
                     break;
                 case FontFamily.StandardFontFamilies.CourierOblique:
-                    boldFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique), fontSize);
-                    italicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.Courier), fontSize);
-                    boldItalicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.CourierBold), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique), fontSize);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Courier), fontSize);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBold), fontSize);
                     break;
                 case FontFamily.StandardFontFamilies.CourierBoldOblique:
-                    boldFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.CourierOblique), fontSize);
-                    italicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.CourierBold), fontSize);
-                    boldItalicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.Courier), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierOblique), fontSize);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBold), fontSize);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Courier), fontSize);
                     break;
 
                 case FontFamily.StandardFontFamilies.Helvetica:
-                    boldFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.HelveticaBold), fontSize);
-                    italicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.HelveticaOblique), fontSize);
-                    boldItalicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.HelveticaBoldOblique), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBold), fontSize);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaOblique), fontSize);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBoldOblique), fontSize);
                     break;
                 case FontFamily.StandardFontFamilies.HelveticaBold:
-                    boldFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.Helvetica), fontSize);
-                    italicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.HelveticaBoldOblique), fontSize);
-                    boldItalicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.HelveticaOblique), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica), fontSize);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBoldOblique), fontSize);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaOblique), fontSize);
                     break;
                 case FontFamily.StandardFontFamilies.HelveticaOblique:
-                    boldFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.HelveticaBoldOblique), fontSize);
-                    italicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.Helvetica), fontSize);
-                    boldItalicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.HelveticaBold), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBoldOblique), fontSize);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica), fontSize);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBold), fontSize);
                     break;
                 case FontFamily.StandardFontFamilies.HelveticaBoldOblique:
-                    boldFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.HelveticaOblique), fontSize);
-                    italicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.HelveticaBold), fontSize);
-                    boldItalicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.Helvetica), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaOblique), fontSize);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBold), fontSize);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica), fontSize);
                     break;
 
                 case FontFamily.StandardFontFamilies.TimesRoman:
-                    boldFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.TimesBold), fontSize);
-                    italicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.TimesItalic), fontSize);
-                    boldItalicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.TimesBoldItalic), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBold), fontSize);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesItalic), fontSize);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBoldItalic), fontSize);
                     break;
                 case FontFamily.StandardFontFamilies.TimesBold:
-                    boldFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.TimesRoman), fontSize);
-                    italicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.TimesBoldItalic), fontSize);
-                    boldItalicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.TimesItalic), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesRoman), fontSize);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBoldItalic), fontSize);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesItalic), fontSize);
                     break;
                 case FontFamily.StandardFontFamilies.TimesItalic:
-                    boldFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.TimesBoldItalic), fontSize);
-                    italicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.TimesRoman), fontSize);
-                    boldItalicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.TimesBold), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBoldItalic), fontSize);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesRoman), fontSize);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBold), fontSize);
                     break;
                 case FontFamily.StandardFontFamilies.TimesBoldItalic:
-                    boldFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.TimesItalic), fontSize);
-                    italicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.TimesBold), fontSize);
-                    boldItalicFont = new Font(new FontFamily(FontFamily.StandardFontFamilies.TimesRoman), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesItalic), fontSize);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBold), fontSize);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesRoman), fontSize);
                     break;
             }
 

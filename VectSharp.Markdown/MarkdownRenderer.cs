@@ -60,42 +60,42 @@ namespace VectSharp.Markdown
         /// <summary>
         /// The font family for regular text.
         /// </summary>
-        public FontFamily RegularFontFamily { get; set; } = new FontFamily(FontFamily.StandardFontFamilies.Helvetica);
+        public FontFamily RegularFontFamily { get; set; } = FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica);
 
         /// <summary>
         /// The font family for bold text.
         /// </summary>
-        public FontFamily BoldFontFamily { get; set; } = new FontFamily(FontFamily.StandardFontFamilies.HelveticaBold);
+        public FontFamily BoldFontFamily { get; set; } = FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBold);
 
         /// <summary>
         /// The font family for italic text.
         /// </summary>
-        public FontFamily ItalicFontFamily { get; set; } = new FontFamily(FontFamily.StandardFontFamilies.HelveticaOblique);
+        public FontFamily ItalicFontFamily { get; set; } = FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaOblique);
 
         /// <summary>
         /// The font family for bold italic text.
         /// </summary>
-        public FontFamily BoldItalicFontFamily { get; set; } = new FontFamily(FontFamily.StandardFontFamilies.HelveticaBoldOblique);
+        public FontFamily BoldItalicFontFamily { get; set; } = FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBoldOblique);
 
         /// <summary>
         /// The font family for code elements.
         /// </summary>
-        public FontFamily CodeFont { get; set; } = new FontFamily(FontFamily.StandardFontFamilies.Courier);
+        public FontFamily CodeFont { get; set; } = FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Courier);
 
         /// <summary>
         /// The font family for bold code elements.
         /// </summary>
-        public FontFamily CodeFontBold { get; set; } = new FontFamily(FontFamily.StandardFontFamilies.CourierBold);
+        public FontFamily CodeFontBold { get; set; } = FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBold);
 
         /// <summary>
         /// The font family for italic code elements.
         /// </summary>
-        public FontFamily CodeFontItalic { get; set; } = new FontFamily(FontFamily.StandardFontFamilies.CourierOblique);
+        public FontFamily CodeFontItalic { get; set; } = FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierOblique);
 
         /// <summary>
         /// The font family for bold italic code elements.
         /// </summary>
-        public FontFamily CodeFontBoldItalic { get; set; } = new FontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique);
+        public FontFamily CodeFontBoldItalic { get; set; } = FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique);
 
         /// <summary>
         /// The thickness of underlines. This value will be multiplied by the font size of the element being underlined.
