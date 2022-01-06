@@ -29,12 +29,13 @@ var NAVTREE =
       [ "Introduction", "index.html#autotoc_md1", null ],
       [ "Installing VectSharp", "index.html#autotoc_md2", null ],
       [ "Usage", "index.html#autotoc_md3", null ],
-      [ "Creating new output layers", "index.html#autotoc_md4", null ],
-      [ "Compiling VectSharp from source", "index.html#autotoc_md5", [
-        [ "Windows", "index.html#autotoc_md6", null ],
-        [ "macOS and Linux", "index.html#autotoc_md7", null ]
+      [ "Font libraries", "index.html#autotoc_md4", null ],
+      [ "Creating new output layers", "index.html#autotoc_md5", null ],
+      [ "Compiling VectSharp from source", "index.html#autotoc_md6", [
+        [ "Windows", "index.html#autotoc_md7", null ],
+        [ "macOS and Linux", "index.html#autotoc_md8", null ]
       ] ],
-      [ "Note about VectSharp.MuPDFUtils and .NET Framework", "index.html#autotoc_md8", null ]
+      [ "Note about VectSharp.MuPDFUtils and .NET Framework", "index.html#autotoc_md9", null ]
     ] ],
     [ "Packages", "namespaces.html", [
       [ "Packages", "namespaces.html", "namespaces_dup" ],
@@ -65,9 +66,10 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_avalonia_context_8cs_source.html",
-"class_vect_sharp_1_1_colours.html#a9b9c1a41d727385556560ee73c473a0c",
-"class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a9299eed73bdf07e38bef45c499d1befc",
-"class_vect_sharp_1_1_true_type_file.html#acd6fac0c1556a58be91ddfcda2f40963"
+"class_vect_sharp_1_1_colours.html#aa296530481c943793e24959742cf510a",
+"class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a5605b0e1ff61f248139e16ed690e0b68",
+"class_vect_sharp_1_1_three_d_1_1_spotlight_light_source.html#a7464dee539aa7dec6eb3087976ba8231",
+"struct_vect_sharp_1_1_line_dash.html#a1f33a2837afe48c8b23edabd74097b38"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

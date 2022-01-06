@@ -28,7 +28,7 @@
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VectSharp
-   &#160;<span id="projectnumber">1.8.0</span>
+   &#160;<span id="projectnumber">2.0.0</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -96,12 +96,13 @@ Introduction</h1>
 <p>It includes an abstract layer on top of which output layers can be written. Currently, there are four available output layers: <b><a class="el" href="namespace_vect_sharp_1_1_p_d_f.html">VectSharp.PDF</a></b> produces PDF documents, <b><a class="el" href="namespace_vect_sharp_1_1_canvas.html">VectSharp.Canvas</a></b> produces an <code>Avalonia.Controls.Canvas</code> object (<a href="https://avaloniaui.net/docs/controls/canvas">https://avaloniaui.net/docs/controls/canvas</a>) containing the rendered graphics objects, <b><a class="el" href="namespace_vect_sharp_1_1_raster.html">VectSharp.Raster</a></b> produces raster images in PNG format, and <b><a class="el" href="namespace_vect_sharp_1_1_s_v_g.html">VectSharp.SVG</a></b> produces vector graphics in SVG format.</p>
 <p><a href="https://github.com/arklumpus/VectSharp/tree/master/VectSharp.ThreeD"><b>VectSharp.ThreeD</b></a> adds support for 3D vector and raster graphics.</p>
 <p><a href="https://github.com/arklumpus/VectSharp/tree/master/VectSharp.Markdown"><b>VectSharp.Markdown</b></a> can be used to transform Markdown documents into <a class="el" href="namespace_vect_sharp.html">VectSharp</a> objects, that can then be exported e.g. as PDF or SVG files, or displayed in an Avalonia <code>Canvas</code>. <b><a class="el" href="namespace_vect_sharp_1_1_markdown_canvas.html">VectSharp.MarkdownCanvas</a></b> uses <a class="el" href="namespace_vect_sharp_1_1_markdown.html">VectSharp.Markdown</a> to render Markdown documents in Avalonia applications (an example of this is in the <a href="https://github.com/arklumpus/VectSharp/tree/master/MarkdownViewerDemo">MarkdownViewerDemo project</a>).</p>
-<p><a class="el" href="namespace_vect_sharp.html">VectSharp</a> is written using .NET Core, and is available for Mac, Windows and Linux. It is released under a GPLv3 license. It includes 14 standard fonts, also released under a GPL license.</p>
+<p><a class="el" href="namespace_vect_sharp.html">VectSharp</a> is written using .NET Core, and is available for Mac, Windows and Linux. Since version 2.0.0, it is released under an LGPLv3 license. It includes 14 standard fonts, originally released under an ASL-2.0 license.</p>
 <p>Since version 2.0.0, <a class="el" href="namespace_vect_sharp_1_1_raster.html">VectSharp.Raster</a> is released under an AGPLv3 license.</p>
 <p><b><a class="el" href="namespace_vect_sharp_1_1_mu_p_d_f_utils.html">VectSharp.MuPDFUtils</a></b>, also released under an AGPLv3 license, contains some utility functions that use <a href="https://github.com/arklumpus/MuPDFCore">MuPDFCore</a> to make it possible to include in <a class="el" href="namespace_vect_sharp.html">VectSharp</a> graphics images in various formats.</p>
+<p><b>VectSharp.Fonts.Nimbus</b> is a package released under a GPLv3 license, which contains the standard fonts that were used in <a class="el" href="namespace_vect_sharp.html">VectSharp</a> before version 2.0.0. Since these fonts are released under a GPL license, they had to be replaced when the <a class="el" href="namespace_vect_sharp.html">VectSharp</a> license changed to LGPL. See the [Font libraries](section) below for information on how to re-enable these fonts.</p>
 <h1><a class="anchor" id="autotoc_md2"></a>
 Installing VectSharp</h1>
-<p>To include <a class="el" href="namespace_vect_sharp.html">VectSharp</a> in your project, you will need one of the output layer NuGet packages: <a href="https://www.nuget.org/packages/VectSharp.PDF/">VectSharp.PDF</a>, <a href="https://www.nuget.org/packages/VectSharp.Canvas/">VectSharp.Canvas</a>, <a href="https://www.nuget.org/packages/VectSharp.Raster/">VectSharp.Raster</a>, or <a href="https://www.nuget.org/packages/VectSharp.SVG/">VectSharp.SVG</a>. You will need <a href="https://www.nuget.org/packages/VectSharp.ThreeD/">VectSharp.ThreeD</a> to work with 3D graphics. You may want the <a href="https://www.nuget.org/packages/VectSharp.MuPDFUtils/">VectSharp.MuPDFUtils</a> package if you wish to manipulate raster images.</p>
+<p>To include <a class="el" href="namespace_vect_sharp.html">VectSharp</a> in your project, you will need one of the output layer NuGet packages: <a href="https://www.nuget.org/packages/VectSharp.PDF/">VectSharp.PDF</a>, <a href="https://www.nuget.org/packages/VectSharp.Canvas/">VectSharp.Canvas</a>, <a href="https://www.nuget.org/packages/VectSharp.Raster/">VectSharp.Raster</a>, or <a href="https://www.nuget.org/packages/VectSharp.SVG/">VectSharp.SVG</a>. You will need <a href="https://www.nuget.org/packages/VectSharp.ThreeD/">VectSharp.ThreeD</a> to work with 3D graphics. You may want the <a href="https://www.nuget.org/packages/VectSharp.MuPDFUtils/">VectSharp.MuPDFUtils</a> package if you wish to manipulate raster images, and the <a href="https://www.nuget.org/packages/VectSharp.Fonts.Nimbus/">VectSharp.Fonts.Nimbus</a> if you want to restore the GPL-licensed fonts used in previous versions of the library.</p>
 <h1><a class="anchor" id="autotoc_md3"></a>
 Usage</h1>
 <p>You can find the full documentation for the <a class="el" href="namespace_vect_sharp.html">VectSharp</a> library at the <a href="https://arklumpus.github.io/VectSharp">documentation website</a>. A <a href="https://arklumpus.github.io/VectSharp/VectSharp.pdf">PDF reference manual</a> is also available.</p>
@@ -161,6 +162,36 @@ Usage</h1>
 <p>This code produces a document with three rectangles: the grey one at the top links to the GitHub home page, while the red one in the middle is a hyperlink to the blue one at the bottom. Links in PDF documents can refer to objects that are in a different page than the one containing the link.</p>
 <p>The public classes and methods are <a href="https://arklumpus.github.io/VectSharp">fully documented</a>, and you can find a (much) more detailed code example in <a href="https://github.com/arklumpus/VectSharp/blob/master/VectSharp.Demo/MainWindow.xaml.cs">MainWindow.xaml.cs</a>. A detailed guide about 3D graphics in <a class="el" href="namespace_vect_sharp_1_1_three_d.html">VectSharp.ThreeD</a> is available in the <a href="https://github.com/arklumpus/VectSharp/tree/master/VectSharp.ThreeD"><code>VectSharp.ThreeD</code></a> folder.</p>
 <h1><a class="anchor" id="autotoc_md4"></a>
+Font libraries</h1>
+<p>Since version 2.0.0, font names are resolved using a "font library". This is a class that implements the <code><a class="el" href="interface_vect_sharp_1_1_i_font_library.html" title="Represents a font library with methods to create FontFamily objects from a string or from FontFamily....">VectSharp.IFontLibrary</a></code> interface, providing methods to obtain a <code>FontFamily</code> object from a <code>string</code> or a <code>FontFamily.StandardFontFamilies</code> enumeration. The default font library included in <a class="el" href="namespace_vect_sharp.html">VectSharp</a> uses the embedded fonts (Arimo, Tinos, Cousine) as the standard font families.</p>
+<p>In practice, assuming you want to use the default font library, you have the following options to create a <code>FontFamily</code> object:</p>
+<div class="fragment"><div class="line">using VectSharp;</div>
+<div class="line"> </div>
+<div class="line">// ...</div>
+<div class="line"> </div>
+<div class="line">FontFamily helvetica = FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica); // Will resolve to the Arimo font family.</div>
+<div class="line">FontFamily times = FontFamily.ResolveFontFamily(&quot;Times-Roman&quot;); // Will resolve to the Tinos font family.</div>
+</div><!-- fragment --><p>These replace the <code>FontFamily(string)</code> and <code>FontFamily(StandardFontFamilies)</code> constructors of previous versions of <a class="el" href="namespace_vect_sharp.html">VectSharp</a>. Overloads of this method let you specify a list of "fallback" fonts that will be used if the first font you specify is not available.</p>
+<p>If you wish, you can replace the default font library with a different one; this will change the way font families are resolved. For example, after installing the <a href="https://www.nuget.org/packages/VectSharp.Fonts.Nimbus/">VectSharp.Fonts.Nimbus</a> NuGet package, you can do:</p>
+<div class="fragment"><div class="line">using VectSharp;</div>
+<div class="line"> </div>
+<div class="line">// ...</div>
+<div class="line"> </div>
+<div class="line">FontFamily.DefaultFontLibrary = VectSharp.Fonts.Nimbus.Library;</div>
+<div class="line"> </div>
+<div class="line">FontFamily helvetica = FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica); // Will resolve to the Nimbus Sans L font family.</div>
+<div class="line">FontFamily times = FontFamily.ResolveFontFamily(&quot;Times-Roman&quot;); // Will resolve to the Nimbus Roman No 9 L font family.</div>
+</div><!-- fragment --><p>This will let you re-enable the fonts that were used in previous versions of <a class="el" href="namespace_vect_sharp.html">VectSharp</a>.</p>
+<p>You can also use multiple font libraries in the same project. Again, assuming you have installed the VectSharp.Fonts.Nimbus NuGet package:</p>
+<div class="fragment"><div class="line">using VectSharp;</div>
+<div class="line"> </div>
+<div class="line">FontFamily helvetica1 = FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica); // Will resolve to the Arimo font family.</div>
+<div class="line">FontFamily times1 = FontFamily.ResolveFontFamily(&quot;Times-Roman&quot;); // Will resolve to the Tinos font family.</div>
+<div class="line"> </div>
+<div class="line">FontFamily helvetica2 = VectSharp.Fonts.Nimbus.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica); // Will resolve to the Nimbus Sans L font family.</div>
+<div class="line">FontFamily times2 = VectSharp.Fonts.Nimbus.ResolveFontFamily(&quot;Times-Roman&quot;); // Will resolve to the Nimbus Roman No 9 L font family.</div>
+</div><!-- fragment --><p>Finally, you can create your own font library class (which could implement things such as dowloading fonts from Google Fonts, or finding them in the user's system font directory...) by creating a class that implements the <code>IFontLibrary</code> interface or that extends the <code>FontLibrary</code> class (in this latter case, you get a default implementation for the <code>ResolveFontFamily</code> overloads that use a list of fallback fonts).</p>
+<h1><a class="anchor" id="autotoc_md5"></a>
 Creating new output layers</h1>
 <p><a class="el" href="namespace_vect_sharp.html">VectSharp</a> can be easily extended to provide additional output layers. To do so:</p><ol type="1">
 <li>Create a new class implementing the <code>IGraphicsContext</code> interface.</li>
@@ -168,24 +199,24 @@ Creating new output layers</h1>
 <li>Somewhere in the extension method, call the <code>CopyToIGraphicsContext</code> method on the <code>Graphics</code> object of the <code>Page</code>s.</li>
 <li>Opportunely save or return the rendered result.</li>
 </ol>
-<h1><a class="anchor" id="autotoc_md5"></a>
+<h1><a class="anchor" id="autotoc_md6"></a>
 Compiling VectSharp from source</h1>
 <p>The <a class="el" href="namespace_vect_sharp.html">VectSharp</a> source code includes an example project (<em>VectSharp.Demo</em>) presenting how <a class="el" href="namespace_vect_sharp.html">VectSharp</a> can be used to produce graphics.</p>
 <p>To be able to compile <a class="el" href="namespace_vect_sharp.html">VectSharp</a> from source, you will need to install the latest <a href="https://dotnet.microsoft.com/download/dotnet/current">.NET SDK</a> for your operating system.</p>
 <p>You can use <a href="https://visualstudio.microsoft.com/it/vs/">Microsoft Visual Studio</a> to compile the program. The following instructions will cover compiling <a class="el" href="namespace_vect_sharp.html">VectSharp</a> from the command line, instead.</p>
 <p>First of all, you will need to download the <a class="el" href="namespace_vect_sharp.html">VectSharp</a> source code: <a href="https://github.com/arklumpus/VectSharp/archive/v1.7.0.tar.gz">VectSharp.tar.gz</a> and extract it somewhere.</p>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="autotoc_md7"></a>
 Windows</h2>
 <p>Open a command-line window in the folder where you have extracted the source code, and type: </p><pre class="fragment">BuildDemo &lt;Target&gt;
 </pre><p>Where <code>&lt;Target&gt;</code> can be one of <code>Win-x64</code>, <code>Linux-x64</code> or <code>Mac-x64</code> depending on which platform you wish to generate executables for.</p>
 <p>In the Release folder and in the appropriate subfolder for the target platform you selected, you will find the compiled program.</p>
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h2><a class="anchor" id="autotoc_md8"></a>
 macOS and Linux</h2>
 <p>Open a terminal in the folder where you have extracted the source code, and type: </p><pre class="fragment">./BuildDemo.sh &lt;Target&gt;
 </pre><p>Where <code>&lt;Target&gt;</code> can be one of <code>Win-x64</code>, <code>Linux-x64</code> or <code>Mac-x64</code> depending on which platform you wish to generate executables for.</p>
 <p>In the Release folder and in the appropriate subfolder for the target platform you selected, you will find the compiled program.</p>
 <p>If you receive an error about permissions being denied, try typing <code>chmod +x BuildDemo.sh</code> first.</p>
-<h1><a class="anchor" id="autotoc_md8"></a>
+<h1><a class="anchor" id="autotoc_md9"></a>
 Note about VectSharp.MuPDFUtils and .NET Framework</h1>
 <p>If you wish to use <a class="el" href="namespace_vect_sharp_1_1_mu_p_d_f_utils.html">VectSharp.MuPDFUtils</a> in a .NET Framework project, you will need to manually copy the native MuPDFWrapper library for the platform you are using to the executable directory (this is done automatically if you target .NET core).</p>
 <p>One way to obtain the appropriate library files is:</p>

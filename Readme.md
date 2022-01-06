@@ -13,14 +13,16 @@ It includes an abstract layer on top of which output layers can be written. Curr
 
 [**VectSharp.Markdown**](https://github.com/arklumpus/VectSharp/tree/master/VectSharp.Markdown) can be used to transform Markdown documents into VectSharp objects, that can then be exported e.g. as PDF or SVG files, or displayed in an Avalonia `Canvas`. **VectSharp.MarkdownCanvas** uses VectSharp.Markdown to render Markdown documents in Avalonia applications (an example of this is in the [MarkdownViewerDemo project](https://github.com/arklumpus/VectSharp/tree/master/MarkdownViewerDemo)).
 
-VectSharp is written using .NET Core, and is available for Mac, Windows and Linux. Since version 1.9.0, it is released under an LGPLv3 license. It includes 14 standard fonts, originally released under an ASL-2.0 license.
+VectSharp is written using .NET Core, and is available for Mac, Windows and Linux. Since version 2.0.0, it is released under an LGPLv3 license. It includes 14 standard fonts, originally released under an ASL-2.0 license.
 
 Since version 2.0.0, VectSharp.Raster is released under an AGPLv3 license.
 
 **VectSharp.MuPDFUtils**, also released under an AGPLv3 license, contains some utility functions that use [MuPDFCore](https://github.com/arklumpus/MuPDFCore) to make it possible to include in VectSharp graphics images in various formats.
 
+**VectSharp.Fonts.Nimbus** is a package released under a GPLv3 license, which contains the standard fonts that were used in VectSharp before version 2.0.0. Since these fonts are released under a GPL license, they had to be replaced when the VectSharp license changed to LGPL. See the [Font libraries](section) below for information on how to re-enable these fonts.
+
 ## Installing VectSharp
-To include VectSharp in your project, you will need one of the output layer NuGet packages: [VectSharp.PDF](https://www.nuget.org/packages/VectSharp.PDF/), [VectSharp.Canvas](https://www.nuget.org/packages/VectSharp.Canvas/), [VectSharp.Raster](https://www.nuget.org/packages/VectSharp.Raster/), or [VectSharp.SVG](https://www.nuget.org/packages/VectSharp.SVG/). You will need [VectSharp.ThreeD](https://www.nuget.org/packages/VectSharp.ThreeD/) to work with 3D graphics. You may want the [VectSharp.MuPDFUtils](https://www.nuget.org/packages/VectSharp.MuPDFUtils/) package if you wish to manipulate raster images.
+To include VectSharp in your project, you will need one of the output layer NuGet packages: [VectSharp.PDF](https://www.nuget.org/packages/VectSharp.PDF/), [VectSharp.Canvas](https://www.nuget.org/packages/VectSharp.Canvas/), [VectSharp.Raster](https://www.nuget.org/packages/VectSharp.Raster/), or [VectSharp.SVG](https://www.nuget.org/packages/VectSharp.SVG/). You will need [VectSharp.ThreeD](https://www.nuget.org/packages/VectSharp.ThreeD/) to work with 3D graphics. You may want the [VectSharp.MuPDFUtils](https://www.nuget.org/packages/VectSharp.MuPDFUtils/) package if you wish to manipulate raster images, and the [VectSharp.Fonts.Nimbus](https://www.nuget.org/packages/VectSharp.Fonts.Nimbus/) if you want to restore the GPL-licensed fonts used in previous versions of the library.
 
 ## Usage
 You can find the full documentation for the VectSharp library at the [documentation website](https://arklumpus.github.io/VectSharp). A [PDF reference manual](https://arklumpus.github.io/VectSharp/VectSharp.pdf) is also available.
@@ -98,6 +100,53 @@ document.SaveAsPDF(@"Links.pdf", linkDestinations: links);
 This code produces a document with three rectangles: the grey one at the top links to the GitHub home page, while the red one in the middle is a hyperlink to the blue one at the bottom. Links in PDF documents can refer to objects that are in a different page than the one containing the link.
 
 The public classes and methods are [fully documented](https://arklumpus.github.io/VectSharp), and you can find a (much) more detailed code example in [MainWindow.xaml.cs](https://github.com/arklumpus/VectSharp/blob/master/VectSharp.Demo/MainWindow.xaml.cs). A detailed guide about 3D graphics in VectSharp.ThreeD is available in the [`VectSharp.ThreeD`](https://github.com/arklumpus/VectSharp/tree/master/VectSharp.ThreeD) folder.
+
+## Font libraries
+
+Since version 2.0.0, font names are resolved using a "font library". This is a class that implements the `VectSharp.IFontLibrary` interface, providing methods to obtain a `FontFamily` object from a `string` or a `FontFamily.StandardFontFamilies` enumeration. The default font library included in VectSharp uses the embedded fonts (Arimo, Tinos, Cousine) as the standard font families.
+
+In practice, assuming you want to use the default font library, you have the following options to create a `FontFamily` object:
+
+```CSharp
+using VectSharp;
+
+// ...
+
+FontFamily helvetica = FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica); // Will resolve to the Arimo font family.
+FontFamily times = FontFamily.ResolveFontFamily("Times-Roman"); // Will resolve to the Tinos font family.
+```
+
+These replace the `FontFamily(string)` and `FontFamily(StandardFontFamilies)` constructors of previous versions of VectSharp. Overloads of this method let you specify a list of "fallback" fonts that will be used if the first font you specify is not available.
+
+If you wish, you can replace the default font library with a different one; this will change the way font families are resolved. For example, after installing the [VectSharp.Fonts.Nimbus](https://www.nuget.org/packages/VectSharp.Fonts.Nimbus/) NuGet package, you can do:
+
+```CSharp
+using VectSharp;
+
+// ...
+
+FontFamily.DefaultFontLibrary = VectSharp.Fonts.Nimbus.Library;
+
+FontFamily helvetica = FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica); // Will resolve to the Nimbus Sans L font family.
+FontFamily times = FontFamily.ResolveFontFamily("Times-Roman"); // Will resolve to the Nimbus Roman No 9 L font family.
+```
+
+This will let you re-enable the fonts that were used in previous versions of VectSharp.
+
+
+You can also use multiple font libraries in the same project. Again, assuming you have installed the VectSharp.Fonts.Nimbus NuGet package:
+
+```Csharp
+using VectSharp;
+
+FontFamily helvetica1 = FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica); // Will resolve to the Arimo font family.
+FontFamily times1 = FontFamily.ResolveFontFamily("Times-Roman"); // Will resolve to the Tinos font family.
+
+FontFamily helvetica2 = VectSharp.Fonts.Nimbus.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica); // Will resolve to the Nimbus Sans L font family.
+FontFamily times2 = VectSharp.Fonts.Nimbus.ResolveFontFamily("Times-Roman"); // Will resolve to the Nimbus Roman No 9 L font family.
+```
+
+Finally, you can create your own font library class (which could implement things such as dowloading fonts from Google Fonts, or finding them in the user's system font directory...) by creating a class that implements the `IFontLibrary` interface or that extends the `FontLibrary` class (in this latter case, you get a default implementation for the `ResolveFontFamily` overloads that use a list of fallback fonts).
 
 ## Creating new output layers
 

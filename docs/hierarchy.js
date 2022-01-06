@@ -16,11 +16,12 @@ var hierarchy =
     [ "VectSharp.Font.DetailedFontMetrics", "class_vect_sharp_1_1_font_1_1_detailed_font_metrics.html", null ],
     [ "VectSharp.Document", "class_vect_sharp_1_1_document.html", null ],
     [ "Exception", null, [
+      [ "VectSharp.FontFamilyCreationException", "class_vect_sharp_1_1_font_family_creation_exception.html", null ],
       [ "VectSharp.UnbalancedStackException", "class_vect_sharp_1_1_unbalanced_stack_exception.html", null ]
     ] ],
     [ "VectSharp.Font", "class_vect_sharp_1_1_font.html", null ],
     [ "VectSharp.FontFamily", "class_vect_sharp_1_1_font_family.html", [
-      [ "VectSharp.Canvas.ResourceFontFamily", "class_vect_sharp_1_1_canvas_1_1_resource_font_family.html", null ]
+      [ "VectSharp.ResourceFontFamily", "class_vect_sharp_1_1_resource_font_family.html", null ]
     ] ],
     [ "VectSharp.Markdown.FormattedString", "struct_vect_sharp_1_1_markdown_1_1_formatted_string.html", null ],
     [ "VectSharp.FormattedText", "class_vect_sharp_1_1_formatted_text.html", null ],
@@ -40,6 +41,12 @@ var hierarchy =
     ] ],
     [ "IEquatable", null, [
       [ "VectSharp.Colour", "struct_vect_sharp_1_1_colour.html", null ]
+    ] ],
+    [ "VectSharp.IFontLibrary", "interface_vect_sharp_1_1_i_font_library.html", [
+      [ "VectSharp.FontLibrary", "class_vect_sharp_1_1_font_library.html", [
+        [ "VectSharp.DefaultFontLibrary", "class_vect_sharp_1_1_default_font_library.html", null ],
+        [ "VectSharp.SimpleFontLibrary", "class_vect_sharp_1_1_simple_font_library.html", null ]
+      ] ]
     ] ],
     [ "VectSharp.IGraphicsContext", "interface_vect_sharp_1_1_i_graphics_context.html", null ],
     [ "VectSharp.ThreeD.ILightSource", "interface_vect_sharp_1_1_three_d_1_1_i_light_source.html", [

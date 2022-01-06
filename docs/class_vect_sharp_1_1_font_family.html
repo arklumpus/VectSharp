@@ -28,7 +28,7 @@
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VectSharp
-   &#160;<span id="projectnumber">1.8.0</span>
+   &#160;<span id="projectnumber">2.0.0</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -88,6 +88,7 @@ $(document).ready(function(){initNavTree('class_vect_sharp_1_1_font_family.html'
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#properties">Properties</a> &#124;
 <a href="class_vect_sharp_1_1_font_family-members.html">List of all members</a>  </div>
@@ -103,8 +104,8 @@ Inheritance diagram for VectSharp.FontFamily:</div>
 <div class="dyncontent">
 <div class="center"><img src="class_vect_sharp_1_1_font_family__inherit__graph.png" border="0" usemap="#_vect_sharp_8_font_family_inherit__map" alt="Inheritance graph"/></div>
 <map name="_vect_sharp_8_font_family_inherit__map" id="_vect_sharp_8_font_family_inherit__map">
-<area shape="rect" title="Represents a typeface." alt="" coords="23,5,175,32"/>
-<area shape="rect" href="class_vect_sharp_1_1_canvas_1_1_resource_font_family.html" title="Represents a FontFamily created from a resource stream." alt="" coords="5,80,193,121"/>
+<area shape="rect" title="Represents a typeface." alt="" coords="33,5,185,32"/>
+<area shape="rect" href="class_vect_sharp_1_1_resource_font_family.html" title="Represents a FontFamily created from a resource stream." alt="" coords="5,80,212,107"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -141,9 +142,27 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5eb152329df38bee403f86d7560905de"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_font_family.html#a5eb152329df38bee403f86d7560905de">FontFamily</a> (Stream ttfStream)</td></tr>
 <tr class="memdesc:a5eb152329df38bee403f86d7560905de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new <a class="el" href="class_vect_sharp_1_1_font_family.html" title="Represents a typeface.">FontFamily</a>.  <a href="class_vect_sharp_1_1_font_family.html#a5eb152329df38bee403f86d7560905de">More...</a><br /></td></tr>
 <tr class="separator:a5eb152329df38bee403f86d7560905de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff9542e52d0fa8e70e10e4c7c558198b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_font_family.html#aff9542e52d0fa8e70e10e4c7c558198b">FontFamily</a> (<a class="el" href="class_vect_sharp_1_1_true_type_file.html">TrueTypeFile</a> ttf)</td></tr>
+<tr class="memdesc:aff9542e52d0fa8e70e10e4c7c558198b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new <a class="el" href="class_vect_sharp_1_1_font_family.html" title="Represents a typeface.">FontFamily</a>.  <a href="class_vect_sharp_1_1_font_family.html#aff9542e52d0fa8e70e10e4c7c558198b">More...</a><br /></td></tr>
+<tr class="separator:aff9542e52d0fa8e70e10e4c7c558198b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0c264aba8ca463a35b4a4efd45ccd76"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_font_family.html#aa0c264aba8ca463a35b4a4efd45ccd76">FontFamily</a> (<a class="el" href="class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780">StandardFontFamilies</a> standardFontFamily)</td></tr>
 <tr class="memdesc:aa0c264aba8ca463a35b4a4efd45ccd76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new standard <a class="el" href="class_vect_sharp_1_1_font_family.html" title="Represents a typeface.">FontFamily</a>.  <a href="class_vect_sharp_1_1_font_family.html#aa0c264aba8ca463a35b4a4efd45ccd76">More...</a><br /></td></tr>
 <tr class="separator:aa0c264aba8ca463a35b4a4efd45ccd76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a54acfc650c637428ea2c9f57be1679c2"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_vect_sharp_1_1_font_family.html">FontFamily</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_font_family.html#a54acfc650c637428ea2c9f57be1679c2">ResolveFontFamily</a> (string fontFamily)</td></tr>
+<tr class="memdesc:a54acfc650c637428ea2c9f57be1679c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new font family from the specified family name or true type file. If the family name or the true type file are not valid, an exception might be raised. Equivalent to <a class="el" href="class_vect_sharp_1_1_default_font_library.html#a24cab54d5c1bf80bffd450336504948d" title="Create a new font family from the specified family name or true type file. If the family name or the ...">DefaultFontLibrary.ResolveFontFamily</a>.  <a href="class_vect_sharp_1_1_font_family.html#a54acfc650c637428ea2c9f57be1679c2">More...</a><br /></td></tr>
+<tr class="separator:a54acfc650c637428ea2c9f57be1679c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab501f8339dd8a0cfb899ad0c81f8a9c8"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_vect_sharp_1_1_font_family.html">FontFamily</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_font_family.html#ab501f8339dd8a0cfb899ad0c81f8a9c8">ResolveFontFamily</a> (<a class="el" href="class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780">StandardFontFamilies</a> standardFontFamily)</td></tr>
+<tr class="memdesc:ab501f8339dd8a0cfb899ad0c81f8a9c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new font family from the specified standard font family name. Equivalent to <a class="el" href="class_vect_sharp_1_1_default_font_library.html#a24cab54d5c1bf80bffd450336504948d" title="Create a new font family from the specified family name or true type file. If the family name or the ...">DefaultFontLibrary.ResolveFontFamily</a>.  <a href="class_vect_sharp_1_1_font_family.html#ab501f8339dd8a0cfb899ad0c81f8a9c8">More...</a><br /></td></tr>
+<tr class="separator:ab501f8339dd8a0cfb899ad0c81f8a9c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:addc1a4dc2277fcbf54e83b4eff5b1555"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_vect_sharp_1_1_font_family.html">FontFamily</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_font_family.html#addc1a4dc2277fcbf54e83b4eff5b1555">ResolveFontFamily</a> (string fontFamily, params string[] fallback)</td></tr>
+<tr class="memdesc:addc1a4dc2277fcbf54e83b4eff5b1555"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new font family from the specified family name or true type file. If the family name or the true type file are not valid, try to instantiate the font family using the <em>fallback</em> . If none of the fallback family names or true type files are valid, an exception might be raised. Equivalent to <a class="el" href="class_vect_sharp_1_1_default_font_library.html#a24cab54d5c1bf80bffd450336504948d" title="Create a new font family from the specified family name or true type file. If the family name or the ...">DefaultFontLibrary.ResolveFontFamily</a>.  <a href="class_vect_sharp_1_1_font_family.html#addc1a4dc2277fcbf54e83b4eff5b1555">More...</a><br /></td></tr>
+<tr class="separator:addc1a4dc2277fcbf54e83b4eff5b1555"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d41478620487f1382875cb2d473b821"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_vect_sharp_1_1_font_family.html">FontFamily</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_font_family.html#a8d41478620487f1382875cb2d473b821">ResolveFontFamily</a> (string fontFamily, <a class="el" href="class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780">StandardFontFamilies</a> finalFallback, params string[] fallback)</td></tr>
+<tr class="memdesc:a8d41478620487f1382875cb2d473b821"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new font family from the specified family name or true type file. If the family name or the true type file are not valid, try to instantiate the font family using the <em>fallback</em> . If none of the fallback family names or true type files are valid, instantiate a standard font family using the <em>finalFallback</em> . Equivalent to <a class="el" href="class_vect_sharp_1_1_default_font_library.html#a24cab54d5c1bf80bffd450336504948d" title="Create a new font family from the specified family name or true type file. If the family name or the ...">DefaultFontLibrary.ResolveFontFamily</a>.  <a href="class_vect_sharp_1_1_font_family.html#a8d41478620487f1382875cb2d473b821">More...</a><br /></td></tr>
+<tr class="separator:a8d41478620487f1382875cb2d473b821"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -156,6 +175,9 @@ Static Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
 Properties</h2></td></tr>
+<tr class="memitem:a75e9369804d0b5f278a7a7b5d2e69ebe"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="interface_vect_sharp_1_1_i_font_library.html">IFontLibrary</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_font_family.html#a75e9369804d0b5f278a7a7b5d2e69ebe">DefaultFontLibrary</a> = new <a class="el" href="class_vect_sharp_1_1_default_font_library.html">DefaultFontLibrary</a>()<code> [get, set]</code></td></tr>
+<tr class="memdesc:a75e9369804d0b5f278a7a7b5d2e69ebe"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default font library used to resolve font family names.  <a href="class_vect_sharp_1_1_font_family.html#a75e9369804d0b5f278a7a7b5d2e69ebe">More...</a><br /></td></tr>
+<tr class="separator:a75e9369804d0b5f278a7a7b5d2e69ebe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3762a5a52204c4874e81d52a80b4ba7b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_font_family.html#a3762a5a52204c4874e81d52a80b4ba7b">IsStandardFamily</a><code> [get]</code></td></tr>
 <tr class="memdesc:a3762a5a52204c4874e81d52a80b4ba7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether this is one of the 14 standard font families or not.  <a href="class_vect_sharp_1_1_font_family.html#a3762a5a52204c4874e81d52a80b4ba7b">More...</a><br /></td></tr>
 <tr class="separator:a3762a5a52204c4874e81d52a80b4ba7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -179,7 +201,7 @@ Properties</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a typeface. </p>
 
-<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00243">243</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00261">261</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="a6cdec4eb0a660064bc416e81f69d3780"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6cdec4eb0a660064bc416e81f69d3780">&#9670;&nbsp;</a></span>StandardFontFamilies</h2>
@@ -233,13 +255,13 @@ Properties</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00283">283</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00340">340</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="affcbb3ab4168fb317aa95397f28ab975"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#affcbb3ab4168fb317aa95397f28ab975">&#9670;&nbsp;</a></span>FontFamily() <span class="overload">[1/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#affcbb3ab4168fb317aa95397f28ab975">&#9670;&nbsp;</a></span>FontFamily() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -262,12 +284,12 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00386">386</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00444">444</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
 
 </div>
 </div>
 <a id="a5eb152329df38bee403f86d7560905de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5eb152329df38bee403f86d7560905de">&#9670;&nbsp;</a></span>FontFamily() <span class="overload">[2/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5eb152329df38bee403f86d7560905de">&#9670;&nbsp;</a></span>FontFamily() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -290,12 +312,40 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00438">438</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00468">468</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
+
+</div>
+</div>
+<a id="aff9542e52d0fa8e70e10e4c7c558198b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff9542e52d0fa8e70e10e4c7c558198b">&#9670;&nbsp;</a></span>FontFamily() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">VectSharp.FontFamily.FontFamily </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_true_type_file.html">TrueTypeFile</a>&#160;</td>
+          <td class="paramname"><em>ttf</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create a new <a class="el" href="class_vect_sharp_1_1_font_family.html" title="Represents a typeface.">FontFamily</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ttf</td><td>A font file in TTF format.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00487">487</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
 
 </div>
 </div>
 <a id="aa0c264aba8ca463a35b4a4efd45ccd76"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa0c264aba8ca463a35b4a4efd45ccd76">&#9670;&nbsp;</a></span>FontFamily() <span class="overload">[3/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0c264aba8ca463a35b4a4efd45ccd76">&#9670;&nbsp;</a></span>FontFamily() <span class="overload">[4/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -318,7 +368,177 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00457">457</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00507">507</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="ab501f8339dd8a0cfb899ad0c81f8a9c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab501f8339dd8a0cfb899ad0c81f8a9c8">&#9670;&nbsp;</a></span>ResolveFontFamily() <span class="overload">[1/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="class_vect_sharp_1_1_font_family.html">FontFamily</a> VectSharp.FontFamily.ResolveFontFamily </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780">StandardFontFamilies</a>&#160;</td>
+          <td class="paramname"><em>standardFontFamily</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a new font family from the specified standard font family name. Equivalent to <a class="el" href="class_vect_sharp_1_1_default_font_library.html#a24cab54d5c1bf80bffd450336504948d" title="Create a new font family from the specified family name or true type file. If the family name or the ...">DefaultFontLibrary.ResolveFontFamily</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">standardFontFamily</td><td>The standard name of the font family.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="class_vect_sharp_1_1_font_family.html" title="Represents a typeface.">FontFamily</a> object corresponding to the specified font family.</dd></dl>
+
+</div>
+</div>
+<a id="a54acfc650c637428ea2c9f57be1679c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54acfc650c637428ea2c9f57be1679c2">&#9670;&nbsp;</a></span>ResolveFontFamily() <span class="overload">[2/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="class_vect_sharp_1_1_font_family.html">FontFamily</a> VectSharp.FontFamily.ResolveFontFamily </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>fontFamily</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a new font family from the specified family name or true type file. If the family name or the true type file are not valid, an exception might be raised. Equivalent to <a class="el" href="class_vect_sharp_1_1_default_font_library.html#a24cab54d5c1bf80bffd450336504948d" title="Create a new font family from the specified family name or true type file. If the family name or the ...">DefaultFontLibrary.ResolveFontFamily</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fontFamily</td><td>The name of the font family to create, or the path to a TTF file.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>If the font family name or the true type file is valid, a <a class="el" href="class_vect_sharp_1_1_font_family.html" title="Represents a typeface.">FontFamily</a> object corresponding to the specified font family.</dd></dl>
+
+</div>
+</div>
+<a id="addc1a4dc2277fcbf54e83b4eff5b1555"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#addc1a4dc2277fcbf54e83b4eff5b1555">&#9670;&nbsp;</a></span>ResolveFontFamily() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="class_vect_sharp_1_1_font_family.html">FontFamily</a> VectSharp.FontFamily.ResolveFontFamily </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>fontFamily</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">params string[]&#160;</td>
+          <td class="paramname"><em>fallback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a new font family from the specified family name or true type file. If the family name or the true type file are not valid, try to instantiate the font family using the <em>fallback</em> . If none of the fallback family names or true type files are valid, an exception might be raised. Equivalent to <a class="el" href="class_vect_sharp_1_1_default_font_library.html#a24cab54d5c1bf80bffd450336504948d" title="Create a new font family from the specified family name or true type file. If the family name or the ...">DefaultFontLibrary.ResolveFontFamily</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fontFamily</td><td>The name of the font family to create, or the path to a TTF file.</td></tr>
+    <tr><td class="paramname">fallback</td><td>Names of additional font families or TTF files, which will be tried if the first <em>fontFamily</em>  is not valid.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="class_vect_sharp_1_1_font_family.html" title="Represents a typeface.">FontFamily</a> object corresponding to the first of the specified font families that is valid.</dd></dl>
+
+</div>
+</div>
+<a id="a8d41478620487f1382875cb2d473b821"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d41478620487f1382875cb2d473b821">&#9670;&nbsp;</a></span>ResolveFontFamily() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="class_vect_sharp_1_1_font_family.html">FontFamily</a> VectSharp.FontFamily.ResolveFontFamily </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>fontFamily</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780">StandardFontFamilies</a>&#160;</td>
+          <td class="paramname"><em>finalFallback</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">params string[]&#160;</td>
+          <td class="paramname"><em>fallback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a new font family from the specified family name or true type file. If the family name or the true type file are not valid, try to instantiate the font family using the <em>fallback</em> . If none of the fallback family names or true type files are valid, instantiate a standard font family using the <em>finalFallback</em> . Equivalent to <a class="el" href="class_vect_sharp_1_1_default_font_library.html#a24cab54d5c1bf80bffd450336504948d" title="Create a new font family from the specified family name or true type file. If the family name or the ...">DefaultFontLibrary.ResolveFontFamily</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fontFamily</td><td>The name of the font family to create, or the path to a TTF file.</td></tr>
+    <tr><td class="paramname">fallback</td><td>Names of additional font families or TTF files, which will be tried if the first <em>fontFamily</em>  is not valid.</td></tr>
+    <tr><td class="paramname">finalFallback</td><td>The standard name of the font family that will be used if none of the fallback families are valid.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="class_vect_sharp_1_1_font_family.html" title="Represents a typeface.">FontFamily</a> object corresponding to the first of the specified font families that is valid.</dd></dl>
 
 </div>
 </div>
@@ -345,7 +565,7 @@ Properties</h2></td></tr>
 
 <p>The names of the 14 standard families that are guaranteed to be displayed correctly. </p>
 
-<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00262">262</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00319">319</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
 
 </div>
 </div>
@@ -370,19 +590,45 @@ Properties</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= <span class="keyword">new</span> <span class="keywordtype">string</span>[]</div>
 <div class="line">        {</div>
-<div class="line">            <span class="stringliteral">&quot;VectSharp.StandardFonts.NimbusRomNo9L-Reg.ttf&quot;</span>, <span class="stringliteral">&quot;VectSharp.StandardFonts.NimbusRomNo9L-Med.ttf&quot;</span>, <span class="stringliteral">&quot;VectSharp.StandardFonts.NimbusRomNo9L-RegIta.ttf&quot;</span>, <span class="stringliteral">&quot;VectSharp.StandardFonts.NimbusRomNo9L-MedIta.ttf&quot;</span>,</div>
-<div class="line">            <span class="stringliteral">&quot;VectSharp.StandardFonts.NimbusSanL-Reg.ttf&quot;</span>, <span class="stringliteral">&quot;VectSharp.StandardFonts.NimbusSanL-Bol.ttf&quot;</span>,  <span class="stringliteral">&quot;VectSharp.StandardFonts.NimbusSanL-RegIta.ttf&quot;</span>, <span class="stringliteral">&quot;VectSharp.StandardFonts.NimbusSanL-BolIta.ttf&quot;</span>,</div>
-<div class="line">            <span class="stringliteral">&quot;VectSharp.StandardFonts.NimbusMono-Regular.ttf&quot;</span>, <span class="stringliteral">&quot;VectSharp.StandardFonts.NimbusMono-Bold.ttf&quot;</span>, <span class="stringliteral">&quot;VectSharp.StandardFonts.NimbusMono-Oblique.ttf&quot;</span>, <span class="stringliteral">&quot;VectSharp.StandardFonts.NimbusMono-BoldOblique.ttf&quot;</span>,</div>
-<div class="line">            <span class="stringliteral">&quot;VectSharp.StandardFonts.StandardSymbolsPS.ttf&quot;</span>, <span class="stringliteral">&quot;VectSharp.StandardFonts.D050000L.ttf&quot;</span></div>
+<div class="line">            <span class="stringliteral">&quot;VectSharp.StandardFonts.Tinos-Regular.ttf&quot;</span>, <span class="stringliteral">&quot;VectSharp.StandardFonts.Tinos-Bold.ttf&quot;</span>, <span class="stringliteral">&quot;VectSharp.StandardFonts.Tinos-Italic.ttf&quot;</span>, <span class="stringliteral">&quot;VectSharp.StandardFonts.Tinos-BoldItalic.ttf&quot;</span>,</div>
+<div class="line">            <span class="stringliteral">&quot;VectSharp.StandardFonts.Arimo-Regular.ttf&quot;</span>, <span class="stringliteral">&quot;VectSharp.StandardFonts.Arimo-Bold.ttf&quot;</span>,  <span class="stringliteral">&quot;VectSharp.StandardFonts.Arimo-Italic.ttf&quot;</span>, <span class="stringliteral">&quot;VectSharp.StandardFonts.Arimo-BoldItalic.ttf&quot;</span>,</div>
+<div class="line">            <span class="stringliteral">&quot;VectSharp.StandardFonts.Cousine-Regular.ttf&quot;</span>, <span class="stringliteral">&quot;VectSharp.StandardFonts.Cousine-Bold.ttf&quot;</span>, <span class="stringliteral">&quot;VectSharp.StandardFonts.Cousine-Italic.ttf&quot;</span>, <span class="stringliteral">&quot;VectSharp.StandardFonts.Cousine-BoldItalic.ttf&quot;</span>,</div>
+<div class="line">            <span class="stringliteral">&quot;VectSharp.StandardFonts.SymbolNeu_GB.ttf&quot;</span>, <span class="stringliteral">&quot;VectSharp.StandardFonts.Levibats-Regular_GB.ttf&quot;</span></div>
 <div class="line">        }</div>
 </div><!-- fragment -->
 <p>The names of the resource streams pointing to the included TrueType font files for each of the standard 14 font families. </p>
 
-<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00267">267</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00324">324</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Property Documentation</h2>
+<a id="a75e9369804d0b5f278a7a7b5d2e69ebe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75e9369804d0b5f278a7a7b5d2e69ebe">&#9670;&nbsp;</a></span>DefaultFontLibrary</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_vect_sharp_1_1_i_font_library.html">IFontLibrary</a> VectSharp.FontFamily.DefaultFontLibrary = new <a class="el" href="class_vect_sharp_1_1_default_font_library.html">DefaultFontLibrary</a>()</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The default font library used to resolve font family names. </p>
+
+<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00266">266</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
+
+</div>
+</div>
 <a id="af2e481c7db6b5c221812cf77a8f4247f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af2e481c7db6b5c221812cf77a8f4247f">&#9670;&nbsp;</a></span>FileName</h2>
 
@@ -405,7 +651,7 @@ Properties</h2></td></tr>
 
 <p>Full path to the TrueType font file for this font family (or, if this is a standard font family, name of the font family). </p>
 
-<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00359">359</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00416">416</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
 
 </div>
 </div>
@@ -431,7 +677,7 @@ Properties</h2></td></tr>
 
 <p>Whether this font is bold or not. This is set based on the information included in the OS/2 table of the TrueType file. </p>
 
-<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00370">370</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00427">427</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
 
 </div>
 </div>
@@ -457,7 +703,7 @@ Properties</h2></td></tr>
 
 <p>Whether this font is italic or oblique or not. This is set based on the information included in the OS/2 table of the TrueType file. </p>
 
-<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00375">375</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00432">432</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
 
 </div>
 </div>
@@ -483,7 +729,7 @@ Properties</h2></td></tr>
 
 <p>Whether this font is oblique or not. This is set based on the information included in the OS/2 table of the TrueType file. </p>
 
-<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00380">380</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00437">437</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
 
 </div>
 </div>
@@ -509,7 +755,7 @@ Properties</h2></td></tr>
 
 <p>Whether this is one of the 14 standard font families or not. </p>
 
-<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00278">278</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00335">335</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
 
 </div>
 </div>
@@ -536,7 +782,7 @@ Properties</h2></td></tr>
 <p>Parsed TrueType font file for this font family. See also: </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="class_vect_sharp_1_1_true_type_file.html" title="Represents a font file in TrueType format. Reference: http://stevehanov.ca/blog/?id=143,...">VectSharp.TrueTypeFile</a></dd></dl>
 <p>. </p>
 
-<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00365">365</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_font_8cs_source.html#l00422">422</a> of file <a class="el" href="_font_8cs_source.html">Font.cs</a>.</p>
 
 </div>
 </div>

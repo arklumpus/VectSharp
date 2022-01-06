@@ -1,0 +1,5 @@
+<map id="VectSharp.SimpleFontLibrary" name="VectSharp.SimpleFontLibrary">
+<area shape="rect" id="node1" title="A font library that can be used to cache and resolve font family names." alt="" coords="5,155,197,181"/>
+<area shape="rect" id="node2" href="$class_vect_sharp_1_1_font_library.html" title="Abstract class with a default implementation of font family fallbacks." alt="" coords="58,80,145,107"/>
+<area shape="rect" id="node3" href="$interface_vect_sharp_1_1_i_font_library.html" title="Represents a font library with methods to create FontFamily objects from a string or from FontFamily...." alt="" coords="56,5,147,32"/>
+</map>

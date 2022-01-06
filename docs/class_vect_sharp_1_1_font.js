@@ -8,6 +8,7 @@ var class_vect_sharp_1_1_font =
     [ "Descent", "class_vect_sharp_1_1_font.html#a17b1bee67490f8075fb7e073b6390c82", null ],
     [ "FontFamily", "class_vect_sharp_1_1_font.html#aeace0fc0ce6e769d69fb250a03772204", null ],
     [ "FontSize", "class_vect_sharp_1_1_font.html#a6c93e01c0a71a6ff0f084c8936ff27ab", null ],
+    [ "WinAscent", "class_vect_sharp_1_1_font.html#a00d586174b8588597de2c73a246373a0", null ],
     [ "YMax", "class_vect_sharp_1_1_font.html#af49cf0ea00b44ec70a4cbbc220debc00", null ],
     [ "YMin", "class_vect_sharp_1_1_font.html#a51ff497fa243de54d22fbcbd0146aeca", null ]
 ];

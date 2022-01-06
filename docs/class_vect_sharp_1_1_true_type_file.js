@@ -10,6 +10,7 @@ var class_vect_sharp_1_1_true_type_file =
     [ "Get1000EmGlyphVerticalMetrics", "class_vect_sharp_1_1_true_type_file.html#ab1795c553123fef65c8a79b06df94b7c", null ],
     [ "Get1000EmGlyphWidth", "class_vect_sharp_1_1_true_type_file.html#a78be18e6d87950d5d1bbaf1970a00564", null ],
     [ "Get1000EmGlyphWidth", "class_vect_sharp_1_1_true_type_file.html#ada8a81ebe29794884fd957163fbd99e8", null ],
+    [ "Get1000EmWinAscent", "class_vect_sharp_1_1_true_type_file.html#ad54089217ce9110b5efb0b1668238761", null ],
     [ "Get1000EmXMax", "class_vect_sharp_1_1_true_type_file.html#a37a6a96e07782c4f6264a5ee11408618", null ],
     [ "Get1000EmXMin", "class_vect_sharp_1_1_true_type_file.html#a8eacb1aad853f9938824a90c43dd4171", null ],
     [ "Get1000EmYMax", "class_vect_sharp_1_1_true_type_file.html#a007e5a47fcd0eeac25a2d40e1e87a6a7", null ],
