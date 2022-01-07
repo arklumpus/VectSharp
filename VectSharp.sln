@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkdownViewerDemo", "Markd
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectSharp.Fonts.Nimbus", "VectSharp.Fonts.Nimbus\VectSharp.Fonts.Nimbus.csproj", "{07F626B2-ED90-4127-A17C-5812C5554E0C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectSharp.Raster.ImageSharp", "VectSharp.Raster.ImageSharp\VectSharp.Raster.ImageSharp.csproj", "{AB5649FA-8451-4628-AE9B-6F68F1CE71D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{07F626B2-ED90-4127-A17C-5812C5554E0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07F626B2-ED90-4127-A17C-5812C5554E0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07F626B2-ED90-4127-A17C-5812C5554E0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB5649FA-8451-4628-AE9B-6F68F1CE71D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB5649FA-8451-4628-AE9B-6F68F1CE71D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB5649FA-8451-4628-AE9B-6F68F1CE71D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB5649FA-8451-4628-AE9B-6F68F1CE71D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
