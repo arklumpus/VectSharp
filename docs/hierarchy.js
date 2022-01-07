@@ -17,6 +17,7 @@ var hierarchy =
     [ "VectSharp.Document", "class_vect_sharp_1_1_document.html", null ],
     [ "Exception", null, [
       [ "VectSharp.FontFamilyCreationException", "class_vect_sharp_1_1_font_family_creation_exception.html", null ],
+      [ "VectSharp.Raster.ImageSharp.ImageSharpContextInterpreter.UnknownFormatException", "class_vect_sharp_1_1_raster_1_1_image_sharp_1_1_image_sharp_context_interpreter_1_1_unknown_format_exception.html", null ],
       [ "VectSharp.UnbalancedStackException", "class_vect_sharp_1_1_unbalanced_stack_exception.html", null ]
     ] ],
     [ "VectSharp.Font", "class_vect_sharp_1_1_font.html", null ],
@@ -57,6 +58,7 @@ var hierarchy =
       [ "VectSharp.ThreeD.PointLightSource", "class_vect_sharp_1_1_three_d_1_1_point_light_source.html", null ],
       [ "VectSharp.ThreeD.SpotlightLightSource", "class_vect_sharp_1_1_three_d_1_1_spotlight_light_source.html", null ]
     ] ],
+    [ "VectSharp.Raster.ImageSharp.ImageSharpContextInterpreter", "class_vect_sharp_1_1_raster_1_1_image_sharp_1_1_image_sharp_context_interpreter.html", null ],
     [ "VectSharp.MuPDFUtils.ImageURIParser", "class_vect_sharp_1_1_mu_p_d_f_utils_1_1_image_u_r_i_parser.html", null ],
     [ "VectSharp.ThreeD.IMaterial", "interface_vect_sharp_1_1_three_d_1_1_i_material.html", [
       [ "VectSharp.ThreeD.ColourMaterial", "class_vect_sharp_1_1_three_d_1_1_colour_material.html", null ],
@@ -72,6 +74,7 @@ var hierarchy =
     [ "VectSharp.LineDash", "struct_vect_sharp_1_1_line_dash.html", null ],
     [ "VectSharp.Markdown.Margins", "class_vect_sharp_1_1_markdown_1_1_margins.html", null ],
     [ "VectSharp.Markdown.MarkdownRenderer", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html", null ],
+    [ "VectSharp.Fonts.Nimbus", "class_vect_sharp_1_1_fonts_1_1_nimbus.html", null ],
     [ "VectSharp.ThreeD.ObjectFactory", "class_vect_sharp_1_1_three_d_1_1_object_factory.html", null ],
     [ "VectSharp.Page", "class_vect_sharp_1_1_page.html", null ],
     [ "VectSharp.SVG.Parser", "class_vect_sharp_1_1_s_v_g_1_1_parser.html", null ],

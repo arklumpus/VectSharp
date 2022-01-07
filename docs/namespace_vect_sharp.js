@@ -1,6 +1,7 @@
 var namespace_vect_sharp =
 [
     [ "Canvas", "namespace_vect_sharp_1_1_canvas.html", "namespace_vect_sharp_1_1_canvas" ],
+    [ "Fonts", "namespace_vect_sharp_1_1_fonts.html", "namespace_vect_sharp_1_1_fonts" ],
     [ "Markdown", "namespace_vect_sharp_1_1_markdown.html", "namespace_vect_sharp_1_1_markdown" ],
     [ "MarkdownCanvas", "namespace_vect_sharp_1_1_markdown_canvas.html", "namespace_vect_sharp_1_1_markdown_canvas" ],
     [ "MuPDFUtils", "namespace_vect_sharp_1_1_mu_p_d_f_utils.html", "namespace_vect_sharp_1_1_mu_p_d_f_utils" ],

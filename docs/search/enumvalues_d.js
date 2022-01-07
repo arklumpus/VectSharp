@@ -1,11 +1,9 @@
 var searchData=
 [
-  ['text_1130',['Text',['../class_vect_sharp_1_1_canvas_1_1_render_action.html#a540142d9a35323a4d5301256c2c804c2a9dffbf69ffba8bc38bc4e01abf4b1675',1,'VectSharp.Canvas.RenderAction.Text()'],['../class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4a9dffbf69ffba8bc38bc4e01abf4b1675',1,'VectSharp.Canvas.SKRenderAction.Text()']]],
-  ['throw_1131',['Throw',['../namespace_vect_sharp.html#a88d2dd0aea021af9a8af889bf292006fa8ce61dd2505effd96f937fa743b6491f',1,'VectSharp']]],
-  ['timesbold_1132',['TimesBold',['../class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780a92de2f3d11895b35fc3700a6f0b9fc5e',1,'VectSharp::FontFamily']]],
-  ['timesbolditalic_1133',['TimesBoldItalic',['../class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780a88588f5c7476077230f94634d2e75fbd',1,'VectSharp::FontFamily']]],
-  ['timesitalic_1134',['TimesItalic',['../class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780a0ce01fdd3bf91a4e641b9bf9e9f58335',1,'VectSharp::FontFamily']]],
-  ['timesroman_1135',['TimesRoman',['../class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780afa6004157a474ea805414a5b897240ce',1,'VectSharp::FontFamily']]],
-  ['top_1136',['Top',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a0e91c7ffd72d8f036d5c592e0e86c4ddaa4ffdcf0dc1f31b9acaf295d75b51d00',1,'VectSharp.Markdown.MarkdownRenderer.Top()'],['../namespace_vect_sharp.html#acfad2994b272989b9cb471230d95334faa4ffdcf0dc1f31b9acaf295d75b51d00',1,'VectSharp.Top()']]],
-  ['transform_1137',['Transform',['../class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4a2ff4148554480a37f85efd299df04850',1,'VectSharp::Canvas::SKRenderAction']]]
+  ['rasterimage_1147',['RasterImage',['../class_vect_sharp_1_1_canvas_1_1_render_action.html#a540142d9a35323a4d5301256c2c804c2a87ee62f0c2390b73f784732a13cce8cb',1,'VectSharp.Canvas.RenderAction.RasterImage()'],['../class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4a87ee62f0c2390b73f784732a13cce8cb',1,'VectSharp.Canvas.SKRenderAction.RasterImage()']]],
+  ['restore_1148',['Restore',['../class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4a2bd339d85ee3b33e513359ce781b60cc',1,'VectSharp::Canvas::SKRenderAction']]],
+  ['rgb_1149',['RGB',['../namespace_vect_sharp.html#a9ccfe4c0d79758b6c0e2fda8a319125ca889574aebacda6bfd3e534e2b49b8028',1,'VectSharp']]],
+  ['rgba_1150',['RGBA',['../namespace_vect_sharp.html#a9ccfe4c0d79758b6c0e2fda8a319125caea3495a278957dc58165e48a8945469f',1,'VectSharp']]],
+  ['right_1151',['Right',['../namespace_vect_sharp.html#a3e60bcba440b3af56d63ab44ef1fc5d7a92b09c7c48c520c3c55e497875da437c',1,'VectSharp']]],
+  ['round_1152',['Round',['../namespace_vect_sharp.html#a6bde58d6aab37ea51e32240503678209ab7f41fc1412ad2ee75e9b2635d3b9d5c',1,'VectSharp.Round()'],['../namespace_vect_sharp.html#a58a4a36ea254b3d255755654fd9e61f6ab7f41fc1412ad2ee75e9b2635d3b9d5c',1,'VectSharp.Round()']]]
 ];

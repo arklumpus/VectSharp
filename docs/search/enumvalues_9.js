@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['neverconvert_1114',['NeverConvert',['../class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html#ab1be8c4c6246dad9c92fcc3f2b3cdd77ab11ded174ba879c08340adc36752024a',1,'VectSharp::Canvas::AvaloniaContextInterpreter']]],
-  ['normal_1115',['Normal',['../namespace_vect_sharp.html#ad89d060535c63df4196d494335867778a960b44c579bc2f6818d2daaf9e4c16f0',1,'VectSharp']]]
+  ['left_1137',['Left',['../namespace_vect_sharp.html#a3e60bcba440b3af56d63ab44ef1fc5d7a945d5e233cf7d6240f6b783b36a374ff',1,'VectSharp']]],
+  ['line_1138',['Line',['../namespace_vect_sharp.html#ad82c158fff255cb1cbe8d51de61cb4e4a4803e6b9e63dabf04de980788d6a13c4',1,'VectSharp']]]
 ];

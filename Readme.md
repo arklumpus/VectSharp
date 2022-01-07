@@ -7,22 +7,29 @@
 ## Introduction
 **VectSharp** is a library to create vector graphics (including text) in C#, without too many dependencies.
 
-It includes an abstract layer on top of which output layers can be written. Currently, there are four available output layers: **VectSharp.PDF** produces PDF documents, **VectSharp.Canvas** produces an `Avalonia.Controls.Canvas` object ([https://avaloniaui.net/docs/controls/canvas](https://avaloniaui.net/docs/controls/canvas)) containing the rendered graphics objects, **VectSharp.Raster** produces raster images in PNG format, and **VectSharp.SVG** produces vector graphics in SVG format.
-
-[**VectSharp.ThreeD**](https://github.com/arklumpus/VectSharp/tree/master/VectSharp.ThreeD) adds support for 3D vector and raster graphics.
-
-[**VectSharp.Markdown**](https://github.com/arklumpus/VectSharp/tree/master/VectSharp.Markdown) can be used to transform Markdown documents into VectSharp objects, that can then be exported e.g. as PDF or SVG files, or displayed in an Avalonia `Canvas`. **VectSharp.MarkdownCanvas** uses VectSharp.Markdown to render Markdown documents in Avalonia applications (an example of this is in the [MarkdownViewerDemo project](https://github.com/arklumpus/VectSharp/tree/master/MarkdownViewerDemo)).
-
 VectSharp is written using .NET Core, and is available for Mac, Windows and Linux. Since version 2.0.0, it is released under an LGPLv3 license. It includes 14 standard fonts, originally released under an ASL-2.0 license.
 
-Since version 2.0.0, VectSharp.Raster is released under an AGPLv3 license.
+It includes an abstract layer on top of which output layers can be written. Currently, there are five available output layers:
+* **VectSharp.PDF** produces PDF documents.
+* **VectSharp.Canvas** produces an `Avalonia.Controls.Canvas` object ([https://avaloniaui.net/docs/controls/canvas](https://avaloniaui.net/docs/controls/canvas)) containing the rendered graphics objects.
+* **VectSharp.SVG** produces vector graphics in SVG format.
+* **VectSharp.Raster** produces raster images in PNG format, (this is done by rendering the image to a PDF document, and then using the [MuPDFCore](https://github.com/arklumpus/MuPDFCore) library to render the PDF). Since version 2.0.0, VectSharp.Raster is released under an AGPLv3 license.
+* **VectSharp.Raster.ImageSharp** produces raster images in multiple formats (BMP, GIF, JPEG, PBM, PNG, TGA, TIFF, WebP) using the [SixLabors.ImageSharp](https://github.com/SixLabors/ImageSharp) library.
 
-**VectSharp.MuPDFUtils**, also released under an AGPLv3 license, contains some utility functions that use [MuPDFCore](https://github.com/arklumpus/MuPDFCore) to make it possible to include in VectSharp graphics images in various formats.
+VectSharp.Raster and VectSharp.Raster.ImageSharp are somewhat overlapping, as both of them can be used to create PNG images. However, VectSharp.Raster is much faster, though it only supports the PNG format. Instead, VectSharp.Raster.ImageSharp is slower, but supports more formats and has a more permissive licence. Another difference is that VectSharp.Raster carries a native dependency (through MuPDFCore), while VectSharp.ImageSharp does not.
 
-**VectSharp.Fonts.Nimbus** is a package released under a GPLv3 license, which contains the standard fonts that were used in VectSharp before version 2.0.0. Since these fonts are released under a GPL license, they had to be replaced when the VectSharp license changed to LGPL. See the [Font libraries](section) below for information on how to re-enable these fonts.
+Furthermore:
+* [**VectSharp.ThreeD**](https://github.com/arklumpus/VectSharp/tree/master/VectSharp.ThreeD) adds support for 3D vector and raster graphics.
+* [**VectSharp.Markdown**](https://github.com/arklumpus/VectSharp/tree/master/VectSharp.Markdown) can be used to transform Markdown documents into VectSharp objects, that can then be exported e.g. as PDF or SVG files, or displayed in an Avalonia `Canvas`. **VectSharp.MarkdownCanvas** uses VectSharp.Markdown to render Markdown documents in Avalonia applications (an example of this is in the [MarkdownViewerDemo project](https://github.com/arklumpus/VectSharp/tree/master/MarkdownViewerDemo)).
+
+* **VectSharp.MuPDFUtils**, also released under an AGPLv3 license, contains some utility functions that use [MuPDFCore](https://github.com/arklumpus/MuPDFCore) to make it possible to include in VectSharp graphics images in various formats.
+
+* **VectSharp.Fonts.Nimbus** is a package released under a GPLv3 license, which contains the standard fonts that were used in VectSharp before version 2.0.0. Since these fonts are released under a GPL license, they had to be replaced when the VectSharp license changed to LGPL. See the [Font libraries](section) below for information on how to re-enable these fonts.
 
 ## Installing VectSharp
-To include VectSharp in your project, you will need one of the output layer NuGet packages: [VectSharp.PDF](https://www.nuget.org/packages/VectSharp.PDF/), [VectSharp.Canvas](https://www.nuget.org/packages/VectSharp.Canvas/), [VectSharp.Raster](https://www.nuget.org/packages/VectSharp.Raster/), or [VectSharp.SVG](https://www.nuget.org/packages/VectSharp.SVG/). You will need [VectSharp.ThreeD](https://www.nuget.org/packages/VectSharp.ThreeD/) to work with 3D graphics. You may want the [VectSharp.MuPDFUtils](https://www.nuget.org/packages/VectSharp.MuPDFUtils/) package if you wish to manipulate raster images, and the [VectSharp.Fonts.Nimbus](https://www.nuget.org/packages/VectSharp.Fonts.Nimbus/) if you want to restore the GPL-licensed fonts used in previous versions of the library.
+To include VectSharp in your project, you will need one of the output layer NuGet packages: [VectSharp.PDF](https://www.nuget.org/packages/VectSharp.PDF/), [VectSharp.Canvas](https://www.nuget.org/packages/VectSharp.Canvas/), [VectSharp.Raster](https://www.nuget.org/packages/VectSharp.Raster/), [VectSharp.Raster.ImageSharp](https://www.nuget.org/packages/VectSharp.Raster.ImageSharp/), or [VectSharp.SVG](https://www.nuget.org/packages/VectSharp.SVG/). You will need [VectSharp.ThreeD](https://www.nuget.org/packages/VectSharp.ThreeD/) to work with 3D graphics. You may want the [VectSharp.MuPDFUtils](https://www.nuget.org/packages/VectSharp.MuPDFUtils/) package if you wish to manipulate raster images, and the [VectSharp.Fonts.Nimbus](https://www.nuget.org/packages/VectSharp.Fonts.Nimbus/) if you want to restore the GPL-licensed fonts used in previous versions of the library.
+
+Note that to install VectSharp.Raster.ImageSharp you will need to add the [ImageSharp MyGet](https://www.myget.org/feed/sixlabors/package/nuget/SixLabors.ImageSharp) source to your package sources, so that you can obtain the latest nightly build (the version of SixLabors.ImageSharp.Drawing that is published on NuGet throws an exception whenever you try to draw outside the page bounds).
 
 ## Usage
 You can find the full documentation for the VectSharp library at the [documentation website](https://arklumpus.github.io/VectSharp). A [PDF reference manual](https://arklumpus.github.io/VectSharp/VectSharp.pdf) is also available.
@@ -71,6 +78,12 @@ Avalonia.Controls.Canvas can = doc.PaintToSKCanvas();
 using VectSharp.Raster;
 //...
 doc.Pages.Last().SaveAsPNG(@"Sample.png");
+``` 
+* Save as a JPEG image:
+```Csharp
+using VectSharp.Raster.ImageSharp;
+//...
+doc.Pages.Last().SaveAsImage(@"Sample.jpg");
 ``` 
 * Save as an SVG document:
 ```Csharp
@@ -195,6 +208,6 @@ One way to obtain the appropriate library files is:
 1. Manually download the NuGet package for [MuPFDCore](https://www.nuget.org/packages/MuPDFCore/) (click on the "Download package" link on the right).
 2. Rename the `.nupkg` file so that it has a `.zip` extension.
 3. Extract the zip file.
-4. Within the extracted folder, the library files are in the `runtimes/xxx-x64/native/` folder, where `xxx` is either `linux`, `osx` or `win`, depending on the platform you are using.
+4. Within the extracted folder, the library files are in the `runtimes/xxx-yyy/native/` folder, where `xxx` is either `linux`, `osx` or `win`, depending on the platform you are using, and `yyy` is `x64`, `x86` or `arm64` depending on the architecture.
 
 Make sure you copy the appropriate file to the same folder as the executable!
