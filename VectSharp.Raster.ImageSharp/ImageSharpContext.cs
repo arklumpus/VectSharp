@@ -929,7 +929,7 @@ namespace VectSharp.Raster.ImageSharp
         }
 
         /// <summary>
-        /// Render the page to an image stream.
+        /// Render the page to an image file.
         /// </summary>
         /// <param name="page">The <see cref="Page"/> to render.</param>
         /// <param name="fileName">The path of the file where the image will be saved.</param>
