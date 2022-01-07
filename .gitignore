@@ -1,0 +1,12 @@
+.vs/
+
+*/bin/
+*/obj/
+*/nuget.config
+*.csproj.user
+*.pubxml.user
+man/
+Thumbs.db
+Release/
+MarkdownViewerDemo/Properties/
+VectSharp.MuPDFUtils/Properties/
