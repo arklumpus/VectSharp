@@ -2248,6 +2248,164 @@ namespace VectSharp
             }
         }
 
+        /// <summary>
+        /// Computes the distance of the top of the underline from the baseline, in thousandths of em unit.
+        /// </summary>
+        /// <returns>The distance of the top of the underline from the baseline, in thousandths of em unit.</returns>
+        public double Get1000EmUnderlinePosition()
+        {
+            if (this.Tables.TryGetValue("post", out ITrueTypeTable table) && table is TrueTypePostTable post)
+            {
+                return post.UnderlinePosition * 1000.0 / ((TrueTypeHeadTable)this.Tables["head"]).UnitsPerEm;
+            }
+            else
+            {
+                return double.NaN;
+            }
+        }
+
+        /// <summary>
+        /// Computes the thickness of the underline, in thousandths of em unit.
+        /// </summary>
+        /// <returns>The thickness of the underline, in thousandths of em unit.</returns>
+        public double Get1000EmUnderlineThickness()
+        {
+            if (this.Tables.TryGetValue("post", out ITrueTypeTable table) && table is TrueTypePostTable post)
+            {
+                return post.UnderlineThickness * 1000.0 / ((TrueTypeHeadTable)this.Tables["head"]).UnitsPerEm;
+            }
+            else
+            {
+                return double.NaN;
+            }
+        }
+
+        /// <summary>
+        /// Computes the italic angle for the current font, in thousandths of em unit. This is computed from the vertical and is negative for text that leans forwards.
+        /// </summary>
+        /// <returns></returns>
+        public double GetItalicAngle()
+        {
+            if (this.Tables.TryGetValue("post", out ITrueTypeTable table) && table is TrueTypePostTable post)
+            {
+                return post.ItalicAngle.Bits / Math.Pow(2, post.ItalicAngle.BitShifts);
+            }
+            else
+            {
+                return double.NaN;
+            }
+        }
+
+        /// <summary>
+        /// Computes the intersections between an underline at the specified position and thickness and a glyph, in thousandths of em units.
+        /// </summary>
+        /// <param name="glyph">The glyph whose intersections with the underline will be computed.</param>
+        /// <param name="position">The distance of the top of the underline from the baseline, in thousandths of em unit.</param>
+        /// <param name="thickness">The thickness of the underline, in thousandths of em unit.</param>
+        /// <returns>If the underline does not intersect the glyph, this method returns <see langword="null" />. Otherwise, it returns an array
+        /// containing two elements, representing the horizontal coordinates of the leftmost and rightmost intersection points.</returns>
+        public double[] Get1000EmUnderlineIntersections(char glyph, double position, double thickness)
+        {
+            List<double> intersections = new List<double>();
+
+            TrueTypePoint[][] glyphPaths = GetGlyphPath(glyph, 1000);
+
+            for (int j = 0; j < glyphPaths.Length; j++)
+            {
+                double[] currPoint = new double[] { glyphPaths[j][0].X, -glyphPaths[j][0].Y };
+
+                for (int k = 1; k < glyphPaths[j].Length; k++)
+                {
+                    if (glyphPaths[j][k].IsOnCurve)
+                    {
+                        double t = (position - currPoint[1]) / (-glyphPaths[j][k].Y - currPoint[1]);
+                        if (t >= 0 && t <= 1)
+                        {
+                            intersections.Add(currPoint[0] + t * (glyphPaths[j][k].X - currPoint[0]));
+                        }
+
+                        t = (position + thickness - currPoint[1]) / (-glyphPaths[j][k].Y - currPoint[1]);
+                        if (t >= 0 && t <= 1)
+                        {
+                            intersections.Add(currPoint[0] + t * (glyphPaths[j][k].X - currPoint[0]));
+                        }
+
+                        currPoint = new double[] { glyphPaths[j][k].X, -glyphPaths[j][k].Y };
+                    }
+                    else
+                    {
+                        double[] ctrlPoint = new double[] { glyphPaths[j][k].X, -glyphPaths[j][k].Y };
+                        double[] endPoint = new double[] { glyphPaths[j][k + 1].X, -glyphPaths[j][k + 1].Y };
+
+                        double a = currPoint[1] - 2 * ctrlPoint[1] + endPoint[1];
+
+                        double[] ts = new double[4];
+
+                        ts[0] = (currPoint[1] - ctrlPoint[1] - Math.Sqrt(position * a + ctrlPoint[1] * ctrlPoint[1] - currPoint[1] * endPoint[1])) / a;
+                        ts[1] = (currPoint[1] - ctrlPoint[1] + Math.Sqrt(position * a + ctrlPoint[1] * ctrlPoint[1] - currPoint[1] * endPoint[1])) / a;
+
+                        ts[2] = (currPoint[1] - ctrlPoint[1] - Math.Sqrt((position + thickness) * a + ctrlPoint[1] * ctrlPoint[1] - currPoint[1] * endPoint[1])) / a;
+                        ts[3] = (currPoint[1] - ctrlPoint[1] + Math.Sqrt((position + thickness) * a + ctrlPoint[1] * ctrlPoint[1] - currPoint[1] * endPoint[1])) / a;
+
+                        double minT = double.MaxValue;
+                        double maxT = double.MinValue;
+                        bool found = false;
+
+                        for (int i = 0; i < 4; i++)
+                        {
+                            if (!double.IsNaN(ts[i]) && ts[i] >= 0 && ts[i] <= 1)
+                            {
+                                minT = Math.Min(minT, ts[i]);
+                                maxT = Math.Max(maxT, ts[i]);
+
+                                found = true;
+                            }
+                        }
+
+                        if (found)
+                        {
+                            double critT = (currPoint[0] - ctrlPoint[0]) / (currPoint[0] - 2 * ctrlPoint[0] + endPoint[0]);
+
+                            if (critT >= minT && critT <= maxT)
+                            {
+                                intersections.Add((1 - critT) * (1 - critT) * currPoint[0] + 2 * critT * (1 - critT) * ctrlPoint[0] + critT * critT * endPoint[0]);
+                            }
+
+                            intersections.Add((1 - minT) * (1 - minT) * currPoint[0] + 2 * minT * (1 - minT) * ctrlPoint[0] + minT * minT * endPoint[0]);
+                            intersections.Add((1 - maxT) * (1 - maxT) * currPoint[0] + 2 * maxT * (1 - maxT) * ctrlPoint[0] + maxT * maxT * endPoint[0]);
+                        }
+
+                        k++;
+                        currPoint = endPoint;
+                    }
+                }
+            }
+
+            if (intersections.Count > 1)
+            {
+                double[] tbr = new double[2] { double.MaxValue, double.MinValue };
+
+                for (int i = 0; i < intersections.Count; i++)
+                {
+                    if (intersections[i] <= tbr[0])
+                    {
+                        tbr[0] = intersections[i];
+                    }
+
+                    if (intersections[i] >= tbr[1])
+                    {
+                        tbr[1] = intersections[i];
+                    }
+                }
+
+                return tbr;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         internal interface ITrueTypeTable
         {
             byte[] GetBytes();

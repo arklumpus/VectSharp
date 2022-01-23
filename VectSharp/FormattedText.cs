@@ -92,6 +92,7 @@ namespace VectSharp
         /// <list type="bullet">
         /// <item><c>&lt;b&gt;&lt;/b&gt;</c> or <c>&lt;strong&gt;&lt;/strong&gt;</c> are used for bold text;</item>
         /// <item><c>&lt;i&gt;&lt;/i&gt;</c> or <c>&lt;em&gt;&lt;/em&gt;</c> are used for text in italics;</item>
+        /// <item><c>&lt;u&gt;&lt;/u&gt;</c></item> are used for underlined text;
         /// <item><c>&lt;sup&gt;&lt;/sup&gt;</c> and <c>&lt;sub&gt;&lt;/sub&gt;</c> are used, respectively, for superscript and subscript text;</item>
         /// <item><c>&lt;#COLOUR&gt;&lt;/#&gt;</c> is used to specify the colour of the text, where <c>COLOUR</c> is a CSS colour string (e.g. <c>&lt;#red&gt;</c>, <c>&lt;#0080FF&gt;</c>, or <c>&lt;#rgba(128, 80, 52, 0.5)&gt;</c>).</item>
         /// </list></param>
@@ -106,6 +107,7 @@ namespace VectSharp
             StringBuilder currentRun = new StringBuilder();
             int boldDepth = 0;
             int italicsDepth = 0;
+            int underlineDepth = 0;
             int superscriptDepth = 0;
             int subscriptDepth = 0;
             Stack<Brush> brushes = new Stack<Brush>();
@@ -136,7 +138,7 @@ namespace VectSharp
                             case Tags.BoldOpen:
                                 if (!string.IsNullOrEmpty(txt))
                                 {
-                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
                                 }
                                 currentRun.Clear();
                                 boldDepth++;
@@ -146,17 +148,36 @@ namespace VectSharp
                                 {
                                     if (!string.IsNullOrEmpty(txt))
                                     {
-                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
                                     }
                                     currentRun.Clear();
                                     boldDepth--;
+                                }
+                                break;
+                            case Tags.UnderlineOpen:
+                                if (!string.IsNullOrEmpty(txt))
+                                {
+                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                }
+                                currentRun.Clear();
+                                underlineDepth++;
+                                break;
+                            case Tags.UnderlineClose:
+                                if (underlineDepth > 0)
+                                {
+                                    if (!string.IsNullOrEmpty(txt))
+                                    {
+                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                    }
+                                    currentRun.Clear();
+                                    underlineDepth--;
                                 }
                                 break;
 
                             case Tags.ItalicsOpen:
                                 if (!string.IsNullOrEmpty(txt))
                                 {
-                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
                                 }
                                 currentRun.Clear();
                                 italicsDepth++;
@@ -166,7 +187,7 @@ namespace VectSharp
                                 {
                                     if (!string.IsNullOrEmpty(txt))
                                     {
-                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
                                     }
                                     currentRun.Clear();
                                     italicsDepth--;
@@ -176,7 +197,7 @@ namespace VectSharp
                             case Tags.SupOpen:
                                 if (!string.IsNullOrEmpty(txt))
                                 {
-                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
                                 }
                                 currentRun.Clear();
                                 superscriptDepth++;
@@ -186,7 +207,7 @@ namespace VectSharp
                                 {
                                     if (!string.IsNullOrEmpty(txt))
                                     {
-                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
                                     }
                                     currentRun.Clear();
                                     superscriptDepth--;
@@ -196,7 +217,7 @@ namespace VectSharp
                             case Tags.SubOpen:
                                 if (!string.IsNullOrEmpty(txt))
                                 {
-                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
                                 }
                                 currentRun.Clear();
                                 subscriptDepth++;
@@ -206,7 +227,7 @@ namespace VectSharp
                                 {
                                     if (!string.IsNullOrEmpty(txt))
                                     {
-                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
                                     }
                                     currentRun.Clear();
                                     subscriptDepth--;
@@ -215,7 +236,7 @@ namespace VectSharp
                             case Tags.ColourOpen:
                                 if (!string.IsNullOrEmpty(txt))
                                 {
-                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
                                 }
                                 currentRun.Clear();
                                 brushes.Push(tagBrush);
@@ -225,7 +246,7 @@ namespace VectSharp
                                 {
                                     if (!string.IsNullOrEmpty(txt))
                                     {
-                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
                                     }
                                     currentRun.Clear();
                                     brushes.Pop();
@@ -238,7 +259,7 @@ namespace VectSharp
 
             if (currentRun.Length > 0)
             {
-                yield return new FormattedText(currentRun.ToString(), GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                yield return new FormattedText(currentRun.ToString(), GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
             }
         }
 
@@ -249,16 +270,18 @@ namespace VectSharp
         /// <list type="bullet">
         /// <item><c>&lt;b&gt;&lt;/b&gt;</c> or <c>&lt;strong&gt;&lt;/strong&gt;</c> are used for bold text;</item>
         /// <item><c>&lt;i&gt;&lt;/i&gt;</c> or <c>&lt;em&gt;&lt;/em&gt;</c> are used for text in italics;</item>
+        /// <item><c>&lt;u&gt;&lt;/u&gt;</c></item> are used for underlined text;
         /// <item><c>&lt;sup&gt;&lt;/sup&gt;</c> and <c>&lt;sub&gt;&lt;/sub&gt;</c> are used, respectively, for superscript and subscript text;</item>
         /// <item><c>&lt;#COLOUR&gt;&lt;/#&gt;</c> is used to specify the colour of the text, where <c>COLOUR</c> is a CSS colour string (e.g. <c>&lt;#red&gt;</c>, <c>&lt;#0080FF&gt;</c>, or <c>&lt;#rgba(128, 80, 52, 0.5)&gt;</c>).</item>
         /// </list></param>
         /// <param name="fontFamily">The font family from which the fonts will be created. If this is a regular font family, the bold, italic and bold-italic versions of the font will be used for the formatted text. Otherwise, the relevant font styles will be toggled (e.g. if the supplied font family is bold, then regular text in the formatted string will be displayed as bold, while bold text in the formatted string will be displayed as regular text).</param>
         /// <param name="fontSize">The size of the fonts to use.</param>
+        /// <param name="defaultUnderline">Determines whether text should be underlined by default. This is toggled by <c>&lt;u&gt;&lt;/u&gt;</c> tags.</param>
         /// <param name="defaultBrush">The default <see cref="Brush"/> that will be used for text runs that do not specify a colour. If this is <see langword="null"/>, the default <see cref="Brush"/> will be the one specified in the painting call.</param>
         /// <returns>A lazy collection of <see cref="FormattedText"/> objects. Note that every enumeration of this collection causes the text to be parsed again; if you need to enumerate this collection more than once, you should probably convert it e.g. to a <see cref="List{T}"/>.</returns>
-        public static IEnumerable<FormattedText> Format(string text, FontFamily.StandardFontFamilies fontFamily, double fontSize, Brush defaultBrush = null)
+        public static IEnumerable<FormattedText> Format(string text, FontFamily.StandardFontFamilies fontFamily, double fontSize, bool defaultUnderline = false, Brush defaultBrush = null)
         {
-            Font normalFont = new Font(FontFamily.ResolveFontFamily(fontFamily), fontSize);
+            Font normalFont = new Font(FontFamily.ResolveFontFamily(fontFamily), fontSize, defaultUnderline);
 
             Font boldFont = normalFont;
             Font italicFont = normalFont;
@@ -267,89 +290,117 @@ namespace VectSharp
             switch (fontFamily)
             {
                 case FontFamily.StandardFontFamilies.Courier:
-                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBold), fontSize);
-                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierOblique), fontSize);
-                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBold), fontSize, defaultUnderline);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierOblique), fontSize, defaultUnderline);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique), fontSize, defaultUnderline);
                     break;
                 case FontFamily.StandardFontFamilies.CourierBold:
-                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Courier), fontSize);
-                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique), fontSize);
-                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierOblique), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Courier), fontSize, defaultUnderline);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique), fontSize, defaultUnderline);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierOblique), fontSize, defaultUnderline);
                     break;
                 case FontFamily.StandardFontFamilies.CourierOblique:
-                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique), fontSize);
-                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Courier), fontSize);
-                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBold), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique), fontSize, defaultUnderline);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Courier), fontSize, defaultUnderline);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBold), fontSize, defaultUnderline);
                     break;
                 case FontFamily.StandardFontFamilies.CourierBoldOblique:
-                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierOblique), fontSize);
-                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBold), fontSize);
-                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Courier), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierOblique), fontSize, defaultUnderline);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBold), fontSize, defaultUnderline);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Courier), fontSize, defaultUnderline);
                     break;
 
                 case FontFamily.StandardFontFamilies.Helvetica:
-                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBold), fontSize);
-                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaOblique), fontSize);
-                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBoldOblique), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBold), fontSize, defaultUnderline);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaOblique), fontSize, defaultUnderline);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBoldOblique), fontSize, defaultUnderline);
                     break;
                 case FontFamily.StandardFontFamilies.HelveticaBold:
-                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica), fontSize);
-                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBoldOblique), fontSize);
-                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaOblique), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica), fontSize, defaultUnderline);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBoldOblique), fontSize, defaultUnderline);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaOblique), fontSize, defaultUnderline);
                     break;
                 case FontFamily.StandardFontFamilies.HelveticaOblique:
-                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBoldOblique), fontSize);
-                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica), fontSize);
-                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBold), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBoldOblique), fontSize, defaultUnderline);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica), fontSize, defaultUnderline);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBold), fontSize, defaultUnderline);
                     break;
                 case FontFamily.StandardFontFamilies.HelveticaBoldOblique:
-                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaOblique), fontSize);
-                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBold), fontSize);
-                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaOblique), fontSize, defaultUnderline);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBold), fontSize, defaultUnderline);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica), fontSize, defaultUnderline);
                     break;
 
                 case FontFamily.StandardFontFamilies.TimesRoman:
-                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBold), fontSize);
-                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesItalic), fontSize);
-                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBoldItalic), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBold), fontSize, defaultUnderline);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesItalic), fontSize, defaultUnderline);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBoldItalic), fontSize, defaultUnderline);
                     break;
                 case FontFamily.StandardFontFamilies.TimesBold:
-                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesRoman), fontSize);
-                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBoldItalic), fontSize);
-                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesItalic), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesRoman), fontSize, defaultUnderline);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBoldItalic), fontSize, defaultUnderline);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesItalic), fontSize, defaultUnderline);
                     break;
                 case FontFamily.StandardFontFamilies.TimesItalic:
-                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBoldItalic), fontSize);
-                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesRoman), fontSize);
-                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBold), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBoldItalic), fontSize, defaultUnderline);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesRoman), fontSize, defaultUnderline);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBold), fontSize, defaultUnderline);
                     break;
                 case FontFamily.StandardFontFamilies.TimesBoldItalic:
-                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesItalic), fontSize);
-                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBold), fontSize);
-                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesRoman), fontSize);
+                    boldFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesItalic), fontSize, defaultUnderline);
+                    italicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBold), fontSize, defaultUnderline);
+                    boldItalicFont = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesRoman), fontSize, defaultUnderline);
                     break;
             }
 
             return Format(text, normalFont, boldFont, italicFont, boldItalicFont, defaultBrush);
         }
 
-        private static Font GetFont(bool bold, bool italic, Font normalFont, Font boldFont, Font italicFont, Font boldItalicFont)
+        private static Font GetFont(bool bold, bool italic, bool underlined, Font normalFont, Font boldFont, Font italicFont, Font boldItalicFont)
         {
             if (!bold && !italic)
             {
-                return normalFont;
+                if (underlined)
+                {
+                    return new Font(normalFont.FontFamily, normalFont.FontSize, normalFont.Underline == null);
+                }
+                else
+                {
+                    return normalFont;
+                }
             }
             else if (bold && !italic)
             {
-                return boldFont;
+                if (underlined)
+                {
+                    return new Font(boldFont.FontFamily, boldFont.FontSize, boldFont.Underline == null);
+                }
+                else
+                {
+                    return boldFont;
+                }
             }
             else if (!bold && italic)
             {
-                return italicFont;
+                if (underlined)
+                {
+                    return new Font(italicFont.FontFamily, italicFont.FontSize, italicFont.Underline == null);
+                }
+                else
+                {
+                    return italicFont;
+                }
             }
             else
             {
-                return boldItalicFont;
+                if (underlined)
+                {
+                    return new Font(boldItalicFont.FontFamily, boldItalicFont.FontSize, boldItalicFont.Underline == null);
+                }
+                else
+                {
+                    return boldItalicFont;
+                }
             }
         }
 
@@ -359,6 +410,8 @@ namespace VectSharp
             BoldClose,
             ItalicsOpen,
             ItalicsClose,
+            UnderlineOpen,
+            UnderlineClose,
             SupOpen,
             SupClose,
             SubOpen,
@@ -404,7 +457,6 @@ namespace VectSharp
                 else if (tagString == "</b>" || tagString == "</strong>")
                 {
                     return Tags.BoldClose;
-
                 }
                 else if (tagString == "<i>" || tagString == "<em>")
                 {
@@ -413,6 +465,14 @@ namespace VectSharp
                 else if (tagString == "</i>" || tagString == "</em>")
                 {
                     return Tags.ItalicsClose;
+                }
+                else if (tagString == "<u>")
+                {
+                    return Tags.UnderlineOpen;
+                }
+                else if (tagString == "</u>")
+                {
+                    return Tags.UnderlineClose;
                 }
                 else if (tagString == "<sup>")
                 {

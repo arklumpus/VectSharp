@@ -28,6 +28,69 @@ namespace VectSharp
     public class Font
     {
         /// <summary>
+        /// Represents options to underline text.
+        /// </summary>
+        public class FontUnderline
+        {
+            /// <summary>
+            /// Determines whether the underline skips the parts of the glyph that would intersect with it or not.
+            /// </summary>
+            public bool SkipDescenders { get; set; }
+
+            /// <summary>
+            /// Determines the position of the top of the underline with respect to the text baseline. Positive values are below the baseline, negative values are above it. This is expressed as a fraction of the font size.
+            /// </summary>
+            public double Position { get; set; }
+
+            /// <summary>
+            /// Determines the thickness of the underline, expressed as a fraction of the font size.
+            /// </summary>
+            public double Thickness { get; set; }
+
+            /// <summary>
+            /// Determines the caps at the start and end of the underline.
+            /// </summary>
+            public LineCaps LineCap { get; set; }
+
+            /// <summary>
+            /// Determine whether the shape of the underline is slanted to follow the angle of italic fonts.
+            /// </summary>
+            public bool FollowItalicAngle { get; set; }
+
+            /// <summary>
+            /// Create a new underline with the default settings for the specified font family.
+            /// </summary>
+            /// <param name="family">The font family to which the underline will be applied.</param>
+            internal FontUnderline(FontFamily family)
+            {
+                this.SkipDescenders = true;
+                this.LineCap = LineCaps.Butt;
+                this.FollowItalicAngle = true;
+
+                if (family.TrueTypeFile != null)
+                {
+                    this.Position = -family.TrueTypeFile.Get1000EmUnderlinePosition() / 1000.0;
+                    this.Thickness = family.TrueTypeFile.Get1000EmUnderlineThickness() / 1000.0;
+                }
+                else
+                {
+                    this.Position = 0.3;
+                    this.Thickness = family.IsBold ? 0.15 : 0.075;
+                }
+
+                if (double.IsNaN(this.Position))
+                {
+                    this.Position = 0.3;
+                }
+
+                if (double.IsNaN(this.Thickness))
+                {
+                    this.Thickness = family.IsBold ? 0.15 : 0.075;
+                }
+            }
+        }
+
+        /// <summary>
         /// Represents detailed information about the metrics of a text string when drawn with a certain font.
         /// </summary>
         public class DetailedFontMetrics
@@ -92,6 +155,36 @@ namespace VectSharp
         {
             this.FontFamily = fontFamily;
             this.FontSize = fontSize;
+        }
+
+        /// <summary>
+        /// Create a new Font object, given the base typeface, the font size, and a boolean value determining whether text using this font should be underlined.
+        /// </summary>
+        /// <param name="fontFamily">Base typeface. See <see cref="FontFamily"/>.</param>
+        /// <param name="fontSize">The font size, in graphics units.</param>
+        /// <param name="underlined">A boolean value determining whether text drawn using this font should be underlined. The appearance of the underline can be tweaked by changing the properties of the <see cref="Underline"/> property after the font has been created.</param>
+        public Font(FontFamily fontFamily, double fontSize, bool underlined)
+        {
+            this.FontFamily = fontFamily;
+            this.FontSize = fontSize;
+
+            if (underlined)
+            {
+                this.Underline = new FontUnderline(fontFamily);
+            }
+        }
+
+        /// <summary>
+        /// Create a new Font object, given the base typeface, the font size, and an object describing the underline properties of text drawn using this font.
+        /// </summary>
+        /// <param name="fontFamily">Base typeface. See <see cref="FontFamily"/>.</param>
+        /// <param name="fontSize">The font size, in graphics units.</param>
+        /// <param name="underline">A <see cref="FontUnderline"/> object describing the underline properties of text drawn using this font.</param>
+        public Font(FontFamily fontFamily, double fontSize, FontUnderline underline)
+        {
+            this.FontFamily = fontFamily;
+            this.FontSize = fontSize;
+            this.Underline = underline;
         }
 
         /// <summary>
@@ -183,6 +276,11 @@ namespace VectSharp
                 }
             }
         }
+
+        /// <summary>
+        /// Determines the underline style of text drawn using this font. If this is <see langword="null"/>, the text is not underlined.
+        /// </summary>
+        public FontUnderline Underline { get; }
 
         /// <summary>
         /// Measure the size of a text string when typeset with this font.

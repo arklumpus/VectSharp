@@ -471,6 +471,461 @@ namespace VectSharp
         }
 
 
+
+        /// <summary>
+        /// Add the contour of the underline of the specified text string to the current path.
+        /// </summary>
+        /// <param name="origin">The text origin. See <paramref name="textBaseline"/>.</param>
+        /// <param name="text">The string whose underline will be drawn.</param>
+        /// <param name="font">The font with which to draw the text.</param>
+        /// <param name="textBaseline">The text baseline (determines what the vertical component of <paramref name="origin"/> represents).</param>
+        /// <returns>The <see cref="GraphicsPath"/>, to allow for chained calls.</returns>
+        public GraphicsPath AddTextUnderline(Point origin, string text, Font font, TextBaselines textBaseline = TextBaselines.Top)
+        {
+            if (font.Underline == null)
+            {
+                return this;
+            }
+
+            Font.DetailedFontMetrics metrics = font.MeasureTextAdvanced(text);
+
+            double italicAngle = font.FontFamily.TrueTypeFile?.GetItalicAngle() ?? 0;
+
+            if (double.IsNaN(italicAngle))
+            {
+                italicAngle = 0;
+            }
+
+            Point baselineOrigin = origin;
+
+            switch (textBaseline)
+            {
+                case TextBaselines.Baseline:
+                    baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y);
+                    break;
+                case TextBaselines.Top:
+                    baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y + metrics.Top);
+                    break;
+                case TextBaselines.Bottom:
+                    baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y + metrics.Bottom);
+                    break;
+                case TextBaselines.Middle:
+                    baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y + (metrics.Top - metrics.Bottom) * 0.5 + metrics.Bottom);
+                    break;
+            }
+
+            if (!font.Underline.SkipDescenders)
+            {
+                double italicShift;
+
+                if (!font.Underline.FollowItalicAngle || italicAngle == 0)
+                {
+                    italicShift = 0;
+                }
+                else
+                {
+                    italicShift = font.Underline.Thickness * font.FontSize * Math.Tan(italicAngle / 180.0 * Math.PI);
+                }
+
+                if (font.Underline.LineCap == LineCaps.Butt)
+                {
+                    if (!font.Underline.FollowItalicAngle || italicAngle == 0)
+                    {
+                        this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                        this.Close();
+                    }
+                    else
+                    {
+                        this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                        this.Close();
+                    }
+                }
+                else if (font.Underline.LineCap == LineCaps.Square)
+                {
+                    if (!font.Underline.FollowItalicAngle || italicAngle == 0)
+                    {
+                        this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                        this.Close();
+                    }
+                    else
+                    {
+                        this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + font.Underline.Thickness * font.FontSize * 0.5 + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize * 0.5 + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                        this.Close();
+                    }
+                }
+                else if (font.Underline.LineCap == LineCaps.Round)
+                {
+                    if (!font.Underline.FollowItalicAngle || italicAngle == 0)
+                    {
+                        this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                        this.Arc(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize * 0.5, font.Underline.Thickness * font.FontSize * 0.5, -Math.PI / 2, Math.PI / 2);
+                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                        this.Arc(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize * 0.5, font.Underline.Thickness * font.FontSize * 0.5, Math.PI / 2, 3 * Math.PI / 2);
+                        this.Close();
+                    }
+                    else
+                    {
+                        this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing - italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                        this.CubicBezierTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize,
+                            baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + italicShift + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize,
+                            baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+
+                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                        this.CubicBezierTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize,
+                            baselineOrigin.X + metrics.LeftSideBearing - italicShift - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize,
+                            baselineOrigin.X + metrics.LeftSideBearing - italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+
+                        this.Close();
+                    }
+                }
+
+                return this;
+            }
+            else
+            {
+                if (font.Underline.LineCap == LineCaps.Butt)
+                {
+                    double italicShift;
+
+                    if (!font.Underline.FollowItalicAngle || italicAngle == 0)
+                    {
+                        italicShift = 0;
+                    }
+                    else
+                    {
+                        italicShift = font.Underline.Thickness * font.FontSize * Math.Tan(italicAngle / 180.0 * Math.PI);
+                    }
+
+                    bool started = false;
+
+                    double currX = baselineOrigin.X;
+                    double underlineStartX = baselineOrigin.X + metrics.LeftSideBearing;
+                    double currUnderlineX = underlineStartX - metrics.LeftSideBearing;
+
+                    for (int i = 0; i < text.Length; i++)
+                    {
+                        char c = text[i];
+                        double[] intersections = font.FontFamily.TrueTypeFile.Get1000EmUnderlineIntersections(c, font.Underline.Position * 1000, font.Underline.Thickness * 1000);
+
+                        if (intersections != null)
+                        {
+                            intersections[0] = intersections[0] * font.FontSize / 1000;
+                            intersections[1] = intersections[1] * font.FontSize / 1000;
+
+                            if (currX + intersections[0] - font.Underline.Thickness * font.FontSize >= underlineStartX)
+                            {
+                                if (!started)
+                                {
+                                    started = true;
+                                    this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize).LineTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                                }
+
+                                this.LineTo(currX + intersections[0] - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                                this.LineTo(currX + intersections[0] - font.Underline.Thickness * font.FontSize + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                                this.Close();
+                            }
+
+                            started = true;
+
+                            this.MoveTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                            this.LineTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+
+                            underlineStartX = currX + intersections[1] + font.Underline.Thickness * font.FontSize;
+                            currUnderlineX = Math.Max(currX + intersections[1] + font.Underline.Thickness * font.FontSize, currX + font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000);
+                        }
+                        else if (i == text.Length - 1)
+                        {
+                            if (c != ' ')
+                            {
+                                currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000;
+                            }
+                            else
+                            {
+                                currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                            }
+                        }
+                        else
+                        {
+                            currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                        }
+
+                        currX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                    }
+
+                    if (!started)
+                    {
+                        started = true;
+                        this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize).LineTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                    }
+
+                    this.LineTo(currUnderlineX, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                    this.LineTo(currUnderlineX + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                    this.LineTo(underlineStartX + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                    this.Close();
+                }
+                else if (font.Underline.LineCap == LineCaps.Square)
+                {
+                    double italicShift;
+
+                    if (!font.Underline.FollowItalicAngle || italicAngle == 0)
+                    {
+                        italicShift = 0;
+                    }
+                    else
+                    {
+                        italicShift = font.Underline.Thickness * font.FontSize * Math.Tan(italicAngle / 180.0 * Math.PI);
+                    }
+
+                    bool started = false;
+
+                    double currX = baselineOrigin.X;
+                    double underlineStartX = baselineOrigin.X + metrics.LeftSideBearing;
+                    double currUnderlineX = underlineStartX - metrics.LeftSideBearing;
+
+                    for (int i = 0; i < text.Length; i++)
+                    {
+                        char c = text[i];
+                        double[] intersections = font.FontFamily.TrueTypeFile.Get1000EmUnderlineIntersections(c, font.Underline.Position * 1000, font.Underline.Thickness * 1000);
+
+                        if (intersections != null)
+                        {
+                            intersections[0] = intersections[0] * font.FontSize / 1000;
+                            intersections[1] = intersections[1] * font.FontSize / 1000;
+
+                            if (currX + intersections[0] - font.Underline.Thickness * font.FontSize >= underlineStartX)
+                            {
+                                if (!started)
+                                {
+                                    started = true;
+                                    this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing + italicShift - font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize).LineTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                                }
+                                this.LineTo(currX + intersections[0] - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                                this.LineTo(currX + intersections[0] - font.Underline.Thickness * font.FontSize + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+
+                                this.Close();
+                            }
+
+                            started = true;
+
+                            this.MoveTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                            this.LineTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+
+                            underlineStartX = currX + intersections[1] + font.Underline.Thickness * font.FontSize;
+                            currUnderlineX = Math.Max(currX + intersections[1] + font.Underline.Thickness * font.FontSize, currX + font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000);
+                        }
+                        else if (i == text.Length - 1)
+                        {
+                            if (c != ' ')
+                            {
+                                currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000;
+                            }
+                            else
+                            {
+                                currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                            }
+                        }
+                        else
+                        {
+                            currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                        }
+
+                        currX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                    }
+
+                    if (!started)
+                    {
+                        started = true;
+                        this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing + italicShift - font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize).LineTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                    }
+
+                    this.LineTo(currUnderlineX + font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                    this.LineTo(currUnderlineX + italicShift + font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                    this.LineTo(underlineStartX + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                    this.Close();
+                }
+                else if (font.Underline.LineCap == LineCaps.Round)
+                {
+                    if (!font.Underline.FollowItalicAngle || italicAngle == 0)
+                    {
+                        bool started = false;
+
+                        double currX = baselineOrigin.X;
+                        double underlineStartX = baselineOrigin.X + metrics.LeftSideBearing;
+                        double currUnderlineX = underlineStartX - metrics.LeftSideBearing;
+
+                        for (int i = 0; i < text.Length; i++)
+                        {
+                            char c = text[i];
+                            double[] intersections = font.FontFamily.TrueTypeFile.Get1000EmUnderlineIntersections(c, font.Underline.Position * 1000, font.Underline.Thickness * 1000);
+
+                            if (intersections != null)
+                            {
+                                intersections[0] = intersections[0] * font.FontSize / 1000;
+                                intersections[1] = intersections[1] * font.FontSize / 1000;
+
+                                if (currX + intersections[0] - font.Underline.Thickness * font.FontSize >= underlineStartX)
+                                {
+                                    if (!started)
+                                    {
+                                        started = true;
+                                        this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                                        this.Arc(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize * 0.5, font.Underline.Thickness * font.FontSize * 0.5, Math.PI / 2, 3 * Math.PI / 2);
+                                    }
+
+                                    this.LineTo(currX + intersections[0] - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                                    this.LineTo(currX + intersections[0] - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+
+                                    this.Close();
+                                }
+
+                                started = true;
+
+                                this.MoveTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                                this.LineTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+
+                                underlineStartX = currX + intersections[1] + font.Underline.Thickness * font.FontSize;
+                                currUnderlineX = Math.Max(currX + intersections[1] + font.Underline.Thickness * font.FontSize, currX + font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000);
+                            }
+                            else if (i == text.Length - 1)
+                            {
+                                if (c != ' ')
+                                {
+                                    currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000;
+                                }
+                                else
+                                {
+                                    currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                                }
+                            }
+                            else
+                            {
+                                currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                            }
+
+                            currX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                        }
+
+                        if (!started)
+                        {
+                            started = true;
+                            this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                            this.Arc(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize * 0.5, font.Underline.Thickness * font.FontSize * 0.5, Math.PI / 2, 3 * Math.PI / 2);
+                        }
+
+                        this.LineTo(currUnderlineX, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+
+                        this.Arc(currUnderlineX, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize * 0.5, font.Underline.Thickness * font.FontSize * 0.5, -Math.PI / 2, Math.PI / 2);
+
+                        this.LineTo(underlineStartX, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                        this.Close();
+                    }
+                    else
+                    {
+                        double italicShift = font.Underline.Thickness * font.FontSize * Math.Tan(italicAngle / 180.0 * Math.PI);
+
+                        bool started = false;
+
+                        double currX = baselineOrigin.X;
+                        double underlineStartX = baselineOrigin.X + metrics.LeftSideBearing;
+                        double currUnderlineX = underlineStartX - metrics.LeftSideBearing;
+
+                        for (int i = 0; i < text.Length; i++)
+                        {
+                            char c = text[i];
+                            double[] intersections = font.FontFamily.TrueTypeFile.Get1000EmUnderlineIntersections(c, font.Underline.Position * 1000, font.Underline.Thickness * 1000);
+
+                            if (intersections != null)
+                            {
+                                intersections[0] = intersections[0] * font.FontSize / 1000;
+                                intersections[1] = intersections[1] * font.FontSize / 1000;
+
+                                if (currX + intersections[0] - font.Underline.Thickness * font.FontSize >= underlineStartX)
+                                {
+                                    if (!started)
+                                    {
+                                        started = true;
+
+                                        this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+
+                                        this.CubicBezierTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize,
+                                            baselineOrigin.X + metrics.LeftSideBearing - italicShift - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize,
+                                            baselineOrigin.X + metrics.LeftSideBearing - italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                                    }
+
+                                    this.LineTo(currX + intersections[0] - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                                    this.LineTo(currX + intersections[0] - font.Underline.Thickness * font.FontSize + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+
+                                    this.Close();
+                                }
+
+                                started = true;
+
+                                this.MoveTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                                this.LineTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+
+                                underlineStartX = currX + intersections[1] + font.Underline.Thickness * font.FontSize;
+                                currUnderlineX = Math.Max(currX + intersections[1] + font.Underline.Thickness * font.FontSize, currX + font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000);
+                            }
+                            else if (i == text.Length - 1)
+                            {
+                                if (c != ' ')
+                                {
+                                    currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000;
+                                }
+                                else
+                                {
+                                    currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                                }
+                            }
+                            else
+                            {
+                                currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                            }
+
+                            currX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                        }
+
+                        if (!started)
+                        {
+                            started = true;
+
+                            this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+
+                            this.CubicBezierTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize,
+                                baselineOrigin.X + metrics.LeftSideBearing - italicShift - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize,
+                                baselineOrigin.X + metrics.LeftSideBearing - italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                        }
+
+                        this.LineTo(currUnderlineX, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+
+                        //this.LineTo(currUnderlineX + italicShift + font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                        this.CubicBezierTo(currUnderlineX + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize,
+                            currUnderlineX + italicShift + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize,
+                            currUnderlineX + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+
+                        this.LineTo(underlineStartX + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                        this.Close();
+                    }
+                }
+            }
+            return this;
+        }
+
+
         /// <summary>
         /// Adds a smooth spline composed of cubic bezier segments that pass through the specified points.
         /// </summary>
@@ -1283,9 +1738,9 @@ namespace VectSharp
             List<Point> currFigure = null;
             bool returned = true;
 
-            foreach (Segment seg in this.Segments)
+            for (int i = 0; i < this.Segments.Count; i++)
             {
-                //tbr.Segments.AddRange(seg.Linearise(previousPoint, resolution));
+                Segment seg = this.Segments[i];
 
                 if (seg.Type != SegmentType.Close)
                 {
@@ -1300,7 +1755,17 @@ namespace VectSharp
                         startPoint = currPoint;
                         currFigure = new List<Point>();
                         returned = false;
-                        currFigure.Add(new Point());
+
+                        if (i < this.Segments.Count - 1 && this.Segments[i + 1].Type != SegmentType.Move)
+                        {
+                            Point tangent = this.Segments[i + 1].GetTangentAt(seg.Point, 0);
+
+                            currFigure.Add(new Point(-tangent.Y, tangent.X));
+                        }
+                        else
+                        {
+                            currFigure.Add(new Point());
+                        }
                     }
                     else
                     {
