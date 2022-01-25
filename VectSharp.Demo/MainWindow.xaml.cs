@@ -387,8 +387,8 @@ namespace VectSharp.Demo
             //Stroke rectangle (with dashed line)
             gpr.StrokeRectangle(3100, 1550, 600, 200, Colour.FromRgb(80, 80, 80), lineWidth: 20, lineDash: new LineDash(60, 60, 0));
 
-            //Text
-            gpr.FillText(3400 - gpr.MeasureText("Click me!", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBold), 80)).Width / 2, 1650, "Click me!", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBold), 80), Colour.FromRgb(0, 0, 0), textBaseline: TextBaselines.Middle, tag: "ClickMeText");
+            //Text with underlined font
+            gpr.FillText(3400 - gpr.MeasureText("Click me!", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBold), 80, true)).Width / 2, 1650, "Click me!", new Font(VectSharp.FontFamily.ResolveFontFamily(VectSharp.FontFamily.StandardFontFamilies.HelveticaBold), 80, true), Colour.FromRgb(0, 0, 0), textBaseline: TextBaselines.Middle, tag: "ClickMeText");
 
             //Text along a path
             GraphicsPath flowPath = new GraphicsPath().Arc(1550, 1100, 300, -7 * Math.PI / 8, -Math.PI / 8);
