@@ -28,7 +28,7 @@
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VectSharp
-   &#160;<span id="projectnumber">2.0.0</span>
+   &#160;<span id="projectnumber">2.1.0</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -109,9 +109,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a3301898754c2293ec78f322f3ee1a7d8"><td class="memItemLeft" align="right" valign="top">static IEnumerable&lt; <a class="el" href="class_vect_sharp_1_1_formatted_text.html">FormattedText</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_formatted_text.html#a3301898754c2293ec78f322f3ee1a7d8">Format</a> (string text, <a class="el" href="class_vect_sharp_1_1_font.html">Font</a> normalFont, <a class="el" href="class_vect_sharp_1_1_font.html">Font</a> boldFont, <a class="el" href="class_vect_sharp_1_1_font.html">Font</a> italicFont, <a class="el" href="class_vect_sharp_1_1_font.html">Font</a> boldItalicFont, <a class="el" href="class_vect_sharp_1_1_brush.html">Brush</a> defaultBrush=null)</td></tr>
 <tr class="memdesc:a3301898754c2293ec78f322f3ee1a7d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the formatting information contained in a text string into a collection of <a class="el" href="class_vect_sharp_1_1_formatted_text.html" title="Represents a run of text that should be drawn with the same style.">FormattedText</a> objects.  <a href="class_vect_sharp_1_1_formatted_text.html#a3301898754c2293ec78f322f3ee1a7d8">More...</a><br /></td></tr>
 <tr class="separator:a3301898754c2293ec78f322f3ee1a7d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae68bb2d7930232f90b7d706230258c97"><td class="memItemLeft" align="right" valign="top">static IEnumerable&lt; <a class="el" href="class_vect_sharp_1_1_formatted_text.html">FormattedText</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_formatted_text.html#ae68bb2d7930232f90b7d706230258c97">Format</a> (string text, <a class="el" href="class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780">FontFamily.StandardFontFamilies</a> fontFamily, double fontSize, <a class="el" href="class_vect_sharp_1_1_brush.html">Brush</a> defaultBrush=null)</td></tr>
-<tr class="memdesc:ae68bb2d7930232f90b7d706230258c97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the formatting information contained in a text string into a collection of <a class="el" href="class_vect_sharp_1_1_formatted_text.html" title="Represents a run of text that should be drawn with the same style.">FormattedText</a> objects, using fonts from a standard font family.  <a href="class_vect_sharp_1_1_formatted_text.html#ae68bb2d7930232f90b7d706230258c97">More...</a><br /></td></tr>
-<tr class="separator:ae68bb2d7930232f90b7d706230258c97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a760ad7c3c5ae099941c37ad6bad54b7e"><td class="memItemLeft" align="right" valign="top">static IEnumerable&lt; <a class="el" href="class_vect_sharp_1_1_formatted_text.html">FormattedText</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_formatted_text.html#a760ad7c3c5ae099941c37ad6bad54b7e">Format</a> (string text, <a class="el" href="class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780">FontFamily.StandardFontFamilies</a> fontFamily, double fontSize, bool defaultUnderline=false, <a class="el" href="class_vect_sharp_1_1_brush.html">Brush</a> defaultBrush=null)</td></tr>
+<tr class="memdesc:a760ad7c3c5ae099941c37ad6bad54b7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the formatting information contained in a text string into a collection of <a class="el" href="class_vect_sharp_1_1_formatted_text.html" title="Represents a run of text that should be drawn with the same style.">FormattedText</a> objects, using fonts from a standard font family.  <a href="class_vect_sharp_1_1_formatted_text.html#a760ad7c3c5ae099941c37ad6bad54b7e">More...</a><br /></td></tr>
+<tr class="separator:a760ad7c3c5ae099941c37ad6bad54b7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
 Properties</h2></td></tr>
@@ -254,6 +254,8 @@ Properties</h2></td></tr>
 <li>
 <code>&lt;i&gt;&lt;/i&gt;</code> or <code>&lt;em&gt;&lt;/em&gt;</code> are used for text in italics; </li>
 <li>
+<code>&lt;u&gt;&lt;/u&gt;</code> are used for underlined text; </li>
+<li>
 <code>&lt;sup&gt;&lt;/sup&gt;</code> and <code>&lt;sub&gt;&lt;/sub&gt;</code> are used, respectively, for superscript and subscript text; </li>
 <li>
 <code>&lt;#COLOUR&gt;&lt;/#&gt;</code> is used to specify the colour of the text, where <code>COLOUR</code> is a CSS colour string (e.g. <code>&lt;#red&gt;</code>, <code>&lt;#0080FF&gt;</code>, or <code>&lt;#rgba(128, 80, 52, 0.5)&gt;</code>). </li>
@@ -269,12 +271,12 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A lazy collection of <a class="el" href="class_vect_sharp_1_1_formatted_text.html" title="Represents a run of text that should be drawn with the same style.">FormattedText</a> objects. Note that every enumeration of this collection causes the text to be parsed again; if you need to enumerate this collection more than once, you should probably convert it e.g. to a List&lt;T&gt;.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_formatted_text_8cs_source.html#l00104">104</a> of file <a class="el" href="_formatted_text_8cs_source.html">FormattedText.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_formatted_text_8cs_source.html#l00105">105</a> of file <a class="el" href="_formatted_text_8cs_source.html">FormattedText.cs</a>.</p>
 
 </div>
 </div>
-<a id="ae68bb2d7930232f90b7d706230258c97"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae68bb2d7930232f90b7d706230258c97">&#9670;&nbsp;</a></span>Format() <span class="overload">[2/2]</span></h2>
+<a id="a760ad7c3c5ae099941c37ad6bad54b7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a760ad7c3c5ae099941c37ad6bad54b7e">&#9670;&nbsp;</a></span>Format() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -299,6 +301,12 @@ Properties</h2></td></tr>
           <td></td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>fontSize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>defaultUnderline</em> = <code>false</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -328,6 +336,8 @@ Properties</h2></td></tr>
 <li>
 <code>&lt;i&gt;&lt;/i&gt;</code> or <code>&lt;em&gt;&lt;/em&gt;</code> are used for text in italics; </li>
 <li>
+<code>&lt;u&gt;&lt;/u&gt;</code> are used for underlined text; </li>
+<li>
 <code>&lt;sup&gt;&lt;/sup&gt;</code> and <code>&lt;sub&gt;&lt;/sub&gt;</code> are used, respectively, for superscript and subscript text; </li>
 <li>
 <code>&lt;#COLOUR&gt;&lt;/#&gt;</code> is used to specify the colour of the text, where <code>COLOUR</code> is a CSS colour string (e.g. <code>&lt;#red&gt;</code>, <code>&lt;#0080FF&gt;</code>, or <code>&lt;#rgba(128, 80, 52, 0.5)&gt;</code>). </li>
@@ -335,13 +345,14 @@ Properties</h2></td></tr>
 </td></tr>
     <tr><td class="paramname">fontFamily</td><td>The font family from which the fonts will be created. If this is a regular font family, the bold, italic and bold-italic versions of the font will be used for the formatted text. Otherwise, the relevant font styles will be toggled (e.g. if the supplied font family is bold, then regular text in the formatted string will be displayed as bold, while bold text in the formatted string will be displayed as regular text).</td></tr>
     <tr><td class="paramname">fontSize</td><td>The size of the fonts to use.</td></tr>
+    <tr><td class="paramname">defaultUnderline</td><td>Determines whether text should be underlined by default. This is toggled by <code>&lt;u&gt;&lt;/u&gt;</code> tags.</td></tr>
     <tr><td class="paramname">defaultBrush</td><td>The default <a class="el" href="class_vect_sharp_1_1_brush.html" title="Represents a brush used to fill or stroke graphics elements. This could be a solid colour,...">Brush</a> that will be used for text runs that do not specify a colour. If this is <code>null</code>, the default <a class="el" href="class_vect_sharp_1_1_brush.html" title="Represents a brush used to fill or stroke graphics elements. This could be a solid colour,...">Brush</a> will be the one specified in the painting call.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A lazy collection of <a class="el" href="class_vect_sharp_1_1_formatted_text.html" title="Represents a run of text that should be drawn with the same style.">FormattedText</a> objects. Note that every enumeration of this collection causes the text to be parsed again; if you need to enumerate this collection more than once, you should probably convert it e.g. to a List&lt;T&gt;.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_formatted_text_8cs_source.html#l00259">259</a> of file <a class="el" href="_formatted_text_8cs_source.html">FormattedText.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_formatted_text_8cs_source.html#l00282">282</a> of file <a class="el" href="_formatted_text_8cs_source.html">FormattedText.cs</a>.</p>
 
 </div>
 </div>

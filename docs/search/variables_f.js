@@ -1,22 +1,12 @@
 var searchData=
 [
-  ['saddlebrown_1057',['SaddleBrown',['../class_vect_sharp_1_1_colours.html#ab25a9e1392d501c7126eb2567f91c529',1,'VectSharp::Colours']]],
-  ['salmon_1058',['Salmon',['../class_vect_sharp_1_1_colours.html#ac4d1b89db4a0792f6c651516af2c32e7',1,'VectSharp::Colours']]],
-  ['sandybrown_1059',['SandyBrown',['../class_vect_sharp_1_1_colours.html#a69e3d2976f21ca093b73194563ecb4b8',1,'VectSharp::Colours']]],
-  ['sceneelements_1060',['SceneElements',['../class_vect_sharp_1_1_three_d_1_1_scene.html#a905e77d78a02110ee96555a9e0a8385a',1,'VectSharp::ThreeD::Scene']]],
-  ['seagreen_1061',['SeaGreen',['../class_vect_sharp_1_1_colours.html#a51ad3957d7cd35ce99fca9e2ea70eb70',1,'VectSharp::Colours']]],
-  ['seashell_1062',['SeaShell',['../class_vect_sharp_1_1_colours.html#ad8b8e5a6990bf59858579fade5187573',1,'VectSharp::Colours']]],
-  ['sienna_1063',['Sienna',['../class_vect_sharp_1_1_colours.html#a02174fe360b79cbf263221eba935a236',1,'VectSharp::Colours']]],
-  ['silver_1064',['Silver',['../class_vect_sharp_1_1_colours.html#a1062d71d075750e7d88cd2ed2550c425',1,'VectSharp::Colours']]],
-  ['skyblue_1065',['SkyBlue',['../class_vect_sharp_1_1_colours.html#aedbc1d2386f6769badf0430326938237',1,'VectSharp::Colours']]],
-  ['slateblue_1066',['SlateBlue',['../class_vect_sharp_1_1_colours.html#a95cc78e71b824f33484820388e6ef162',1,'VectSharp::Colours']]],
-  ['slategray_1067',['SlateGray',['../class_vect_sharp_1_1_colours.html#ac99a7a674e71c7d1d046a14140e5ad00',1,'VectSharp::Colours']]],
-  ['slategrey_1068',['SlateGrey',['../class_vect_sharp_1_1_colours.html#a833dd383a1f9a112cb418d9254ffcf5e',1,'VectSharp::Colours']]],
-  ['snow_1069',['Snow',['../class_vect_sharp_1_1_colours.html#a55635ec5bd5e0b72253b69fab0932321',1,'VectSharp::Colours']]],
-  ['solidline_1070',['SolidLine',['../struct_vect_sharp_1_1_line_dash.html#a1f33a2837afe48c8b23edabd74097b38',1,'VectSharp::LineDash']]],
-  ['springgreen_1071',['SpringGreen',['../class_vect_sharp_1_1_colours.html#a08c224e1a944c7ecf5d0a6446cf37603',1,'VectSharp::Colours']]],
-  ['standardfamilies_1072',['StandardFamilies',['../class_vect_sharp_1_1_font_family.html#abf750b21f27b68a5f7159888dd293e43',1,'VectSharp::FontFamily']]],
-  ['standardfontfamilyresources_1073',['StandardFontFamilyResources',['../class_vect_sharp_1_1_font_family.html#a93d661f4d34330da759d86018bb33964',1,'VectSharp::FontFamily']]],
-  ['steelblue_1074',['SteelBlue',['../class_vect_sharp_1_1_colours.html#a07a544ea9b982e69e8953863cbfe5270',1,'VectSharp::Colours']]],
-  ['stoptolerance_1075',['StopTolerance',['../class_vect_sharp_1_1_gradient_stops.html#a3ddc7c6166f37c45e6b41755e91bfcd8',1,'VectSharp::GradientStops']]]
+  ['r_1083',['R',['../class_vect_sharp_1_1_solid_colour_brush.html#a41abaa1b9a745ca2759fd6c70997e245',1,'VectSharp.SolidColourBrush.R()'],['../struct_vect_sharp_1_1_colour.html#a4477a64d804a1624ec1fa27773be1885',1,'VectSharp.Colour.R()']]],
+  ['rebeccapurple_1084',['RebeccaPurple',['../class_vect_sharp_1_1_colours.html#a86ff0ae5deb3c958b4884ad4bdae6349',1,'VectSharp::Colours']]],
+  ['red_1085',['Red',['../class_vect_sharp_1_1_colours.html#a61eeb6bd8c4e90ad55104264028f6e63',1,'VectSharp::Colours']]],
+  ['renderactions_1086',['RenderActions',['../class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#aab220bda90e3a0c36f27b87bfbeff6f0',1,'VectSharp::Canvas::SKMultiLayerRenderCanvas']]],
+  ['renderlock_1087',['RenderLock',['../class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a7ff6c67552e1715308850a5bba174941',1,'VectSharp::Canvas::SKMultiLayerRenderCanvas']]],
+  ['resourcename_1088',['ResourceName',['../class_vect_sharp_1_1_resource_font_family.html#a671091d13a7be0a453c67c301f2c83f6',1,'VectSharp::ResourceFontFamily']]],
+  ['rightsidebearing_1089',['RightSideBearing',['../struct_vect_sharp_1_1_true_type_file_1_1_bearings.html#a57ff629c03b40a27b492b193bcc1894a',1,'VectSharp::TrueTypeFile::Bearings']]],
+  ['rosybrown_1090',['RosyBrown',['../class_vect_sharp_1_1_colours.html#ad57412828f0ae3aa2d349ad822e1ff8e',1,'VectSharp::Colours']]],
+  ['royalblue_1091',['RoyalBlue',['../class_vect_sharp_1_1_colours.html#a8b5ae240d08f69be3f138ff08b2df218',1,'VectSharp::Colours']]]
 ];

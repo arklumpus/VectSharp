@@ -1,7 +1,12 @@
 var searchData=
 [
-  ['h_971',['H',['../struct_vect_sharp_1_1_colour.html#a68497c53ff0fead819d2c166f186866e',1,'VectSharp::Colour']]],
-  ['height_972',['Height',['../struct_vect_sharp_1_1_size.html#acc8757dcc44a1061ee336b2024605d0a',1,'VectSharp::Size']]],
-  ['honeydew_973',['HoneyDew',['../class_vect_sharp_1_1_colours.html#ac8ce57b989fb85fba61ac2adf70c61c3',1,'VectSharp::Colours']]],
-  ['hotpink_974',['HotPink',['../class_vect_sharp_1_1_colours.html#a353168b387835c4f7ff1e43643d68170',1,'VectSharp::Colours']]]
+  ['g_997',['G',['../class_vect_sharp_1_1_solid_colour_brush.html#abca31cba4279c3b003c568d99a3c28b7',1,'VectSharp.SolidColourBrush.G()'],['../struct_vect_sharp_1_1_colour.html#ad3312c38e132d1ed0eaf1177dcfb29af',1,'VectSharp.Colour.G()']]],
+  ['gainsboro_998',['Gainsboro',['../class_vect_sharp_1_1_colours.html#a77f7724984181cf168b48c97a368948e',1,'VectSharp::Colours']]],
+  ['ghostwhite_999',['GhostWhite',['../class_vect_sharp_1_1_colours.html#a7f78b841c45a3a8de2e18c4512feb9e0',1,'VectSharp::Colours']]],
+  ['gold_1000',['Gold',['../class_vect_sharp_1_1_colours.html#a505dd8fa22cf4f6cb0999a43653b9cfb',1,'VectSharp::Colours']]],
+  ['goldenrod_1001',['GoldenRod',['../class_vect_sharp_1_1_colours.html#ae284410af867170418c0935c802db920',1,'VectSharp::Colours']]],
+  ['gray_1002',['Gray',['../class_vect_sharp_1_1_colours.html#a482483b851d20afacc847b9e89a22125',1,'VectSharp::Colours']]],
+  ['green_1003',['Green',['../class_vect_sharp_1_1_colours.html#ab90400a0f0fa630e1d0bae5d0a59ce57',1,'VectSharp::Colours']]],
+  ['greenyellow_1004',['GreenYellow',['../class_vect_sharp_1_1_colours.html#a4a596ac0df8d5e3d149e3688125e51f3',1,'VectSharp::Colours']]],
+  ['grey_1005',['Grey',['../class_vect_sharp_1_1_colours.html#af8dedb3484bd03c4ad45b9fbd136c712',1,'VectSharp::Colours']]]
 ];

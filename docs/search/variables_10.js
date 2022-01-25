@@ -1,10 +1,22 @@
 var searchData=
 [
-  ['tan_1076',['Tan',['../class_vect_sharp_1_1_colours.html#aeac5ea9cebbbf3831cc34c72375442fc',1,'VectSharp::Colours']]],
-  ['teal_1077',['Teal',['../class_vect_sharp_1_1_colours.html#a0aeec1cd703ea13a9bc967f65a3840b9',1,'VectSharp::Colours']]],
-  ['textconversionoptionsproperty_1078',['TextConversionOptionsProperty',['../class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#ae9a1fbea19470ff176ac79a4cac23d58',1,'VectSharp::MarkdownCanvas::MarkdownCanvasControl']]],
-  ['this_5bint_20index_5d_1079',['this[int index]',['../class_vect_sharp_1_1_gradient_stops.html#a4e21f7fb0641f329d07f4a81e8c2d822',1,'VectSharp::GradientStops']]],
-  ['thistle_1080',['Thistle',['../class_vect_sharp_1_1_colours.html#a07a937ba22a0e2ad7962e931ad82f4d8',1,'VectSharp::Colours']]],
-  ['tomato_1081',['Tomato',['../class_vect_sharp_1_1_colours.html#afc1693d6aa41d0c4c0048a431e02b161',1,'VectSharp::Colours']]],
-  ['turquoise_1082',['Turquoise',['../class_vect_sharp_1_1_colours.html#ace912b0601225eba25e5bf039adfa7f1',1,'VectSharp::Colours']]]
+  ['saddlebrown_1092',['SaddleBrown',['../class_vect_sharp_1_1_colours.html#ab25a9e1392d501c7126eb2567f91c529',1,'VectSharp::Colours']]],
+  ['salmon_1093',['Salmon',['../class_vect_sharp_1_1_colours.html#ac4d1b89db4a0792f6c651516af2c32e7',1,'VectSharp::Colours']]],
+  ['sandybrown_1094',['SandyBrown',['../class_vect_sharp_1_1_colours.html#a69e3d2976f21ca093b73194563ecb4b8',1,'VectSharp::Colours']]],
+  ['sceneelements_1095',['SceneElements',['../class_vect_sharp_1_1_three_d_1_1_scene.html#a905e77d78a02110ee96555a9e0a8385a',1,'VectSharp::ThreeD::Scene']]],
+  ['seagreen_1096',['SeaGreen',['../class_vect_sharp_1_1_colours.html#a51ad3957d7cd35ce99fca9e2ea70eb70',1,'VectSharp::Colours']]],
+  ['seashell_1097',['SeaShell',['../class_vect_sharp_1_1_colours.html#ad8b8e5a6990bf59858579fade5187573',1,'VectSharp::Colours']]],
+  ['sienna_1098',['Sienna',['../class_vect_sharp_1_1_colours.html#a02174fe360b79cbf263221eba935a236',1,'VectSharp::Colours']]],
+  ['silver_1099',['Silver',['../class_vect_sharp_1_1_colours.html#a1062d71d075750e7d88cd2ed2550c425',1,'VectSharp::Colours']]],
+  ['skyblue_1100',['SkyBlue',['../class_vect_sharp_1_1_colours.html#aedbc1d2386f6769badf0430326938237',1,'VectSharp::Colours']]],
+  ['slateblue_1101',['SlateBlue',['../class_vect_sharp_1_1_colours.html#a95cc78e71b824f33484820388e6ef162',1,'VectSharp::Colours']]],
+  ['slategray_1102',['SlateGray',['../class_vect_sharp_1_1_colours.html#ac99a7a674e71c7d1d046a14140e5ad00',1,'VectSharp::Colours']]],
+  ['slategrey_1103',['SlateGrey',['../class_vect_sharp_1_1_colours.html#a833dd383a1f9a112cb418d9254ffcf5e',1,'VectSharp::Colours']]],
+  ['snow_1104',['Snow',['../class_vect_sharp_1_1_colours.html#a55635ec5bd5e0b72253b69fab0932321',1,'VectSharp::Colours']]],
+  ['solidline_1105',['SolidLine',['../struct_vect_sharp_1_1_line_dash.html#a1f33a2837afe48c8b23edabd74097b38',1,'VectSharp::LineDash']]],
+  ['springgreen_1106',['SpringGreen',['../class_vect_sharp_1_1_colours.html#a08c224e1a944c7ecf5d0a6446cf37603',1,'VectSharp::Colours']]],
+  ['standardfamilies_1107',['StandardFamilies',['../class_vect_sharp_1_1_font_family.html#abf750b21f27b68a5f7159888dd293e43',1,'VectSharp::FontFamily']]],
+  ['standardfontfamilyresources_1108',['StandardFontFamilyResources',['../class_vect_sharp_1_1_font_family.html#a93d661f4d34330da759d86018bb33964',1,'VectSharp::FontFamily']]],
+  ['steelblue_1109',['SteelBlue',['../class_vect_sharp_1_1_colours.html#a07a544ea9b982e69e8953863cbfe5270',1,'VectSharp::Colours']]],
+  ['stoptolerance_1110',['StopTolerance',['../class_vect_sharp_1_1_gradient_stops.html#a3ddc7c6166f37c45e6b41755e91bfcd8',1,'VectSharp::GradientStops']]]
 ];

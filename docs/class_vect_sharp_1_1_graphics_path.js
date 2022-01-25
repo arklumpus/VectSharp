@@ -4,6 +4,7 @@ var class_vect_sharp_1_1_graphics_path =
     [ "AddText", "class_vect_sharp_1_1_graphics_path.html#acb6657677bfcf1f40485fa17281acee2", null ],
     [ "AddText", "class_vect_sharp_1_1_graphics_path.html#a1b20f74ab48870b64774179eb1c925b1", null ],
     [ "AddTextOnPath", "class_vect_sharp_1_1_graphics_path.html#a2b8069edbea3ceb31ef2679d0a2749cf", null ],
+    [ "AddTextUnderline", "class_vect_sharp_1_1_graphics_path.html#a74d185cefda42606e82f853ab2169f0e", null ],
     [ "Arc", "class_vect_sharp_1_1_graphics_path.html#a6c329cfe1e8228f5f4c749d6539e93ba", null ],
     [ "Arc", "class_vect_sharp_1_1_graphics_path.html#a7c75a37e1bbe6adffb843c5af63070d4", null ],
     [ "Close", "class_vect_sharp_1_1_graphics_path.html#aed7e7730ed904883e3a0fb2b901c2783", null ],

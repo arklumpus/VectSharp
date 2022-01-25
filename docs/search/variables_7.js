@@ -1,9 +1,7 @@
 var searchData=
 [
-  ['indianred_975',['IndianRed',['../class_vect_sharp_1_1_colours.html#abf9925d98c9f60e4cef66bf4c3fd99c4',1,'VectSharp::Colours']]],
-  ['indigo_976',['Indigo',['../class_vect_sharp_1_1_colours.html#a3f86e292b983aec1d7895a0ac50acf80',1,'VectSharp::Colours']]],
-  ['intensity_977',['Intensity',['../struct_vect_sharp_1_1_three_d_1_1_light_intensity.html#a0a1bd53aaaf8c6982f8865aa15d686b3',1,'VectSharp::ThreeD::LightIntensity']]],
-  ['internalpointer_978',['InternalPointer',['../class_vect_sharp_1_1_disposable_int_ptr.html#a302f3352139ebeac272a6e212503ba5b',1,'VectSharp::DisposableIntPtr']]],
-  ['isoncurve_979',['IsOnCurve',['../struct_vect_sharp_1_1_true_type_file_1_1_true_type_point.html#aff912de8c802798b6e4d3d586cf7d6df',1,'VectSharp::TrueTypeFile::TrueTypePoint']]],
-  ['ivory_980',['Ivory',['../class_vect_sharp_1_1_colours.html#af31a8c4c63c28e6428a86e8f68bbb41d',1,'VectSharp::Colours']]]
+  ['h_1006',['H',['../struct_vect_sharp_1_1_colour.html#a68497c53ff0fead819d2c166f186866e',1,'VectSharp::Colour']]],
+  ['height_1007',['Height',['../struct_vect_sharp_1_1_size.html#acc8757dcc44a1061ee336b2024605d0a',1,'VectSharp::Size']]],
+  ['honeydew_1008',['HoneyDew',['../class_vect_sharp_1_1_colours.html#ac8ce57b989fb85fba61ac2adf70c61c3',1,'VectSharp::Colours']]],
+  ['hotpink_1009',['HotPink',['../class_vect_sharp_1_1_colours.html#a353168b387835c4f7ff1e43643d68170',1,'VectSharp::Colours']]]
 ];

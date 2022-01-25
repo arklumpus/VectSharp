@@ -1,6 +1,7 @@
 var class_vect_sharp_1_1_true_type_file =
 [
     [ "Bearings", "struct_vect_sharp_1_1_true_type_file_1_1_bearings.html", "struct_vect_sharp_1_1_true_type_file_1_1_bearings" ],
+    [ "PairKerning", "class_vect_sharp_1_1_true_type_file_1_1_pair_kerning.html", "class_vect_sharp_1_1_true_type_file_1_1_pair_kerning" ],
     [ "TrueTypePoint", "struct_vect_sharp_1_1_true_type_file_1_1_true_type_point.html", "struct_vect_sharp_1_1_true_type_file_1_1_true_type_point" ],
     [ "VerticalMetrics", "struct_vect_sharp_1_1_true_type_file_1_1_vertical_metrics.html", "struct_vect_sharp_1_1_true_type_file_1_1_vertical_metrics" ],
     [ "Destroy", "class_vect_sharp_1_1_true_type_file.html#af90110e53ded920a9f3fbb1906ebcfd2", null ],
@@ -10,6 +11,11 @@ var class_vect_sharp_1_1_true_type_file =
     [ "Get1000EmGlyphVerticalMetrics", "class_vect_sharp_1_1_true_type_file.html#ab1795c553123fef65c8a79b06df94b7c", null ],
     [ "Get1000EmGlyphWidth", "class_vect_sharp_1_1_true_type_file.html#a78be18e6d87950d5d1bbaf1970a00564", null ],
     [ "Get1000EmGlyphWidth", "class_vect_sharp_1_1_true_type_file.html#ada8a81ebe29794884fd957163fbd99e8", null ],
+    [ "Get1000EmKerning", "class_vect_sharp_1_1_true_type_file.html#a31fea5eeabcaa93b2637eaba8ed69c27", null ],
+    [ "Get1000EmKerning", "class_vect_sharp_1_1_true_type_file.html#a533bb576f83c40d4a148e7357b34f89c", null ],
+    [ "Get1000EmUnderlineIntersections", "class_vect_sharp_1_1_true_type_file.html#a516d107a5b03f7d26306a2baeca6467a", null ],
+    [ "Get1000EmUnderlinePosition", "class_vect_sharp_1_1_true_type_file.html#a1388de7ef1645e051578d813649bc69b", null ],
+    [ "Get1000EmUnderlineThickness", "class_vect_sharp_1_1_true_type_file.html#a5b5bb2fb701f97516051c590d799e969", null ],
     [ "Get1000EmWinAscent", "class_vect_sharp_1_1_true_type_file.html#ad54089217ce9110b5efb0b1668238761", null ],
     [ "Get1000EmXMax", "class_vect_sharp_1_1_true_type_file.html#a37a6a96e07782c4f6264a5ee11408618", null ],
     [ "Get1000EmXMin", "class_vect_sharp_1_1_true_type_file.html#a8eacb1aad853f9938824a90c43dd4171", null ],
@@ -21,6 +27,7 @@ var class_vect_sharp_1_1_true_type_file =
     [ "GetGlyphIndex", "class_vect_sharp_1_1_true_type_file.html#a9c43d885920fab37a9314aa390453bc3", null ],
     [ "GetGlyphPath", "class_vect_sharp_1_1_true_type_file.html#ac88599818d6e845a6a212e2737422576", null ],
     [ "GetGlyphPath", "class_vect_sharp_1_1_true_type_file.html#af3cd75d018082a8265b07cac951ef585", null ],
+    [ "GetItalicAngle", "class_vect_sharp_1_1_true_type_file.html#a7bfa118192a7224fce438753c6667994", null ],
     [ "GetLastCharIndex", "class_vect_sharp_1_1_true_type_file.html#acc93935c524ad9ec77d8ca0b1d44055b", null ],
     [ "IsBold", "class_vect_sharp_1_1_true_type_file.html#a7e8376d45118eef1099fe0ad33d0e21b", null ],
     [ "IsFixedPitch", "class_vect_sharp_1_1_true_type_file.html#a5cbc0138ead9fd519e09e8f1988c7117", null ],

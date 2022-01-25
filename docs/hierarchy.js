@@ -12,6 +12,7 @@ var hierarchy =
     [ "Canvas", null, [
       [ "VectSharp.Canvas.SKMultiLayerRenderCanvas", "class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html", null ]
     ] ],
+    [ "VectSharp.TrueTypeFile.ClassDefinitionTable.ClassRangeRecord", "struct_vect_sharp_1_1_true_type_file_1_1_class_definition_table_1_1_class_range_record.html", null ],
     [ "VectSharp.Colours", "class_vect_sharp_1_1_colours.html", null ],
     [ "VectSharp.Font.DetailedFontMetrics", "class_vect_sharp_1_1_font_1_1_detailed_font_metrics.html", null ],
     [ "VectSharp.Document", "class_vect_sharp_1_1_document.html", null ],
@@ -24,6 +25,7 @@ var hierarchy =
     [ "VectSharp.FontFamily", "class_vect_sharp_1_1_font_family.html", [
       [ "VectSharp.ResourceFontFamily", "class_vect_sharp_1_1_resource_font_family.html", null ]
     ] ],
+    [ "VectSharp.Font.FontUnderline", "class_vect_sharp_1_1_font_1_1_font_underline.html", null ],
     [ "VectSharp.Markdown.FormattedString", "struct_vect_sharp_1_1_markdown_1_1_formatted_string.html", null ],
     [ "VectSharp.FormattedText", "class_vect_sharp_1_1_formatted_text.html", null ],
     [ "VectSharp.FormattedTextExtensions", "class_vect_sharp_1_1_formatted_text_extensions.html", null ],
@@ -77,9 +79,11 @@ var hierarchy =
     [ "VectSharp.Fonts.Nimbus", "class_vect_sharp_1_1_fonts_1_1_nimbus.html", null ],
     [ "VectSharp.ThreeD.ObjectFactory", "class_vect_sharp_1_1_three_d_1_1_object_factory.html", null ],
     [ "VectSharp.Page", "class_vect_sharp_1_1_page.html", null ],
+    [ "VectSharp.TrueTypeFile.PairKerning", "class_vect_sharp_1_1_true_type_file_1_1_pair_kerning.html", null ],
     [ "VectSharp.SVG.Parser", "class_vect_sharp_1_1_s_v_g_1_1_parser.html", null ],
     [ "VectSharp.PDF.PDFContextInterpreter", "class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html", null ],
     [ "VectSharp.Point", "struct_vect_sharp_1_1_point.html", null ],
+    [ "VectSharp.TrueTypeFile.CoverageTable.RangeRecord", "struct_vect_sharp_1_1_true_type_file_1_1_coverage_table_1_1_range_record.html", null ],
     [ "VectSharp.Raster.Raster", "class_vect_sharp_1_1_raster_1_1_raster.html", null ],
     [ "VectSharp.Canvas.RenderAction", "class_vect_sharp_1_1_canvas_1_1_render_action.html", null ],
     [ "VectSharp.Segment", "class_vect_sharp_1_1_segment.html", null ],
