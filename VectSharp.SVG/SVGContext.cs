@@ -164,13 +164,14 @@ namespace VectSharp.SVG
         private Stack<string> clipPaths;
 
         private bool TextToPaths = false;
+        private SVGContextInterpreter.TextOptions TextOption = SVGContextInterpreter.TextOptions.SubsetFonts;
 
         private Dictionary<string, string> linkDestinations;
 
         XmlElement definitions;
         Dictionary<Brush, string> gradients;
 
-        public SVGContext(double width, double height, bool textToPaths, Dictionary<string, string> linkDestinations)
+        public SVGContext(double width, double height, bool textToPaths, SVGContextInterpreter.TextOptions textOption, Dictionary<string, string> linkDestinations)
         {
             this.linkDestinations = linkDestinations;
 
@@ -222,6 +223,7 @@ namespace VectSharp.SVG
             currentElement.AppendChild(definitions);
 
             this.TextToPaths = textToPaths;
+            this.TextOption = textOption;
         }
 
 
@@ -483,7 +485,7 @@ namespace VectSharp.SVG
                     textElement.SetAttribute("font-style", "oblique");
                 }
 
-                textElement.InnerText = text;
+                ProcessText(text, textElement);
 
                 if (!string.IsNullOrEmpty(Tag))
                 {
@@ -870,7 +872,7 @@ namespace VectSharp.SVG
                     textElement.SetAttribute("font-style", "oblique");
                 }
 
-                textElement.InnerText = text;
+                ProcessText(text, textElement);
 
                 if (!string.IsNullOrEmpty(Tag))
                 {
@@ -1096,6 +1098,96 @@ namespace VectSharp.SVG
 
             Restore();
         }
+
+        private void ProcessText(string text, XmlNode parent)
+        {
+            if (Font.EnableKerning && this.TextOption == SVGContextInterpreter.TextOptions.SubsetFonts)
+            {
+                List<(string, Point)> tSpans = new List<(string, Point)>();
+
+                StringBuilder currentRun = new StringBuilder();
+                Point currentKerning = new Point();
+
+                Point currentGlyphPlacementDelta = new Point();
+                Point currentGlyphAdvanceDelta = new Point();
+                Point nextGlyphPlacementDelta = new Point();
+                Point nextGlyphAdvanceDelta = new Point();
+
+                for (int i = 0; i < text.Length; i++)
+                {
+                    if (i < text.Length - 1)
+                    {
+                        currentGlyphPlacementDelta = nextGlyphPlacementDelta;
+                        currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
+                        nextGlyphAdvanceDelta = new Point();
+                        nextGlyphPlacementDelta = new Point();
+
+                        TrueTypeFile.PairKerning kerning = Font.FontFamily.TrueTypeFile.Get1000EmKerning(text[i], text[i + 1]);
+
+                        if (kerning != null)
+                        {
+                            currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
+                            currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+
+                            nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
+                            nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
+                        }
+                    }
+
+                    if (currentGlyphPlacementDelta.X != 0 || currentGlyphPlacementDelta.Y != 0 || currentGlyphAdvanceDelta.X != 0 || currentGlyphAdvanceDelta.Y != 0)
+                    {
+                        if (currentRun.Length > 0)
+                        {
+                            tSpans.Add((currentRun.ToString(), currentKerning));
+
+                            tSpans.Add((text[i].ToString(), new Point(currentGlyphPlacementDelta.X * Font.FontSize / 1000, currentGlyphPlacementDelta.Y * Font.FontSize / 1000)));
+
+                            currentRun.Clear();
+                            currentKerning = new Point((currentGlyphAdvanceDelta.X - currentGlyphPlacementDelta.X) * Font.FontSize / 1000, (currentGlyphAdvanceDelta.Y - currentGlyphPlacementDelta.Y) * Font.FontSize / 1000);
+                        }
+                        else
+                        {
+                            tSpans.Add((text[i].ToString(), new Point(currentGlyphPlacementDelta.X * Font.FontSize / 1000 + currentKerning.X, currentGlyphPlacementDelta.Y * Font.FontSize / 1000 + currentKerning.Y)));
+
+                            currentRun.Clear();
+                            currentKerning = new Point((currentGlyphAdvanceDelta.X - currentGlyphPlacementDelta.X) * Font.FontSize / 1000, (currentGlyphAdvanceDelta.Y - currentGlyphPlacementDelta.Y) * Font.FontSize / 1000);
+                        }
+                    }
+                    else
+                    {
+                        currentRun.Append(text[i]);
+                    }
+                }
+
+                if (currentRun.Length > 0)
+                {
+                    tSpans.Add((currentRun.ToString(), currentKerning));
+                }
+
+                for (int i = 0; i < tSpans.Count; i++)
+                {
+                    XmlElement tspanElement = Document.CreateElement("tspan", SVGNamespace);
+                    tspanElement.InnerText = tSpans[i].Item1.Replace(" ", "\u00A0");
+
+                    if (tSpans[i].Item2.X != 0)
+                    {
+                        tspanElement.SetAttribute("dx", tSpans[i].Item2.X.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    }
+
+                    if (tSpans[i].Item2.Y != 0)
+                    {
+                        tspanElement.SetAttribute("dy", tSpans[i].Item2.Y.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    }
+
+                    parent.AppendChild(tspanElement);
+                }
+
+            }
+            else
+            {
+                parent.InnerText = text.Replace(" ", "\u00A0");
+            }
+        }
     }
 
 
@@ -1162,7 +1254,7 @@ namespace VectSharp.SVG
 
             bool textToPaths = textOption == TextOptions.ConvertIntoPaths;
 
-            SVGContext ctx = new SVGContext(page.Width, page.Height, textToPaths, linkDestinations);
+            SVGContext ctx = new SVGContext(page.Width, page.Height, textToPaths, textOption, linkDestinations);
 
             ctx.Rectangle(0, 0, page.Width, page.Height);
             ctx.SetFillStyle(page.Background);
@@ -1331,7 +1423,9 @@ namespace VectSharp.SVG
 
             ctx.Document.DocumentElement.SetAttribute("style", "font-synthesis: none;");
 
-            ctx.Document.Save(stream);
+            WriteXMLToStream(ctx.Document.DocumentElement, stream);
+
+            //ctx.Document.Save(stream);
         }
 
         internal static XmlElement ToLinearGradient(this LinearGradientBrush brush, XmlDocument document, string gradientId)
@@ -1387,6 +1481,72 @@ namespace VectSharp.SVG
             }
 
             return gradient;
+        }
+
+        // Adapted from http://www.ericwhite.com/blog/2011/05/09/custom-formatting-of-xml-using-linq-to-xml-2/
+        private static void WriteStartElement(XmlWriter writer, XmlElement e)
+        {
+            writer.WriteStartElement(e.Prefix, e.LocalName, e.NamespaceURI);
+
+            foreach (XmlAttribute a in e.Attributes)
+            {
+                writer.WriteAttributeString(a.Prefix, a.LocalName, a.NamespaceURI, a.Value);
+            }
+        }
+
+        private static void WriteElement(XmlWriter writer, XmlElement e)
+        {
+            if (e.Name == "text")
+            {
+                XmlWriterSettings settings = new XmlWriterSettings();
+                settings.Indent = false;
+                settings.OmitXmlDeclaration = true;
+                settings.ConformanceLevel = ConformanceLevel.Fragment;
+                settings.NamespaceHandling = NamespaceHandling.OmitDuplicates;
+
+                WriteStartElement(writer, e);
+
+                StringBuilder sb = new StringBuilder();
+
+                using (XmlWriter newWriter = XmlWriter.Create(sb, settings))
+                {
+                    foreach (XmlNode n in e.ChildNodes)
+                    {
+                        n.WriteTo(newWriter);
+                    }
+                }
+
+                writer.WriteRaw(sb.ToString().Replace(" xmlns=\"http://www.w3.org/2000/svg\">", ">"));
+
+                writer.WriteEndElement();
+            }
+            else
+            {
+                WriteStartElement(writer, e);
+                foreach (XmlNode n in e.ChildNodes)
+                {
+                    if (n is XmlElement element)
+                    {
+                        WriteElement(writer, element);
+                    }
+                    else
+                    {
+                        n.WriteTo(writer);
+                    }
+                }
+                writer.WriteEndElement();
+            }
+        }
+
+        private static void WriteXMLToStream(XmlElement element, Stream output)
+        {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+
+            using (XmlWriter writer = XmlWriter.Create(output, settings))
+            {
+                WriteElement(writer, element);
+            }
         }
     }
 }

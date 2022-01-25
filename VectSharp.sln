@@ -29,9 +29,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectSharp.MarkdownCanvas", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkdownViewerDemo", "MarkdownViewerDemo\MarkdownViewerDemo.csproj", "{2A445826-7054-413B-A63B-1086D7EF25C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectSharp.Fonts.Nimbus", "VectSharp.Fonts.Nimbus\VectSharp.Fonts.Nimbus.csproj", "{07F626B2-ED90-4127-A17C-5812C5554E0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectSharp.Fonts.Nimbus", "VectSharp.Fonts.Nimbus\VectSharp.Fonts.Nimbus.csproj", "{07F626B2-ED90-4127-A17C-5812C5554E0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectSharp.Raster.ImageSharp", "VectSharp.Raster.ImageSharp\VectSharp.Raster.ImageSharp.csproj", "{AB5649FA-8451-4628-AE9B-6F68F1CE71D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectSharp.Raster.ImageSharp", "VectSharp.Raster.ImageSharp\VectSharp.Raster.ImageSharp.csproj", "{AB5649FA-8451-4628-AE9B-6F68F1CE71D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

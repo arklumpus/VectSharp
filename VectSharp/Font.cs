@@ -28,6 +28,11 @@ namespace VectSharp
     public class Font
     {
         /// <summary>
+        /// Determines whether text kerning is enabled. Note that, even when this is set to <see langword="false" />, text kerning will be applied on some platforms. For the best consistency, leave this set to <see langword="true"/>.
+        /// </summary>
+        public static bool EnableKerning = true;
+
+        /// <summary>
         /// Represents options to underline text.
         /// </summary>
         public class FontUnderline
@@ -125,7 +130,12 @@ namespace VectSharp
             /// </summary>
             public double Bottom { get; }
 
-            internal DetailedFontMetrics(double width, double height, double leftSideBearing, double rightSideBearing, double top, double bottom)
+            /// <summary>
+            /// Advance width of the text (excluding any left- or right- side bearing).
+            /// </summary>
+            public double AdvanceWidth { get; }
+
+            internal DetailedFontMetrics(double width, double height, double leftSideBearing, double rightSideBearing, double top, double bottom, double advanceWidth)
             {
                 this.Width = width;
                 this.Height = height;
@@ -133,6 +143,7 @@ namespace VectSharp
                 this.RightSideBearing = rightSideBearing;
                 this.Top = top;
                 this.Bottom = bottom;
+                this.AdvanceWidth = advanceWidth;
             }
         }
 
@@ -295,13 +306,37 @@ namespace VectSharp
                 double yMin = 0;
                 double yMax = 0;
 
+                Point currentGlyphPlacementDelta = new Point();
+                Point currentGlyphAdvanceDelta = new Point();
+                Point nextGlyphPlacementDelta = new Point();
+                Point nextGlyphAdvanceDelta = new Point();
+
                 for (int i = 0; i < text.Length; i++)
                 {
-                    width += this.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(text[i]) * this.FontSize / 1000;
+                    if (Font.EnableKerning && i < text.Length - 1)
+                    {
+                        currentGlyphPlacementDelta = nextGlyphPlacementDelta;
+                        currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
+                        nextGlyphAdvanceDelta = new Point();
+                        nextGlyphPlacementDelta = new Point();
+
+                        TrueTypeFile.PairKerning kerning = this.FontFamily.TrueTypeFile.Get1000EmKerning(text[i], text[i + 1]);
+
+                        if (kerning != null)
+                        {
+                            currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
+                            currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+
+                            nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
+                            nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
+                        }
+                    }
+
+                    width += (this.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(text[i]) + currentGlyphAdvanceDelta.X) * this.FontSize / 1000;
                     TrueTypeFile.VerticalMetrics vMet = this.FontFamily.TrueTypeFile.Get1000EmGlyphVerticalMetrics(text[i]);
 
-                    yMin = Math.Min(yMin, vMet.YMin * this.FontSize / 1000);
-                    yMax = Math.Max(yMax, vMet.YMax * this.FontSize / 1000);
+                    yMin = Math.Min(yMin, (vMet.YMin + currentGlyphPlacementDelta.Y) * this.FontSize / 1000);
+                    yMax = Math.Max(yMax, (vMet.YMax + currentGlyphPlacementDelta.Y) * this.FontSize / 1000);
                 }
 
                 width -= this.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(text[0]).LeftSideBearing * this.FontSize / 1000;
@@ -328,26 +363,52 @@ namespace VectSharp
                 double yMin = 0;
                 double yMax = 0;
 
+                Point currentGlyphPlacementDelta = new Point();
+                Point currentGlyphAdvanceDelta = new Point();
+                Point nextGlyphPlacementDelta = new Point();
+                Point nextGlyphAdvanceDelta = new Point();
+
                 for (int i = 0; i < text.Length; i++)
                 {
-                    width += this.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(text[i]) * this.FontSize / 1000;
+                    if (Font.EnableKerning && i < text.Length - 1)
+                    {
+                        currentGlyphPlacementDelta = nextGlyphPlacementDelta;
+                        currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
+                        nextGlyphAdvanceDelta = new Point();
+                        nextGlyphPlacementDelta = new Point();
+
+                        TrueTypeFile.PairKerning kerning = this.FontFamily.TrueTypeFile.Get1000EmKerning(text[i], text[i + 1]);
+
+                        if (kerning != null)
+                        {
+                            currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
+                            currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+
+                            nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
+                            nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
+                        }
+                    }
+
+                    width += (this.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(text[i]) + currentGlyphAdvanceDelta.X) * this.FontSize / 1000;
                     TrueTypeFile.VerticalMetrics vMet = this.FontFamily.TrueTypeFile.Get1000EmGlyphVerticalMetrics(text[i]);
 
-                    yMin = Math.Min(yMin, vMet.YMin * this.FontSize / 1000);
-                    yMax = Math.Max(yMax, vMet.YMax * this.FontSize / 1000);
+                    yMin = Math.Min(yMin, (vMet.YMin + currentGlyphPlacementDelta.Y) * this.FontSize / 1000);
+                    yMax = Math.Max(yMax, (vMet.YMax + currentGlyphPlacementDelta.Y) * this.FontSize / 1000);
                 }
 
                 double lsb = this.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(text[0]).LeftSideBearing * this.FontSize / 1000;
                 double rsb = this.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(text[text.Length - 1]).RightSideBearing * this.FontSize / 1000;
 
+                double advanceWidth = width;
+
                 width -= lsb;
                 width -= rsb;
 
-                return new DetailedFontMetrics(width, yMax - yMin, lsb, rsb, yMax, yMin);
+                return new DetailedFontMetrics(width, yMax - yMin, lsb, rsb, yMax, yMin, advanceWidth);
             }
             else
             {
-                return new DetailedFontMetrics(0, 0, 0, 0, 0, 0);
+                return new DetailedFontMetrics(0, 0, 0, 0, 0, 0, 0);
             }
         }
     }

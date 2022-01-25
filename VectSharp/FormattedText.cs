@@ -539,6 +539,7 @@ namespace VectSharp
         internal static Font.DetailedFontMetrics Measure(this IEnumerable<FormattedText> text, List<FormattedText> items, List<Font.DetailedFontMetrics> allMetrics)
         {
             double width = 0;
+            double advanceWidth = 0;
 
             double lsb = 0;
             double rsb = 0;
@@ -561,6 +562,8 @@ namespace VectSharp
                     bottom = Math.Min(bottom, metrics.Bottom);
                     rsb = metrics.RightSideBearing;
 
+                    advanceWidth += metrics.AdvanceWidth;
+
                     if (!isFirst)
                     {
                         width += metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing;
@@ -577,6 +580,8 @@ namespace VectSharp
 
                     Font.DetailedFontMetrics metrics = newFont.MeasureTextAdvanced(txt.Text);
                     allMetrics?.Add(metrics);
+
+                    advanceWidth += metrics.AdvanceWidth;
 
                     if (txt.Script == Script.Subscript)
                     {
@@ -610,7 +615,7 @@ namespace VectSharp
 
             width -= rsb;
 
-            return new Font.DetailedFontMetrics(width, top - bottom, lsb, rsb, top, bottom);
+            return new Font.DetailedFontMetrics(width, top - bottom, lsb, rsb, top, bottom, advanceWidth);
         }
 
         /// <summary>

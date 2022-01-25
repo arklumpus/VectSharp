@@ -584,6 +584,90 @@ namespace VectSharp.PDF
     /// </summary>
     public static class PDFContextInterpreter
     {
+        private static string GetKernedString(string text, Font font)
+        {
+            List<(string, Point)> tSpans = new List<(string, Point)>();
+
+            StringBuilder currentRun = new StringBuilder();
+            Point currentKerning = new Point();
+
+            Point currentGlyphPlacementDelta = new Point();
+            Point currentGlyphAdvanceDelta = new Point();
+            Point nextGlyphPlacementDelta = new Point();
+            Point nextGlyphAdvanceDelta = new Point();
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (i < text.Length - 1)
+                {
+                    currentGlyphPlacementDelta = nextGlyphPlacementDelta;
+                    currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
+                    nextGlyphAdvanceDelta = new Point();
+                    nextGlyphPlacementDelta = new Point();
+
+                    TrueTypeFile.PairKerning kerning = font.FontFamily.TrueTypeFile.Get1000EmKerning(text[i], text[i + 1]);
+
+                    if (kerning != null)
+                    {
+                        currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
+                        currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+
+                        nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
+                        nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
+                    }
+                }
+
+                if (currentGlyphPlacementDelta.X != 0 || currentGlyphPlacementDelta.Y != 0 || currentGlyphAdvanceDelta.X != 0 || currentGlyphAdvanceDelta.Y != 0)
+                {
+                    if (currentRun.Length > 0)
+                    {
+                        tSpans.Add((currentRun.ToString(), currentKerning));
+
+                        tSpans.Add((text[i].ToString(), new Point(currentGlyphPlacementDelta.X, currentGlyphPlacementDelta.Y)));
+
+                        currentRun.Clear();
+                        currentKerning = new Point(currentGlyphAdvanceDelta.X - currentGlyphPlacementDelta.X, currentGlyphAdvanceDelta.Y - currentGlyphPlacementDelta.Y);
+                    }
+                    else
+                    {
+                        tSpans.Add((text[i].ToString(), new Point(currentGlyphPlacementDelta.X + currentKerning.X, currentGlyphPlacementDelta.Y + currentKerning.Y)));
+
+                        currentRun.Clear();
+                        currentKerning = new Point(currentGlyphAdvanceDelta.X - currentGlyphPlacementDelta.X, currentGlyphAdvanceDelta.Y - currentGlyphPlacementDelta.Y);
+                    }
+                }
+                else
+                {
+                    currentRun.Append(text[i]);
+                }
+            }
+
+            if (currentRun.Length > 0)
+            {
+                tSpans.Add((currentRun.ToString(), currentKerning));
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append("[");
+
+            for (int i = 0; i < tSpans.Count; i++)
+            {
+                if (tSpans[i].Item2.X != 0)
+                {
+                    sb.Append((-tSpans[i].Item2.X).ToString("0.################", System.Globalization.CultureInfo.InvariantCulture));
+                }
+
+                sb.Append("(");
+                sb.Append(EscapeStringForPDF(tSpans[i].Item1));
+                sb.Append(")");
+            }
+
+            sb.Append("]");
+
+            return sb.ToString();
+        }
+
+
         private static string EscapeStringForPDF(string str)
         {
             StringBuilder sb = new StringBuilder();
@@ -2122,7 +2206,7 @@ namespace VectSharp.PDF
                     if (!segments[i].isSymbolic)
                     {
                         sb.Append("/" + nonSymbolFontIds[fig.Font.FontFamily.FileName] + " " + fig.Font.FontSize.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " Tf\n");
-                        sb.Append("(" + EscapeStringForPDF(segments[i].txt) + ") Tj\n");
+                        sb.Append(GetKernedString(segments[i].txt, fig.Font) + " TJ\n");
                     }
                     else
                     {

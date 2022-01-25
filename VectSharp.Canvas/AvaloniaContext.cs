@@ -1520,6 +1520,124 @@ namespace VectSharp.Canvas
 
         public void FillText(string text, double x, double y)
         {
+            if (!Font.EnableKerning)
+            {
+                FillSimpleText(text, x, y);
+            }
+            else
+            {
+                List<(string, Point)> tSpans = new List<(string, Point)>();
+
+                System.Text.StringBuilder currentRun = new System.Text.StringBuilder();
+                Point currentKerning = new Point();
+
+                Point currentGlyphPlacementDelta = new Point();
+                Point currentGlyphAdvanceDelta = new Point();
+                Point nextGlyphPlacementDelta = new Point();
+                Point nextGlyphAdvanceDelta = new Point();
+
+                for (int i = 0; i < text.Length; i++)
+                {
+                    if (i < text.Length - 1)
+                    {
+                        currentGlyphPlacementDelta = nextGlyphPlacementDelta;
+                        currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
+                        nextGlyphAdvanceDelta = new Point();
+                        nextGlyphPlacementDelta = new Point();
+
+                        TrueTypeFile.PairKerning kerning = Font.FontFamily.TrueTypeFile.Get1000EmKerning(text[i], text[i + 1]);
+
+                        if (kerning != null)
+                        {
+                            currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
+                            currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+
+                            nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
+                            nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
+                        }
+                    }
+
+                    if (currentGlyphPlacementDelta.X != 0 || currentGlyphPlacementDelta.Y != 0 || currentGlyphAdvanceDelta.X != 0 || currentGlyphAdvanceDelta.Y != 0)
+                    {
+                        if (currentRun.Length > 0)
+                        {
+                            tSpans.Add((currentRun.ToString(), currentKerning));
+
+                            tSpans.Add((text[i].ToString(), new Point(currentGlyphPlacementDelta.X * Font.FontSize / 1000, currentGlyphPlacementDelta.Y * Font.FontSize / 1000)));
+
+                            currentRun.Clear();
+                            currentKerning = new Point((currentGlyphAdvanceDelta.X - currentGlyphPlacementDelta.X) * Font.FontSize / 1000, (currentGlyphAdvanceDelta.Y - currentGlyphPlacementDelta.Y) * Font.FontSize / 1000);
+                        }
+                        else
+                        {
+                            tSpans.Add((text[i].ToString(), new Point(currentGlyphPlacementDelta.X * Font.FontSize / 1000 + currentKerning.X, currentGlyphPlacementDelta.Y * Font.FontSize / 1000 + currentKerning.Y)));
+
+                            currentRun.Clear();
+                            currentKerning = new Point((currentGlyphAdvanceDelta.X - currentGlyphPlacementDelta.X) * Font.FontSize / 1000, (currentGlyphAdvanceDelta.Y - currentGlyphPlacementDelta.Y) * Font.FontSize / 1000);
+                        }
+                    }
+                    else
+                    {
+                        currentRun.Append(text[i]);
+                    }
+                }
+
+                if (currentRun.Length > 0)
+                {
+                    tSpans.Add((currentRun.ToString(), currentKerning));
+                }
+
+                double currX = x;
+                double currY = y;
+
+                Font.DetailedFontMetrics fullMetrics = Font.MeasureTextAdvanced(text);
+
+                if (TextBaseline == TextBaselines.Top)
+                {
+                    if (Font.FontFamily.TrueTypeFile != null)
+                    {
+                        currY += fullMetrics.Top;
+                    }
+                }
+                else if (TextBaseline == TextBaselines.Middle)
+                {
+                    if (Font.FontFamily.TrueTypeFile != null)
+                    {
+                        currY += (fullMetrics.Top + fullMetrics.Bottom) * 0.5;
+                    }
+                }
+                else if (TextBaseline == TextBaselines.Bottom)
+                {
+                    if (Font.FontFamily.TrueTypeFile != null)
+                    {
+                        currY += fullMetrics.Bottom;
+                    }
+                }
+
+                TextBaseline = TextBaselines.Baseline;
+
+                for (int i = 0; i < tSpans.Count; i++)
+                {
+                    Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(tSpans[i].Item1);
+
+                    if (i == 0)
+                    {
+                        FillSimpleText(tSpans[i].Item1, currX + tSpans[i].Item2.X, currY + tSpans[i].Item2.Y);
+                    }
+                    else
+                    {
+                        FillSimpleText(tSpans[i].Item1, currX + metrics.LeftSideBearing - fullMetrics.LeftSideBearing + tSpans[i].Item2.X, currY + tSpans[i].Item2.Y);
+                    }
+
+
+                    currX += metrics.AdvanceWidth + tSpans[i].Item2.X;
+                    currY += tSpans[i].Item2.Y;
+                }
+            }
+        }
+
+        public void FillSimpleText(string text, double x, double y)
+        {
             Utils.CoerceNaNAndInfinityToZero(ref x, ref y);
 
             if (_textOption == AvaloniaContextInterpreter.TextOptions.NeverConvert || (_textOption == AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary && Font.FontFamily.IsStandardFamily && Font.FontFamily.FileName != "ZapfDingbats" && Font.FontFamily.FileName != "Symbol"))

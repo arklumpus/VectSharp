@@ -146,15 +146,41 @@ namespace VectSharp
                     break;
             }
 
+            Point currentGlyphPlacementDelta = new Point();
+            Point currentGlyphAdvanceDelta = new Point();
+            Point nextGlyphPlacementDelta = new Point();
+            Point nextGlyphAdvanceDelta = new Point();
+
             for (int i = 0; i < text.Length; i++)
             {
                 string c = text.Substring(i, 1);
 
+                if (Font.EnableKerning && i < text.Length - 1)
+                {
+                    currentGlyphPlacementDelta = nextGlyphPlacementDelta;
+                    currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
+                    nextGlyphAdvanceDelta = new Point();
+                    nextGlyphPlacementDelta = new Point();
+
+                    TrueTypeFile.PairKerning kerning = font.FontFamily.TrueTypeFile.Get1000EmKerning(text[i], text[i + 1]);
+
+                    if (kerning != null)
+                    {
+                        currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
+                        currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+
+                        nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
+                        nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
+                    }
+                }
+
                 Font.DetailedFontMetrics metrics = font.MeasureTextAdvanced(c);
 
-                Point origin = path.GetPointAtRelative(reference + currDelta);
+                Point origin = path.GetPointAtRelative(reference + currDelta + currentGlyphPlacementDelta.X * font.FontSize / 1000);
 
-                Point tangent = path.GetTangentAtRelative(reference + currDelta + (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing) / pathLength * 0.5);
+                Point tangent = path.GetTangentAtRelative(reference + currDelta + currentGlyphPlacementDelta.X * font.FontSize / 1000 + (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing) / pathLength * 0.5);
+
+                origin = new Point(origin.X - tangent.Y * currentGlyphPlacementDelta.Y * font.FontSize / 1000, origin.Y + tangent.X * currentGlyphPlacementDelta.Y * font.FontSize / 1000);
 
                 this.Save();
 
@@ -209,11 +235,11 @@ namespace VectSharp
 
                 if (i > 0)
                 {
-                    currDelta += (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing) / pathLength;
+                    currDelta += (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing + currentGlyphAdvanceDelta.X * font.FontSize / 1000) / pathLength;
                 }
                 else
                 {
-                    currDelta += (metrics.Width + metrics.RightSideBearing) / pathLength;
+                    currDelta += (metrics.Width + metrics.RightSideBearing + currentGlyphAdvanceDelta.X * font.FontSize / 1000) / pathLength;
                 }
             }
         }
@@ -257,15 +283,41 @@ namespace VectSharp
                     break;
             }
 
+            Point currentGlyphPlacementDelta = new Point();
+            Point currentGlyphAdvanceDelta = new Point();
+            Point nextGlyphPlacementDelta = new Point();
+            Point nextGlyphAdvanceDelta = new Point();
+
             for (int i = 0; i < text.Length; i++)
             {
                 string c = text.Substring(i, 1);
 
+                if (Font.EnableKerning && i < text.Length - 1)
+                {
+                    currentGlyphPlacementDelta = nextGlyphPlacementDelta;
+                    currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
+                    nextGlyphAdvanceDelta = new Point();
+                    nextGlyphPlacementDelta = new Point();
+
+                    TrueTypeFile.PairKerning kerning = font.FontFamily.TrueTypeFile.Get1000EmKerning(text[i], text[i + 1]);
+
+                    if (kerning != null)
+                    {
+                        currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
+                        currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+
+                        nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
+                        nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
+                    }
+                }
+
                 Font.DetailedFontMetrics metrics = font.MeasureTextAdvanced(c);
 
-                Point origin = path.GetPointAtRelative(reference + currDelta);
+                Point origin = path.GetPointAtRelative(reference + currDelta + currentGlyphPlacementDelta.X * font.FontSize / 1000);
 
-                Point tangent = path.GetTangentAtRelative(reference + currDelta + (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing) / pathLength * 0.5);
+                Point tangent = path.GetTangentAtRelative(reference + currDelta + currentGlyphPlacementDelta.X * font.FontSize / 1000 + (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing) / pathLength * 0.5);
+
+                origin = new Point(origin.X - tangent.Y * currentGlyphPlacementDelta.Y * font.FontSize / 1000, origin.Y + tangent.X * currentGlyphPlacementDelta.Y * font.FontSize / 1000);
 
                 this.Save();
 
@@ -320,11 +372,11 @@ namespace VectSharp
 
                 if (i > 0)
                 {
-                    currDelta += (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing) / pathLength;
+                    currDelta += (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing + currentGlyphAdvanceDelta.X * font.FontSize / 1000) / pathLength;
                 }
                 else
                 {
-                    currDelta += (metrics.Width + metrics.RightSideBearing) / pathLength;
+                    currDelta += (metrics.Width + metrics.RightSideBearing + currentGlyphAdvanceDelta.X * font.FontSize / 1000) / pathLength;
                 }
             }
         }

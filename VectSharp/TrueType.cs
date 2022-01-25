@@ -508,6 +508,12 @@ namespace VectSharp
                 Tables.Add("fpgm", new TrueTypeRawTable(fs, this.TableOffsets["fpgm"].Length));
             }
 
+            if (this.TableOffsets.ContainsKey("GPOS"))
+            {
+                fs.Seek(this.TableOffsets["GPOS"].Offset, SeekOrigin.Begin);
+                Tables.Add("GPOS", new TrueTypeGPOSTable(fs));
+            }
+
             Glyph[] glyphs = new Glyph[((TrueTypeMaxpTable)this.Tables["maxp"]).NumGlyphs];
 
             for (int i = 0; i < ((TrueTypeMaxpTable)this.Tables["maxp"]).NumGlyphs; i++)
@@ -2318,16 +2324,27 @@ namespace VectSharp
                 {
                     if (glyphPaths[j][k].IsOnCurve)
                     {
-                        double t = (position - currPoint[1]) / (-glyphPaths[j][k].Y - currPoint[1]);
-                        if (t >= 0 && t <= 1)
+                        if (-glyphPaths[j][k].Y - currPoint[1] != 0)
                         {
-                            intersections.Add(currPoint[0] + t * (glyphPaths[j][k].X - currPoint[0]));
-                        }
+                            double t = (position - currPoint[1]) / (-glyphPaths[j][k].Y - currPoint[1]);
+                            if (t >= 0 && t <= 1)
+                            {
+                                intersections.Add(currPoint[0] + t * (glyphPaths[j][k].X - currPoint[0]));
+                            }
 
-                        t = (position + thickness - currPoint[1]) / (-glyphPaths[j][k].Y - currPoint[1]);
-                        if (t >= 0 && t <= 1)
+                            t = (position + thickness - currPoint[1]) / (-glyphPaths[j][k].Y - currPoint[1]);
+                            if (t >= 0 && t <= 1)
+                            {
+                                intersections.Add(currPoint[0] + t * (glyphPaths[j][k].X - currPoint[0]));
+                            }
+                        }
+                        else
                         {
-                            intersections.Add(currPoint[0] + t * (glyphPaths[j][k].X - currPoint[0]));
+                            if (position <= currPoint[1] && position + thickness >= currPoint[1])
+                            {
+                                intersections.Add(currPoint[0]);
+                                intersections.Add(glyphPaths[j][k].X);
+                            }
                         }
 
                         currPoint = new double[] { glyphPaths[j][k].X, -glyphPaths[j][k].Y };
@@ -2399,6 +2416,52 @@ namespace VectSharp
                 }
 
                 return tbr;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the kerning between two glyphs.
+        /// </summary>
+        /// <param name="glyph1">The first glyph of the kerning pair.</param>
+        /// <param name="glyph2">The second glyph of the kerning pair.</param>
+        /// <returns>A <see cref="PairKerning"/> object containing information about how the position of each glyphs should be altered.</returns>
+        public PairKerning Get1000EmKerning(char glyph1, char glyph2)
+        {
+            int glyph1Index = this.GetGlyphIndex(glyph1);
+            int glyph2Index = this.GetGlyphIndex(glyph2);
+
+            return Get1000EmKerning(glyph1Index, glyph2Index);
+        }
+
+        /// <summary>
+        /// Gets the kerning between two glyphs.
+        /// </summary>
+        /// <param name="glyph1Index">The index of the first glyph of the kerning pair.</param>
+        /// <param name="glyph2Index">The index of the second glyph of the kerning pair.</param>
+        /// <returns>A <see cref="PairKerning"/> object containing information about how the position of each glyphs should be altered.</returns>
+        public PairKerning Get1000EmKerning(int glyph1Index, int glyph2Index)
+        {
+            if (this.Tables.TryGetValue("GPOS", out ITrueTypeTable table) && table is TrueTypeGPOSTable gpos)
+            {
+                PairKerning kerning = gpos.GetKerning(glyph1Index, glyph2Index);
+
+                if (kerning != null)
+                {
+                    double units = ((TrueTypeHeadTable)this.Tables["head"]).UnitsPerEm;
+
+                    return new PairKerning(new Point(kerning.Glyph1Placement.X * 1000 / units, kerning.Glyph1Placement.Y * 1000 / units),
+                        new Point(kerning.Glyph1Advance.X * 1000 / units, kerning.Glyph1Advance.Y * 1000 / units),
+                        new Point(kerning.Glyph2Placement.X * 1000 / units, kerning.Glyph2Placement.Y * 1000 / units),
+                        new Point(kerning.Glyph2Advance.X * 1000 / units, kerning.Glyph2Advance.Y * 1000 / units));
+                }
+                else
+                {
+                    return null;
+                }
             }
             else
             {
@@ -3124,6 +3187,1397 @@ namespace VectSharp
                     ms.WriteUShort(this.NumOfLongHorMetrics);
                     return ms.ToArray();
                 }
+            }
+        }
+
+
+        internal class LangSysTable
+        {
+            public string Tag;
+            public ushort LookupOrderOffset;
+            public ushort RequiredFeatureIndex;
+            public ushort[] FeatureIndices;
+
+            public LangSysTable(string tag, Stream fs)
+            {
+                this.Tag = tag;
+                this.LookupOrderOffset = fs.ReadUShort();
+                this.RequiredFeatureIndex = fs.ReadUShort();
+                ushort featureIndexCount = fs.ReadUShort();
+
+                this.FeatureIndices = new ushort[featureIndexCount];
+
+                for (int i = 0; i < featureIndexCount; i++)
+                {
+                    this.FeatureIndices[i] = fs.ReadUShort();
+                }
+            }
+
+            public byte[] GetBytes()
+            {
+                using (MemoryStream ms = new MemoryStream(6 + this.FeatureIndices.Length * 2))
+                {
+                    ms.WriteUShort(this.LookupOrderOffset);
+                    ms.WriteUShort(this.RequiredFeatureIndex);
+                    ms.WriteUShort((ushort)this.FeatureIndices.Length);
+                    for (int i = 0; i < this.FeatureIndices.Length; i++)
+                    {
+                        ms.WriteUShort(this.FeatureIndices[i]);
+                    }
+
+                    return ms.ToArray();
+                }
+            }
+        }
+
+        internal class ScriptTable
+        {
+            public string Tag;
+            public LangSysTable DefaultLangSys;
+            public LangSysTable[] LangSysRecords;
+
+            public ScriptTable(string tag, Stream fs)
+            {
+                this.Tag = tag;
+
+                long startPosition = fs.Position;
+
+                ushort defaultLangSysOffset = fs.ReadUShort();
+                ushort langSysCount = fs.ReadUShort();
+
+                (string, ushort)[] langSysRecords = new (string, ushort)[langSysCount];
+
+                for (int i = 0; i < langSysCount; i++)
+                {
+                    StringBuilder langSysTag = new StringBuilder(4);
+                    langSysTag.Append((char)fs.ReadByte());
+                    langSysTag.Append((char)fs.ReadByte());
+                    langSysTag.Append((char)fs.ReadByte());
+                    langSysTag.Append((char)fs.ReadByte());
+
+                    langSysRecords[i] = (langSysTag.ToString(), fs.ReadUShort());
+                }
+
+                if (defaultLangSysOffset != 0)
+                {
+                    fs.Seek(startPosition + defaultLangSysOffset, SeekOrigin.Begin);
+                    this.DefaultLangSys = new LangSysTable(null, fs);
+                }
+                else
+                {
+                    this.DefaultLangSys = null;
+                }
+
+                this.LangSysRecords = new LangSysTable[langSysCount];
+
+                for (int i = 0; i < langSysCount; i++)
+                {
+                    fs.Seek(startPosition + langSysRecords[i].Item2, SeekOrigin.Begin);
+                    this.LangSysRecords[i] = new LangSysTable(langSysRecords[i].Item1, fs);
+                }
+            }
+
+            public byte[] GetBytes()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    int offset = 6 * this.LangSysRecords.Length + 2 + 2;
+
+                    if (this.DefaultLangSys != null)
+                    {
+                        ms.WriteUShort((ushort)offset);
+                    }
+                    else
+                    {
+                        ms.WriteUShort(0);
+                    }
+
+                    ms.WriteUShort((ushort)this.LangSysRecords.Length);
+
+                    byte[] defaultLangSysTable = DefaultLangSys != null ? DefaultLangSys.GetBytes() : new byte[0];
+
+                    byte[][] langSysTables = new byte[this.LangSysRecords.Length][];
+
+                    offset += defaultLangSysTable.Length;
+
+                    int[] offsets = new int[this.LangSysRecords.Length];
+
+                    for (int i = 0; i < this.LangSysRecords.Length; i++)
+                    {
+                        offsets[i] = offset;
+                        langSysTables[i] = this.LangSysRecords[i].GetBytes();
+                        offset += langSysTables[i].Length;
+                    }
+
+                    for (int i = 0; i < this.LangSysRecords.Length; i++)
+                    {
+                        ms.WriteByte((byte)this.LangSysRecords[i].Tag[0]);
+                        ms.WriteByte((byte)this.LangSysRecords[i].Tag[1]);
+                        ms.WriteByte((byte)this.LangSysRecords[i].Tag[2]);
+                        ms.WriteByte((byte)this.LangSysRecords[i].Tag[3]);
+
+                        ms.WriteUShort((ushort)offsets[i]);
+                    }
+
+                    ms.Write(defaultLangSysTable, 0, defaultLangSysTable.Length);
+
+                    for (int i = 0; i < langSysTables[i].Length; i++)
+                    {
+                        ms.Write(langSysTables[i], 0, langSysTables[i].Length);
+                    }
+
+                    return ms.ToArray();
+                }
+            }
+        }
+
+
+        internal class ScriptList
+        {
+            public ScriptTable[] ScriptRecords;
+            public ScriptList(Stream fs)
+            {
+                long startPosition = fs.Position;
+
+                ushort scriptCount = fs.ReadUShort();
+
+                (string, ushort)[] scriptRecords = new (string, ushort)[scriptCount];
+
+                for (int i = 0; i < scriptCount; i++)
+                {
+                    StringBuilder scriptTag = new StringBuilder(4);
+                    scriptTag.Append((char)fs.ReadByte());
+                    scriptTag.Append((char)fs.ReadByte());
+                    scriptTag.Append((char)fs.ReadByte());
+                    scriptTag.Append((char)fs.ReadByte());
+
+                    scriptRecords[i] = (scriptTag.ToString(), fs.ReadUShort());
+                }
+
+                this.ScriptRecords = new ScriptTable[scriptCount];
+
+                for (int i = 0; i < scriptCount; i++)
+                {
+                    fs.Seek(startPosition + scriptRecords[i].Item2, SeekOrigin.Begin);
+                    this.ScriptRecords[i] = new ScriptTable(scriptRecords[i].Item1, fs);
+                }
+            }
+
+            public byte[] GetBytes()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    int offset = 2 + 6 * this.ScriptRecords.Length;
+
+                    ms.WriteUShort((ushort)this.ScriptRecords.Length);
+
+                    byte[][] scripts = new byte[this.ScriptRecords.Length][];
+                    int[] offsets = new int[this.ScriptRecords.Length];
+
+                    for (int i = 0; i < this.ScriptRecords.Length; i++)
+                    {
+                        offsets[i] = offset;
+                        scripts[i] = this.ScriptRecords[i].GetBytes();
+                        offset += scripts[i].Length;
+                    }
+
+                    for (int i = 0; i < this.ScriptRecords.Length; i++)
+                    {
+                        ms.WriteByte((byte)this.ScriptRecords[i].Tag[0]);
+                        ms.WriteByte((byte)this.ScriptRecords[i].Tag[1]);
+                        ms.WriteByte((byte)this.ScriptRecords[i].Tag[2]);
+                        ms.WriteByte((byte)this.ScriptRecords[i].Tag[3]);
+
+                        ms.WriteUShort((ushort)offsets[i]);
+                    }
+
+                    for (int i = 0; i < this.ScriptRecords.Length; i++)
+                    {
+                        ms.Write(scripts[i], 0, scripts[i].Length);
+                    }
+
+                    return ms.ToArray();
+                }
+            }
+        }
+
+        internal class LookupTable
+        {
+            public ushort LookupType;
+            public ushort LookupFlag;
+            public ITrueTypeTable[] SubTables;
+            public ushort MarkFilteringSet;
+
+            public LookupTable(Stream fs)
+            {
+                long startPosition = fs.Position;
+
+                this.LookupType = fs.ReadUShort();
+                this.LookupFlag = fs.ReadUShort();
+
+                ushort subTableCount = fs.ReadUShort();
+                ushort[] subTableOffsets = new ushort[subTableCount];
+
+                for (int i = 0; i < subTableCount; i++)
+                {
+                    subTableOffsets[i] = fs.ReadUShort();
+                }
+
+                if ((this.LookupFlag & 0x0010) != 0)
+                {
+                    this.MarkFilteringSet = fs.ReadUShort();
+                }
+
+                if (this.LookupType == 1)
+                {
+                    this.SubTables = new ITrueTypeTable[subTableCount];
+
+                    for (int i = 0; i < subTableCount; i++)
+                    {
+                        fs.Seek(startPosition + subTableOffsets[i], SeekOrigin.Begin);
+                        this.SubTables[i] = new SinglePosSubtable(fs);
+                    }
+                }
+                else if (this.LookupType == 2)
+                {
+                    this.SubTables = new ITrueTypeTable[subTableCount];
+
+                    for (int i = 0; i < subTableCount; i++)
+                    {
+                        fs.Seek(startPosition + subTableOffsets[i], SeekOrigin.Begin);
+                        this.SubTables[i] = new PairPosSubtable(fs);
+                    }
+                }
+                else
+                {
+                    this.SubTables = new ITrueTypeTable[0];
+                }
+            }
+
+            public byte[] GetBytes()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    ms.WriteUShort(this.LookupType);
+                    ms.WriteUShort(this.LookupFlag);
+                    ms.WriteUShort((ushort)this.SubTables.Length);
+
+                    int offset = 6 + 2 * this.SubTables.Length;
+
+                    if ((this.LookupFlag & 0x0010) != 0)
+                    {
+                        offset += 2;
+                    }
+
+                    byte[][] subTables = new byte[this.SubTables.Length][];
+                    int[] offsets = new int[this.SubTables.Length];
+
+                    for (int i = 0; i < this.SubTables.Length; i++)
+                    {
+                        offsets[i] = offset;
+                        subTables[i] = this.SubTables[i].GetBytes();
+                        offset += subTables[i].Length;
+                    }
+
+                    for (int i = 0; i < this.SubTables.Length; i++)
+                    {
+                        ms.WriteUShort((ushort)offsets[i]);
+                    }
+
+                    if ((this.LookupFlag & 0x0010) != 0)
+                    {
+                        ms.WriteUShort(this.MarkFilteringSet);
+                    }
+
+                    for (int i = 0; i < this.SubTables.Length; i++)
+                    {
+                        ms.Write(subTables[i], 0, subTables[i].Length);
+                    }
+
+                    return ms.ToArray();
+                }
+            }
+        }
+
+        internal class LookupList
+        {
+            public LookupTable[] LookupTables;
+
+            public LookupList(Stream fs)
+            {
+                long startPosition = fs.Position;
+
+                ushort lookupCount = fs.ReadUShort();
+                ushort[] lookupOffsets = new ushort[lookupCount];
+
+                for (int i = 0; i < lookupCount; i++)
+                {
+                    lookupOffsets[i] = fs.ReadUShort();
+                }
+
+                this.LookupTables = new LookupTable[lookupCount];
+
+                for (int i = 0; i < lookupCount; i++)
+                {
+                    fs.Seek(startPosition + lookupOffsets[i], SeekOrigin.Begin);
+                    this.LookupTables[i] = new LookupTable(fs);
+                }
+            }
+
+            public byte[] GetBytes()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    ms.WriteUShort((ushort)this.LookupTables.Length);
+
+                    int offset = 2 + 2 * this.LookupTables.Length;
+
+                    int[] offsets = new int[this.LookupTables.Length];
+                    byte[][] lookupTables = new byte[this.LookupTables.Length][];
+
+                    for (int i = 0; i < this.LookupTables.Length; i++)
+                    {
+                        offsets[i] = offset;
+                        lookupTables[i] = this.LookupTables[i].GetBytes();
+                        offset += lookupTables[i].Length;
+                    }
+
+                    for (int i = 0; i < this.LookupTables.Length; i++)
+                    {
+                        ms.WriteUShort((ushort)offsets[i]);
+                    }
+
+                    for (int i = 0; i < this.LookupTables.Length; i++)
+                    {
+                        ms.Write(lookupTables[i], 0, lookupTables[i].Length);
+                    }
+
+                    return ms.ToArray();
+                }
+            }
+        }
+
+        internal class CoverageTable
+        {
+            public struct RangeRecord
+            {
+                public ushort StartGlyphID;
+                public ushort EndGlyphID;
+                public ushort StartCoverageIndex;
+
+                public RangeRecord(Stream fs)
+                {
+                    this.StartGlyphID = fs.ReadUShort();
+                    this.EndGlyphID = fs.ReadUShort();
+                    this.StartCoverageIndex = fs.ReadUShort();
+                }
+            }
+
+            public ushort CoverageFormat;
+
+            public ushort[] GlyphArray;
+            public RangeRecord[] RangeRecords;
+
+            public int ContainsGlyph(int glyphIndex)
+            {
+                if (this.CoverageFormat == 1)
+                {
+                    for (int i = 0; i < this.GlyphArray.Length; i++)
+                    {
+                        if (this.GlyphArray[i] == glyphIndex)
+                        {
+                            return i;
+                        }
+                    }
+
+                    return -1;
+                }
+                else if (this.CoverageFormat == 2)
+                {
+                    for (int i = 0; i < this.RangeRecords.Length; i++)
+                    {
+                        if (this.RangeRecords[i].StartGlyphID <= glyphIndex && this.RangeRecords[i].EndGlyphID >= glyphIndex)
+                        {
+                            return this.RangeRecords[i].StartCoverageIndex + (glyphIndex - this.RangeRecords[i].StartGlyphID);
+                        }
+                    }
+
+                    return -1;
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+
+            public CoverageTable(Stream fs)
+            {
+                this.CoverageFormat = fs.ReadUShort();
+
+                if (this.CoverageFormat == 1)
+                {
+                    ushort glyphCount = fs.ReadUShort();
+                    this.GlyphArray = new ushort[glyphCount];
+                    for (int i = 0; i < glyphCount; i++)
+                    {
+                        this.GlyphArray[i] = fs.ReadUShort();
+                    }
+                }
+                else if (this.CoverageFormat == 2)
+                {
+                    ushort rangeCount = fs.ReadUShort();
+
+                    this.RangeRecords = new RangeRecord[rangeCount];
+
+                    for (int i = 0; i < rangeCount; i++)
+                    {
+                        this.RangeRecords[i] = new RangeRecord(fs);
+                    }
+                }
+            }
+
+            public byte[] GetBytes()
+            {
+                if (this.CoverageFormat == 1)
+                {
+                    using (MemoryStream ms = new MemoryStream(4 + 2 * this.GlyphArray.Length))
+                    {
+                        ms.WriteUShort(this.CoverageFormat);
+                        ms.WriteUShort((ushort)this.GlyphArray.Length);
+                        for (int i = 0; i < this.GlyphArray.Length; i++)
+                        {
+                            ms.WriteUShort(this.GlyphArray[i]);
+                        }
+
+                        return ms.ToArray();
+                    }
+                }
+                else if (this.CoverageFormat == 2)
+                {
+                    using (MemoryStream ms = new MemoryStream(4 + 6 * this.RangeRecords.Length))
+                    {
+                        ms.WriteUShort(this.CoverageFormat);
+                        ms.WriteUShort((ushort)this.RangeRecords.Length);
+                        for (int i = 0; i < this.RangeRecords.Length; i++)
+                        {
+                            ms.WriteUShort(this.RangeRecords[i].StartGlyphID);
+                            ms.WriteUShort(this.RangeRecords[i].EndGlyphID);
+                            ms.WriteUShort(this.RangeRecords[i].StartCoverageIndex);
+                        }
+
+                        return ms.ToArray();
+                    }
+                }
+                else
+                {
+                    using (MemoryStream ms = new MemoryStream(4 + 2 * this.GlyphArray.Length))
+                    {
+                        ms.WriteUShort(this.CoverageFormat);
+
+                        return ms.ToArray();
+                    }
+                }
+            }
+        }
+
+        internal class ClassDefinitionTable
+        {
+            public struct ClassRangeRecord
+            {
+                public ushort StartGlyphID;
+                public ushort EndGlyphID;
+                public ushort Class;
+
+                public ClassRangeRecord(Stream fs)
+                {
+                    this.StartGlyphID = fs.ReadUShort();
+                    this.EndGlyphID = fs.ReadUShort();
+                    this.Class = fs.ReadUShort();
+                }
+            }
+
+            public ushort ClassFormat;
+            public ushort StartGlyphID;
+            public ushort[] ClassValueArray;
+
+            public ClassRangeRecord[] ClassRangeRecords;
+
+            public ClassDefinitionTable(Stream fs)
+            {
+                this.ClassFormat = fs.ReadUShort();
+
+                if (this.ClassFormat == 1)
+                {
+                    this.StartGlyphID = fs.ReadUShort();
+                    ushort glyphCount = fs.ReadUShort();
+
+                    this.ClassValueArray = new ushort[glyphCount];
+
+                    for (int i = 0; i < this.ClassValueArray.Length; i++)
+                    {
+                        this.ClassValueArray[i] = fs.ReadUShort();
+                    }
+                }
+                else if (this.ClassFormat == 2)
+                {
+                    ushort classRangeCount = fs.ReadUShort();
+
+                    this.ClassRangeRecords = new ClassRangeRecord[classRangeCount];
+
+                    for (int i = 0; i < classRangeCount; i++)
+                    {
+                        this.ClassRangeRecords[i] = new ClassRangeRecord(fs);
+                    }
+                }
+            }
+
+            public int GetClass(int glyphIndex)
+            {
+                if (this.ClassFormat == 1)
+                {
+                    return this.ClassValueArray[glyphIndex - StartGlyphID];
+                }
+                else if (this.ClassFormat == 2)
+                {
+                    for (int i = 0; i < this.ClassRangeRecords.Length; i++)
+                    {
+                        if (this.ClassRangeRecords[i].StartGlyphID <= glyphIndex && this.ClassRangeRecords[i].EndGlyphID >= glyphIndex)
+                        {
+                            return this.ClassRangeRecords[i].Class;
+                        }
+                    }
+                    return -1;
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+
+            public byte[] GetBytes()
+            {
+                if (this.ClassFormat == 1)
+                {
+                    using (MemoryStream ms = new MemoryStream(6 + 2 * this.ClassValueArray.Length))
+                    {
+                        ms.WriteUShort(this.ClassFormat);
+                        ms.WriteUShort(this.StartGlyphID);
+                        ms.WriteUShort((ushort)this.ClassValueArray.Length);
+
+                        for (int i = 0; i < this.ClassValueArray.Length; i++)
+                        {
+                            ms.WriteUShort(this.ClassValueArray[i]);
+                        }
+
+                        return ms.ToArray();
+                    }
+                }
+                else if (this.ClassFormat == 2)
+                {
+                    using (MemoryStream ms = new MemoryStream(4 + 6 * this.ClassRangeRecords.Length))
+                    {
+                        ms.WriteUShort(this.ClassFormat);
+                        ms.WriteUShort((ushort)this.ClassRangeRecords.Length);
+
+                        for (int i = 0; i < this.ClassRangeRecords.Length; i++)
+                        {
+                            ms.WriteUShort(this.ClassRangeRecords[i].StartGlyphID);
+                            ms.WriteUShort(this.ClassRangeRecords[i].EndGlyphID);
+                            ms.WriteUShort(this.ClassRangeRecords[i].Class);
+                        }
+
+                        return ms.ToArray();
+                    }
+                }
+                else
+                {
+                    using (MemoryStream ms = new MemoryStream(2))
+                    {
+                        ms.WriteUShort(this.ClassFormat);
+
+                        return ms.ToArray();
+                    }
+                }
+            }
+        }
+
+        internal class FeatureTable
+        {
+            public string Tag;
+            public byte[] FeatureParams;
+            public ushort[] LookupListIndices;
+
+            public FeatureTable(string tag, Stream fs)
+            {
+                this.Tag = tag;
+
+                long startPosition = fs.Position;
+
+                ushort featureParamsOffset = fs.ReadUShort();
+
+                ushort lookupIndexCount = fs.ReadUShort();
+                this.LookupListIndices = new ushort[lookupIndexCount];
+
+                for (int i = 0; i < lookupIndexCount; i++)
+                {
+                    this.LookupListIndices[i] = fs.ReadUShort();
+                }
+
+                if (featureParamsOffset != 0 && tag == "size")
+                {
+                    fs.Seek(startPosition + featureParamsOffset, SeekOrigin.Begin);
+
+                    this.FeatureParams = new byte[10];
+
+                    for (int i = 0; i < 10; i++)
+                    {
+                        this.FeatureParams[i] = (byte)fs.ReadByte();
+                    }
+                }
+                else
+                {
+                    this.FeatureParams = null;
+                }
+            }
+
+            public byte[] GetBytes()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    if (this.FeatureParams != null)
+                    {
+                        ms.WriteUShort((ushort)(4 + 2 * this.LookupListIndices.Length));
+                    }
+                    else
+                    {
+                        ms.WriteUShort(0);
+                    }
+
+                    ms.WriteUShort((ushort)this.LookupListIndices.Length);
+
+                    for (int i = 0; i < this.LookupListIndices.Length; i++)
+                    {
+                        ms.WriteUShort(this.LookupListIndices[i]);
+                    }
+
+                    if (this.FeatureParams != null)
+                    {
+                        ms.Write(this.FeatureParams, 0, this.FeatureParams.Length);
+                    }
+
+                    return ms.ToArray();
+                }
+            }
+        }
+
+        internal class FeatureList
+        {
+            public FeatureTable[] FeatureRecords;
+
+            public FeatureList(Stream fs)
+            {
+                long startPosition = fs.Position;
+
+                ushort featureCount = fs.ReadUShort();
+
+                (string, ushort)[] featureRecords = new (string, ushort)[featureCount];
+
+                for (int i = 0; i < featureCount; i++)
+                {
+                    StringBuilder featureTag = new StringBuilder(4);
+                    featureTag.Append((char)fs.ReadByte());
+                    featureTag.Append((char)fs.ReadByte());
+                    featureTag.Append((char)fs.ReadByte());
+                    featureTag.Append((char)fs.ReadByte());
+
+                    featureRecords[i] = (featureTag.ToString(), fs.ReadUShort());
+                }
+
+                this.FeatureRecords = new FeatureTable[featureCount];
+
+                for (int i = 0; i < featureCount; i++)
+                {
+                    fs.Seek(startPosition + featureRecords[i].Item2, SeekOrigin.Begin);
+
+                    this.FeatureRecords[i] = new FeatureTable(featureRecords[i].Item1, fs);
+                }
+            }
+
+            public byte[] GetBytes()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    int offset = 2 + 6 * this.FeatureRecords.Length;
+
+                    ms.WriteUShort((ushort)this.FeatureRecords.Length);
+
+                    byte[][] featureRecords = new byte[this.FeatureRecords.Length][];
+                    int[] offsets = new int[this.FeatureRecords.Length];
+
+                    for (int i = 0; i < this.FeatureRecords.Length; i++)
+                    {
+                        offsets[i] = offset;
+                        featureRecords[i] = this.FeatureRecords[i].GetBytes();
+                        offset += featureRecords[i].Length;
+                    }
+
+                    for (int i = 0; i < this.FeatureRecords.Length; i++)
+                    {
+                        ms.WriteByte((byte)this.FeatureRecords[i].Tag[0]);
+                        ms.WriteByte((byte)this.FeatureRecords[i].Tag[1]);
+                        ms.WriteByte((byte)this.FeatureRecords[i].Tag[2]);
+                        ms.WriteByte((byte)this.FeatureRecords[i].Tag[3]);
+
+                        ms.WriteUShort((ushort)offsets[i]);
+                    }
+
+                    for (int i = 0; i < this.FeatureRecords.Length; i++)
+                    {
+                        ms.Write(featureRecords[i], 0, featureRecords[i].Length);
+                    }
+
+                    return ms.ToArray();
+                }
+            }
+        }
+
+        internal class ValueRecord
+        {
+            public short XPlacement;
+            public short YPlacement;
+            public short XAdvance;
+            public short YAdvance;
+            public ushort ValueFormat;
+
+            public ValueRecord(Stream fs, ushort valueFormat)
+            {
+                this.ValueFormat = valueFormat;
+
+                if ((valueFormat & 0x0001) != 0)
+                {
+                    this.XPlacement = fs.ReadShort();
+                }
+
+                if ((valueFormat & 0x0002) != 0)
+                {
+                    this.YPlacement = fs.ReadShort();
+                }
+
+                if ((valueFormat & 0x0004) != 0)
+                {
+                    this.XAdvance = fs.ReadShort();
+                }
+
+                if ((valueFormat & 0x0008) != 0)
+                {
+                    this.YAdvance = fs.ReadShort();
+                }
+
+                if ((valueFormat & 0x0010) != 0)
+                {
+                    fs.ReadUShort();
+                }
+
+                if ((valueFormat & 0x0020) != 0)
+                {
+                    fs.ReadUShort();
+                }
+
+                if ((valueFormat & 0x0040) != 0)
+                {
+                    fs.ReadUShort();
+                }
+
+                if ((valueFormat & 0x0080) != 0)
+                {
+                    fs.ReadUShort();
+                }
+            }
+
+            public byte[] GetBytes()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    if ((this.ValueFormat & 0x0001) != 0)
+                    {
+                        ms.WriteShort(this.XPlacement);
+                    }
+
+                    if ((this.ValueFormat & 0x0002) != 0)
+                    {
+                        ms.WriteShort(this.YPlacement);
+                    }
+
+                    if ((this.ValueFormat & 0x0004) != 0)
+                    {
+                        ms.WriteShort(this.XAdvance);
+                    }
+
+                    if ((this.ValueFormat & 0x0008) != 0)
+                    {
+                        ms.WriteShort(this.YAdvance);
+                    }
+
+                    if ((this.ValueFormat & 0x0010) != 0)
+                    {
+                        ms.WriteUShort(0);
+                    }
+
+                    if ((this.ValueFormat & 0x0020) != 0)
+                    {
+                        ms.WriteUShort(0);
+                    }
+
+                    if ((this.ValueFormat & 0x0040) != 0)
+                    {
+                        ms.WriteUShort(0);
+                    }
+
+                    if ((this.ValueFormat & 0x0080) != 0)
+                    {
+                        ms.WriteUShort(0);
+                    }
+
+                    return ms.ToArray();
+                }
+            }
+        }
+
+        internal class SinglePosSubtable : ITrueTypeTable
+        {
+            public ushort PosFormat;
+            public CoverageTable CoverageTable;
+            public ushort ValueFormat;
+            public ValueRecord ValueRecord;
+            public ValueRecord[] ValueRecords;
+
+            public SinglePosSubtable(Stream fs)
+            {
+                long startPosition = fs.Position;
+
+                this.PosFormat = fs.ReadUShort();
+
+                if (this.PosFormat == 1)
+                {
+                    ushort coverageOffset = fs.ReadUShort();
+                    this.ValueFormat = fs.ReadUShort();
+                    this.ValueRecord = new ValueRecord(fs, this.ValueFormat);
+
+                    fs.Seek(startPosition + coverageOffset, SeekOrigin.Begin);
+                    this.CoverageTable = new CoverageTable(fs);
+                }
+                else if (this.PosFormat == 2)
+                {
+                    ushort coverageOffset = fs.ReadUShort();
+                    this.ValueFormat = fs.ReadUShort();
+
+                    ushort valueCount = fs.ReadUShort();
+
+                    this.ValueRecords = new ValueRecord[valueCount];
+
+                    for (int i = 0; i < valueCount; i++)
+                    {
+                        this.ValueRecords[i] = new ValueRecord(fs, this.ValueFormat);
+                    }
+
+                    fs.Seek(startPosition + coverageOffset, SeekOrigin.Begin);
+                    this.CoverageTable = new CoverageTable(fs);
+                }
+            }
+
+            public byte[] GetBytes()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    ms.WriteUShort(this.PosFormat);
+
+                    if (this.PosFormat == 1)
+                    {
+                        int offset = 22;
+
+                        ms.WriteUShort((ushort)offset);
+                        ms.WriteUShort(this.ValueFormat);
+
+                        byte[] valueBytes = this.ValueRecord.GetBytes();
+
+                        ms.Write(valueBytes, 0, valueBytes.Length);
+
+                        byte[] coverageBytes = this.CoverageTable.GetBytes();
+
+                        ms.Write(coverageBytes, 0, coverageBytes.Length);
+                    }
+                    else if (this.PosFormat == 2)
+                    {
+                        int offset = 8 + 16 * ValueRecords.Length;
+
+                        ms.WriteUShort((ushort)offset);
+                        ms.WriteUShort(this.ValueFormat);
+                        ms.WriteUShort((ushort)this.ValueRecords.Length);
+
+                        for (int i = 0; i < this.ValueRecords.Length; i++)
+                        {
+                            byte[] valueBytes = this.ValueRecords[i].GetBytes();
+
+                            ms.Write(valueBytes, 0, valueBytes.Length);
+                        }
+
+                        byte[] coverageBytes = this.CoverageTable.GetBytes();
+
+                        ms.Write(coverageBytes, 0, coverageBytes.Length);
+                    }
+
+                    return ms.ToArray();
+                }
+            }
+        }
+
+        internal class PairValueRecord
+        {
+            public ushort SecondGlyph;
+            public ValueRecord ValueRecord1;
+            public ValueRecord ValueRecord2;
+
+            public PairValueRecord(Stream fs, ushort valueFormat1, ushort valueFormat2)
+            {
+                this.SecondGlyph = fs.ReadUShort();
+                this.ValueRecord1 = new ValueRecord(fs, valueFormat1);
+                this.ValueRecord2 = new ValueRecord(fs, valueFormat2);
+            }
+
+            public byte[] GetBytes()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    ms.WriteUShort(SecondGlyph);
+
+                    byte[] bytes = this.ValueRecord1.GetBytes();
+                    ms.Write(bytes, 0, bytes.Length);
+
+                    bytes = this.ValueRecord2.GetBytes();
+                    ms.Write(bytes, 0, bytes.Length);
+
+                    return ms.ToArray();
+                }
+            }
+        }
+
+        internal class Class2Record
+        {
+            public ValueRecord ValueRecord1;
+            public ValueRecord ValueRecord2;
+
+            public Class2Record(Stream fs, ushort valueFormat1, ushort valueFormat2)
+            {
+                this.ValueRecord1 = new ValueRecord(fs, valueFormat1);
+                this.ValueRecord2 = new ValueRecord(fs, valueFormat2);
+            }
+
+            public byte[] GetBytes()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    byte[] bytes = this.ValueRecord1.GetBytes();
+                    ms.Write(bytes, 0, bytes.Length);
+
+                    bytes = this.ValueRecord2.GetBytes();
+                    ms.Write(bytes, 0, bytes.Length);
+
+                    return ms.ToArray();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Contains information describing how the position of two glyphs in a kerning pair should be altered.
+        /// </summary>
+        public class PairKerning
+        {
+            /// <summary>
+            /// This vector contains the displacement that should be applied to the first glyph of the pair.
+            /// </summary>
+            public Point Glyph1Placement { get; }
+
+            /// <summary>
+            /// This vector describes how the advance width of the first glyph should be altered.
+            /// </summary>
+            public Point Glyph1Advance { get; }
+
+            /// <summary>
+            /// This vector contains the displacement that should be applied to the second glyph of the pair.
+            /// </summary>
+            public Point Glyph2Placement { get; }
+
+            /// <summary>
+            /// This vector describes how the advance width of the second glyph should be altered.
+            /// </summary>
+            public Point Glyph2Advance { get; }
+
+            internal PairKerning(Point glyph1Placement, Point glyph1Advance, Point glyph2Placement, Point glyph2Advance)
+            {
+                this.Glyph1Placement = glyph1Placement;
+                this.Glyph1Advance = glyph1Advance;
+                this.Glyph2Placement = glyph2Placement;
+                this.Glyph2Advance = glyph2Advance;
+            }
+        }
+
+        internal class PairPosSubtable : ITrueTypeTable
+        {
+            public ushort PosFormat;
+            public CoverageTable CoverageTable;
+
+            public ushort ValueFormat1;
+            public ushort ValueFormat2;
+
+            public PairValueRecord[][] PairSets;
+
+            public ClassDefinitionTable ClassDef1;
+            public ClassDefinitionTable ClassDef2;
+            public Class2Record[][] Class1Records;
+
+            public PairPosSubtable(Stream fs)
+            {
+                long startPosition = fs.Position;
+
+                this.PosFormat = fs.ReadUShort();
+
+                if (this.PosFormat == 1)
+                {
+                    ushort coverageOffset = fs.ReadUShort();
+
+                    this.ValueFormat1 = fs.ReadUShort();
+                    this.ValueFormat2 = fs.ReadUShort();
+
+                    ushort pairSetCount = fs.ReadUShort();
+
+                    ushort[] pairSetOffsets = new ushort[pairSetCount];
+
+                    for (int i = 0; i < pairSetCount; i++)
+                    {
+                        pairSetOffsets[i] = fs.ReadUShort();
+                    }
+
+                    fs.Seek(startPosition + coverageOffset, SeekOrigin.Begin);
+                    this.CoverageTable = new CoverageTable(fs);
+
+                    this.PairSets = new PairValueRecord[pairSetCount][];
+
+                    for (int i = 0; i < pairSetCount; i++)
+                    {
+                        fs.Seek(startPosition + pairSetOffsets[i], SeekOrigin.Begin);
+
+                        ushort pairValueCount = fs.ReadUShort();
+
+                        this.PairSets[i] = new PairValueRecord[pairValueCount];
+
+                        for (int j = 0; j < pairValueCount; j++)
+                        {
+                            this.PairSets[i][j] = new PairValueRecord(fs, this.ValueFormat1, this.ValueFormat2);
+                        }
+                    }
+                }
+                else if (this.PosFormat == 2)
+                {
+                    ushort coverageOffset = fs.ReadUShort();
+
+                    this.ValueFormat1 = fs.ReadUShort();
+                    this.ValueFormat2 = fs.ReadUShort();
+
+                    ushort class1DefOffset = fs.ReadUShort();
+                    ushort class2DefOffset = fs.ReadUShort();
+
+                    ushort class1Count = fs.ReadUShort();
+                    ushort class2Count = fs.ReadUShort();
+
+                    this.Class1Records = new Class2Record[class1Count][];
+
+                    for (int i = 0; i < class1Count; i++)
+                    {
+                        this.Class1Records[i] = new Class2Record[class2Count];
+
+                        for (int j = 0; j < class2Count; j++)
+                        {
+                            this.Class1Records[i][j] = new Class2Record(fs, this.ValueFormat1, this.ValueFormat2);
+                        }
+                    }
+
+                    fs.Seek(startPosition + coverageOffset, SeekOrigin.Begin);
+                    this.CoverageTable = new CoverageTable(fs);
+
+                    fs.Seek(startPosition + class1DefOffset, SeekOrigin.Begin);
+                    this.ClassDef1 = new ClassDefinitionTable(fs);
+
+                    fs.Seek(startPosition + class2DefOffset, SeekOrigin.Begin);
+
+                    this.ClassDef2 = new ClassDefinitionTable(fs);
+                }
+            }
+
+            public PairKerning GetKerning(int glyph1CoverageIndex, int glyph1Index, int glyph2Index)
+            {
+                if (this.PosFormat == 1)
+                {
+                    for (int i = 0; i < this.PairSets[glyph1CoverageIndex].Length; i++)
+                    {
+                        if (this.PairSets[glyph1CoverageIndex][i].SecondGlyph == glyph2Index)
+                        {
+                            return new PairKerning(new Point(this.PairSets[glyph1CoverageIndex][i].ValueRecord1.XPlacement, this.PairSets[glyph1CoverageIndex][i].ValueRecord1.YPlacement),
+                                new Point(this.PairSets[glyph1CoverageIndex][i].ValueRecord1.XAdvance, this.PairSets[glyph1CoverageIndex][i].ValueRecord1.YAdvance),
+                                new Point(this.PairSets[glyph1CoverageIndex][i].ValueRecord2.XPlacement, this.PairSets[glyph1CoverageIndex][i].ValueRecord2.YPlacement),
+                                new Point(this.PairSets[glyph1CoverageIndex][i].ValueRecord2.XAdvance, this.PairSets[glyph1CoverageIndex][i].ValueRecord2.YAdvance));
+                        }
+                    }
+
+                    return null;
+                }
+                else if (this.PosFormat == 2)
+                {
+                    int glyph1Class = this.ClassDef1.GetClass(glyph1Index);
+                    int glyph2Class = this.ClassDef2.GetClass(glyph2Index);
+
+                    return new PairKerning(new Point(this.Class1Records[glyph1Class][glyph2Class].ValueRecord1.XPlacement, this.Class1Records[glyph1Class][glyph2Class].ValueRecord1.YPlacement),
+                                new Point(this.Class1Records[glyph1Class][glyph2Class].ValueRecord1.XAdvance, this.Class1Records[glyph1Class][glyph2Class].ValueRecord1.YAdvance),
+                                new Point(this.Class1Records[glyph1Class][glyph2Class].ValueRecord2.XPlacement, this.Class1Records[glyph1Class][glyph2Class].ValueRecord2.YPlacement),
+                                new Point(this.Class1Records[glyph1Class][glyph2Class].ValueRecord2.XAdvance, this.Class1Records[glyph1Class][glyph2Class].ValueRecord2.YAdvance));
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            public byte[] GetBytes()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    ms.WriteUShort(this.PosFormat);
+
+                    if (this.PosFormat == 1)
+                    {
+                        int offset = 10 + 2 * PairSets.Length;
+
+                        ms.WriteUShort((ushort)offset);
+
+                        ms.WriteUShort((ushort)ValueFormat1);
+                        ms.WriteUShort((ushort)ValueFormat2);
+
+                        ms.WriteUShort((ushort)this.PairSets.Length);
+
+                        byte[] coverageBytes = this.CoverageTable.GetBytes();
+
+                        offset += coverageBytes.Length;
+
+                        byte[][][] pairSets = new byte[this.PairSets.Length][][];
+                        int[] offsets = new int[this.PairSets.Length];
+
+                        for (int i = 0; i < this.PairSets.Length; i++)
+                        {
+                            offsets[i] = offset;
+
+                            pairSets[i] = new byte[this.PairSets[i].Length][];
+
+                            for (int j = 0; j < this.PairSets[i].Length; j++)
+                            {
+                                pairSets[i][j] = this.PairSets[i][j].GetBytes();
+                                offset += pairSets[i][j].Length;
+                            }
+                        }
+
+                        for (int i = 0; i < offsets.Length; i++)
+                        {
+                            ms.WriteUShort((ushort)offsets[i]);
+                        }
+
+                        ms.Write(coverageBytes, 0, coverageBytes.Length);
+
+                        for (int i = 0; i < pairSets.Length; i++)
+                        {
+                            for (int j = 0; j < pairSets[i].Length; j++)
+                            {
+                                ms.Write(pairSets[i][j], 0, pairSets[i][j].Length);
+                            }
+                        }
+
+                        return ms.ToArray();
+                    }
+                    else if (this.PosFormat == 2)
+                    {
+                        int offset = 16;
+
+                        byte[][][] class1Records = new byte[this.Class1Records.Length][][];
+
+                        for (int i = 0; i < class1Records.Length; i++)
+                        {
+                            class1Records[i] = new byte[this.Class1Records[i].Length][];
+
+                            for (int j = 0; j < class1Records[i].Length; j++)
+                            {
+                                class1Records[i][j] = this.Class1Records[i][j].GetBytes();
+                                offset += class1Records[i][j].Length;
+                            }
+                        }
+
+                        ms.WriteUShort((ushort)offset);
+
+                        ms.WriteUShort(this.ValueFormat1);
+                        ms.WriteUShort(this.ValueFormat2);
+
+                        byte[] coverageBytes = this.CoverageTable.GetBytes();
+
+                        offset += coverageBytes.Length;
+
+                        ms.WriteUShort((ushort)offset);
+
+                        byte[] classDef1Bytes = this.ClassDef1.GetBytes();
+
+                        offset += classDef1Bytes.Length;
+
+                        ms.WriteUShort((ushort)offset);
+
+                        ms.WriteUShort((ushort)this.Class1Records.Length);
+                        ms.WriteUShort((ushort)this.Class1Records[0].Length);
+
+                        for (int i = 0; i < class1Records.Length; i++)
+                        {
+                            for (int j = 0; j < class1Records[i].Length; j++)
+                            {
+                                ms.Write(class1Records[i][j], 0, class1Records[i][j].Length);
+                            }
+                        }
+
+                        ms.Write(coverageBytes, 0, coverageBytes.Length);
+                        ms.Write(classDef1Bytes, 0, classDef1Bytes.Length);
+
+                        byte[] classDef2Bytes = this.ClassDef2.GetBytes();
+                        ms.Write(classDef2Bytes, 0, classDef2Bytes.Length);
+
+                        return ms.ToArray();
+                    }
+                    else
+                    {
+                        return ms.ToArray();
+                    }
+                }
+            }
+
+        }
+
+        internal class TrueTypeGPOSTable : ITrueTypeTable
+        {
+            public ushort MajorVersion;
+            public ushort MinorVersion;
+
+            public ScriptList ScriptList;
+            public FeatureList FeatureList;
+            public LookupList LookupList;
+
+            private HashSet<int> KernLookups;
+
+            public TrueTypeGPOSTable(Stream fs)
+            {
+                long startPosition = fs.Position;
+
+                this.MajorVersion = fs.ReadUShort();
+                this.MinorVersion = fs.ReadUShort();
+
+                ushort scriptListOffset = fs.ReadUShort();
+                ushort featureListOffset = fs.ReadUShort();
+                ushort lookupListOffset = fs.ReadUShort();
+
+                if (this.MinorVersion == 1)
+                {
+                    fs.ReadUInt();
+                }
+
+                fs.Seek(startPosition + scriptListOffset, SeekOrigin.Begin);
+                this.ScriptList = new ScriptList(fs);
+
+                fs.Seek(startPosition + featureListOffset, SeekOrigin.Begin);
+                this.FeatureList = new FeatureList(fs);
+
+                fs.Seek(startPosition + lookupListOffset, SeekOrigin.Begin);
+                this.LookupList = new LookupList(fs);
+
+                this.KernLookups = new HashSet<int>();
+
+                for (int i = 0; i < this.FeatureList.FeatureRecords.Length; i++)
+                {
+                    if (this.FeatureList.FeatureRecords[i].Tag == "kern")
+                    {
+                        for (int j = 0; j < this.FeatureList.FeatureRecords[i].LookupListIndices.Length; j++)
+                        {
+                            if (this.LookupList.LookupTables[this.FeatureList.FeatureRecords[i].LookupListIndices[j]].LookupType == 2)
+                            {
+                                this.KernLookups.Add(this.FeatureList.FeatureRecords[i].LookupListIndices[j]);
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            public byte[] GetBytes()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    ms.WriteUShort(this.MajorVersion);
+                    ms.WriteUShort(this.MinorVersion);
+
+                    int offset = 10;
+
+                    if (this.MinorVersion == 1)
+                    {
+                        offset += 2;
+                    }
+
+                    ms.WriteUShort((ushort)offset);
+
+                    byte[] scriptList = this.ScriptList.GetBytes();
+                    offset += scriptList.Length;
+
+                    ms.WriteUShort((ushort)offset);
+
+                    byte[] featureList = this.FeatureList.GetBytes();
+                    offset += featureList.Length;
+
+                    ms.WriteUShort((ushort)offset);
+
+                    if (this.MinorVersion == 1)
+                    {
+                        ms.WriteUInt(0);
+                    }
+
+                    ms.Write(scriptList, 0, scriptList.Length);
+                    ms.Write(featureList, 0, featureList.Length);
+
+                    byte[] lookupList = this.LookupList.GetBytes();
+
+                    ms.Write(lookupList, 0, lookupList.Length);
+
+                    return ms.ToArray();
+                }
+            }
+
+
+            public PairKerning GetKerning(int glyph1Index, int glyph2Index)
+            {
+                foreach (int index in this.KernLookups)
+                {
+                    for (int i = 0; i < this.LookupList.LookupTables[index].SubTables.Length; i++)
+                    {
+                        if (this.LookupList.LookupTables[index].SubTables[i] is PairPosSubtable pairPos)
+                        {
+                            int coverageIndex = pairPos.CoverageTable.ContainsGlyph(glyph1Index);
+
+                            if (coverageIndex >= 0)
+                            {
+                                return pairPos.GetKerning(coverageIndex, glyph1Index, glyph2Index);
+                            }
+                        }
+                    }
+                }
+
+                return null;
             }
         }
 

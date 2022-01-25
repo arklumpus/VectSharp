@@ -309,9 +309,33 @@ namespace VectSharp
                     break;
             }
 
+            Point currentGlyphPlacementDelta = new Point();
+            Point currentGlyphAdvanceDelta = new Point();
+            Point nextGlyphPlacementDelta = new Point();
+            Point nextGlyphAdvanceDelta = new Point();
+
             for (int i = 0; i < text.Length; i++)
             {
                 char c = text[i];
+
+                if (Font.EnableKerning && i < text.Length - 1)
+                {
+                    currentGlyphPlacementDelta = nextGlyphPlacementDelta;
+                    currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
+                    nextGlyphAdvanceDelta = new Point();
+                    nextGlyphPlacementDelta = new Point();
+
+                    TrueTypeFile.PairKerning kerning = font.FontFamily.TrueTypeFile.Get1000EmKerning(c, text[i + 1]);
+
+                    if (kerning != null)
+                    {
+                        currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
+                        currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+
+                        nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
+                        nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
+                    }
+                }
 
                 TrueTypeFile.TrueTypePoint[][] glyphPaths = font.FontFamily.TrueTypeFile.GetGlyphPath(c, font.FontSize);
 
@@ -321,19 +345,19 @@ namespace VectSharp
                     {
                         if (k == 0)
                         {
-                            this.MoveTo(glyphPaths[j][k].X + baselineOrigin.X, -glyphPaths[j][k].Y + baselineOrigin.Y);
+                            this.MoveTo(glyphPaths[j][k].X + baselineOrigin.X + currentGlyphPlacementDelta.X, -glyphPaths[j][k].Y + baselineOrigin.Y + currentGlyphPlacementDelta.Y);
                         }
                         else
                         {
                             if (glyphPaths[j][k].IsOnCurve)
                             {
-                                this.LineTo(glyphPaths[j][k].X + baselineOrigin.X, -glyphPaths[j][k].Y + baselineOrigin.Y);
+                                this.LineTo(glyphPaths[j][k].X + baselineOrigin.X + currentGlyphPlacementDelta.X, -glyphPaths[j][k].Y + baselineOrigin.Y + currentGlyphPlacementDelta.Y);
                             }
                             else
                             {
                                 Point startPoint = this.Segments.Last().Point;
-                                Point quadCtrl = new Point(glyphPaths[j][k].X + baselineOrigin.X, -glyphPaths[j][k].Y + baselineOrigin.Y);
-                                Point endPoint = new Point(glyphPaths[j][k + 1].X + baselineOrigin.X, -glyphPaths[j][k + 1].Y + baselineOrigin.Y);
+                                Point quadCtrl = new Point(glyphPaths[j][k].X + baselineOrigin.X + currentGlyphPlacementDelta.X, -glyphPaths[j][k].Y + baselineOrigin.Y + currentGlyphPlacementDelta.Y);
+                                Point endPoint = new Point(glyphPaths[j][k + 1].X + baselineOrigin.X + currentGlyphPlacementDelta.X, -glyphPaths[j][k + 1].Y + baselineOrigin.Y + currentGlyphPlacementDelta.Y);
 
 
                                 Point ctrl1 = new Point(startPoint.X / 3 + 2 * quadCtrl.X / 3, startPoint.Y / 3 + 2 * quadCtrl.Y / 3);
@@ -349,7 +373,8 @@ namespace VectSharp
                     this.Close();
                 }
 
-                baselineOrigin.X += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                baselineOrigin.X += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
+                baselineOrigin.Y += (currentGlyphAdvanceDelta.Y) * font.FontSize / 1000;
             }
             return this;
         }
@@ -383,15 +408,41 @@ namespace VectSharp
                     break;
             }
 
+            Point currentGlyphPlacementDelta = new Point();
+            Point currentGlyphAdvanceDelta = new Point();
+            Point nextGlyphPlacementDelta = new Point();
+            Point nextGlyphAdvanceDelta = new Point();
+
             for (int i = 0; i < text.Length; i++)
             {
                 string c = text.Substring(i, 1);
 
+                if (Font.EnableKerning && i < text.Length - 1)
+                {
+                    currentGlyphPlacementDelta = nextGlyphPlacementDelta;
+                    currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
+                    nextGlyphAdvanceDelta = new Point();
+                    nextGlyphPlacementDelta = new Point();
+
+                    TrueTypeFile.PairKerning kerning = font.FontFamily.TrueTypeFile.Get1000EmKerning(text[i], text[i + 1]);
+
+                    if (kerning != null)
+                    {
+                        currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
+                        currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+
+                        nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
+                        nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
+                    }
+                }
+
                 Font.DetailedFontMetrics metrics = font.MeasureTextAdvanced(c);
 
-                Point origin = path.GetPointAtRelative(reference + currDelta);
+                Point origin = path.GetPointAtRelative(reference + currDelta + currentGlyphPlacementDelta.X * font.FontSize / 1000);
 
-                Point tangent = path.GetTangentAtRelative(reference + currDelta + (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing) / pathLength * 0.5);
+                Point tangent = path.GetTangentAtRelative(reference + currDelta + currentGlyphPlacementDelta.X * font.FontSize / 1000 + (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing) / pathLength * 0.5);
+
+                origin = new Point(origin.X - tangent.Y * currentGlyphPlacementDelta.Y * font.FontSize / 1000, origin.Y + tangent.X * currentGlyphPlacementDelta.Y * font.FontSize / 1000);
 
                 GraphicsPath glyphPath = new GraphicsPath();
 
@@ -459,11 +510,11 @@ namespace VectSharp
 
                 if (i > 0)
                 {
-                    currDelta += (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing) / pathLength;
+                    currDelta += (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing + currentGlyphAdvanceDelta.X * font.FontSize / 1000) / pathLength;
                 }
                 else
                 {
-                    currDelta += (metrics.Width + metrics.RightSideBearing) / pathLength;
+                    currDelta += (metrics.Width + metrics.RightSideBearing + currentGlyphAdvanceDelta.X * font.FontSize / 1000) / pathLength;
                 }
             }
 
@@ -616,9 +667,34 @@ namespace VectSharp
                     double underlineStartX = baselineOrigin.X + metrics.LeftSideBearing;
                     double currUnderlineX = underlineStartX - metrics.LeftSideBearing;
 
+                    Point currentGlyphPlacementDelta = new Point();
+                    Point currentGlyphAdvanceDelta = new Point();
+                    Point nextGlyphPlacementDelta = new Point();
+                    Point nextGlyphAdvanceDelta = new Point();
+
                     for (int i = 0; i < text.Length; i++)
                     {
                         char c = text[i];
+
+                        if (Font.EnableKerning && i < text.Length - 1)
+                        {
+                            currentGlyphPlacementDelta = nextGlyphPlacementDelta;
+                            currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
+                            nextGlyphAdvanceDelta = new Point();
+                            nextGlyphPlacementDelta = new Point();
+
+                            TrueTypeFile.PairKerning kerning = font.FontFamily.TrueTypeFile.Get1000EmKerning(c, text[i + 1]);
+
+                            if (kerning != null)
+                            {
+                                currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
+                                currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+
+                                nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
+                                nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
+                            }
+                        }
+
                         double[] intersections = font.FontFamily.TrueTypeFile.Get1000EmUnderlineIntersections(c, font.Underline.Position * 1000, font.Underline.Thickness * 1000);
 
                         if (intersections != null)
@@ -645,25 +721,25 @@ namespace VectSharp
                             this.LineTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
 
                             underlineStartX = currX + intersections[1] + font.Underline.Thickness * font.FontSize;
-                            currUnderlineX = Math.Max(currX + intersections[1] + font.Underline.Thickness * font.FontSize, currX + font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000);
+                            currUnderlineX = Math.Max(currX + intersections[1] + font.Underline.Thickness * font.FontSize, currX + (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000);
                         }
                         else if (i == text.Length - 1)
                         {
                             if (c != ' ')
                             {
-                                currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000;
+                                currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000;
                             }
                             else
                             {
-                                currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                                currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
                             }
                         }
                         else
                         {
-                            currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                            currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
                         }
 
-                        currX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                        currX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
                     }
 
                     if (!started)
@@ -696,9 +772,34 @@ namespace VectSharp
                     double underlineStartX = baselineOrigin.X + metrics.LeftSideBearing;
                     double currUnderlineX = underlineStartX - metrics.LeftSideBearing;
 
+                    Point currentGlyphPlacementDelta = new Point();
+                    Point currentGlyphAdvanceDelta = new Point();
+                    Point nextGlyphPlacementDelta = new Point();
+                    Point nextGlyphAdvanceDelta = new Point();
+
                     for (int i = 0; i < text.Length; i++)
                     {
                         char c = text[i];
+
+                        if (Font.EnableKerning && i < text.Length - 1)
+                        {
+                            currentGlyphPlacementDelta = nextGlyphPlacementDelta;
+                            currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
+                            nextGlyphAdvanceDelta = new Point();
+                            nextGlyphPlacementDelta = new Point();
+
+                            TrueTypeFile.PairKerning kerning = font.FontFamily.TrueTypeFile.Get1000EmKerning(c, text[i + 1]);
+
+                            if (kerning != null)
+                            {
+                                currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
+                                currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+
+                                nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
+                                nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
+                            }
+                        }
+
                         double[] intersections = font.FontFamily.TrueTypeFile.Get1000EmUnderlineIntersections(c, font.Underline.Position * 1000, font.Underline.Thickness * 1000);
 
                         if (intersections != null)
@@ -725,25 +826,25 @@ namespace VectSharp
                             this.LineTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
 
                             underlineStartX = currX + intersections[1] + font.Underline.Thickness * font.FontSize;
-                            currUnderlineX = Math.Max(currX + intersections[1] + font.Underline.Thickness * font.FontSize, currX + font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000);
+                            currUnderlineX = Math.Max(currX + intersections[1] + font.Underline.Thickness * font.FontSize, currX + (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000);
                         }
                         else if (i == text.Length - 1)
                         {
                             if (c != ' ')
                             {
-                                currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000;
+                                currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000;
                             }
                             else
                             {
-                                currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                                currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
                             }
                         }
                         else
                         {
-                            currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                            currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
                         }
 
-                        currX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                        currX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
                     }
 
                     if (!started)
@@ -767,9 +868,34 @@ namespace VectSharp
                         double underlineStartX = baselineOrigin.X + metrics.LeftSideBearing;
                         double currUnderlineX = underlineStartX - metrics.LeftSideBearing;
 
+                        Point currentGlyphPlacementDelta = new Point();
+                        Point currentGlyphAdvanceDelta = new Point();
+                        Point nextGlyphPlacementDelta = new Point();
+                        Point nextGlyphAdvanceDelta = new Point();
+
                         for (int i = 0; i < text.Length; i++)
                         {
                             char c = text[i];
+
+                            if (Font.EnableKerning && i < text.Length - 1)
+                            {
+                                currentGlyphPlacementDelta = nextGlyphPlacementDelta;
+                                currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
+                                nextGlyphAdvanceDelta = new Point();
+                                nextGlyphPlacementDelta = new Point();
+
+                                TrueTypeFile.PairKerning kerning = font.FontFamily.TrueTypeFile.Get1000EmKerning(c, text[i + 1]);
+
+                                if (kerning != null)
+                                {
+                                    currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
+                                    currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+
+                                    nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
+                                    nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
+                                }
+                            }
+
                             double[] intersections = font.FontFamily.TrueTypeFile.Get1000EmUnderlineIntersections(c, font.Underline.Position * 1000, font.Underline.Thickness * 1000);
 
                             if (intersections != null)
@@ -798,25 +924,25 @@ namespace VectSharp
                                 this.LineTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
 
                                 underlineStartX = currX + intersections[1] + font.Underline.Thickness * font.FontSize;
-                                currUnderlineX = Math.Max(currX + intersections[1] + font.Underline.Thickness * font.FontSize, currX + font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000);
+                                currUnderlineX = Math.Max(currX + intersections[1] + font.Underline.Thickness * font.FontSize, currX + (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000);
                             }
                             else if (i == text.Length - 1)
                             {
                                 if (c != ' ')
                                 {
-                                    currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000;
+                                    currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000;
                                 }
                                 else
                                 {
-                                    currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                                    currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
                                 }
                             }
                             else
                             {
-                                currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                                currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
                             }
 
-                            currX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                            currX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
                         }
 
                         if (!started)
@@ -843,9 +969,34 @@ namespace VectSharp
                         double underlineStartX = baselineOrigin.X + metrics.LeftSideBearing;
                         double currUnderlineX = underlineStartX - metrics.LeftSideBearing;
 
+                        Point currentGlyphPlacementDelta = new Point();
+                        Point currentGlyphAdvanceDelta = new Point();
+                        Point nextGlyphPlacementDelta = new Point();
+                        Point nextGlyphAdvanceDelta = new Point();
+
                         for (int i = 0; i < text.Length; i++)
                         {
                             char c = text[i];
+
+                            if (Font.EnableKerning && i < text.Length - 1)
+                            {
+                                currentGlyphPlacementDelta = nextGlyphPlacementDelta;
+                                currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
+                                nextGlyphAdvanceDelta = new Point();
+                                nextGlyphPlacementDelta = new Point();
+
+                                TrueTypeFile.PairKerning kerning = font.FontFamily.TrueTypeFile.Get1000EmKerning(c, text[i + 1]);
+
+                                if (kerning != null)
+                                {
+                                    currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
+                                    currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+
+                                    nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
+                                    nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
+                                }
+                            }
+
                             double[] intersections = font.FontFamily.TrueTypeFile.Get1000EmUnderlineIntersections(c, font.Underline.Position * 1000, font.Underline.Thickness * 1000);
 
                             if (intersections != null)
@@ -878,25 +1029,25 @@ namespace VectSharp
                                 this.LineTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
 
                                 underlineStartX = currX + intersections[1] + font.Underline.Thickness * font.FontSize;
-                                currUnderlineX = Math.Max(currX + intersections[1] + font.Underline.Thickness * font.FontSize, currX + font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000);
+                                currUnderlineX = Math.Max(currX + intersections[1] + font.Underline.Thickness * font.FontSize, currX + (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000);
                             }
                             else if (i == text.Length - 1)
                             {
                                 if (c != ' ')
                                 {
-                                    currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000;
+                                    currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000;
                                 }
                                 else
                                 {
-                                    currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                                    currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
                                 }
                             }
                             else
                             {
-                                currUnderlineX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                                currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
                             }
 
-                            currX += font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000;
+                            currX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
                         }
 
                         if (!started)
