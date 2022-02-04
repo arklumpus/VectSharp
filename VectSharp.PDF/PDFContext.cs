@@ -23,12 +23,13 @@ using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using VectSharp.Filters;
 
 namespace VectSharp.PDF
 {
     internal enum SegmentType
     {
-        Move, Line, CubicBezier, Arc, Close
+        Move, Line, CubicBezier, Close
     }
 
     internal abstract class Segment
@@ -128,6 +129,7 @@ namespace VectSharp.PDF
         LineDash LineDash { get; }
         bool IsClipping { get; }
         string Tag { get; }
+        Rectangle GetBounds();
     }
 
     internal class TransformFigure : IFigure
@@ -160,6 +162,11 @@ namespace VectSharp.PDF
             this.TransformationMatrix = transformationMatrix;
             this.Tag = tag;
         }
+
+        public Rectangle GetBounds()
+        {
+            return Rectangle.NaN;
+        }
     }
 
     internal class RasterImageFigure : IFigure
@@ -188,6 +195,11 @@ namespace VectSharp.PDF
             this.Image = image;
             this.Tag = tag;
         }
+
+        public Rectangle GetBounds()
+        {
+            return new Rectangle(0, 0, 1, 1);
+        }
     }
 
     internal class PathFigure : IFigure
@@ -205,7 +217,10 @@ namespace VectSharp.PDF
         public Segment[] Segments { get; }
 
         public string Tag { get; }
-        public PathFigure(IEnumerable<Segment> segments, Brush fill, Brush stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, bool isClipping, string tag)
+
+        private Rectangle Bounds { get; }
+
+        public PathFigure(IEnumerable<Segment> segments, Rectangle bounds, Brush fill, Brush stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, bool isClipping, string tag)
         {
             List<Segment> segs = new List<Segment>();
 
@@ -224,6 +239,20 @@ namespace VectSharp.PDF
             LineDash = lineDash;
             IsClipping = isClipping;
             this.Tag = tag;
+
+            if (stroke == null)
+            {
+                this.Bounds = bounds;
+            }
+            else
+            {
+                this.Bounds = new Rectangle(bounds.Location.X - lineWidth * 0.5, bounds.Location.Y - lineWidth * 0.5, bounds.Size.Width + lineWidth, bounds.Size.Height + lineWidth);
+            }
+        }
+
+        public Rectangle GetBounds()
+        {
+            return Bounds;
         }
     }
 
@@ -263,6 +292,25 @@ namespace VectSharp.PDF
             LineJoin = lineJoin;
             LineDash = lineDash;
             this.Tag = tag;
+        }
+
+        public Rectangle GetBounds()
+        {
+            Font.DetailedFontMetrics metrics = this.Font.MeasureTextAdvanced(this.Text);
+
+            switch (this.TextBaseline)
+            {
+                case TextBaselines.Top:
+                    return new Rectangle(this.Position, new Size(metrics.Width, metrics.Height));
+                case TextBaselines.Bottom:
+                    return new Rectangle(this.Position.X, this.Position.Y - metrics.Height, metrics.Width, metrics.Height);
+                case TextBaselines.Middle:
+                    return new Rectangle(this.Position.X, this.Position.Y - metrics.Height * 0.5, metrics.Width, metrics.Height);
+                case TextBaselines.Baseline:
+                    return new Rectangle(this.Position.X, this.Position.Y - metrics.Top, metrics.Width, metrics.Height);
+                default:
+                    throw new System.ArgumentOutOfRangeException(nameof(TextBaseline), this.TextBaseline, "Invalid text baseline!");
+            }
         }
     }
 
@@ -349,7 +397,9 @@ namespace VectSharp.PDF
 
         private readonly bool _textToPaths;
 
-        public PDFContext(double width, double height, Colour background, bool textToPaths)
+        private PDFContextInterpreter.FilterOption _filterOption;
+
+        public PDFContext(double width, double height, Colour background, bool textToPaths, PDFContextInterpreter.FilterOption filterOption)
         {
             this.Width = width;
             this.Height = height;
@@ -379,6 +429,8 @@ namespace VectSharp.PDF
             this.Fill();
 
             this.SetFillStyle(Colour.FromRgb(0, 0, 0));
+
+            this._filterOption = filterOption;
         }
 
 
@@ -434,21 +486,168 @@ namespace VectSharp.PDF
         public LineCaps LineCap { get; set; }
         public LineJoins LineJoin { get; set; }
 
+        internal static bool IsCompatible(Brush brush)
+        {
+            if (brush is SolidColourBrush)
+            {
+                return true;
+            }
+            else if (brush is GradientBrush gradient)
+            {
+                foreach (GradientStop stop in gradient.GradientStops)
+                {
+                    if (stop.Colour.A != 1)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private static Brush RemoveAlpha(Brush brush)
+        {
+            if (brush is SolidColourBrush)
+            {
+                return brush;
+            }
+            else if (brush is LinearGradientBrush linear)
+            {
+                return new LinearGradientBrush(linear.StartPoint, linear.EndPoint, from el in linear.GradientStops select new GradientStop(el.Colour.WithAlpha(1.0), el.Offset));
+            }
+            else if (brush is RadialGradientBrush radial)
+            {
+                return new RadialGradientBrush(radial.FocalPoint, radial.Centre, radial.Radius, from el in radial.GradientStops select new GradientStop(el.Colour.WithAlpha(1.0), el.Offset));
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        internal static Brush GetAlphaBrush(Brush brush)
+        {
+            if (brush is SolidColourBrush)
+            {
+                return brush;
+            }
+            else if (brush is LinearGradientBrush linear)
+            {
+                return new LinearGradientBrush(linear.StartPoint, linear.EndPoint, from el in linear.GradientStops select new GradientStop(Colour.FromRgb(el.Colour.A, el.Colour.A, el.Colour.A), el.Offset));
+            }
+            else if (brush is RadialGradientBrush radial)
+            {
+                return new RadialGradientBrush(radial.FocalPoint, radial.Centre, radial.Radius, from el in radial.GradientStops select new GradientStop(Colour.FromRgb(el.Colour.A, el.Colour.A, el.Colour.A), el.Offset));
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private static GraphicsPath GetGraphicsPath(IEnumerable<Segment> segments)
+        {
+            GraphicsPath tbr = new GraphicsPath();
+
+            foreach (Segment seg in segments)
+            {
+                switch (seg.Type)
+                {
+                    case SegmentType.Close:
+                        tbr.Close();
+                        break;
+                    case SegmentType.Move:
+                        tbr.MoveTo(seg.Point);
+                        break;
+                    case SegmentType.Line:
+                        tbr.LineTo(seg.Point);
+                        break;
+                    case SegmentType.CubicBezier:
+                        tbr.CubicBezierTo(seg.Points[0], seg.Points[1], seg.Points[2]);
+                        break;
+                }
+            }
+
+            return tbr;
+        }
+
+        private Graphics GetCurrentFigureMask(Brush brush, bool stroke, bool blackBackground = false)
+        {
+            Graphics gpr = new Graphics();
+
+            GraphicsPath path = GetGraphicsPath(_currentFigure);
+
+            if (!stroke)
+            {
+                gpr.FillPath(path, brush);
+            }
+            else
+            {
+                gpr.StrokePath(path, brush, LineWidth, LineCap, LineJoin, _lineDash);
+            }
+
+            if (blackBackground)
+            {
+                Rectangle bounds = gpr.GetBounds();
+
+                Graphics gpr2 = new Graphics();
+
+                gpr2.FillRectangle(bounds.Location.X, bounds.Location.Y, bounds.Size.Width, bounds.Size.Height, Colours.White);
+                gpr2.DrawGraphics(0, 0, gpr);
+
+                gpr = gpr2;
+            }
+
+            return gpr;
+        }
+
         public void Fill()
         {
-            _figures.Add(new PathFigure(_currentFigure, _fillStyle, null, 0, LineCaps.Butt, LineJoins.Bevel, new LineDash(0, 0, 0), false, this.Tag));
+            if (IsCompatible(_fillStyle))
+            {
+                _figures.Add(new PathFigure(_currentFigure, VectSharp.Rectangle.NaN, _fillStyle, null, 0, LineCaps.Butt, LineJoins.Bevel, new LineDash(0, 0, 0), false, this.Tag));
+            }
+            else
+            {
+                _figures.Add(new PathFigure(_currentFigure, GetGraphicsPath(_currentFigure).GetBounds(), _fillStyle, null, 0, LineCaps.Butt, LineJoins.Bevel, new LineDash(0, 0, 0), false, this.Tag));
+                /*Graphics mask = GetCurrentFigureMask(GetAlphaBrush(_fillStyle), false, true);
+                Graphics subject = GetCurrentFigureMask(RemoveAlpha(_fillStyle), false);
+
+                this.DrawFilteredGraphics(subject, new MaskFilter(mask));*/
+            }
+
             _currentFigure = new List<Segment>();
         }
 
         public void Stroke()
         {
-            _figures.Add(new PathFigure(_currentFigure, null, _strokeStyle, LineWidth, LineCap, LineJoin, _lineDash, false, this.Tag));
+            if (IsCompatible(_strokeStyle))
+            {
+                _figures.Add(new PathFigure(_currentFigure, VectSharp.Rectangle.NaN, null, _strokeStyle, LineWidth, LineCap, LineJoin, _lineDash, false, this.Tag));
+            }
+            else
+            {
+                _figures.Add(new PathFigure(_currentFigure, GetGraphicsPath(_currentFigure).GetBounds(), null, _strokeStyle, LineWidth, LineCap, LineJoin, _lineDash, false, this.Tag));
+            }
+
+            /*else
+            {
+                Graphics mask = GetCurrentFigureMask(GetAlphaBrush(_strokeStyle), true, true);
+                Graphics subject = GetCurrentFigureMask(RemoveAlpha(_strokeStyle), true);
+
+                this.DrawFilteredGraphics(subject, new MaskFilter(mask));
+            }*/
+
             _currentFigure = new List<Segment>();
         }
 
         public void SetClippingPath()
         {
-            _figures.Add(new PathFigure(_currentFigure, null, null, 0, LineCaps.Butt, LineJoins.Bevel, new LineDash(0, 0, 0), true, this.Tag));
+            _figures.Add(new PathFigure(_currentFigure, VectSharp.Rectangle.NaN, null, null, 0, LineCaps.Butt, LineJoins.Bevel, new LineDash(0, 0, 0), true, this.Tag));
             _currentFigure = new List<Segment>();
         }
 
@@ -576,6 +775,62 @@ namespace VectSharp.PDF
             _figures.Add(new RasterImageFigure(image, this.Tag));
 
             Restore();
+        }
+
+        public void DrawFilteredGraphics(Graphics graphics, IFilter filter)
+        {
+            if (this._filterOption.Operation == PDFContextInterpreter.FilterOption.FilterOperations.RasteriseAll)
+            {
+                double scale = this._filterOption.RasterisationResolution;
+
+                Rectangle bounds = graphics.GetBounds();
+
+                bounds = new Rectangle(bounds.Location.X - filter.TopLeftMargin.X, bounds.Location.Y - filter.TopLeftMargin.Y, bounds.Size.Width + filter.TopLeftMargin.X + filter.BottomRightMargin.X, bounds.Size.Height + filter.TopLeftMargin.Y + filter.BottomRightMargin.Y);
+
+                if (bounds.Size.Width > 0 && bounds.Size.Height > 0)
+                {
+                    if (!this._filterOption.RasterisationResolutionRelative)
+                    {
+                        scale = scale / Math.Min(bounds.Size.Width, bounds.Size.Height);
+                    }
+
+                    if (graphics.TryRasterise(bounds, scale, true, out RasterImage rasterised))
+                    {
+                        RasterImage filtered = null;
+
+                        if (filter is ILocationInvariantFilter locInvFilter)
+                        {
+                            filtered = locInvFilter.Filter(rasterised, scale);
+                        }
+                        else if (filter is IFilterWithLocation filterWithLoc)
+                        {
+                            filtered = filterWithLoc.Filter(rasterised, bounds, scale);
+                        }
+
+                        if (filtered != null)
+                        {
+                            rasterised.Dispose();
+
+                            DrawRasterImage(0, 0, filtered.Width, filtered.Height, bounds.Location.X, bounds.Location.Y, bounds.Size.Width, bounds.Size.Height, filtered);
+                        }
+                    }
+                    else
+                    {
+                        throw new NotImplementedException(@"The filter could not be rasterised! You can avoid this error by doing one of the following:
+ • Add a reference to VectSharp.Raster or VectSharp.Raster.ImageSharp (you may also need to add a using directive somewhere to force the assembly to be loaded).
+ • Provide your own implementation of Graphics.RasterisationMethod.
+ • Set the FilterOption.Operation to ""IgnoreAll"" or ""SkipAll"".");
+                    }
+                }
+            }
+            else if (this._filterOption.Operation == PDFContextInterpreter.FilterOption.FilterOperations.IgnoreAll)
+            {
+                graphics.CopyToIGraphicsContext(this);
+            }
+            else
+            {
+
+            }
         }
     }
 
@@ -865,11 +1120,12 @@ namespace VectSharp.PDF
         /// <param name="textOption">Defines whether the used fonts should be included in the file.</param>
         /// <param name="compressStreams">Indicates whether the streams in the PDF file should be compressed.</param>
         /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
-        public static void SaveAsPDF(this Document document, string fileName, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null)
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
+        public static void SaveAsPDF(this Document document, string fileName, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, FilterOption filterOption = default)
         {
             using (FileStream stream = new FileStream(fileName, FileMode.Create))
             {
-                document.SaveAsPDF(stream, textOption, compressStreams, linkDestinations);
+                document.SaveAsPDF(stream, textOption, compressStreams, linkDestinations, filterOption);
             }
         }
 
@@ -889,6 +1145,66 @@ namespace VectSharp.PDF
             ConvertIntoPaths
         }
 
+        /// <summary>
+        /// Determines how and whether image filters are rasterised.
+        /// </summary>
+        public class FilterOption
+        {
+            /// <summary>
+            /// Defines whether image filters should be rasterised or not.
+            /// </summary>
+            public enum FilterOperations
+            {
+                /// <summary>
+                /// Image filters will always be rasterised.
+                /// </summary>
+                RasteriseAll,
+
+                /// <summary>
+                /// All image filters will be ignored.
+                /// </summary>
+                IgnoreAll,
+
+                /// <summary>
+                /// All the images that should be drawn with a filter will be ignored.
+                /// </summary>
+                SkipAll
+            }
+
+            /// <summary>
+            /// Defines whether image filters should be rasterised or not.
+            /// </summary>
+            public FilterOperations Operation { get; } = FilterOperations.RasteriseAll;
+
+            /// <summary>
+            /// The resolution that will be used to rasterise image filters. Depending on the value of <see cref="RasterisationResolutionRelative"/>, this can either be an absolute resolution (i.e. a size in pixel), or a scale factor that is applied to the image size in graphics units.
+            /// </summary>
+            public double RasterisationResolution { get; } = 1;
+
+            /// <summary>
+            /// Determines whether the value of <see cref="RasterisationResolution"/> is absolute (i.e. a size in pixel), or relative (i.e. a scale factor that is applied to the image size in graphics units).
+            /// </summary>
+            public bool RasterisationResolutionRelative { get; } = true;
+
+            /// <summary>
+            /// The default options for image filter rasterisation.
+            /// </summary>
+            public static FilterOption Default = new FilterOption(FilterOperations.RasteriseAll, 1, true);
+
+            /// <summary>
+            /// Create a new <see cref="FilterOption"/> object.
+            /// </summary>
+            /// <param name="operation">Defines whether image filters should be rasterised or not.</param>
+            /// <param name="rasterisationResolution">The resolution that will be used to rasterise image filters. Depending on the value of <see cref="RasterisationResolutionRelative"/>, this can either be an absolute resolution (i.e. a size in pixel), or a scale factor that is applied to the image size in graphics units.</param>
+            /// <param name="rasterisationResolutionRelative">Determines whether the value of <see cref="RasterisationResolution"/> is absolute (i.e. a size in pixel), or relative (i.e. a scale factor that is applied to the image size in graphics units).</param>
+            public FilterOption(FilterOperations operation, double rasterisationResolution, bool rasterisationResolutionRelative)
+            {
+                this.Operation = operation;
+                this.RasterisationResolution = rasterisationResolution;
+                this.RasterisationResolutionRelative = rasterisationResolutionRelative;
+            }
+        }
+
 
 
         /// <summary>
@@ -899,11 +1215,17 @@ namespace VectSharp.PDF
         /// <param name="textOption">Defines whether the used fonts should be included in the file.</param>
         /// <param name="compressStreams">Indicates whether the streams in the PDF file should be compressed.</param>
         /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
-        public static void SaveAsPDF(this Document document, Stream stream, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null)
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
+        public static void SaveAsPDF(this Document document, Stream stream, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, FilterOption filterOption = default)
         {
             if (linkDestinations == null)
             {
                 linkDestinations = new Dictionary<string, string>();
+            }
+
+            if (filterOption == null)
+            {
+                filterOption = FilterOption.Default;
             }
 
             long position = 0;
@@ -925,7 +1247,7 @@ namespace VectSharp.PDF
 
             for (int i = 0; i < document.Pages.Count; i++)
             {
-                pageContexts[i] = new PDFContext(document.Pages[i].Width, document.Pages[i].Height, document.Pages[i].Background, textOption == TextOptions.ConvertIntoPaths);
+                pageContexts[i] = new PDFContext(document.Pages[i].Width, document.Pages[i].Height, document.Pages[i].Background, textOption == TextOptions.ConvertIntoPaths, filterOption);
                 document.Pages[i].Graphics.CopyToIGraphicsContext(pageContexts[i]);
             }
 
@@ -1380,7 +1702,7 @@ namespace VectSharp.PDF
 
             List<(string, List<(double, double, double, double)>)>[] taggedObjectRectsByPage = new List<(string, List<(double, double, double, double)>)>[document.Pages.Count];
             Dictionary<string, int>[] taggedObjectRectsIndicesByPage = new Dictionary<string, int>[document.Pages.Count];
-            List<(GradientBrush, double[,])> gradients = new System.Collections.Generic.List<(GradientBrush, double[,])>();
+            List<(GradientBrush, double[,], IFigure)> gradients = new System.Collections.Generic.List<(GradientBrush, double[,], IFigure)>();
 
 
             for (int pageInd = 0; pageInd < document.Pages.Count; pageInd++)
@@ -1469,16 +1791,20 @@ namespace VectSharp.PDF
             }
 
             List<int> gradientIndices = new List<int>(gradients.Count);
+            List<int> gradientAlphaIndices = new List<int>(gradients.Count);
+            List<int> gradientMaskIndices = new List<int>(gradients.Count);
 
             if (gradients.Count > 0)
             {
                 for (int i = 0; i < gradients.Count; i++)
                 {
-                    (GradientBrush gradient, double[,] matrix) = gradients[i];
+                    (GradientBrush gradient, double[,] matrix, IFigure figure) = gradients[i];
 
-                    int functionObject = -1;
+                    //int functionObject = -1;
 
-                    if (gradient.GradientStops.Count == 2)
+                    bool hasAlpha = false;
+
+                    /*if (gradient.GradientStops.Count == 2)
                     {
                         objectPositions.Add(position);
 
@@ -1489,6 +1815,8 @@ namespace VectSharp.PDF
 
                         position += currObject.Length;
                         objectNum++;
+
+                        hasAlpha = gradient.GradientStops[0].Colour.A != 1 || gradient.GradientStops[1].Colour.A != 1;
                     }
                     else
                     {
@@ -1511,10 +1839,15 @@ namespace VectSharp.PDF
 
                             position += currObject.Length;
                             objectNum++;
+
+                            if (gradient.GradientStops[j].Colour.A != 1)
+                            {
+                                hasAlpha = true;
+                            }
                         }
 
                         objectPositions.Add(position);
-                        
+
                         currObject = objectNum.ToString() + " 0 obj\n<< /FunctionType 3 /Domain [ 0 1 ] /Functions [ ";
 
                         for (int j = 0; j < functionIndices.Count; j++)
@@ -1554,8 +1887,8 @@ namespace VectSharp.PDF
                         currObject = objectNum.ToString() + " 0 obj\n<< /Type /Pattern /PatternType 2 /Matrix [ " +
 
                         matrix[0, 0].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
-                        matrix[0, 1].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
                         matrix[1, 0].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                        matrix[0, 1].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
                         matrix[1, 1].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
                         matrix[0, 2].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
                         matrix[1, 2].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " ] ";
@@ -1576,8 +1909,8 @@ namespace VectSharp.PDF
                         currObject = objectNum.ToString() + " 0 obj\n<< /Type /Pattern /PatternType 2 /Matrix [ " +
 
                         matrix[0, 0].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
-                        matrix[0, 1].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
                         matrix[1, 0].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                        matrix[0, 1].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
                         matrix[1, 1].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
                         matrix[0, 2].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
                         matrix[1, 2].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " ] ";
@@ -1590,7 +1923,115 @@ namespace VectSharp.PDF
 
                         position += currObject.Length;
                         objectNum++;
+                    }*/
+
+                    WriteGradient(true, ref gradient, ref objectPositions, ref position, ref currObject, ref objectNum, ref sw, ref hasAlpha, ref matrix, ref gradientIndices);
+
+                    if (!hasAlpha)
+                    {
+                        gradientAlphaIndices.Add(-1);
+                        gradientMaskIndices.Add(-1);
                     }
+                    else
+                    {
+                        /*objectPositions.Add(position);
+                        int alphaGradientIndex = objectNum;
+
+
+                        **/
+
+                        GradientBrush alphaGradient = (GradientBrush)PDFContext.GetAlphaBrush(gradient);
+
+                        bool hasAlpha2 = false;
+
+                        WriteGradient(false, ref alphaGradient, ref objectPositions, ref position, ref currObject, ref objectNum, ref sw, ref hasAlpha2, ref matrix, ref gradientAlphaIndices);
+
+                        int alphaGradientIndex = gradientAlphaIndices[gradientAlphaIndices.Count - 1];
+
+                        Rectangle bbox = figure.GetBounds();
+
+                        MemoryStream contentStream = new MemoryStream();
+
+                        using (StreamWriter ctW = new StreamWriter(contentStream, Encoding.ASCII, 1024, true))
+                        {
+                            ctW.Write("q\n");
+                            ctW.Write(bbox.Location.X.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + bbox.Location.Y.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + (bbox.Location.X + bbox.Size.Width).ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + (bbox.Location.Y + bbox.Size.Height).ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " re\n");
+                            ctW.Write("/Pattern cs\n");
+                            ctW.Write("/pa" + gradientAlphaIndices.Count + " scn\n");
+                            ctW.Write("f\n");
+                            ctW.Write("Q\n");
+                        }
+
+                        contentStream.Seek(0, SeekOrigin.Begin);
+
+                        MemoryStream compressedStream;
+
+                        if (!compressStreams)
+                        {
+                            compressedStream = contentStream;
+                        }
+                        else
+                        {
+                            compressedStream = ZLibCompress(contentStream);
+                        }
+
+                        long streamLength = compressedStream.Length;
+
+                        objectPositions.Add(position);
+                        int maskIndex = objectNum;
+
+                        currObject = objectNum.ToString() + " 0 obj\n<< /Type /XObject /Subtype /Form " + 
+                            "/Group << /Type /Group /S /Transparency /I true /CS /DeviceRGB >> " +
+                            "/BBox [ " +
+                            bbox.Location.X.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + bbox.Location.Y.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + (bbox.Location.X + bbox.Size.Width).ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + (bbox.Location.Y + bbox.Size.Height).ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) +
+                            " ] " + /*"/Matrix [ " +
+                        matrix[0, 0].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                        matrix[1, 0].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                        matrix[0, 1].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                        matrix[1, 1].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                        matrix[0, 2].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                        matrix[1, 2].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " ] " +*/
+                        "/Resources << /Pattern << /pa" + gradientAlphaIndices.Count + " " + alphaGradientIndex.ToString() + " 0 R >> >> " +
+
+                        "/Length " + streamLength.ToString();
+
+                        if (compressStreams)
+                        {
+                            if (compressStreams)
+                            {
+                                currObject += " /Filter [ /FlateDecode ]";
+                            }
+                        }
+
+                        currObject += " >>\nstream\n";
+
+                        sw.Write(currObject);
+                        sw.Flush();
+
+                        position += currObject.Length;
+                        compressedStream.WriteTo(stream);
+                        position += streamLength;
+
+                        compressedStream.Dispose();
+
+                        currObject = "endstream\nendobj\n";
+                        sw.Write(currObject);
+                        position += currObject.Length;
+
+                        objectNum++;
+
+
+                        objectPositions.Add(position);
+                        int actualMaskIndex = objectNum;
+
+                        gradientMaskIndices.Add(actualMaskIndex);
+
+                        currObject = objectNum.ToString() + " 0 obj\n<< /Type /ExtGState /SMask << /Type /Mask /S /Luminosity /G " + maskIndex.ToString() + " 0 R >> >>\nendobj\n";
+                        sw.Write(currObject);
+                        position += currObject.Length;
+                        objectNum++;
+                    }
+
                 }
             }
 
@@ -1602,13 +2043,21 @@ namespace VectSharp.PDF
                 resourceObject = objectNum;
                 currObject = objectNum.ToString() + " 0 obj\n<< /Font " + fontListObject.ToString() + " 0 R";
 
-                if (alphas.Length > 0)
+                if (alphas.Length > 0 || gradientMaskIndices.Where(x => x >= 0).Any())
                 {
                     currObject += " /ExtGState <<\n";
 
                     for (int i = 0; i < alphas.Length; i++)
                     {
                         currObject += "/a" + i.ToString() + " << /CA " + alphas[i].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " /ca " + alphas[i].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " >>\n";
+                    }
+
+                    for (int i = 0; i < gradientMaskIndices.Count; i++)
+                    {
+                        if (gradientMaskIndices[i] >= 0)
+                        {
+                            currObject += "/ma" + i.ToString() + " " + gradientMaskIndices[i].ToString(System.Globalization.CultureInfo.InvariantCulture) + " 0 R\n";
+                        }
                     }
 
                     currObject += ">>";
@@ -1650,13 +2099,21 @@ namespace VectSharp.PDF
                 resourceObject = objectNum;
                 currObject = objectNum.ToString() + " 0 obj\n<<";
 
-                if (alphas.Length > 0)
+                if (alphas.Length > 0 || gradientMaskIndices.Where(x => x >= 0).Any())
                 {
                     currObject += " /ExtGState <<\n";
 
                     for (int i = 0; i < alphas.Length; i++)
                     {
                         currObject += "/a" + i.ToString() + " << /CA " + alphas[i].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " /ca " + alphas[i].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " >>\n";
+                    }
+
+                    for (int i = 0; i < gradientMaskIndices.Count; i++)
+                    {
+                        if (gradientMaskIndices[i] >= 0)
+                        {
+                            currObject += "/ma" + i.ToString() + " " + gradientMaskIndices[i].ToString(System.Globalization.CultureInfo.InvariantCulture) + " 0 R\n";
+                        }
                     }
 
                     currObject += ">>";
@@ -1813,6 +2270,147 @@ namespace VectSharp.PDF
 
             sw.Flush();
             sw.Dispose();
+        }
+
+        private static void WriteGradient(bool includeMatrix, ref GradientBrush gradient, ref List<long> objectPositions, ref long position, ref string currObject, ref int objectNum, ref StreamWriter sw, ref bool hasAlpha, ref double[,] matrix, ref List<int> gradientIndices)
+        {
+            int functionObject = -1;
+
+            if (gradient.GradientStops.Count == 2)
+            {
+                objectPositions.Add(position);
+
+                currObject = objectNum.ToString() + " 0 obj\n<< /FunctionType 2 /Domain [ 0 1 ] /C0 [ " + gradient.GradientStops[0].Colour.R.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + gradient.GradientStops[0].Colour.G.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + gradient.GradientStops[0].Colour.B.ToString(System.Globalization.CultureInfo.InvariantCulture) + " ] ";
+                currObject += "/C1 [ " + gradient.GradientStops[1].Colour.R.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + gradient.GradientStops[1].Colour.G.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + gradient.GradientStops[1].Colour.B.ToString(System.Globalization.CultureInfo.InvariantCulture) + " ] /N 1 >>\nendobj\n";
+                sw.Write(currObject);
+                functionObject = objectNum;
+
+                position += currObject.Length;
+                objectNum++;
+
+                hasAlpha = gradient.GradientStops[0].Colour.A != 1 || gradient.GradientStops[1].Colour.A != 1;
+            }
+            else
+            {
+                List<double> bounds = new List<double>();
+                List<int> functionIndices = new List<int>();
+
+                for (int j = 0; j < gradient.GradientStops.Count - 1; j++)
+                {
+                    objectPositions.Add(position);
+
+                    currObject = objectNum.ToString() + " 0 obj\n<< /FunctionType 2 /Domain [ 0 1 ] /C0 [ " + gradient.GradientStops[j].Colour.R.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + gradient.GradientStops[j].Colour.G.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + gradient.GradientStops[j].Colour.B.ToString(System.Globalization.CultureInfo.InvariantCulture) + " ] ";
+                    currObject += "/C1 [ " + gradient.GradientStops[j + 1].Colour.R.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + gradient.GradientStops[j + 1].Colour.G.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + gradient.GradientStops[j + 1].Colour.B.ToString(System.Globalization.CultureInfo.InvariantCulture) + " ] /N 1 >>\nendobj\n";
+                    sw.Write(currObject);
+                    functionIndices.Add(objectNum);
+
+                    if (j < gradient.GradientStops.Count - 2)
+                    {
+                        bounds.Add(gradient.GradientStops[j + 1].Offset);
+                    }
+
+                    position += currObject.Length;
+                    objectNum++;
+
+                    if (gradient.GradientStops[j].Colour.A != 1)
+                    {
+                        hasAlpha = true;
+                    }
+                }
+
+                if (gradient.GradientStops[gradient.GradientStops.Count - 1].Colour.A != 1)
+                {
+                    hasAlpha = true;
+                }
+
+                objectPositions.Add(position);
+
+                currObject = objectNum.ToString() + " 0 obj\n<< /FunctionType 3 /Domain [ 0 1 ] /Functions [ ";
+
+                for (int j = 0; j < functionIndices.Count; j++)
+                {
+                    currObject += functionIndices[j].ToString(System.Globalization.CultureInfo.InvariantCulture) + " 0 R ";
+                }
+
+                currObject += "] /Bounds [ ";
+
+                for (int j = 0; j < bounds.Count; j++)
+                {
+                    currObject += bounds[j].ToString(System.Globalization.CultureInfo.InvariantCulture) + " ";
+                }
+
+                currObject += "] /Encode [ ";
+
+                for (int j = 0; j < functionIndices.Count; j++)
+                {
+                    currObject += "0 1 ";
+                }
+
+                currObject += "] >>\nendobj\n";
+
+
+                sw.Write(currObject);
+                functionObject = objectNum;
+
+                position += currObject.Length;
+                objectNum++;
+
+            }
+
+            if (gradient is LinearGradientBrush linear)
+            {
+                objectPositions.Add(position);
+
+                currObject = objectNum.ToString() + " 0 obj\n<< /Type /Pattern /PatternType 2 ";
+
+                if (includeMatrix)
+                {
+                    currObject += "/Matrix [ " +
+
+                    matrix[0, 0].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                    matrix[1, 0].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                    matrix[0, 1].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                    matrix[1, 1].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                    matrix[0, 2].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                    matrix[1, 2].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " ] ";
+                }
+
+                currObject += "/Shading << /ShadingType 2 /ColorSpace /DeviceRGB /Coords [ " + linear.StartPoint.X.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + linear.StartPoint.Y.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + linear.EndPoint.X.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + linear.EndPoint.Y.ToString(System.Globalization.CultureInfo.InvariantCulture) + " ] ";
+
+                currObject += "/Domain [ 0 1 ] /Extend [ true true ] /Function " + functionObject.ToString(System.Globalization.CultureInfo.InvariantCulture) + " 0 R >> >>\nendobj\n";
+                sw.Write(currObject);
+                gradientIndices.Add(objectNum);
+
+                position += currObject.Length;
+                objectNum++;
+            }
+            else if (gradient is RadialGradientBrush radial)
+            {
+                objectPositions.Add(position);
+
+                currObject = objectNum.ToString() + " 0 obj\n<< /Type /Pattern /PatternType 2 ";
+
+                if (includeMatrix)
+                {
+                    currObject += "/Matrix [ " +
+
+                    matrix[0, 0].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                    matrix[1, 0].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                    matrix[0, 1].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                    matrix[1, 1].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                    matrix[0, 2].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " +
+                    matrix[1, 2].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " ] ";
+                }
+
+                currObject += "/Shading << /ShadingType 3 /ColorSpace /DeviceRGB /Coords [ " + radial.FocalPoint.X.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + radial.FocalPoint.Y.ToString(System.Globalization.CultureInfo.InvariantCulture) + " 0 " + radial.Centre.X.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + radial.Centre.Y.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + radial.Radius.ToString(System.Globalization.CultureInfo.InvariantCulture) + " ] ";
+
+                currObject += "/Domain [ 0 1 ] /Extend [ true true ] /Function " + functionObject.ToString(System.Globalization.CultureInfo.InvariantCulture) + " 0 R >> >>\nendobj\n";
+                sw.Write(currObject);
+                gradientIndices.Add(objectNum);
+
+                position += currObject.Length;
+                objectNum++;
+            }
         }
 
         private static (double, double, double, double) MeasureFigure(IFigure figure, ref double[,] transformationMatrix, Stack<double[,]> savedStates)
@@ -1989,7 +2587,7 @@ namespace VectSharp.PDF
             return new Point(transPt[0] / transPt[2], transPt[1] / transPt[2]);
         }
 
-        private static string FigureAsPDFString(IFigure figure, Dictionary<string, string> nonSymbolFontIds, Dictionary<string, string> symbolFontIds, Dictionary<string, Dictionary<char, int>> symbolGlyphIndices, double[] alphas, Dictionary<string, int> imageObjectNums, double[,] transformationMatrix, List<(GradientBrush, double[,])> gradients)
+        private static string FigureAsPDFString(IFigure figure, Dictionary<string, string> nonSymbolFontIds, Dictionary<string, string> symbolFontIds, Dictionary<string, Dictionary<char, int>> symbolGlyphIndices, double[] alphas, Dictionary<string, int> imageObjectNums, double[,] transformationMatrix, List<(GradientBrush, double[,], IFigure)> gradients)
         {
 
             StringBuilder sb = new StringBuilder();
@@ -2006,7 +2604,12 @@ namespace VectSharp.PDF
                     int brushIndex = gradients.Count;
                     double[,] clonedMatrix = new double[3, 3] { { transformationMatrix[0, 0], transformationMatrix[0, 1], transformationMatrix[0, 2] }, { transformationMatrix[1, 0], transformationMatrix[1, 1], transformationMatrix[1, 2] }, { transformationMatrix[2, 0], transformationMatrix[2, 1], transformationMatrix[2, 2] } };
 
-                    gradients.Add((gradient, clonedMatrix));
+                    gradients.Add((gradient, clonedMatrix, figure));
+
+                    if (!PDFContext.IsCompatible(gradient))
+                    {
+                        sb.Append("/ma" + brushIndex.ToString(System.Globalization.CultureInfo.InvariantCulture) + " gs ");
+                    }
 
                     sb.Append("/Pattern cs /p" + brushIndex.ToString(System.Globalization.CultureInfo.InvariantCulture) + " scn /a" + Array.IndexOf(alphas, 1.0).ToString() + " gs\n");
                 }
@@ -2018,6 +2621,20 @@ namespace VectSharp.PDF
                 {
                     sb.Append(solid.R.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + solid.G.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + solid.B.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " RG\n");
                     sb.Append("/a" + Array.IndexOf(alphas, solid.A).ToString() + " gs\n");
+                }
+                else if (figure.Stroke is GradientBrush gradient)
+                {
+                    int brushIndex = gradients.Count;
+                    double[,] clonedMatrix = new double[3, 3] { { transformationMatrix[0, 0], transformationMatrix[0, 1], transformationMatrix[0, 2] }, { transformationMatrix[1, 0], transformationMatrix[1, 1], transformationMatrix[1, 2] }, { transformationMatrix[2, 0], transformationMatrix[2, 1], transformationMatrix[2, 2] } };
+
+                    gradients.Add((gradient, clonedMatrix, figure));
+
+                    if (!PDFContext.IsCompatible(gradient))
+                    {
+                        sb.Append("/ma" + brushIndex.ToString(System.Globalization.CultureInfo.InvariantCulture) + " gs ");
+                    }
+
+                    sb.Append("/Pattern CS /p" + brushIndex.ToString(System.Globalization.CultureInfo.InvariantCulture) + " SCN /a" + Array.IndexOf(alphas, 1.0).ToString() + " gs\n");
                 }
 
                 sb.Append(figure.LineWidth.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " w\n");
