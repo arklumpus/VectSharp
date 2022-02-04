@@ -28,6 +28,7 @@ using VectSharp.MuPDFUtils;
 using VectSharp.PDF;
 using VectSharp.Raster;
 using VectSharp.SVG;
+using VectSharp.Filters;
 
 namespace VectSharp.Demo
 {
@@ -267,6 +268,9 @@ namespace VectSharp.Demo
 
             //Reuse the first path for a stroke           
             faceGraphics.StrokePath(face, Colour.FromRgb(0, 0, 0), lineWidth: 2.5);
+
+            //Use filters to draw a drop shadow
+            gpr.DrawGraphics(2015, 1015, faceGraphics, new CompositeLocationInvariantFilter(new GaussianBlurFilter(15), new ColourMatrixFilter(ColourMatrix.ToColour(Colours.Black).WithAlpha(0.5))));
 
             //Copy the graphics object on the main graphics
             gpr.DrawGraphics(2000, 1000, faceGraphics);
