@@ -796,8 +796,6 @@ namespace VectSharp.Canvas
 
         private void RenderLayer(SKCanvas canvas, int layer)
         {
-            System.Diagnostics.Debug.WriteLine("In/Canvas");
-
             bool updateHitTests = this.TaggedRenderActions[this.TaggedRenderActions.Count - 1 - layer].Count > 0;
 
             HashSet<uint> ZIndices = new HashSet<uint>();
@@ -980,8 +978,6 @@ namespace VectSharp.Canvas
                     canvas.Restore();
                 }
             }
-
-            System.Diagnostics.Debug.WriteLine("Out/Canvas");
         }
 
         private bool IsDirty = false;
