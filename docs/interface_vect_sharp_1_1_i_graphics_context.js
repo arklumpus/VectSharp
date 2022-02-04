@@ -2,6 +2,7 @@ var interface_vect_sharp_1_1_i_graphics_context =
 [
     [ "Close", "interface_vect_sharp_1_1_i_graphics_context.html#aee6422b22a12103db71ce2ae6095716e", null ],
     [ "CubicBezierTo", "interface_vect_sharp_1_1_i_graphics_context.html#a4abdb2a21fd2f7b6bb8682cec0d63327", null ],
+    [ "DrawFilteredGraphics", "interface_vect_sharp_1_1_i_graphics_context.html#a6f9a0624b075685623fd30d8555a54c9", null ],
     [ "DrawRasterImage", "interface_vect_sharp_1_1_i_graphics_context.html#a531e68add8d9bf7ef60ca8ede6366bc7", null ],
     [ "Fill", "interface_vect_sharp_1_1_i_graphics_context.html#a1271cbb1f3085a0c765d20e378390dd1", null ],
     [ "FillText", "interface_vect_sharp_1_1_i_graphics_context.html#a9d03d7fa22ce2f684ca3ac0c9aca32c1", null ],

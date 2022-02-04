@@ -11,6 +11,7 @@ var class_vect_sharp_1_1_graphics_path =
     [ "CubicBezierTo", "class_vect_sharp_1_1_graphics_path.html#a92b12bcc311a890448cbc75d402730ac", null ],
     [ "CubicBezierTo", "class_vect_sharp_1_1_graphics_path.html#af86483dc1b86c204fa8b07598b14df99", null ],
     [ "EllipticalArc", "class_vect_sharp_1_1_graphics_path.html#a02f9585dd8e00b27c840cbcd604b6cd3", null ],
+    [ "GetBounds", "class_vect_sharp_1_1_graphics_path.html#aaa1c750dec2cccec037b2dcdc97cb249", null ],
     [ "GetLinearisationPointsNormals", "class_vect_sharp_1_1_graphics_path.html#a5080d51dd3c82a7c8f45df3f49a4b637", null ],
     [ "GetNormalAtAbsolute", "class_vect_sharp_1_1_graphics_path.html#a0e28048a9f5a2d678b1ba360c006b078", null ],
     [ "GetNormalAtRelative", "class_vect_sharp_1_1_graphics_path.html#a375abcfb69b00fe3f57c9e117e2ccc09", null ],

@@ -28,7 +28,7 @@
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VectSharp
-   &#160;<span id="projectnumber">2.1.0</span>
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -104,12 +104,77 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a542960c7ec48c41dd308bf2f67b262c5"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_raster_1_1_raster.html#a542960c7ec48c41dd308bf2f67b262c5">SaveAsPNG</a> (this <a class="el" href="class_vect_sharp_1_1_page.html">Page</a> page, Stream stream, double scale=1)</td></tr>
 <tr class="memdesc:a542960c7ec48c41dd308bf2f67b262c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Render the page to a PNG stream.  <a href="class_vect_sharp_1_1_raster_1_1_raster.html#a542960c7ec48c41dd308bf2f67b262c5">More...</a><br /></td></tr>
 <tr class="separator:a542960c7ec48c41dd308bf2f67b262c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20b17b29133cf8280d009a56068ae595"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_vect_sharp_1_1_raster_image.html">RasterImage</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_raster_1_1_raster.html#a20b17b29133cf8280d009a56068ae595">Rasterise</a> (this <a class="el" href="class_vect_sharp_1_1_graphics.html">Graphics</a> graphics, <a class="el" href="struct_vect_sharp_1_1_rectangle.html">Rectangle</a> region, double scale, bool interpolate)</td></tr>
+<tr class="memdesc:a20b17b29133cf8280d009a56068ae595"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rasterise a region of a <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object.  <a href="class_vect_sharp_1_1_raster_1_1_raster.html#a20b17b29133cf8280d009a56068ae595">More...</a><br /></td></tr>
+<tr class="separator:a20b17b29133cf8280d009a56068ae595"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Contains methods to render a page to a PNG image. </p>
 
-<p class="definition">Definition at line <a class="el" href="_raster_8cs_source.html#l00027">27</a> of file <a class="el" href="_raster_8cs_source.html">Raster.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_raster_8cs_source.html#l00029">29</a> of file <a class="el" href="_raster_8cs_source.html">Raster.cs</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a20b17b29133cf8280d009a56068ae595"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20b17b29133cf8280d009a56068ae595">&#9670;&nbsp;</a></span>Rasterise()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="class_vect_sharp_1_1_raster_image.html">RasterImage</a> VectSharp.Raster.Raster.Rasterise </td>
+          <td>(</td>
+          <td class="paramtype">this <a class="el" href="class_vect_sharp_1_1_graphics.html">Graphics</a>&#160;</td>
+          <td class="paramname"><em>graphics</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_vect_sharp_1_1_rectangle.html">Rectangle</a>&#160;</td>
+          <td class="paramname"><em>region</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>scale</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>interpolate</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Rasterise a region of a <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">graphics</td><td>The <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object that will be rasterised.</td></tr>
+    <tr><td class="paramname">region</td><td>The region of the <em>graphics</em>  that will be rasterised.</td></tr>
+    <tr><td class="paramname">scale</td><td>The scale at which the image will be rendered.</td></tr>
+    <tr><td class="paramname">interpolate</td><td>Whether the resulting image should be interpolated or not when it is drawn on another <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> surface.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="class_vect_sharp_1_1_raster_image.html" title="Represents a raster image, created from raw pixel data. Consider using the derived classes included i...">RasterImage</a> containing the rasterised graphics.</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_raster_8cs_source.html#l00090">90</a> of file <a class="el" href="_raster_8cs_source.html">Raster.cs</a>.</p>
+
+</div>
+</div>
 <a id="a542960c7ec48c41dd308bf2f67b262c5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a542960c7ec48c41dd308bf2f67b262c5">&#9670;&nbsp;</a></span>SaveAsPNG() <span class="overload">[1/2]</span></h2>
 
@@ -160,7 +225,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_raster_8cs_source.html#l00059">59</a> of file <a class="el" href="_raster_8cs_source.html">Raster.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_raster_8cs_source.html#l00063">63</a> of file <a class="el" href="_raster_8cs_source.html">Raster.cs</a>.</p>
 
 </div>
 </div>
@@ -214,7 +279,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_raster_8cs_source.html#l00036">36</a> of file <a class="el" href="_raster_8cs_source.html">Raster.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_raster_8cs_source.html#l00038">38</a> of file <a class="el" href="_raster_8cs_source.html">Raster.cs</a>.</p>
 
 </div>
 </div>

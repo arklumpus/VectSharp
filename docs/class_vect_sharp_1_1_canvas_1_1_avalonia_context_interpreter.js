@@ -5,8 +5,8 @@ var class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter =
       [ "ConvertIfNecessary", "class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html#ab1be8c4c6246dad9c92fcc3f2b3cdd77a3078eae57eb621634ae88b57c0d9c61b", null ],
       [ "NeverConvert", "class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html#ab1be8c4c6246dad9c92fcc3f2b3cdd77ab11ded174ba879c08340adc36752024a", null ]
     ] ],
-    [ "PaintToCanvas", "class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html#a442683e5958c9e2a4520ab7e21f157f4", null ],
-    [ "PaintToCanvas", "class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html#a678c27fed624ed7b87e367c9afc1a611", null ],
-    [ "PaintToCanvas", "class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html#ac7d6623f19c869c0812ea33a0f3d1fba", null ],
-    [ "PaintToCanvas", "class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html#aabd31455c8dbe595478318e1d4c342e1", null ]
+    [ "PaintToCanvas", "class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html#ad8c6e4435566b7d2b3f4a612758819b4", null ],
+    [ "PaintToCanvas", "class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html#ab9ac8c59ad128a29dc370149b7de58a8", null ],
+    [ "PaintToCanvas", "class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html#a00b8774edb717826eb45bf9105a003f4", null ],
+    [ "PaintToCanvas", "class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html#a4fa27f5763ef89c05ec22a34d4e72dc9", null ]
 ];

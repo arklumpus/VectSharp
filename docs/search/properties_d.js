@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['quoteblockbackgroundcolour_1320',['QuoteBlockBackgroundColour',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a3bdbb1c56eb65eaa64cf6bbb49be5e8b',1,'VectSharp::Markdown::MarkdownRenderer']]],
-  ['quoteblockbarcolour_1321',['QuoteBlockBarColour',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a6b38a6792d05c99b03c8c034c049657a',1,'VectSharp::Markdown::MarkdownRenderer']]],
-  ['quoteblockbarwidth_1322',['QuoteBlockBarWidth',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a402022d345b480ea8a24c8ff5d976501',1,'VectSharp::Markdown::MarkdownRenderer']]],
-  ['quoteblockindentwidth_1323',['QuoteBlockIndentWidth',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ad30c590363a832ee91f3d641e9b6306a',1,'VectSharp::Markdown::MarkdownRenderer']]]
+  ['offset_1475',['Offset',['../struct_vect_sharp_1_1_gradient_stop.html#a0c23e3cd0cee007cd0b2be4e21b80862',1,'VectSharp::GradientStop']]],
+  ['operation_1476',['Operation',['../class_vect_sharp_1_1_canvas_1_1_filter_option.html#aca21f4770d6ea866ba780d6e8311799d',1,'VectSharp.Canvas.FilterOption.Operation()'],['../class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter_1_1_filter_option.html#aa631e199db25bde4700963303b1d1c93',1,'VectSharp.PDF.PDFContextInterpreter.FilterOption.Operation()'],['../class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter_1_1_filter_option.html#a063b17eab16a85c19b03c79b2066cb7c',1,'VectSharp.SVG.SVGContextInterpreter.FilterOption.Operation()']]],
+  ['origin_1477',['Origin',['../class_vect_sharp_1_1_three_d_1_1_masked_light_source.html#a7d691ed7328aeec4de160a180582760f',1,'VectSharp::ThreeD::MaskedLightSource']]]
 ];

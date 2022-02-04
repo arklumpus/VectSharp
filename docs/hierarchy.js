@@ -13,6 +13,7 @@ var hierarchy =
       [ "VectSharp.Canvas.SKMultiLayerRenderCanvas", "class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html", null ]
     ] ],
     [ "VectSharp.TrueTypeFile.ClassDefinitionTable.ClassRangeRecord", "struct_vect_sharp_1_1_true_type_file_1_1_class_definition_table_1_1_class_range_record.html", null ],
+    [ "VectSharp.Filters.ColourMatrix", "class_vect_sharp_1_1_filters_1_1_colour_matrix.html", null ],
     [ "VectSharp.Colours", "class_vect_sharp_1_1_colours.html", null ],
     [ "VectSharp.Font.DetailedFontMetrics", "class_vect_sharp_1_1_font_1_1_detailed_font_metrics.html", null ],
     [ "VectSharp.Document", "class_vect_sharp_1_1_document.html", null ],
@@ -21,6 +22,9 @@ var hierarchy =
       [ "VectSharp.Raster.ImageSharp.ImageSharpContextInterpreter.UnknownFormatException", "class_vect_sharp_1_1_raster_1_1_image_sharp_1_1_image_sharp_context_interpreter_1_1_unknown_format_exception.html", null ],
       [ "VectSharp.UnbalancedStackException", "class_vect_sharp_1_1_unbalanced_stack_exception.html", null ]
     ] ],
+    [ "VectSharp.Canvas.FilterOption", "class_vect_sharp_1_1_canvas_1_1_filter_option.html", null ],
+    [ "VectSharp.PDF.PDFContextInterpreter.FilterOption", "class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter_1_1_filter_option.html", null ],
+    [ "VectSharp.SVG.SVGContextInterpreter.FilterOption", "class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter_1_1_filter_option.html", null ],
     [ "VectSharp.Font", "class_vect_sharp_1_1_font.html", null ],
     [ "VectSharp.FontFamily", "class_vect_sharp_1_1_font_family.html", [
       [ "VectSharp.ResourceFontFamily", "class_vect_sharp_1_1_resource_font_family.html", null ]
@@ -37,6 +41,9 @@ var hierarchy =
       [ "VectSharp.Canvas.SKMultiLayerRenderCanvas", "class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html", null ],
       [ "VectSharp.Canvas.SKRenderAction", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html", null ],
       [ "VectSharp.DisposableIntPtr", "class_vect_sharp_1_1_disposable_int_ptr.html", null ],
+      [ "VectSharp.Filters.FilterWithRasterisableParameter", "class_vect_sharp_1_1_filters_1_1_filter_with_rasterisable_parameter.html", [
+        [ "VectSharp.Filters.MaskFilter", "class_vect_sharp_1_1_filters_1_1_mask_filter.html", null ]
+      ] ],
       [ "VectSharp.RasterImage", "class_vect_sharp_1_1_raster_image.html", [
         [ "VectSharp.MuPDFUtils.RasterImageFile", "class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_file.html", null ],
         [ "VectSharp.MuPDFUtils.RasterImageStream", "class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_stream.html", null ]
@@ -44,6 +51,21 @@ var hierarchy =
     ] ],
     [ "IEquatable", null, [
       [ "VectSharp.Colour", "struct_vect_sharp_1_1_colour.html", null ]
+    ] ],
+    [ "VectSharp.Filters.IFilter", "interface_vect_sharp_1_1_filters_1_1_i_filter.html", [
+      [ "VectSharp.Filters.IFilterWithLocation", "interface_vect_sharp_1_1_filters_1_1_i_filter_with_location.html", [
+        [ "VectSharp.Filters.MaskFilter", "class_vect_sharp_1_1_filters_1_1_mask_filter.html", null ]
+      ] ],
+      [ "VectSharp.Filters.ILocationInvariantFilter", "interface_vect_sharp_1_1_filters_1_1_i_location_invariant_filter.html", [
+        [ "VectSharp.Filters.BoxBlurFilter", "class_vect_sharp_1_1_filters_1_1_box_blur_filter.html", null ],
+        [ "VectSharp.Filters.ColourMatrixFilter", "class_vect_sharp_1_1_filters_1_1_colour_matrix_filter.html", null ],
+        [ "VectSharp.Filters.CompositeLocationInvariantFilter", "class_vect_sharp_1_1_filters_1_1_composite_location_invariant_filter.html", null ],
+        [ "VectSharp.Filters.ConvolutionFilter", "class_vect_sharp_1_1_filters_1_1_convolution_filter.html", null ],
+        [ "VectSharp.Filters.GaussianBlurFilter", "class_vect_sharp_1_1_filters_1_1_gaussian_blur_filter.html", null ]
+      ] ]
+    ] ],
+    [ "VectSharp.Filters.IFilterWithRasterisableParameter", "interface_vect_sharp_1_1_filters_1_1_i_filter_with_rasterisable_parameter.html", [
+      [ "VectSharp.Filters.FilterWithRasterisableParameter", "class_vect_sharp_1_1_filters_1_1_filter_with_rasterisable_parameter.html", null ]
     ] ],
     [ "VectSharp.IFontLibrary", "interface_vect_sharp_1_1_i_font_library.html", [
       [ "VectSharp.FontLibrary", "class_vect_sharp_1_1_font_library.html", [
@@ -85,6 +107,7 @@ var hierarchy =
     [ "VectSharp.Point", "struct_vect_sharp_1_1_point.html", null ],
     [ "VectSharp.TrueTypeFile.CoverageTable.RangeRecord", "struct_vect_sharp_1_1_true_type_file_1_1_coverage_table_1_1_range_record.html", null ],
     [ "VectSharp.Raster.Raster", "class_vect_sharp_1_1_raster_1_1_raster.html", null ],
+    [ "VectSharp.Rectangle", "struct_vect_sharp_1_1_rectangle.html", null ],
     [ "VectSharp.Canvas.RenderAction", "class_vect_sharp_1_1_canvas_1_1_render_action.html", null ],
     [ "VectSharp.Segment", "class_vect_sharp_1_1_segment.html", null ],
     [ "VectSharp.Size", "struct_vect_sharp_1_1_size.html", null ],

@@ -28,7 +28,7 @@
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VectSharp
-   &#160;<span id="projectnumber">2.1.0</span>
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -887,411 +887,407 @@ $(document).ready(function(){initNavTree('_s_k_multi_layer_render_canvas_8cs_sou
 <div class="line"><a name="l00796"></a><span class="lineno">  796</span>&#160; </div>
 <div class="line"><a name="l00797"></a><span class="lineno">  797</span>&#160;        <span class="keyword">private</span> <span class="keywordtype">void</span> RenderLayer(SKCanvas canvas, <span class="keywordtype">int</span> layer)</div>
 <div class="line"><a name="l00798"></a><span class="lineno">  798</span>&#160;        {</div>
-<div class="line"><a name="l00799"></a><span class="lineno">  799</span>&#160;            System.Diagnostics.Debug.WriteLine(<span class="stringliteral">&quot;In/Canvas&quot;</span>);</div>
+<div class="line"><a name="l00799"></a><span class="lineno">  799</span>&#160;            <span class="keywordtype">bool</span> updateHitTests = this.TaggedRenderActions[this.TaggedRenderActions.Count - 1 - layer].Count &gt; 0;</div>
 <div class="line"><a name="l00800"></a><span class="lineno">  800</span>&#160; </div>
-<div class="line"><a name="l00801"></a><span class="lineno">  801</span>&#160;            <span class="keywordtype">bool</span> updateHitTests = this.TaggedRenderActions[this.TaggedRenderActions.Count - 1 - layer].Count &gt; 0;</div>
+<div class="line"><a name="l00801"></a><span class="lineno">  801</span>&#160;            HashSet&lt;uint&gt; ZIndices = <span class="keyword">new</span> HashSet&lt;uint&gt;();</div>
 <div class="line"><a name="l00802"></a><span class="lineno">  802</span>&#160; </div>
-<div class="line"><a name="l00803"></a><span class="lineno">  803</span>&#160;            HashSet&lt;uint&gt; ZIndices = <span class="keyword">new</span> HashSet&lt;uint&gt;();</div>
+<div class="line"><a name="l00803"></a><span class="lineno">  803</span>&#160;            canvas.Save();</div>
 <div class="line"><a name="l00804"></a><span class="lineno">  804</span>&#160; </div>
-<div class="line"><a name="l00805"></a><span class="lineno">  805</span>&#160;            canvas.Save();</div>
+<div class="line"><a name="l00805"></a><span class="lineno">  805</span>&#160;            SKMatrix invertedInitialTransform;</div>
 <div class="line"><a name="l00806"></a><span class="lineno">  806</span>&#160; </div>
-<div class="line"><a name="l00807"></a><span class="lineno">  807</span>&#160;            SKMatrix invertedInitialTransform;</div>
-<div class="line"><a name="l00808"></a><span class="lineno">  808</span>&#160; </div>
-<div class="line"><a name="l00809"></a><span class="lineno">  809</span>&#160;            <span class="keywordflow">if</span> (this.LayerTransforms[layer].ActionType == SKRenderAction.ActionTypes.Transform)</div>
-<div class="line"><a name="l00810"></a><span class="lineno">  810</span>&#160;            {</div>
-<div class="line"><a name="l00811"></a><span class="lineno">  811</span>&#160;                invertedInitialTransform = (canvas.TotalMatrix.PreConcat(this.LayerTransforms[layer].Transform.Value.Invert())).Invert();</div>
-<div class="line"><a name="l00812"></a><span class="lineno">  812</span>&#160;            }</div>
-<div class="line"><a name="l00813"></a><span class="lineno">  813</span>&#160;            <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00814"></a><span class="lineno">  814</span>&#160;            {</div>
-<div class="line"><a name="l00815"></a><span class="lineno">  815</span>&#160;                invertedInitialTransform = canvas.TotalMatrix.Invert();</div>
-<div class="line"><a name="l00816"></a><span class="lineno">  816</span>&#160;            }</div>
-<div class="line"><a name="l00817"></a><span class="lineno">  817</span>&#160; </div>
-<div class="line"><a name="l00818"></a><span class="lineno">  818</span>&#160;            SKPath clipPath = <span class="keyword">null</span>;</div>
-<div class="line"><a name="l00819"></a><span class="lineno">  819</span>&#160;            Stack&lt;SKPath&gt; clipPaths = <span class="keyword">new</span> Stack&lt;SKPath&gt;();</div>
-<div class="line"><a name="l00820"></a><span class="lineno">  820</span>&#160;            clipPaths.Push(<span class="keyword">null</span>);</div>
-<div class="line"><a name="l00821"></a><span class="lineno">  821</span>&#160; </div>
-<div class="line"><a name="l00822"></a><span class="lineno">  822</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; this.RenderActions[layer].Count; i++)</div>
-<div class="line"><a name="l00823"></a><span class="lineno">  823</span>&#160;            {</div>
-<div class="line"><a name="l00824"></a><span class="lineno">  824</span>&#160;                ZIndices.Add(this.RenderActions[layer][i].ZIndex);</div>
-<div class="line"><a name="l00825"></a><span class="lineno">  825</span>&#160; </div>
-<div class="line"><a name="l00826"></a><span class="lineno">  826</span>&#160;                <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Clip)</div>
-<div class="line"><a name="l00827"></a><span class="lineno">  827</span>&#160;                {</div>
-<div class="line"><a name="l00828"></a><span class="lineno">  828</span>&#160;                    canvas.ClipPath(this.RenderActions[layer][i].Path, antialias: <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00829"></a><span class="lineno">  829</span>&#160; </div>
-<div class="line"><a name="l00830"></a><span class="lineno">  830</span>&#160;                    <span class="keywordflow">if</span> (updateHitTests)</div>
-<div class="line"><a name="l00831"></a><span class="lineno">  831</span>&#160;                    {</div>
-<div class="line"><a name="l00832"></a><span class="lineno">  832</span>&#160;                        <span class="keywordflow">if</span> (clipPath == <span class="keyword">null</span>)</div>
-<div class="line"><a name="l00833"></a><span class="lineno">  833</span>&#160;                        {</div>
-<div class="line"><a name="l00834"></a><span class="lineno">  834</span>&#160;                            clipPath = this.RenderActions[layer][i].Path.Clone();</div>
-<div class="line"><a name="l00835"></a><span class="lineno">  835</span>&#160;                            clipPath.Transform(canvas.TotalMatrix.PostConcat(invertedInitialTransform));</div>
-<div class="line"><a name="l00836"></a><span class="lineno">  836</span>&#160;                        }</div>
-<div class="line"><a name="l00837"></a><span class="lineno">  837</span>&#160;                        <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00838"></a><span class="lineno">  838</span>&#160;                        {</div>
-<div class="line"><a name="l00839"></a><span class="lineno">  839</span>&#160;                            <span class="keyword">using</span> (SKPath tempPath = this.RenderActions[layer][i].Path.Clone())</div>
-<div class="line"><a name="l00840"></a><span class="lineno">  840</span>&#160;                            {</div>
-<div class="line"><a name="l00841"></a><span class="lineno">  841</span>&#160;                                tempPath.Transform(canvas.TotalMatrix.PostConcat(invertedInitialTransform));</div>
-<div class="line"><a name="l00842"></a><span class="lineno">  842</span>&#160;                                clipPath.Op(tempPath, SKPathOp.Intersect);</div>
-<div class="line"><a name="l00843"></a><span class="lineno">  843</span>&#160;                            }</div>
-<div class="line"><a name="l00844"></a><span class="lineno">  844</span>&#160;                        }</div>
-<div class="line"><a name="l00845"></a><span class="lineno">  845</span>&#160;                    }</div>
-<div class="line"><a name="l00846"></a><span class="lineno">  846</span>&#160;                }</div>
-<div class="line"><a name="l00847"></a><span class="lineno">  847</span>&#160;                <span class="keywordflow">else</span> <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Restore)</div>
-<div class="line"><a name="l00848"></a><span class="lineno">  848</span>&#160;                {</div>
-<div class="line"><a name="l00849"></a><span class="lineno">  849</span>&#160;                    canvas.Restore();</div>
-<div class="line"><a name="l00850"></a><span class="lineno">  850</span>&#160; </div>
-<div class="line"><a name="l00851"></a><span class="lineno">  851</span>&#160;                    <span class="keywordflow">if</span> (updateHitTests)</div>
-<div class="line"><a name="l00852"></a><span class="lineno">  852</span>&#160;                    {</div>
-<div class="line"><a name="l00853"></a><span class="lineno">  853</span>&#160;                        clipPath = clipPaths.Pop();</div>
-<div class="line"><a name="l00854"></a><span class="lineno">  854</span>&#160;                    }</div>
-<div class="line"><a name="l00855"></a><span class="lineno">  855</span>&#160;                }</div>
-<div class="line"><a name="l00856"></a><span class="lineno">  856</span>&#160;                <span class="keywordflow">else</span> <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Save)</div>
-<div class="line"><a name="l00857"></a><span class="lineno">  857</span>&#160;                {</div>
-<div class="line"><a name="l00858"></a><span class="lineno">  858</span>&#160;                    canvas.Save();</div>
-<div class="line"><a name="l00859"></a><span class="lineno">  859</span>&#160; </div>
-<div class="line"><a name="l00860"></a><span class="lineno">  860</span>&#160;                    <span class="keywordflow">if</span> (updateHitTests)</div>
-<div class="line"><a name="l00861"></a><span class="lineno">  861</span>&#160;                    {</div>
-<div class="line"><a name="l00862"></a><span class="lineno">  862</span>&#160;                        clipPaths.Push(clipPath?.Clone());</div>
-<div class="line"><a name="l00863"></a><span class="lineno">  863</span>&#160;                    }</div>
-<div class="line"><a name="l00864"></a><span class="lineno">  864</span>&#160;                }</div>
-<div class="line"><a name="l00865"></a><span class="lineno">  865</span>&#160;                <span class="keywordflow">else</span> <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Transform)</div>
-<div class="line"><a name="l00866"></a><span class="lineno">  866</span>&#160;                {</div>
-<div class="line"><a name="l00867"></a><span class="lineno">  867</span>&#160;                    SKMatrix mat = this.RenderActions[layer][i].Transform.Value;</div>
-<div class="line"><a name="l00868"></a><span class="lineno">  868</span>&#160;                    canvas.Concat(ref mat);</div>
-<div class="line"><a name="l00869"></a><span class="lineno">  869</span>&#160;                }</div>
-<div class="line"><a name="l00870"></a><span class="lineno">  870</span>&#160;                <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00871"></a><span class="lineno">  871</span>&#160;                {</div>
-<div class="line"><a name="l00872"></a><span class="lineno">  872</span>&#160;                    <span class="keywordflow">if</span> (this.RenderActions[layer][i].ZIndex == 0)</div>
-<div class="line"><a name="l00873"></a><span class="lineno">  873</span>&#160;                    {</div>
-<div class="line"><a name="l00874"></a><span class="lineno">  874</span>&#160; </div>
-<div class="line"><a name="l00875"></a><span class="lineno">  875</span>&#160;                        <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Path &amp;&amp; <span class="keyword">this</span>.RenderActions[layer][i].Path != <span class="keyword">null</span>)</div>
-<div class="line"><a name="l00876"></a><span class="lineno">  876</span>&#160;                        {</div>
-<div class="line"><a name="l00877"></a><span class="lineno">  877</span>&#160;                            canvas.DrawPath(this.RenderActions[layer][i].Path, this.RenderActions[layer][i].Paint);</div>
-<div class="line"><a name="l00878"></a><span class="lineno">  878</span>&#160;                        }</div>
-<div class="line"><a name="l00879"></a><span class="lineno">  879</span>&#160;                        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Text)</div>
-<div class="line"><a name="l00880"></a><span class="lineno">  880</span>&#160;                        {</div>
-<div class="line"><a name="l00881"></a><span class="lineno">  881</span>&#160;                            canvas.DrawText(this.RenderActions[layer][i].Text, this.RenderActions[layer][i].TextX, this.RenderActions[layer][i].TextY, this.RenderActions[layer][i].Font, this.RenderActions[layer][i].Paint);</div>
-<div class="line"><a name="l00882"></a><span class="lineno">  882</span>&#160;                        }</div>
-<div class="line"><a name="l00883"></a><span class="lineno">  883</span>&#160;                        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.RasterImage)</div>
-<div class="line"><a name="l00884"></a><span class="lineno">  884</span>&#160;                        {</div>
-<div class="line"><a name="l00885"></a><span class="lineno">  885</span>&#160;                            (SKBitmap image, <span class="keywordtype">bool</span> interpolate) = this.Images[this.RenderActions[layer][i].ImageId];</div>
+<div class="line"><a name="l00807"></a><span class="lineno">  807</span>&#160;            <span class="keywordflow">if</span> (this.LayerTransforms[layer].ActionType == SKRenderAction.ActionTypes.Transform)</div>
+<div class="line"><a name="l00808"></a><span class="lineno">  808</span>&#160;            {</div>
+<div class="line"><a name="l00809"></a><span class="lineno">  809</span>&#160;                invertedInitialTransform = (canvas.TotalMatrix.PreConcat(this.LayerTransforms[layer].Transform.Value.Invert())).Invert();</div>
+<div class="line"><a name="l00810"></a><span class="lineno">  810</span>&#160;            }</div>
+<div class="line"><a name="l00811"></a><span class="lineno">  811</span>&#160;            <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00812"></a><span class="lineno">  812</span>&#160;            {</div>
+<div class="line"><a name="l00813"></a><span class="lineno">  813</span>&#160;                invertedInitialTransform = canvas.TotalMatrix.Invert();</div>
+<div class="line"><a name="l00814"></a><span class="lineno">  814</span>&#160;            }</div>
+<div class="line"><a name="l00815"></a><span class="lineno">  815</span>&#160; </div>
+<div class="line"><a name="l00816"></a><span class="lineno">  816</span>&#160;            SKPath clipPath = <span class="keyword">null</span>;</div>
+<div class="line"><a name="l00817"></a><span class="lineno">  817</span>&#160;            Stack&lt;SKPath&gt; clipPaths = <span class="keyword">new</span> Stack&lt;SKPath&gt;();</div>
+<div class="line"><a name="l00818"></a><span class="lineno">  818</span>&#160;            clipPaths.Push(<span class="keyword">null</span>);</div>
+<div class="line"><a name="l00819"></a><span class="lineno">  819</span>&#160; </div>
+<div class="line"><a name="l00820"></a><span class="lineno">  820</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; this.RenderActions[layer].Count; i++)</div>
+<div class="line"><a name="l00821"></a><span class="lineno">  821</span>&#160;            {</div>
+<div class="line"><a name="l00822"></a><span class="lineno">  822</span>&#160;                ZIndices.Add(this.RenderActions[layer][i].ZIndex);</div>
+<div class="line"><a name="l00823"></a><span class="lineno">  823</span>&#160; </div>
+<div class="line"><a name="l00824"></a><span class="lineno">  824</span>&#160;                <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Clip)</div>
+<div class="line"><a name="l00825"></a><span class="lineno">  825</span>&#160;                {</div>
+<div class="line"><a name="l00826"></a><span class="lineno">  826</span>&#160;                    canvas.ClipPath(this.RenderActions[layer][i].Path, antialias: <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00827"></a><span class="lineno">  827</span>&#160; </div>
+<div class="line"><a name="l00828"></a><span class="lineno">  828</span>&#160;                    <span class="keywordflow">if</span> (updateHitTests)</div>
+<div class="line"><a name="l00829"></a><span class="lineno">  829</span>&#160;                    {</div>
+<div class="line"><a name="l00830"></a><span class="lineno">  830</span>&#160;                        <span class="keywordflow">if</span> (clipPath == <span class="keyword">null</span>)</div>
+<div class="line"><a name="l00831"></a><span class="lineno">  831</span>&#160;                        {</div>
+<div class="line"><a name="l00832"></a><span class="lineno">  832</span>&#160;                            clipPath = this.RenderActions[layer][i].Path.Clone();</div>
+<div class="line"><a name="l00833"></a><span class="lineno">  833</span>&#160;                            clipPath.Transform(canvas.TotalMatrix.PostConcat(invertedInitialTransform));</div>
+<div class="line"><a name="l00834"></a><span class="lineno">  834</span>&#160;                        }</div>
+<div class="line"><a name="l00835"></a><span class="lineno">  835</span>&#160;                        <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00836"></a><span class="lineno">  836</span>&#160;                        {</div>
+<div class="line"><a name="l00837"></a><span class="lineno">  837</span>&#160;                            <span class="keyword">using</span> (SKPath tempPath = this.RenderActions[layer][i].Path.Clone())</div>
+<div class="line"><a name="l00838"></a><span class="lineno">  838</span>&#160;                            {</div>
+<div class="line"><a name="l00839"></a><span class="lineno">  839</span>&#160;                                tempPath.Transform(canvas.TotalMatrix.PostConcat(invertedInitialTransform));</div>
+<div class="line"><a name="l00840"></a><span class="lineno">  840</span>&#160;                                clipPath.Op(tempPath, SKPathOp.Intersect);</div>
+<div class="line"><a name="l00841"></a><span class="lineno">  841</span>&#160;                            }</div>
+<div class="line"><a name="l00842"></a><span class="lineno">  842</span>&#160;                        }</div>
+<div class="line"><a name="l00843"></a><span class="lineno">  843</span>&#160;                    }</div>
+<div class="line"><a name="l00844"></a><span class="lineno">  844</span>&#160;                }</div>
+<div class="line"><a name="l00845"></a><span class="lineno">  845</span>&#160;                <span class="keywordflow">else</span> <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Restore)</div>
+<div class="line"><a name="l00846"></a><span class="lineno">  846</span>&#160;                {</div>
+<div class="line"><a name="l00847"></a><span class="lineno">  847</span>&#160;                    canvas.Restore();</div>
+<div class="line"><a name="l00848"></a><span class="lineno">  848</span>&#160; </div>
+<div class="line"><a name="l00849"></a><span class="lineno">  849</span>&#160;                    <span class="keywordflow">if</span> (updateHitTests)</div>
+<div class="line"><a name="l00850"></a><span class="lineno">  850</span>&#160;                    {</div>
+<div class="line"><a name="l00851"></a><span class="lineno">  851</span>&#160;                        clipPath = clipPaths.Pop();</div>
+<div class="line"><a name="l00852"></a><span class="lineno">  852</span>&#160;                    }</div>
+<div class="line"><a name="l00853"></a><span class="lineno">  853</span>&#160;                }</div>
+<div class="line"><a name="l00854"></a><span class="lineno">  854</span>&#160;                <span class="keywordflow">else</span> <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Save)</div>
+<div class="line"><a name="l00855"></a><span class="lineno">  855</span>&#160;                {</div>
+<div class="line"><a name="l00856"></a><span class="lineno">  856</span>&#160;                    canvas.Save();</div>
+<div class="line"><a name="l00857"></a><span class="lineno">  857</span>&#160; </div>
+<div class="line"><a name="l00858"></a><span class="lineno">  858</span>&#160;                    <span class="keywordflow">if</span> (updateHitTests)</div>
+<div class="line"><a name="l00859"></a><span class="lineno">  859</span>&#160;                    {</div>
+<div class="line"><a name="l00860"></a><span class="lineno">  860</span>&#160;                        clipPaths.Push(clipPath?.Clone());</div>
+<div class="line"><a name="l00861"></a><span class="lineno">  861</span>&#160;                    }</div>
+<div class="line"><a name="l00862"></a><span class="lineno">  862</span>&#160;                }</div>
+<div class="line"><a name="l00863"></a><span class="lineno">  863</span>&#160;                <span class="keywordflow">else</span> <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Transform)</div>
+<div class="line"><a name="l00864"></a><span class="lineno">  864</span>&#160;                {</div>
+<div class="line"><a name="l00865"></a><span class="lineno">  865</span>&#160;                    SKMatrix mat = this.RenderActions[layer][i].Transform.Value;</div>
+<div class="line"><a name="l00866"></a><span class="lineno">  866</span>&#160;                    canvas.Concat(ref mat);</div>
+<div class="line"><a name="l00867"></a><span class="lineno">  867</span>&#160;                }</div>
+<div class="line"><a name="l00868"></a><span class="lineno">  868</span>&#160;                <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00869"></a><span class="lineno">  869</span>&#160;                {</div>
+<div class="line"><a name="l00870"></a><span class="lineno">  870</span>&#160;                    <span class="keywordflow">if</span> (this.RenderActions[layer][i].ZIndex == 0)</div>
+<div class="line"><a name="l00871"></a><span class="lineno">  871</span>&#160;                    {</div>
+<div class="line"><a name="l00872"></a><span class="lineno">  872</span>&#160; </div>
+<div class="line"><a name="l00873"></a><span class="lineno">  873</span>&#160;                        <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Path &amp;&amp; <span class="keyword">this</span>.RenderActions[layer][i].Path != <span class="keyword">null</span>)</div>
+<div class="line"><a name="l00874"></a><span class="lineno">  874</span>&#160;                        {</div>
+<div class="line"><a name="l00875"></a><span class="lineno">  875</span>&#160;                            canvas.DrawPath(this.RenderActions[layer][i].Path, this.RenderActions[layer][i].Paint);</div>
+<div class="line"><a name="l00876"></a><span class="lineno">  876</span>&#160;                        }</div>
+<div class="line"><a name="l00877"></a><span class="lineno">  877</span>&#160;                        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Text)</div>
+<div class="line"><a name="l00878"></a><span class="lineno">  878</span>&#160;                        {</div>
+<div class="line"><a name="l00879"></a><span class="lineno">  879</span>&#160;                            canvas.DrawText(this.RenderActions[layer][i].Text, this.RenderActions[layer][i].TextX, this.RenderActions[layer][i].TextY, this.RenderActions[layer][i].Font, this.RenderActions[layer][i].Paint);</div>
+<div class="line"><a name="l00880"></a><span class="lineno">  880</span>&#160;                        }</div>
+<div class="line"><a name="l00881"></a><span class="lineno">  881</span>&#160;                        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.RasterImage)</div>
+<div class="line"><a name="l00882"></a><span class="lineno">  882</span>&#160;                        {</div>
+<div class="line"><a name="l00883"></a><span class="lineno">  883</span>&#160;                            (SKBitmap image, <span class="keywordtype">bool</span> interpolate) = this.Images[this.RenderActions[layer][i].ImageId];</div>
+<div class="line"><a name="l00884"></a><span class="lineno">  884</span>&#160; </div>
+<div class="line"><a name="l00885"></a><span class="lineno">  885</span>&#160;                            SKPaint paint;</div>
 <div class="line"><a name="l00886"></a><span class="lineno">  886</span>&#160; </div>
-<div class="line"><a name="l00887"></a><span class="lineno">  887</span>&#160;                            SKPaint paint;</div>
-<div class="line"><a name="l00888"></a><span class="lineno">  888</span>&#160; </div>
-<div class="line"><a name="l00889"></a><span class="lineno">  889</span>&#160;                            <span class="keywordflow">if</span> (!interpolate)</div>
-<div class="line"><a name="l00890"></a><span class="lineno">  890</span>&#160;                            {</div>
-<div class="line"><a name="l00891"></a><span class="lineno">  891</span>&#160;                                paint = <span class="keyword">null</span>;</div>
-<div class="line"><a name="l00892"></a><span class="lineno">  892</span>&#160;                            }</div>
-<div class="line"><a name="l00893"></a><span class="lineno">  893</span>&#160;                            <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00894"></a><span class="lineno">  894</span>&#160;                            {</div>
-<div class="line"><a name="l00895"></a><span class="lineno">  895</span>&#160;                                paint = <span class="keyword">new</span> SKPaint() { FilterQuality = SKFilterQuality.Medium };</div>
-<div class="line"><a name="l00896"></a><span class="lineno">  896</span>&#160;                            }</div>
+<div class="line"><a name="l00887"></a><span class="lineno">  887</span>&#160;                            <span class="keywordflow">if</span> (!interpolate)</div>
+<div class="line"><a name="l00888"></a><span class="lineno">  888</span>&#160;                            {</div>
+<div class="line"><a name="l00889"></a><span class="lineno">  889</span>&#160;                                paint = <span class="keyword">null</span>;</div>
+<div class="line"><a name="l00890"></a><span class="lineno">  890</span>&#160;                            }</div>
+<div class="line"><a name="l00891"></a><span class="lineno">  891</span>&#160;                            <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00892"></a><span class="lineno">  892</span>&#160;                            {</div>
+<div class="line"><a name="l00893"></a><span class="lineno">  893</span>&#160;                                paint = <span class="keyword">new</span> SKPaint() { FilterQuality = SKFilterQuality.Medium };</div>
+<div class="line"><a name="l00894"></a><span class="lineno">  894</span>&#160;                            }</div>
+<div class="line"><a name="l00895"></a><span class="lineno">  895</span>&#160; </div>
+<div class="line"><a name="l00896"></a><span class="lineno">  896</span>&#160;                            canvas.DrawBitmap(image, this.RenderActions[layer][i].ImageSource.Value, <span class="keyword">this</span>.RenderActions[layer][i].ImageDestination.Value, paint);</div>
 <div class="line"><a name="l00897"></a><span class="lineno">  897</span>&#160; </div>
-<div class="line"><a name="l00898"></a><span class="lineno">  898</span>&#160;                            canvas.DrawBitmap(image, this.RenderActions[layer][i].ImageSource.Value, <span class="keyword">this</span>.RenderActions[layer][i].ImageDestination.Value, paint);</div>
-<div class="line"><a name="l00899"></a><span class="lineno">  899</span>&#160; </div>
-<div class="line"><a name="l00900"></a><span class="lineno">  900</span>&#160;                            paint?.Dispose();</div>
-<div class="line"><a name="l00901"></a><span class="lineno">  901</span>&#160;                        }</div>
-<div class="line"><a name="l00902"></a><span class="lineno">  902</span>&#160;                    }</div>
-<div class="line"><a name="l00903"></a><span class="lineno">  903</span>&#160; </div>
-<div class="line"><a name="l00904"></a><span class="lineno">  904</span>&#160;                    <span class="keywordflow">if</span> (updateHitTests &amp;&amp; this.RenderActions[layer][i].Tag != <span class="keyword">null</span> &amp;&amp; this.RenderActions[layer][i].HitTestPath != <span class="keyword">null</span>)</div>
-<div class="line"><a name="l00905"></a><span class="lineno">  905</span>&#160;                    {</div>
-<div class="line"><a name="l00906"></a><span class="lineno">  906</span>&#160;                        SKPath hitTestPath = this.RenderActions[layer][i].HitTestPath.Clone();</div>
-<div class="line"><a name="l00907"></a><span class="lineno">  907</span>&#160;                        hitTestPath.Transform(canvas.TotalMatrix.PostConcat(invertedInitialTransform));</div>
-<div class="line"><a name="l00908"></a><span class="lineno">  908</span>&#160; </div>
-<div class="line"><a name="l00909"></a><span class="lineno">  909</span>&#160;                        <span class="keywordflow">if</span> (clipPath != <span class="keyword">null</span>)</div>
-<div class="line"><a name="l00910"></a><span class="lineno">  910</span>&#160;                        {</div>
-<div class="line"><a name="l00911"></a><span class="lineno">  911</span>&#160;                            hitTestPath.Op(clipPath, SKPathOp.Intersect);</div>
-<div class="line"><a name="l00912"></a><span class="lineno">  912</span>&#160;                        }</div>
-<div class="line"><a name="l00913"></a><span class="lineno">  913</span>&#160; </div>
-<div class="line"><a name="l00914"></a><span class="lineno">  914</span>&#160;                        this.RenderActions[layer][i].LastRenderedGlobalHitTestPath = hitTestPath;</div>
-<div class="line"><a name="l00915"></a><span class="lineno">  915</span>&#160;                    }</div>
-<div class="line"><a name="l00916"></a><span class="lineno">  916</span>&#160;                }</div>
-<div class="line"><a name="l00917"></a><span class="lineno">  917</span>&#160;            }</div>
+<div class="line"><a name="l00898"></a><span class="lineno">  898</span>&#160;                            paint?.Dispose();</div>
+<div class="line"><a name="l00899"></a><span class="lineno">  899</span>&#160;                        }</div>
+<div class="line"><a name="l00900"></a><span class="lineno">  900</span>&#160;                    }</div>
+<div class="line"><a name="l00901"></a><span class="lineno">  901</span>&#160; </div>
+<div class="line"><a name="l00902"></a><span class="lineno">  902</span>&#160;                    <span class="keywordflow">if</span> (updateHitTests &amp;&amp; this.RenderActions[layer][i].Tag != <span class="keyword">null</span> &amp;&amp; this.RenderActions[layer][i].HitTestPath != <span class="keyword">null</span>)</div>
+<div class="line"><a name="l00903"></a><span class="lineno">  903</span>&#160;                    {</div>
+<div class="line"><a name="l00904"></a><span class="lineno">  904</span>&#160;                        SKPath hitTestPath = this.RenderActions[layer][i].HitTestPath.Clone();</div>
+<div class="line"><a name="l00905"></a><span class="lineno">  905</span>&#160;                        hitTestPath.Transform(canvas.TotalMatrix.PostConcat(invertedInitialTransform));</div>
+<div class="line"><a name="l00906"></a><span class="lineno">  906</span>&#160; </div>
+<div class="line"><a name="l00907"></a><span class="lineno">  907</span>&#160;                        <span class="keywordflow">if</span> (clipPath != <span class="keyword">null</span>)</div>
+<div class="line"><a name="l00908"></a><span class="lineno">  908</span>&#160;                        {</div>
+<div class="line"><a name="l00909"></a><span class="lineno">  909</span>&#160;                            hitTestPath.Op(clipPath, SKPathOp.Intersect);</div>
+<div class="line"><a name="l00910"></a><span class="lineno">  910</span>&#160;                        }</div>
+<div class="line"><a name="l00911"></a><span class="lineno">  911</span>&#160; </div>
+<div class="line"><a name="l00912"></a><span class="lineno">  912</span>&#160;                        this.RenderActions[layer][i].LastRenderedGlobalHitTestPath = hitTestPath;</div>
+<div class="line"><a name="l00913"></a><span class="lineno">  913</span>&#160;                    }</div>
+<div class="line"><a name="l00914"></a><span class="lineno">  914</span>&#160;                }</div>
+<div class="line"><a name="l00915"></a><span class="lineno">  915</span>&#160;            }</div>
+<div class="line"><a name="l00916"></a><span class="lineno">  916</span>&#160; </div>
+<div class="line"><a name="l00917"></a><span class="lineno">  917</span>&#160;            canvas.Restore();</div>
 <div class="line"><a name="l00918"></a><span class="lineno">  918</span>&#160; </div>
-<div class="line"><a name="l00919"></a><span class="lineno">  919</span>&#160;            canvas.Restore();</div>
+<div class="line"><a name="l00919"></a><span class="lineno">  919</span>&#160;            uint[] sortedIndices = ZIndices.OrderBy(x =&gt; x).ToArray();</div>
 <div class="line"><a name="l00920"></a><span class="lineno">  920</span>&#160; </div>
-<div class="line"><a name="l00921"></a><span class="lineno">  921</span>&#160;            uint[] sortedIndices = ZIndices.OrderBy(x =&gt; x).ToArray();</div>
-<div class="line"><a name="l00922"></a><span class="lineno">  922</span>&#160; </div>
-<div class="line"><a name="l00923"></a><span class="lineno">  923</span>&#160;            <span class="keywordflow">if</span> (sortedIndices.Length &gt; 1 || sortedIndices[0] != 0)</div>
-<div class="line"><a name="l00924"></a><span class="lineno">  924</span>&#160;            {</div>
-<div class="line"><a name="l00925"></a><span class="lineno">  925</span>&#160;                <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; sortedIndices.Length; j++)</div>
-<div class="line"><a name="l00926"></a><span class="lineno">  926</span>&#160;                {</div>
-<div class="line"><a name="l00927"></a><span class="lineno">  927</span>&#160;                    canvas.Save();</div>
-<div class="line"><a name="l00928"></a><span class="lineno">  928</span>&#160; </div>
-<div class="line"><a name="l00929"></a><span class="lineno">  929</span>&#160;                    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; this.RenderActions[layer].Count; i++)</div>
-<div class="line"><a name="l00930"></a><span class="lineno">  930</span>&#160;                    {</div>
-<div class="line"><a name="l00931"></a><span class="lineno">  931</span>&#160;                        <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Clip)</div>
-<div class="line"><a name="l00932"></a><span class="lineno">  932</span>&#160;                        {</div>
-<div class="line"><a name="l00933"></a><span class="lineno">  933</span>&#160;                            canvas.ClipPath(this.RenderActions[layer][i].Path, antialias: <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00934"></a><span class="lineno">  934</span>&#160;                        }</div>
-<div class="line"><a name="l00935"></a><span class="lineno">  935</span>&#160;                        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Restore)</div>
-<div class="line"><a name="l00936"></a><span class="lineno">  936</span>&#160;                        {</div>
-<div class="line"><a name="l00937"></a><span class="lineno">  937</span>&#160;                            canvas.Restore();</div>
-<div class="line"><a name="l00938"></a><span class="lineno">  938</span>&#160;                        }</div>
-<div class="line"><a name="l00939"></a><span class="lineno">  939</span>&#160;                        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Save)</div>
-<div class="line"><a name="l00940"></a><span class="lineno">  940</span>&#160;                        {</div>
-<div class="line"><a name="l00941"></a><span class="lineno">  941</span>&#160;                            canvas.Save();</div>
-<div class="line"><a name="l00942"></a><span class="lineno">  942</span>&#160;                        }</div>
-<div class="line"><a name="l00943"></a><span class="lineno">  943</span>&#160;                        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Transform)</div>
-<div class="line"><a name="l00944"></a><span class="lineno">  944</span>&#160;                        {</div>
-<div class="line"><a name="l00945"></a><span class="lineno">  945</span>&#160;                            SKMatrix mat = this.RenderActions[layer][i].Transform.Value;</div>
-<div class="line"><a name="l00946"></a><span class="lineno">  946</span>&#160;                            canvas.Concat(ref mat);</div>
-<div class="line"><a name="l00947"></a><span class="lineno">  947</span>&#160;                        }</div>
-<div class="line"><a name="l00948"></a><span class="lineno">  948</span>&#160;                        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sortedIndices[j] != 0 &amp;&amp; this.RenderActions[layer][i].ZIndex == sortedIndices[j])</div>
-<div class="line"><a name="l00949"></a><span class="lineno">  949</span>&#160;                        {</div>
-<div class="line"><a name="l00950"></a><span class="lineno">  950</span>&#160;                            <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Path &amp;&amp; <span class="keyword">this</span>.RenderActions[layer][i].Path != <span class="keyword">null</span>)</div>
-<div class="line"><a name="l00951"></a><span class="lineno">  951</span>&#160;                            {</div>
-<div class="line"><a name="l00952"></a><span class="lineno">  952</span>&#160;                                canvas.DrawPath(this.RenderActions[layer][i].Path, this.RenderActions[layer][i].Paint);</div>
-<div class="line"><a name="l00953"></a><span class="lineno">  953</span>&#160;                            }</div>
-<div class="line"><a name="l00954"></a><span class="lineno">  954</span>&#160;                            <span class="keywordflow">else</span> <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Text)</div>
-<div class="line"><a name="l00955"></a><span class="lineno">  955</span>&#160;                            {</div>
-<div class="line"><a name="l00956"></a><span class="lineno">  956</span>&#160;                                canvas.DrawText(this.RenderActions[layer][i].Text, this.RenderActions[layer][i].TextX, this.RenderActions[layer][i].TextY, this.RenderActions[layer][i].Font, this.RenderActions[layer][i].Paint);</div>
-<div class="line"><a name="l00957"></a><span class="lineno">  957</span>&#160;                            }</div>
-<div class="line"><a name="l00958"></a><span class="lineno">  958</span>&#160;                            <span class="keywordflow">else</span> <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.RasterImage)</div>
-<div class="line"><a name="l00959"></a><span class="lineno">  959</span>&#160;                            {</div>
-<div class="line"><a name="l00960"></a><span class="lineno">  960</span>&#160;                                (SKBitmap image, <span class="keywordtype">bool</span> interpolate) = this.Images[this.RenderActions[layer][i].ImageId];</div>
+<div class="line"><a name="l00921"></a><span class="lineno">  921</span>&#160;            <span class="keywordflow">if</span> (sortedIndices.Length &gt; 1 || sortedIndices[0] != 0)</div>
+<div class="line"><a name="l00922"></a><span class="lineno">  922</span>&#160;            {</div>
+<div class="line"><a name="l00923"></a><span class="lineno">  923</span>&#160;                <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; sortedIndices.Length; j++)</div>
+<div class="line"><a name="l00924"></a><span class="lineno">  924</span>&#160;                {</div>
+<div class="line"><a name="l00925"></a><span class="lineno">  925</span>&#160;                    canvas.Save();</div>
+<div class="line"><a name="l00926"></a><span class="lineno">  926</span>&#160; </div>
+<div class="line"><a name="l00927"></a><span class="lineno">  927</span>&#160;                    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; this.RenderActions[layer].Count; i++)</div>
+<div class="line"><a name="l00928"></a><span class="lineno">  928</span>&#160;                    {</div>
+<div class="line"><a name="l00929"></a><span class="lineno">  929</span>&#160;                        <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Clip)</div>
+<div class="line"><a name="l00930"></a><span class="lineno">  930</span>&#160;                        {</div>
+<div class="line"><a name="l00931"></a><span class="lineno">  931</span>&#160;                            canvas.ClipPath(this.RenderActions[layer][i].Path, antialias: <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00932"></a><span class="lineno">  932</span>&#160;                        }</div>
+<div class="line"><a name="l00933"></a><span class="lineno">  933</span>&#160;                        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Restore)</div>
+<div class="line"><a name="l00934"></a><span class="lineno">  934</span>&#160;                        {</div>
+<div class="line"><a name="l00935"></a><span class="lineno">  935</span>&#160;                            canvas.Restore();</div>
+<div class="line"><a name="l00936"></a><span class="lineno">  936</span>&#160;                        }</div>
+<div class="line"><a name="l00937"></a><span class="lineno">  937</span>&#160;                        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Save)</div>
+<div class="line"><a name="l00938"></a><span class="lineno">  938</span>&#160;                        {</div>
+<div class="line"><a name="l00939"></a><span class="lineno">  939</span>&#160;                            canvas.Save();</div>
+<div class="line"><a name="l00940"></a><span class="lineno">  940</span>&#160;                        }</div>
+<div class="line"><a name="l00941"></a><span class="lineno">  941</span>&#160;                        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Transform)</div>
+<div class="line"><a name="l00942"></a><span class="lineno">  942</span>&#160;                        {</div>
+<div class="line"><a name="l00943"></a><span class="lineno">  943</span>&#160;                            SKMatrix mat = this.RenderActions[layer][i].Transform.Value;</div>
+<div class="line"><a name="l00944"></a><span class="lineno">  944</span>&#160;                            canvas.Concat(ref mat);</div>
+<div class="line"><a name="l00945"></a><span class="lineno">  945</span>&#160;                        }</div>
+<div class="line"><a name="l00946"></a><span class="lineno">  946</span>&#160;                        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sortedIndices[j] != 0 &amp;&amp; this.RenderActions[layer][i].ZIndex == sortedIndices[j])</div>
+<div class="line"><a name="l00947"></a><span class="lineno">  947</span>&#160;                        {</div>
+<div class="line"><a name="l00948"></a><span class="lineno">  948</span>&#160;                            <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Path &amp;&amp; <span class="keyword">this</span>.RenderActions[layer][i].Path != <span class="keyword">null</span>)</div>
+<div class="line"><a name="l00949"></a><span class="lineno">  949</span>&#160;                            {</div>
+<div class="line"><a name="l00950"></a><span class="lineno">  950</span>&#160;                                canvas.DrawPath(this.RenderActions[layer][i].Path, this.RenderActions[layer][i].Paint);</div>
+<div class="line"><a name="l00951"></a><span class="lineno">  951</span>&#160;                            }</div>
+<div class="line"><a name="l00952"></a><span class="lineno">  952</span>&#160;                            <span class="keywordflow">else</span> <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.Text)</div>
+<div class="line"><a name="l00953"></a><span class="lineno">  953</span>&#160;                            {</div>
+<div class="line"><a name="l00954"></a><span class="lineno">  954</span>&#160;                                canvas.DrawText(this.RenderActions[layer][i].Text, this.RenderActions[layer][i].TextX, this.RenderActions[layer][i].TextY, this.RenderActions[layer][i].Font, this.RenderActions[layer][i].Paint);</div>
+<div class="line"><a name="l00955"></a><span class="lineno">  955</span>&#160;                            }</div>
+<div class="line"><a name="l00956"></a><span class="lineno">  956</span>&#160;                            <span class="keywordflow">else</span> <span class="keywordflow">if</span> (this.RenderActions[layer][i].ActionType == SKRenderAction.ActionTypes.RasterImage)</div>
+<div class="line"><a name="l00957"></a><span class="lineno">  957</span>&#160;                            {</div>
+<div class="line"><a name="l00958"></a><span class="lineno">  958</span>&#160;                                (SKBitmap image, <span class="keywordtype">bool</span> interpolate) = this.Images[this.RenderActions[layer][i].ImageId];</div>
+<div class="line"><a name="l00959"></a><span class="lineno">  959</span>&#160; </div>
+<div class="line"><a name="l00960"></a><span class="lineno">  960</span>&#160;                                SKPaint paint;</div>
 <div class="line"><a name="l00961"></a><span class="lineno">  961</span>&#160; </div>
-<div class="line"><a name="l00962"></a><span class="lineno">  962</span>&#160;                                SKPaint paint;</div>
-<div class="line"><a name="l00963"></a><span class="lineno">  963</span>&#160; </div>
-<div class="line"><a name="l00964"></a><span class="lineno">  964</span>&#160;                                <span class="keywordflow">if</span> (!interpolate)</div>
-<div class="line"><a name="l00965"></a><span class="lineno">  965</span>&#160;                                {</div>
-<div class="line"><a name="l00966"></a><span class="lineno">  966</span>&#160;                                    paint = <span class="keyword">null</span>;</div>
-<div class="line"><a name="l00967"></a><span class="lineno">  967</span>&#160;                                }</div>
-<div class="line"><a name="l00968"></a><span class="lineno">  968</span>&#160;                                <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00969"></a><span class="lineno">  969</span>&#160;                                {</div>
-<div class="line"><a name="l00970"></a><span class="lineno">  970</span>&#160;                                    paint = <span class="keyword">new</span> SKPaint() { FilterQuality = SKFilterQuality.Medium };</div>
-<div class="line"><a name="l00971"></a><span class="lineno">  971</span>&#160;                                }</div>
+<div class="line"><a name="l00962"></a><span class="lineno">  962</span>&#160;                                <span class="keywordflow">if</span> (!interpolate)</div>
+<div class="line"><a name="l00963"></a><span class="lineno">  963</span>&#160;                                {</div>
+<div class="line"><a name="l00964"></a><span class="lineno">  964</span>&#160;                                    paint = <span class="keyword">null</span>;</div>
+<div class="line"><a name="l00965"></a><span class="lineno">  965</span>&#160;                                }</div>
+<div class="line"><a name="l00966"></a><span class="lineno">  966</span>&#160;                                <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00967"></a><span class="lineno">  967</span>&#160;                                {</div>
+<div class="line"><a name="l00968"></a><span class="lineno">  968</span>&#160;                                    paint = <span class="keyword">new</span> SKPaint() { FilterQuality = SKFilterQuality.Medium };</div>
+<div class="line"><a name="l00969"></a><span class="lineno">  969</span>&#160;                                }</div>
+<div class="line"><a name="l00970"></a><span class="lineno">  970</span>&#160; </div>
+<div class="line"><a name="l00971"></a><span class="lineno">  971</span>&#160;                                canvas.DrawBitmap(image, this.RenderActions[layer][i].ImageSource.Value, <span class="keyword">this</span>.RenderActions[layer][i].ImageDestination.Value, paint);</div>
 <div class="line"><a name="l00972"></a><span class="lineno">  972</span>&#160; </div>
-<div class="line"><a name="l00973"></a><span class="lineno">  973</span>&#160;                                canvas.DrawBitmap(image, this.RenderActions[layer][i].ImageSource.Value, <span class="keyword">this</span>.RenderActions[layer][i].ImageDestination.Value, paint);</div>
-<div class="line"><a name="l00974"></a><span class="lineno">  974</span>&#160; </div>
-<div class="line"><a name="l00975"></a><span class="lineno">  975</span>&#160;                                paint?.Dispose();</div>
-<div class="line"><a name="l00976"></a><span class="lineno">  976</span>&#160;                            }</div>
-<div class="line"><a name="l00977"></a><span class="lineno">  977</span>&#160;                        }</div>
-<div class="line"><a name="l00978"></a><span class="lineno">  978</span>&#160;                    }</div>
-<div class="line"><a name="l00979"></a><span class="lineno">  979</span>&#160; </div>
-<div class="line"><a name="l00980"></a><span class="lineno">  980</span>&#160;                    canvas.Restore();</div>
-<div class="line"><a name="l00981"></a><span class="lineno">  981</span>&#160;                }</div>
-<div class="line"><a name="l00982"></a><span class="lineno">  982</span>&#160;            }</div>
-<div class="line"><a name="l00983"></a><span class="lineno">  983</span>&#160; </div>
-<div class="line"><a name="l00984"></a><span class="lineno">  984</span>&#160;            System.Diagnostics.Debug.WriteLine(<span class="stringliteral">&quot;Out/Canvas&quot;</span>);</div>
-<div class="line"><a name="l00985"></a><span class="lineno">  985</span>&#160;        }</div>
-<div class="line"><a name="l00986"></a><span class="lineno">  986</span>&#160; </div>
-<div class="line"><a name="l00987"></a><span class="lineno">  987</span>&#160;        <span class="keyword">private</span> <span class="keywordtype">bool</span> IsDirty = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00988"></a><span class="lineno">  988</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00989"></a><span class="lineno">  989</span>&#160;<span class="comment">        /// &lt;summary&gt;</span></div>
-<div class="line"><a name="l00990"></a><span class="lineno">  990</span>&#160;<span class="comment">        /// Invalidate the contents of the canvas, forcing it to redraw itself.</span></div>
-<div class="line"><a name="l00991"></a><span class="lineno">  991</span>&#160;<span class="comment">        /// &lt;/summary&gt;</span></div>
-<div class="line"><a name="l00992"></a><span class="lineno"><a class="line" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a1701ed51368b6dc5bb771b5ea858e4ee">  992</a></span>&#160;<span class="comment"></span>        <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a1701ed51368b6dc5bb771b5ea858e4ee">InvalidateDirty</a>()</div>
-<div class="line"><a name="l00993"></a><span class="lineno">  993</span>&#160;        {</div>
-<div class="line"><a name="l00994"></a><span class="lineno">  994</span>&#160;            this.IsDirty = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00995"></a><span class="lineno">  995</span>&#160;            base.InvalidateVisual();</div>
-<div class="line"><a name="l00996"></a><span class="lineno">  996</span>&#160;        }</div>
-<div class="line"><a name="l00997"></a><span class="lineno">  997</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00998"></a><span class="lineno">  998</span>&#160;<span class="comment">        /// &lt;summary&gt;</span></div>
-<div class="line"><a name="l00999"></a><span class="lineno">  999</span>&#160;<span class="comment">        /// Invalidate the contents of the canvas, specifying that the order of the layers has changed.</span></div>
-<div class="line"><a name="l01000"></a><span class="lineno"> 1000</span>&#160;<span class="comment">        /// &lt;/summary&gt;</span></div>
-<div class="line"><a name="l01001"></a><span class="lineno"><a class="line" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a28e9f0cfe4fa1286ac9b90b8ae33b2d2"> 1001</a></span>&#160;<span class="comment"></span>        <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a28e9f0cfe4fa1286ac9b90b8ae33b2d2">InvalidateZIndex</a>()</div>
-<div class="line"><a name="l01002"></a><span class="lineno"> 1002</span>&#160;        {</div>
-<div class="line"><a name="l01003"></a><span class="lineno"> 1003</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; this.TaggedRenderActions.Count; i++)</div>
-<div class="line"><a name="l01004"></a><span class="lineno"> 1004</span>&#160;            {</div>
-<div class="line"><a name="l01005"></a><span class="lineno"> 1005</span>&#160;                this.TaggedRenderActions[i] = this.TaggedRenderActions[i].OrderByDescending(a =&gt; a.ZIndex).ToList();</div>
-<div class="line"><a name="l01006"></a><span class="lineno"> 1006</span>&#160;            }</div>
-<div class="line"><a name="l01007"></a><span class="lineno"> 1007</span>&#160;            this.<a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a1701ed51368b6dc5bb771b5ea858e4ee">InvalidateDirty</a>();</div>
-<div class="line"><a name="l01008"></a><span class="lineno"> 1008</span>&#160;        }</div>
-<div class="line"><a name="l01009"></a><span class="lineno"> 1009</span>&#160; </div>
-<div class="line"><a name="l01010"></a><span class="lineno"> 1010</span>&#160; </div>
-<div class="line"><a name="l01011"></a><span class="lineno"> 1011</span>&#160;        <span class="keyword">private</span> RenderTargetBitmap FrontBuffer = <span class="keyword">null</span>;</div>
-<div class="line"><a name="l01012"></a><span class="lineno"> 1012</span>&#160;        <span class="keyword">private</span> RenderingParameters FrontBufferRenderingParams = <span class="keyword">null</span>;</div>
-<div class="line"><a name="l01013"></a><span class="lineno"> 1013</span>&#160;        <span class="keyword">private</span> readonly <span class="keywordtype">object</span> FrontBufferLock = <span class="keyword">new</span> object();</div>
-<div class="line"><a name="l01014"></a><span class="lineno"> 1014</span>&#160;        ISkiaDrawingContextImpl FrontBufferSkiaContext = <span class="keyword">null</span>;</div>
-<div class="line"><a name="l01015"></a><span class="lineno"> 1015</span>&#160;        SKCanvas FrontBufferSkiaCanvas = <span class="keyword">null</span>;</div>
-<div class="line"><a name="l01016"></a><span class="lineno"> 1016</span>&#160; </div>
-<div class="line"><a name="l01017"></a><span class="lineno"> 1017</span>&#160;        <span class="keyword">private</span> RenderTargetBitmap BackBuffer = <span class="keyword">null</span>;</div>
-<div class="line"><a name="l01018"></a><span class="lineno"> 1018</span>&#160;        <span class="keyword">private</span> RenderingParameters BackBufferRenderingParams = <span class="keyword">null</span>;</div>
-<div class="line"><a name="l01019"></a><span class="lineno"> 1019</span>&#160;        ISkiaDrawingContextImpl BackBufferSkiaContext = <span class="keyword">null</span>;</div>
-<div class="line"><a name="l01020"></a><span class="lineno"> 1020</span>&#160;        SKCanvas BackBufferSkiaCanvas = <span class="keyword">null</span>;</div>
-<div class="line"><a name="l01021"></a><span class="lineno"> 1021</span>&#160; </div>
-<div class="line"><a name="l01022"></a><span class="lineno"> 1022</span>&#160;        <span class="keyword">private</span> RenderTargetBitmap BackBuffer2 = <span class="keyword">null</span>;</div>
-<div class="line"><a name="l01023"></a><span class="lineno"> 1023</span>&#160;        <span class="keyword">private</span> RenderingParameters BackBufferRenderingParams2 = <span class="keyword">null</span>;</div>
-<div class="line"><a name="l01024"></a><span class="lineno"> 1024</span>&#160;        ISkiaDrawingContextImpl BackBufferSkiaContext2 = <span class="keyword">null</span>;</div>
-<div class="line"><a name="l01025"></a><span class="lineno"> 1025</span>&#160;        SKCanvas BackBufferSkiaCanvas2 = <span class="keyword">null</span>;</div>
-<div class="line"><a name="l01026"></a><span class="lineno"> 1026</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l01027"></a><span class="lineno"> 1027</span>&#160;<span class="comment">        /// &lt;inheritdoc/&gt;</span></div>
-<div class="line"><a name="l01028"></a><span class="lineno"><a class="line" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a6bc35a6235e3f24da0d2c27d5868c587"> 1028</a></span>&#160;<span class="comment"></span>        <span class="keyword">public</span> <span class="keyword">override</span> <span class="keywordtype">void</span> <a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a6bc35a6235e3f24da0d2c27d5868c587">Render</a>(DrawingContext context)</div>
-<div class="line"><a name="l01029"></a><span class="lineno"> 1029</span>&#160;        {</div>
-<div class="line"><a name="l01030"></a><span class="lineno"> 1030</span>&#160;            lock (FrontBufferLock)</div>
-<div class="line"><a name="l01031"></a><span class="lineno"> 1031</span>&#160;            {</div>
-<div class="line"><a name="l01032"></a><span class="lineno"> 1032</span>&#160;                IVisualNode node = GetNode(context.PlatformImpl);</div>
+<div class="line"><a name="l00973"></a><span class="lineno">  973</span>&#160;                                paint?.Dispose();</div>
+<div class="line"><a name="l00974"></a><span class="lineno">  974</span>&#160;                            }</div>
+<div class="line"><a name="l00975"></a><span class="lineno">  975</span>&#160;                        }</div>
+<div class="line"><a name="l00976"></a><span class="lineno">  976</span>&#160;                    }</div>
+<div class="line"><a name="l00977"></a><span class="lineno">  977</span>&#160; </div>
+<div class="line"><a name="l00978"></a><span class="lineno">  978</span>&#160;                    canvas.Restore();</div>
+<div class="line"><a name="l00979"></a><span class="lineno">  979</span>&#160;                }</div>
+<div class="line"><a name="l00980"></a><span class="lineno">  980</span>&#160;            }</div>
+<div class="line"><a name="l00981"></a><span class="lineno">  981</span>&#160;        }</div>
+<div class="line"><a name="l00982"></a><span class="lineno">  982</span>&#160; </div>
+<div class="line"><a name="l00983"></a><span class="lineno">  983</span>&#160;        <span class="keyword">private</span> <span class="keywordtype">bool</span> IsDirty = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00984"></a><span class="lineno">  984</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00985"></a><span class="lineno">  985</span>&#160;<span class="comment">        /// &lt;summary&gt;</span></div>
+<div class="line"><a name="l00986"></a><span class="lineno">  986</span>&#160;<span class="comment">        /// Invalidate the contents of the canvas, forcing it to redraw itself.</span></div>
+<div class="line"><a name="l00987"></a><span class="lineno">  987</span>&#160;<span class="comment">        /// &lt;/summary&gt;</span></div>
+<div class="line"><a name="l00988"></a><span class="lineno"><a class="line" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a1701ed51368b6dc5bb771b5ea858e4ee">  988</a></span>&#160;<span class="comment"></span>        <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a1701ed51368b6dc5bb771b5ea858e4ee">InvalidateDirty</a>()</div>
+<div class="line"><a name="l00989"></a><span class="lineno">  989</span>&#160;        {</div>
+<div class="line"><a name="l00990"></a><span class="lineno">  990</span>&#160;            this.IsDirty = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00991"></a><span class="lineno">  991</span>&#160;            base.InvalidateVisual();</div>
+<div class="line"><a name="l00992"></a><span class="lineno">  992</span>&#160;        }</div>
+<div class="line"><a name="l00993"></a><span class="lineno">  993</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00994"></a><span class="lineno">  994</span>&#160;<span class="comment">        /// &lt;summary&gt;</span></div>
+<div class="line"><a name="l00995"></a><span class="lineno">  995</span>&#160;<span class="comment">        /// Invalidate the contents of the canvas, specifying that the order of the layers has changed.</span></div>
+<div class="line"><a name="l00996"></a><span class="lineno">  996</span>&#160;<span class="comment">        /// &lt;/summary&gt;</span></div>
+<div class="line"><a name="l00997"></a><span class="lineno"><a class="line" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a28e9f0cfe4fa1286ac9b90b8ae33b2d2">  997</a></span>&#160;<span class="comment"></span>        <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a28e9f0cfe4fa1286ac9b90b8ae33b2d2">InvalidateZIndex</a>()</div>
+<div class="line"><a name="l00998"></a><span class="lineno">  998</span>&#160;        {</div>
+<div class="line"><a name="l00999"></a><span class="lineno">  999</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; this.TaggedRenderActions.Count; i++)</div>
+<div class="line"><a name="l01000"></a><span class="lineno"> 1000</span>&#160;            {</div>
+<div class="line"><a name="l01001"></a><span class="lineno"> 1001</span>&#160;                this.TaggedRenderActions[i] = this.TaggedRenderActions[i].OrderByDescending(a =&gt; a.ZIndex).ToList();</div>
+<div class="line"><a name="l01002"></a><span class="lineno"> 1002</span>&#160;            }</div>
+<div class="line"><a name="l01003"></a><span class="lineno"> 1003</span>&#160;            this.<a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a1701ed51368b6dc5bb771b5ea858e4ee">InvalidateDirty</a>();</div>
+<div class="line"><a name="l01004"></a><span class="lineno"> 1004</span>&#160;        }</div>
+<div class="line"><a name="l01005"></a><span class="lineno"> 1005</span>&#160; </div>
+<div class="line"><a name="l01006"></a><span class="lineno"> 1006</span>&#160; </div>
+<div class="line"><a name="l01007"></a><span class="lineno"> 1007</span>&#160;        <span class="keyword">private</span> RenderTargetBitmap FrontBuffer = <span class="keyword">null</span>;</div>
+<div class="line"><a name="l01008"></a><span class="lineno"> 1008</span>&#160;        <span class="keyword">private</span> RenderingParameters FrontBufferRenderingParams = <span class="keyword">null</span>;</div>
+<div class="line"><a name="l01009"></a><span class="lineno"> 1009</span>&#160;        <span class="keyword">private</span> readonly <span class="keywordtype">object</span> FrontBufferLock = <span class="keyword">new</span> object();</div>
+<div class="line"><a name="l01010"></a><span class="lineno"> 1010</span>&#160;        ISkiaDrawingContextImpl FrontBufferSkiaContext = <span class="keyword">null</span>;</div>
+<div class="line"><a name="l01011"></a><span class="lineno"> 1011</span>&#160;        SKCanvas FrontBufferSkiaCanvas = <span class="keyword">null</span>;</div>
+<div class="line"><a name="l01012"></a><span class="lineno"> 1012</span>&#160; </div>
+<div class="line"><a name="l01013"></a><span class="lineno"> 1013</span>&#160;        <span class="keyword">private</span> RenderTargetBitmap BackBuffer = <span class="keyword">null</span>;</div>
+<div class="line"><a name="l01014"></a><span class="lineno"> 1014</span>&#160;        <span class="keyword">private</span> RenderingParameters BackBufferRenderingParams = <span class="keyword">null</span>;</div>
+<div class="line"><a name="l01015"></a><span class="lineno"> 1015</span>&#160;        ISkiaDrawingContextImpl BackBufferSkiaContext = <span class="keyword">null</span>;</div>
+<div class="line"><a name="l01016"></a><span class="lineno"> 1016</span>&#160;        SKCanvas BackBufferSkiaCanvas = <span class="keyword">null</span>;</div>
+<div class="line"><a name="l01017"></a><span class="lineno"> 1017</span>&#160; </div>
+<div class="line"><a name="l01018"></a><span class="lineno"> 1018</span>&#160;        <span class="keyword">private</span> RenderTargetBitmap BackBuffer2 = <span class="keyword">null</span>;</div>
+<div class="line"><a name="l01019"></a><span class="lineno"> 1019</span>&#160;        <span class="keyword">private</span> RenderingParameters BackBufferRenderingParams2 = <span class="keyword">null</span>;</div>
+<div class="line"><a name="l01020"></a><span class="lineno"> 1020</span>&#160;        ISkiaDrawingContextImpl BackBufferSkiaContext2 = <span class="keyword">null</span>;</div>
+<div class="line"><a name="l01021"></a><span class="lineno"> 1021</span>&#160;        SKCanvas BackBufferSkiaCanvas2 = <span class="keyword">null</span>;</div>
+<div class="line"><a name="l01022"></a><span class="lineno"> 1022</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l01023"></a><span class="lineno"> 1023</span>&#160;<span class="comment">        /// &lt;inheritdoc/&gt;</span></div>
+<div class="line"><a name="l01024"></a><span class="lineno"><a class="line" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a6bc35a6235e3f24da0d2c27d5868c587"> 1024</a></span>&#160;<span class="comment"></span>        <span class="keyword">public</span> <span class="keyword">override</span> <span class="keywordtype">void</span> <a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a6bc35a6235e3f24da0d2c27d5868c587">Render</a>(DrawingContext context)</div>
+<div class="line"><a name="l01025"></a><span class="lineno"> 1025</span>&#160;        {</div>
+<div class="line"><a name="l01026"></a><span class="lineno"> 1026</span>&#160;            lock (FrontBufferLock)</div>
+<div class="line"><a name="l01027"></a><span class="lineno"> 1027</span>&#160;            {</div>
+<div class="line"><a name="l01028"></a><span class="lineno"> 1028</span>&#160;                IVisualNode node = GetNode(context.PlatformImpl);</div>
+<div class="line"><a name="l01029"></a><span class="lineno"> 1029</span>&#160; </div>
+<div class="line"><a name="l01030"></a><span class="lineno"> 1030</span>&#160;                Rect layoutBounds = node.LayoutBounds;</div>
+<div class="line"><a name="l01031"></a><span class="lineno"> 1031</span>&#160;                Rect clipBounds = node.ClipBounds;</div>
+<div class="line"><a name="l01032"></a><span class="lineno"> 1032</span>&#160; </div>
 <div class="line"><a name="l01033"></a><span class="lineno"> 1033</span>&#160; </div>
-<div class="line"><a name="l01034"></a><span class="lineno"> 1034</span>&#160;                Rect layoutBounds = node.LayoutBounds;</div>
-<div class="line"><a name="l01035"></a><span class="lineno"> 1035</span>&#160;                Rect clipBounds = node.ClipBounds;</div>
-<div class="line"><a name="l01036"></a><span class="lineno"> 1036</span>&#160; </div>
+<div class="line"><a name="l01034"></a><span class="lineno"> 1034</span>&#160;                <span class="keywordtype">double</span> DPIscaling = (VisualRoot as Avalonia.Layout.ILayoutRoot)?.LayoutScaling ?? 1;</div>
+<div class="line"><a name="l01035"></a><span class="lineno"> 1035</span>&#160; </div>
+<div class="line"><a name="l01036"></a><span class="lineno"> 1036</span>&#160;                <span class="keywordtype">double</span> scale = 0.5 * (this.<a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a4fd73dc712c4f90ed8e00412eb50bdd2">PageWidth</a> / layoutBounds.Width + this.<a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#aabe2d24ee767ba8e7bac57f98d88a0ef">PageHeight</a> / layoutBounds.Height);</div>
 <div class="line"><a name="l01037"></a><span class="lineno"> 1037</span>&#160; </div>
-<div class="line"><a name="l01038"></a><span class="lineno"> 1038</span>&#160;                <span class="keywordtype">double</span> DPIscaling = (VisualRoot as Avalonia.Layout.ILayoutRoot)?.LayoutScaling ?? 1;</div>
-<div class="line"><a name="l01039"></a><span class="lineno"> 1039</span>&#160; </div>
-<div class="line"><a name="l01040"></a><span class="lineno"> 1040</span>&#160;                <span class="keywordtype">double</span> scale = 0.5 * (this.<a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a4fd73dc712c4f90ed8e00412eb50bdd2">PageWidth</a> / layoutBounds.Width + this.<a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#aabe2d24ee767ba8e7bac57f98d88a0ef">PageHeight</a> / layoutBounds.Height);</div>
+<div class="line"><a name="l01038"></a><span class="lineno"> 1038</span>&#160; </div>
+<div class="line"><a name="l01039"></a><span class="lineno"> 1039</span>&#160;                <span class="keywordtype">double</span> left = Math.Max(0, (clipBounds.Left - layoutBounds.Left) * scale);</div>
+<div class="line"><a name="l01040"></a><span class="lineno"> 1040</span>&#160;                <span class="keywordtype">double</span> top = Math.Max(0, (clipBounds.Top - layoutBounds.Top) * scale);</div>
 <div class="line"><a name="l01041"></a><span class="lineno"> 1041</span>&#160; </div>
-<div class="line"><a name="l01042"></a><span class="lineno"> 1042</span>&#160; </div>
-<div class="line"><a name="l01043"></a><span class="lineno"> 1043</span>&#160;                <span class="keywordtype">double</span> left = Math.Max(0, (clipBounds.Left - layoutBounds.Left) * scale);</div>
-<div class="line"><a name="l01044"></a><span class="lineno"> 1044</span>&#160;                <span class="keywordtype">double</span> top = Math.Max(0, (clipBounds.Top - layoutBounds.Top) * scale);</div>
-<div class="line"><a name="l01045"></a><span class="lineno"> 1045</span>&#160; </div>
-<div class="line"><a name="l01046"></a><span class="lineno"> 1046</span>&#160;                <span class="keywordtype">double</span> width = Math.Min((clipBounds.Right - layoutBounds.Left) * scale, this.<a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a4fd73dc712c4f90ed8e00412eb50bdd2">PageWidth</a>) - left;</div>
-<div class="line"><a name="l01047"></a><span class="lineno"> 1047</span>&#160;                <span class="keywordtype">double</span> height = Math.Min((clipBounds.Bottom - layoutBounds.Top) * scale, this.<a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#aabe2d24ee767ba8e7bac57f98d88a0ef">PageHeight</a>) - top;</div>
-<div class="line"><a name="l01048"></a><span class="lineno"> 1048</span>&#160; </div>
-<div class="line"><a name="l01049"></a><span class="lineno"> 1049</span>&#160;                <span class="keywordtype">int</span> pixelWidth = (int)Math.Round(width / scale * DPIscaling);</div>
-<div class="line"><a name="l01050"></a><span class="lineno"> 1050</span>&#160;                <span class="keywordtype">int</span> pixelHeight = (int)Math.Round(height / scale * DPIscaling);</div>
+<div class="line"><a name="l01042"></a><span class="lineno"> 1042</span>&#160;                <span class="keywordtype">double</span> width = Math.Min((clipBounds.Right - layoutBounds.Left) * scale, this.<a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a4fd73dc712c4f90ed8e00412eb50bdd2">PageWidth</a>) - left;</div>
+<div class="line"><a name="l01043"></a><span class="lineno"> 1043</span>&#160;                <span class="keywordtype">double</span> height = Math.Min((clipBounds.Bottom - layoutBounds.Top) * scale, this.<a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#aabe2d24ee767ba8e7bac57f98d88a0ef">PageHeight</a>) - top;</div>
+<div class="line"><a name="l01044"></a><span class="lineno"> 1044</span>&#160; </div>
+<div class="line"><a name="l01045"></a><span class="lineno"> 1045</span>&#160;                <span class="keywordtype">int</span> pixelWidth = (int)Math.Round(width / scale * DPIscaling);</div>
+<div class="line"><a name="l01046"></a><span class="lineno"> 1046</span>&#160;                <span class="keywordtype">int</span> pixelHeight = (int)Math.Round(height / scale * DPIscaling);</div>
+<div class="line"><a name="l01047"></a><span class="lineno"> 1047</span>&#160; </div>
+<div class="line"><a name="l01048"></a><span class="lineno"> 1048</span>&#160;                <span class="keywordflow">if</span> (pixelWidth &gt; 0 &amp;&amp; pixelHeight &gt; 0)</div>
+<div class="line"><a name="l01049"></a><span class="lineno"> 1049</span>&#160;                {</div>
+<div class="line"><a name="l01050"></a><span class="lineno"> 1050</span>&#160;                    RenderingParameters currentParameters = <span class="keyword">new</span> RenderingParameters((<span class="keywordtype">float</span>)left, (<span class="keywordtype">float</span>)top, (<span class="keywordtype">float</span>)width, (<span class="keywordtype">float</span>)height, (<span class="keywordtype">float</span>)(1 / scale * DPIscaling), pixelWidth, pixelHeight);</div>
 <div class="line"><a name="l01051"></a><span class="lineno"> 1051</span>&#160; </div>
-<div class="line"><a name="l01052"></a><span class="lineno"> 1052</span>&#160;                <span class="keywordflow">if</span> (pixelWidth &gt; 0 &amp;&amp; pixelHeight &gt; 0)</div>
-<div class="line"><a name="l01053"></a><span class="lineno"> 1053</span>&#160;                {</div>
-<div class="line"><a name="l01054"></a><span class="lineno"> 1054</span>&#160;                    RenderingParameters currentParameters = <span class="keyword">new</span> RenderingParameters((<span class="keywordtype">float</span>)left, (<span class="keywordtype">float</span>)top, (<span class="keywordtype">float</span>)width, (<span class="keywordtype">float</span>)height, (<span class="keywordtype">float</span>)(1 / scale * DPIscaling), pixelWidth, pixelHeight);</div>
-<div class="line"><a name="l01055"></a><span class="lineno"> 1055</span>&#160; </div>
-<div class="line"><a name="l01056"></a><span class="lineno"> 1056</span>&#160;                    <span class="keywordflow">if</span> (FrontBuffer != <span class="keyword">null</span> &amp;&amp; FrontBufferRenderingParams == currentParameters &amp;&amp; !IsDirty)</div>
-<div class="line"><a name="l01057"></a><span class="lineno"> 1057</span>&#160;                    {</div>
-<div class="line"><a name="l01058"></a><span class="lineno"> 1058</span>&#160;                        <span class="keywordflow">if</span> (!RenderRequestedHandle.WaitOne(0))</div>
+<div class="line"><a name="l01052"></a><span class="lineno"> 1052</span>&#160;                    <span class="keywordflow">if</span> (FrontBuffer != <span class="keyword">null</span> &amp;&amp; FrontBufferRenderingParams == currentParameters &amp;&amp; !IsDirty)</div>
+<div class="line"><a name="l01053"></a><span class="lineno"> 1053</span>&#160;                    {</div>
+<div class="line"><a name="l01054"></a><span class="lineno"> 1054</span>&#160;                        <span class="keywordflow">if</span> (!RenderRequestedHandle.WaitOne(0))</div>
+<div class="line"><a name="l01055"></a><span class="lineno"> 1055</span>&#160;                        {</div>
+<div class="line"><a name="l01056"></a><span class="lineno"> 1056</span>&#160;                            LastFrameStopwatch.Reset();</div>
+<div class="line"><a name="l01057"></a><span class="lineno"> 1057</span>&#160;                        }</div>
+<div class="line"><a name="l01058"></a><span class="lineno"> 1058</span>&#160;                        <span class="keywordflow">else</span></div>
 <div class="line"><a name="l01059"></a><span class="lineno"> 1059</span>&#160;                        {</div>
-<div class="line"><a name="l01060"></a><span class="lineno"> 1060</span>&#160;                            LastFrameStopwatch.Reset();</div>
-<div class="line"><a name="l01061"></a><span class="lineno"> 1061</span>&#160;                        }</div>
-<div class="line"><a name="l01062"></a><span class="lineno"> 1062</span>&#160;                        <span class="keywordflow">else</span></div>
-<div class="line"><a name="l01063"></a><span class="lineno"> 1063</span>&#160;                        {</div>
-<div class="line"><a name="l01064"></a><span class="lineno"> 1064</span>&#160;                            Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =&gt;</div>
-<div class="line"><a name="l01065"></a><span class="lineno"> 1065</span>&#160;                            {</div>
-<div class="line"><a name="l01066"></a><span class="lineno"> 1066</span>&#160;                                this.InvalidateVisual();</div>
-<div class="line"><a name="l01067"></a><span class="lineno"> 1067</span>&#160;                            });</div>
-<div class="line"><a name="l01068"></a><span class="lineno"> 1068</span>&#160;                        }</div>
-<div class="line"><a name="l01069"></a><span class="lineno"> 1069</span>&#160;                        context.DrawImage(FrontBuffer, <span class="keyword">new</span> Rect(0, 0, pixelWidth, pixelHeight), <span class="keyword">new</span> Rect(left, top, width, height));</div>
-<div class="line"><a name="l01070"></a><span class="lineno"> 1070</span>&#160;                    }</div>
-<div class="line"><a name="l01071"></a><span class="lineno"> 1071</span>&#160;                    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (FrontBuffer != <span class="keyword">null</span> &amp;&amp; FrontBufferRenderingParams.GoodEnough(currentParameters) &amp;&amp; !IsDirty)</div>
-<div class="line"><a name="l01072"></a><span class="lineno"> 1072</span>&#160;                    {</div>
-<div class="line"><a name="l01073"></a><span class="lineno"> 1073</span>&#160;                        <span class="keywordflow">if</span> (!RenderRequestedHandle.WaitOne(0))</div>
+<div class="line"><a name="l01060"></a><span class="lineno"> 1060</span>&#160;                            Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =&gt;</div>
+<div class="line"><a name="l01061"></a><span class="lineno"> 1061</span>&#160;                            {</div>
+<div class="line"><a name="l01062"></a><span class="lineno"> 1062</span>&#160;                                this.InvalidateVisual();</div>
+<div class="line"><a name="l01063"></a><span class="lineno"> 1063</span>&#160;                            });</div>
+<div class="line"><a name="l01064"></a><span class="lineno"> 1064</span>&#160;                        }</div>
+<div class="line"><a name="l01065"></a><span class="lineno"> 1065</span>&#160;                        context.DrawImage(FrontBuffer, <span class="keyword">new</span> Rect(0, 0, pixelWidth, pixelHeight), <span class="keyword">new</span> Rect(left, top, width, height));</div>
+<div class="line"><a name="l01066"></a><span class="lineno"> 1066</span>&#160;                    }</div>
+<div class="line"><a name="l01067"></a><span class="lineno"> 1067</span>&#160;                    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (FrontBuffer != <span class="keyword">null</span> &amp;&amp; FrontBufferRenderingParams.GoodEnough(currentParameters) &amp;&amp; !IsDirty)</div>
+<div class="line"><a name="l01068"></a><span class="lineno"> 1068</span>&#160;                    {</div>
+<div class="line"><a name="l01069"></a><span class="lineno"> 1069</span>&#160;                        <span class="keywordflow">if</span> (!RenderRequestedHandle.WaitOne(0))</div>
+<div class="line"><a name="l01070"></a><span class="lineno"> 1070</span>&#160;                        {</div>
+<div class="line"><a name="l01071"></a><span class="lineno"> 1071</span>&#160;                            LastFrameStopwatch.Reset();</div>
+<div class="line"><a name="l01072"></a><span class="lineno"> 1072</span>&#160;                        }</div>
+<div class="line"><a name="l01073"></a><span class="lineno"> 1073</span>&#160;                        <span class="keywordflow">else</span></div>
 <div class="line"><a name="l01074"></a><span class="lineno"> 1074</span>&#160;                        {</div>
-<div class="line"><a name="l01075"></a><span class="lineno"> 1075</span>&#160;                            LastFrameStopwatch.Reset();</div>
-<div class="line"><a name="l01076"></a><span class="lineno"> 1076</span>&#160;                        }</div>
-<div class="line"><a name="l01077"></a><span class="lineno"> 1077</span>&#160;                        <span class="keywordflow">else</span></div>
-<div class="line"><a name="l01078"></a><span class="lineno"> 1078</span>&#160;                        {</div>
-<div class="line"><a name="l01079"></a><span class="lineno"> 1079</span>&#160;                            Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =&gt;</div>
-<div class="line"><a name="l01080"></a><span class="lineno"> 1080</span>&#160;                            {</div>
-<div class="line"><a name="l01081"></a><span class="lineno"> 1081</span>&#160;                                this.InvalidateVisual();</div>
-<div class="line"><a name="l01082"></a><span class="lineno"> 1082</span>&#160;                            });</div>
-<div class="line"><a name="l01083"></a><span class="lineno"> 1083</span>&#160;                        }</div>
-<div class="line"><a name="l01084"></a><span class="lineno"> 1084</span>&#160;                        context.DrawImage(FrontBuffer, <span class="keyword">new</span> Rect(0, 0, FrontBufferRenderingParams.RenderWidth, FrontBufferRenderingParams.RenderHeight), <span class="keyword">new</span> Rect(FrontBufferRenderingParams.Left, FrontBufferRenderingParams.Top, FrontBufferRenderingParams.Width, FrontBufferRenderingParams.Height));</div>
-<div class="line"><a name="l01085"></a><span class="lineno"> 1085</span>&#160;                    }</div>
-<div class="line"><a name="l01086"></a><span class="lineno"> 1086</span>&#160;                    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l01087"></a><span class="lineno"> 1087</span>&#160;                    {</div>
-<div class="line"><a name="l01088"></a><span class="lineno"> 1088</span>&#160;                        lock (RenderingRequestLock)</div>
-<div class="line"><a name="l01089"></a><span class="lineno"> 1089</span>&#160;                        {</div>
-<div class="line"><a name="l01090"></a><span class="lineno"> 1090</span>&#160;                            IsDirty = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01091"></a><span class="lineno"> 1091</span>&#160;                            RenderingRequest = currentParameters;</div>
-<div class="line"><a name="l01092"></a><span class="lineno"> 1092</span>&#160;                            RenderRequestedHandle.Set();</div>
-<div class="line"><a name="l01093"></a><span class="lineno"> 1093</span>&#160;                            LastFrameStopwatch.Start();</div>
-<div class="line"><a name="l01094"></a><span class="lineno"> 1094</span>&#160;                        }</div>
-<div class="line"><a name="l01095"></a><span class="lineno"> 1095</span>&#160; </div>
-<div class="line"><a name="l01096"></a><span class="lineno"> 1096</span>&#160;                        <span class="keywordflow">if</span> (FrontBuffer != <span class="keyword">null</span>)</div>
-<div class="line"><a name="l01097"></a><span class="lineno"> 1097</span>&#160;                        {</div>
-<div class="line"><a name="l01098"></a><span class="lineno"> 1098</span>&#160;                            context.DrawImage(FrontBuffer, <span class="keyword">new</span> Rect(0, 0, FrontBufferRenderingParams.RenderWidth, FrontBufferRenderingParams.RenderHeight), <span class="keyword">new</span> Rect(FrontBufferRenderingParams.Left, FrontBufferRenderingParams.Top, FrontBufferRenderingParams.Width, FrontBufferRenderingParams.Height));</div>
-<div class="line"><a name="l01099"></a><span class="lineno"> 1099</span>&#160;                        }</div>
+<div class="line"><a name="l01075"></a><span class="lineno"> 1075</span>&#160;                            Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =&gt;</div>
+<div class="line"><a name="l01076"></a><span class="lineno"> 1076</span>&#160;                            {</div>
+<div class="line"><a name="l01077"></a><span class="lineno"> 1077</span>&#160;                                this.InvalidateVisual();</div>
+<div class="line"><a name="l01078"></a><span class="lineno"> 1078</span>&#160;                            });</div>
+<div class="line"><a name="l01079"></a><span class="lineno"> 1079</span>&#160;                        }</div>
+<div class="line"><a name="l01080"></a><span class="lineno"> 1080</span>&#160;                        context.DrawImage(FrontBuffer, <span class="keyword">new</span> Rect(0, 0, FrontBufferRenderingParams.RenderWidth, FrontBufferRenderingParams.RenderHeight), <span class="keyword">new</span> Rect(FrontBufferRenderingParams.Left, FrontBufferRenderingParams.Top, FrontBufferRenderingParams.Width, FrontBufferRenderingParams.Height));</div>
+<div class="line"><a name="l01081"></a><span class="lineno"> 1081</span>&#160;                    }</div>
+<div class="line"><a name="l01082"></a><span class="lineno"> 1082</span>&#160;                    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l01083"></a><span class="lineno"> 1083</span>&#160;                    {</div>
+<div class="line"><a name="l01084"></a><span class="lineno"> 1084</span>&#160;                        lock (RenderingRequestLock)</div>
+<div class="line"><a name="l01085"></a><span class="lineno"> 1085</span>&#160;                        {</div>
+<div class="line"><a name="l01086"></a><span class="lineno"> 1086</span>&#160;                            IsDirty = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01087"></a><span class="lineno"> 1087</span>&#160;                            RenderingRequest = currentParameters;</div>
+<div class="line"><a name="l01088"></a><span class="lineno"> 1088</span>&#160;                            RenderRequestedHandle.Set();</div>
+<div class="line"><a name="l01089"></a><span class="lineno"> 1089</span>&#160;                            LastFrameStopwatch.Start();</div>
+<div class="line"><a name="l01090"></a><span class="lineno"> 1090</span>&#160;                        }</div>
+<div class="line"><a name="l01091"></a><span class="lineno"> 1091</span>&#160; </div>
+<div class="line"><a name="l01092"></a><span class="lineno"> 1092</span>&#160;                        <span class="keywordflow">if</span> (FrontBuffer != <span class="keyword">null</span>)</div>
+<div class="line"><a name="l01093"></a><span class="lineno"> 1093</span>&#160;                        {</div>
+<div class="line"><a name="l01094"></a><span class="lineno"> 1094</span>&#160;                            context.DrawImage(FrontBuffer, <span class="keyword">new</span> Rect(0, 0, FrontBufferRenderingParams.RenderWidth, FrontBufferRenderingParams.RenderHeight), <span class="keyword">new</span> Rect(FrontBufferRenderingParams.Left, FrontBufferRenderingParams.Top, FrontBufferRenderingParams.Width, FrontBufferRenderingParams.Height));</div>
+<div class="line"><a name="l01095"></a><span class="lineno"> 1095</span>&#160;                        }</div>
+<div class="line"><a name="l01096"></a><span class="lineno"> 1096</span>&#160; </div>
+<div class="line"><a name="l01097"></a><span class="lineno"> 1097</span>&#160;                        <span class="keywordtype">long</span> milliseconds = LastFrameStopwatch.ElapsedMilliseconds;</div>
+<div class="line"><a name="l01098"></a><span class="lineno"> 1098</span>&#160; </div>
+<div class="line"><a name="l01099"></a><span class="lineno"> 1099</span>&#160;                        Bitmap spinner = <a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a6d4c4c30f79f3b6c45f848e7888e1765">Spinner</a>?.Invoke(milliseconds);</div>
 <div class="line"><a name="l01100"></a><span class="lineno"> 1100</span>&#160; </div>
-<div class="line"><a name="l01101"></a><span class="lineno"> 1101</span>&#160;                        <span class="keywordtype">long</span> milliseconds = LastFrameStopwatch.ElapsedMilliseconds;</div>
-<div class="line"><a name="l01102"></a><span class="lineno"> 1102</span>&#160; </div>
-<div class="line"><a name="l01103"></a><span class="lineno"> 1103</span>&#160;                        Bitmap spinner = <a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a6d4c4c30f79f3b6c45f848e7888e1765">Spinner</a>?.Invoke(milliseconds);</div>
-<div class="line"><a name="l01104"></a><span class="lineno"> 1104</span>&#160; </div>
-<div class="line"><a name="l01105"></a><span class="lineno"> 1105</span>&#160;                        <span class="keywordflow">if</span> (spinner != <span class="keyword">null</span>)</div>
-<div class="line"><a name="l01106"></a><span class="lineno"> 1106</span>&#160;                        {</div>
-<div class="line"><a name="l01107"></a><span class="lineno"> 1107</span>&#160;                            <span class="keywordtype">double</span> spinnerWidth = spinner.Size.Width * scale;</div>
-<div class="line"><a name="l01108"></a><span class="lineno"> 1108</span>&#160;                            <span class="keywordtype">double</span> spinnerHeight = spinner.Size.Height * scale;</div>
-<div class="line"><a name="l01109"></a><span class="lineno"> 1109</span>&#160; </div>
-<div class="line"><a name="l01110"></a><span class="lineno"> 1110</span>&#160;                            <span class="keywordtype">double</span> actualLeft = (clipBounds.Left - layoutBounds.Left) * scale;</div>
-<div class="line"><a name="l01111"></a><span class="lineno"> 1111</span>&#160;                            <span class="keywordtype">double</span> actualTop = (clipBounds.Top - layoutBounds.Top) * scale;</div>
-<div class="line"><a name="l01112"></a><span class="lineno"> 1112</span>&#160; </div>
-<div class="line"><a name="l01113"></a><span class="lineno"> 1113</span>&#160;                            <span class="keywordtype">double</span> actualRight = (clipBounds.Right - layoutBounds.Left) * scale;</div>
-<div class="line"><a name="l01114"></a><span class="lineno"> 1114</span>&#160;                            <span class="keywordtype">double</span> actualBottom = (clipBounds.Bottom - layoutBounds.Top) * scale;</div>
-<div class="line"><a name="l01115"></a><span class="lineno"> 1115</span>&#160; </div>
-<div class="line"><a name="l01116"></a><span class="lineno"> 1116</span>&#160;                            context.DrawImage(spinner, <span class="keyword">new</span> Rect(0, 0, spinner.Size.Width, spinner.Size.Height), <span class="keyword">new</span> Rect((actualLeft + actualRight - spinnerWidth) * 0.5, (actualTop + actualBottom - spinnerHeight) * 0.5, spinnerWidth, spinnerHeight));</div>
-<div class="line"><a name="l01117"></a><span class="lineno"> 1117</span>&#160;                        }</div>
-<div class="line"><a name="l01118"></a><span class="lineno"> 1118</span>&#160; </div>
-<div class="line"><a name="l01119"></a><span class="lineno"> 1119</span>&#160;                        Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =&gt;</div>
-<div class="line"><a name="l01120"></a><span class="lineno"> 1120</span>&#160;                        {</div>
-<div class="line"><a name="l01121"></a><span class="lineno"> 1121</span>&#160;                            this.InvalidateVisual();</div>
-<div class="line"><a name="l01122"></a><span class="lineno"> 1122</span>&#160;                        });</div>
-<div class="line"><a name="l01123"></a><span class="lineno"> 1123</span>&#160;                    }</div>
-<div class="line"><a name="l01124"></a><span class="lineno"> 1124</span>&#160;                }</div>
-<div class="line"><a name="l01125"></a><span class="lineno"> 1125</span>&#160;            }</div>
-<div class="line"><a name="l01126"></a><span class="lineno"> 1126</span>&#160;        }</div>
-<div class="line"><a name="l01127"></a><span class="lineno"> 1127</span>&#160; </div>
-<div class="line"><a name="l01128"></a><span class="lineno"> 1128</span>&#160;        <span class="keyword">private</span> <span class="keywordtype">bool</span> disposedValue;</div>
-<div class="line"><a name="l01129"></a><span class="lineno"> 1129</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l01130"></a><span class="lineno"> 1130</span>&#160;<span class="comment">        /// &lt;inheritdoc cref=&quot;Dispose()&quot;/&gt;</span></div>
-<div class="line"><a name="l01131"></a><span class="lineno"> 1131</span>&#160;<span class="comment"></span>        <span class="keyword">protected</span> <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#ab28d9c9dc4156695119b583fcffcc3da">Dispose</a>(<span class="keywordtype">bool</span> disposing)</div>
-<div class="line"><a name="l01132"></a><span class="lineno"> 1132</span>&#160;        {</div>
-<div class="line"><a name="l01133"></a><span class="lineno"> 1133</span>&#160;            <span class="keywordflow">if</span> (!disposedValue)</div>
-<div class="line"><a name="l01134"></a><span class="lineno"> 1134</span>&#160;            {</div>
-<div class="line"><a name="l01135"></a><span class="lineno"> 1135</span>&#160;                <span class="keywordflow">if</span> (disposing)</div>
-<div class="line"><a name="l01136"></a><span class="lineno"> 1136</span>&#160;                {</div>
-<div class="line"><a name="l01137"></a><span class="lineno"> 1137</span>&#160;                    this.BackBufferSkiaCanvas?.Dispose();</div>
-<div class="line"><a name="l01138"></a><span class="lineno"> 1138</span>&#160;                    this.BackBufferSkiaCanvas2?.Dispose();</div>
-<div class="line"><a name="l01139"></a><span class="lineno"> 1139</span>&#160;                    this.BackBufferSkiaContext?.Dispose();</div>
-<div class="line"><a name="l01140"></a><span class="lineno"> 1140</span>&#160;                    this.BackBufferSkiaContext2?.Dispose();</div>
-<div class="line"><a name="l01141"></a><span class="lineno"> 1141</span>&#160;                    this.BackBuffer?.Dispose();</div>
-<div class="line"><a name="l01142"></a><span class="lineno"> 1142</span>&#160;                    this.BackBuffer2?.Dispose();</div>
-<div class="line"><a name="l01143"></a><span class="lineno"> 1143</span>&#160;                    this.DisposedHandle?.Set();</div>
-<div class="line"><a name="l01144"></a><span class="lineno"> 1144</span>&#160;                    this.FrontBufferSkiaCanvas?.Dispose();</div>
-<div class="line"><a name="l01145"></a><span class="lineno"> 1145</span>&#160;                    this.FrontBufferSkiaContext?.Dispose();</div>
-<div class="line"><a name="l01146"></a><span class="lineno"> 1146</span>&#160;                    this.FrontBuffer?.Dispose();</div>
-<div class="line"><a name="l01147"></a><span class="lineno"> 1147</span>&#160; </div>
-<div class="line"><a name="l01148"></a><span class="lineno"> 1148</span>&#160;                    <span class="keywordflow">foreach</span> (KeyValuePair&lt;<span class="keywordtype">string</span>, (SKBitmap, <span class="keywordtype">bool</span>)&gt; image in this.Images)</div>
-<div class="line"><a name="l01149"></a><span class="lineno"> 1149</span>&#160;                    {</div>
-<div class="line"><a name="l01150"></a><span class="lineno"> 1150</span>&#160;                        image.Value.Item1?.Dispose();</div>
-<div class="line"><a name="l01151"></a><span class="lineno"> 1151</span>&#160;                    }</div>
-<div class="line"><a name="l01152"></a><span class="lineno"> 1152</span>&#160; </div>
-<div class="line"><a name="l01153"></a><span class="lineno"> 1153</span>&#160;                    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; this.RenderActions?.Count; i++)</div>
-<div class="line"><a name="l01154"></a><span class="lineno"> 1154</span>&#160;                    {</div>
-<div class="line"><a name="l01155"></a><span class="lineno"> 1155</span>&#160;                        <span class="keywordflow">foreach</span> (SKRenderAction act <span class="keywordflow">in</span> this.RenderActions[i])</div>
-<div class="line"><a name="l01156"></a><span class="lineno"> 1156</span>&#160;                        {</div>
-<div class="line"><a name="l01157"></a><span class="lineno"> 1157</span>&#160;                            act?.Dispose();</div>
-<div class="line"><a name="l01158"></a><span class="lineno"> 1158</span>&#160;                        }</div>
+<div class="line"><a name="l01101"></a><span class="lineno"> 1101</span>&#160;                        <span class="keywordflow">if</span> (spinner != <span class="keyword">null</span>)</div>
+<div class="line"><a name="l01102"></a><span class="lineno"> 1102</span>&#160;                        {</div>
+<div class="line"><a name="l01103"></a><span class="lineno"> 1103</span>&#160;                            <span class="keywordtype">double</span> spinnerWidth = spinner.Size.Width * scale;</div>
+<div class="line"><a name="l01104"></a><span class="lineno"> 1104</span>&#160;                            <span class="keywordtype">double</span> spinnerHeight = spinner.Size.Height * scale;</div>
+<div class="line"><a name="l01105"></a><span class="lineno"> 1105</span>&#160; </div>
+<div class="line"><a name="l01106"></a><span class="lineno"> 1106</span>&#160;                            <span class="keywordtype">double</span> actualLeft = (clipBounds.Left - layoutBounds.Left) * scale;</div>
+<div class="line"><a name="l01107"></a><span class="lineno"> 1107</span>&#160;                            <span class="keywordtype">double</span> actualTop = (clipBounds.Top - layoutBounds.Top) * scale;</div>
+<div class="line"><a name="l01108"></a><span class="lineno"> 1108</span>&#160; </div>
+<div class="line"><a name="l01109"></a><span class="lineno"> 1109</span>&#160;                            <span class="keywordtype">double</span> actualRight = (clipBounds.Right - layoutBounds.Left) * scale;</div>
+<div class="line"><a name="l01110"></a><span class="lineno"> 1110</span>&#160;                            <span class="keywordtype">double</span> actualBottom = (clipBounds.Bottom - layoutBounds.Top) * scale;</div>
+<div class="line"><a name="l01111"></a><span class="lineno"> 1111</span>&#160; </div>
+<div class="line"><a name="l01112"></a><span class="lineno"> 1112</span>&#160;                            context.DrawImage(spinner, <span class="keyword">new</span> Rect(0, 0, spinner.Size.Width, spinner.Size.Height), <span class="keyword">new</span> Rect((actualLeft + actualRight - spinnerWidth) * 0.5, (actualTop + actualBottom - spinnerHeight) * 0.5, spinnerWidth, spinnerHeight));</div>
+<div class="line"><a name="l01113"></a><span class="lineno"> 1113</span>&#160;                        }</div>
+<div class="line"><a name="l01114"></a><span class="lineno"> 1114</span>&#160; </div>
+<div class="line"><a name="l01115"></a><span class="lineno"> 1115</span>&#160;                        Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =&gt;</div>
+<div class="line"><a name="l01116"></a><span class="lineno"> 1116</span>&#160;                        {</div>
+<div class="line"><a name="l01117"></a><span class="lineno"> 1117</span>&#160;                            this.InvalidateVisual();</div>
+<div class="line"><a name="l01118"></a><span class="lineno"> 1118</span>&#160;                        });</div>
+<div class="line"><a name="l01119"></a><span class="lineno"> 1119</span>&#160;                    }</div>
+<div class="line"><a name="l01120"></a><span class="lineno"> 1120</span>&#160;                }</div>
+<div class="line"><a name="l01121"></a><span class="lineno"> 1121</span>&#160;            }</div>
+<div class="line"><a name="l01122"></a><span class="lineno"> 1122</span>&#160;        }</div>
+<div class="line"><a name="l01123"></a><span class="lineno"> 1123</span>&#160; </div>
+<div class="line"><a name="l01124"></a><span class="lineno"> 1124</span>&#160;        <span class="keyword">private</span> <span class="keywordtype">bool</span> disposedValue;</div>
+<div class="line"><a name="l01125"></a><span class="lineno"> 1125</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l01126"></a><span class="lineno"> 1126</span>&#160;<span class="comment">        /// &lt;inheritdoc cref=&quot;Dispose()&quot;/&gt;</span></div>
+<div class="line"><a name="l01127"></a><span class="lineno"> 1127</span>&#160;<span class="comment"></span>        <span class="keyword">protected</span> <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#ab28d9c9dc4156695119b583fcffcc3da">Dispose</a>(<span class="keywordtype">bool</span> disposing)</div>
+<div class="line"><a name="l01128"></a><span class="lineno"> 1128</span>&#160;        {</div>
+<div class="line"><a name="l01129"></a><span class="lineno"> 1129</span>&#160;            <span class="keywordflow">if</span> (!disposedValue)</div>
+<div class="line"><a name="l01130"></a><span class="lineno"> 1130</span>&#160;            {</div>
+<div class="line"><a name="l01131"></a><span class="lineno"> 1131</span>&#160;                <span class="keywordflow">if</span> (disposing)</div>
+<div class="line"><a name="l01132"></a><span class="lineno"> 1132</span>&#160;                {</div>
+<div class="line"><a name="l01133"></a><span class="lineno"> 1133</span>&#160;                    this.BackBufferSkiaCanvas?.Dispose();</div>
+<div class="line"><a name="l01134"></a><span class="lineno"> 1134</span>&#160;                    this.BackBufferSkiaCanvas2?.Dispose();</div>
+<div class="line"><a name="l01135"></a><span class="lineno"> 1135</span>&#160;                    this.BackBufferSkiaContext?.Dispose();</div>
+<div class="line"><a name="l01136"></a><span class="lineno"> 1136</span>&#160;                    this.BackBufferSkiaContext2?.Dispose();</div>
+<div class="line"><a name="l01137"></a><span class="lineno"> 1137</span>&#160;                    this.BackBuffer?.Dispose();</div>
+<div class="line"><a name="l01138"></a><span class="lineno"> 1138</span>&#160;                    this.BackBuffer2?.Dispose();</div>
+<div class="line"><a name="l01139"></a><span class="lineno"> 1139</span>&#160;                    this.DisposedHandle?.Set();</div>
+<div class="line"><a name="l01140"></a><span class="lineno"> 1140</span>&#160;                    this.FrontBufferSkiaCanvas?.Dispose();</div>
+<div class="line"><a name="l01141"></a><span class="lineno"> 1141</span>&#160;                    this.FrontBufferSkiaContext?.Dispose();</div>
+<div class="line"><a name="l01142"></a><span class="lineno"> 1142</span>&#160;                    this.FrontBuffer?.Dispose();</div>
+<div class="line"><a name="l01143"></a><span class="lineno"> 1143</span>&#160; </div>
+<div class="line"><a name="l01144"></a><span class="lineno"> 1144</span>&#160;                    <span class="keywordflow">foreach</span> (KeyValuePair&lt;<span class="keywordtype">string</span>, (SKBitmap, <span class="keywordtype">bool</span>)&gt; image in this.Images)</div>
+<div class="line"><a name="l01145"></a><span class="lineno"> 1145</span>&#160;                    {</div>
+<div class="line"><a name="l01146"></a><span class="lineno"> 1146</span>&#160;                        image.Value.Item1?.Dispose();</div>
+<div class="line"><a name="l01147"></a><span class="lineno"> 1147</span>&#160;                    }</div>
+<div class="line"><a name="l01148"></a><span class="lineno"> 1148</span>&#160; </div>
+<div class="line"><a name="l01149"></a><span class="lineno"> 1149</span>&#160;                    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; this.RenderActions?.Count; i++)</div>
+<div class="line"><a name="l01150"></a><span class="lineno"> 1150</span>&#160;                    {</div>
+<div class="line"><a name="l01151"></a><span class="lineno"> 1151</span>&#160;                        <span class="keywordflow">foreach</span> (SKRenderAction act <span class="keywordflow">in</span> this.RenderActions[i])</div>
+<div class="line"><a name="l01152"></a><span class="lineno"> 1152</span>&#160;                        {</div>
+<div class="line"><a name="l01153"></a><span class="lineno"> 1153</span>&#160;                            act?.Dispose();</div>
+<div class="line"><a name="l01154"></a><span class="lineno"> 1154</span>&#160;                        }</div>
+<div class="line"><a name="l01155"></a><span class="lineno"> 1155</span>&#160; </div>
+<div class="line"><a name="l01156"></a><span class="lineno"> 1156</span>&#160;                        this.LayerTransforms?[i]?.Dispose();</div>
+<div class="line"><a name="l01157"></a><span class="lineno"> 1157</span>&#160;                    }</div>
+<div class="line"><a name="l01158"></a><span class="lineno"> 1158</span>&#160;                }</div>
 <div class="line"><a name="l01159"></a><span class="lineno"> 1159</span>&#160; </div>
-<div class="line"><a name="l01160"></a><span class="lineno"> 1160</span>&#160;                        this.LayerTransforms?[i]?.Dispose();</div>
-<div class="line"><a name="l01161"></a><span class="lineno"> 1161</span>&#160;                    }</div>
-<div class="line"><a name="l01162"></a><span class="lineno"> 1162</span>&#160;                }</div>
-<div class="line"><a name="l01163"></a><span class="lineno"> 1163</span>&#160; </div>
-<div class="line"><a name="l01164"></a><span class="lineno"> 1164</span>&#160;                disposedValue = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l01165"></a><span class="lineno"> 1165</span>&#160;            }</div>
-<div class="line"><a name="l01166"></a><span class="lineno"> 1166</span>&#160;        }</div>
-<div class="line"><a name="l01167"></a><span class="lineno"> 1167</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l01168"></a><span class="lineno"> 1168</span>&#160;<span class="comment">        /// &lt;inheritdoc/&gt;</span></div>
-<div class="line"><a name="l01169"></a><span class="lineno"><a class="line" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#ab28d9c9dc4156695119b583fcffcc3da"> 1169</a></span>&#160;<span class="comment"></span>        <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#ab28d9c9dc4156695119b583fcffcc3da">Dispose</a>()</div>
-<div class="line"><a name="l01170"></a><span class="lineno"> 1170</span>&#160;        {</div>
-<div class="line"><a name="l01171"></a><span class="lineno"> 1171</span>&#160;            <a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#ab28d9c9dc4156695119b583fcffcc3da">Dispose</a>(disposing: <span class="keyword">true</span>);</div>
-<div class="line"><a name="l01172"></a><span class="lineno"> 1172</span>&#160;            GC.SuppressFinalize(<span class="keyword">this</span>);</div>
-<div class="line"><a name="l01173"></a><span class="lineno"> 1173</span>&#160;        }</div>
-<div class="line"><a name="l01174"></a><span class="lineno"> 1174</span>&#160;    }</div>
-<div class="line"><a name="l01175"></a><span class="lineno"> 1175</span>&#160;}</div>
+<div class="line"><a name="l01160"></a><span class="lineno"> 1160</span>&#160;                disposedValue = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l01161"></a><span class="lineno"> 1161</span>&#160;            }</div>
+<div class="line"><a name="l01162"></a><span class="lineno"> 1162</span>&#160;        }</div>
+<div class="line"><a name="l01163"></a><span class="lineno"> 1163</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l01164"></a><span class="lineno"> 1164</span>&#160;<span class="comment">        /// &lt;inheritdoc/&gt;</span></div>
+<div class="line"><a name="l01165"></a><span class="lineno"><a class="line" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#ab28d9c9dc4156695119b583fcffcc3da"> 1165</a></span>&#160;<span class="comment"></span>        <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#ab28d9c9dc4156695119b583fcffcc3da">Dispose</a>()</div>
+<div class="line"><a name="l01166"></a><span class="lineno"> 1166</span>&#160;        {</div>
+<div class="line"><a name="l01167"></a><span class="lineno"> 1167</span>&#160;            <a class="code" href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#ab28d9c9dc4156695119b583fcffcc3da">Dispose</a>(disposing: <span class="keyword">true</span>);</div>
+<div class="line"><a name="l01168"></a><span class="lineno"> 1168</span>&#160;            GC.SuppressFinalize(<span class="keyword">this</span>);</div>
+<div class="line"><a name="l01169"></a><span class="lineno"> 1169</span>&#160;        }</div>
+<div class="line"><a name="l01170"></a><span class="lineno"> 1170</span>&#160;    }</div>
+<div class="line"><a name="l01171"></a><span class="lineno"> 1171</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_render_action_html_afeb0838c89e91c66e8e6a35c846be3b4"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4">VectSharp.Canvas.SKRenderAction.ActionTypes</a></div><div class="ttdeci">ActionTypes</div><div class="ttdoc">Types of rendering actions.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_render_context_8cs_source.html#l00041">SKRenderContext.cs:42</a></div></div>
-<div class="ttc" id="anamespace_vect_sharp_1_1_canvas_html"><div class="ttname"><a href="namespace_vect_sharp_1_1_canvas.html">VectSharp.Canvas</a></div><div class="ttdef"><b>Definition:</b> <a href="_avalonia_context_8cs_source.html#l00027">AvaloniaContext.cs:28</a></div></div>
-<div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_render_context_html"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_render_context.html">VectSharp.Canvas.SKRenderContext</a></div><div class="ttdoc">Represents a page that has been prepared for fast rendering using the SkiaSharp renderer.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_render_context_8cs_source.html#l00515">SKRenderContext.cs:516</a></div></div>
+<div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_render_action_html_afeb0838c89e91c66e8e6a35c846be3b4"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4">VectSharp.Canvas.SKRenderAction.ActionTypes</a></div><div class="ttdeci">ActionTypes</div><div class="ttdoc">Types of rendering actions.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_render_context_8cs_source.html#l00042">SKRenderContext.cs:43</a></div></div>
+<div class="ttc" id="anamespace_vect_sharp_1_1_canvas_html"><div class="ttname"><a href="namespace_vect_sharp_1_1_canvas.html">VectSharp.Canvas</a></div><div class="ttdef"><b>Definition:</b> <a href="_avalonia_context_8cs_source.html#l00028">AvaloniaContext.cs:29</a></div></div>
+<div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_render_context_html"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_render_context.html">VectSharp.Canvas.SKRenderContext</a></div><div class="ttdoc">Represents a page that has been prepared for fast rendering using the SkiaSharp renderer.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_render_context_8cs_source.html#l00546">SKRenderContext.cs:547</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_aabe2d24ee767ba8e7bac57f98d88a0ef"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#aabe2d24ee767ba8e7bac57f98d88a0ef">VectSharp.Canvas.SKMultiLayerRenderCanvas.PageHeight</a></div><div class="ttdeci">double PageHeight</div><div class="ttdoc">The height of the page that is rendered on this canvas.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l00053">SKMultiLayerRenderCanvas.cs:53</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_a00243775be8cd6bb94efc35791b26c71"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a00243775be8cd6bb94efc35791b26c71">VectSharp.Canvas.SKMultiLayerRenderCanvas.SKMultiLayerRenderCanvas</a></div><div class="ttdeci">SKMultiLayerRenderCanvas(Document document, Colour backgroundColour, double width, double height, List&lt; SKRenderAction &gt; layerTransforms=null)</div><div class="ttdoc">Create a new SKMultiLayerRenderCanvas from a Document, where each page represents a layer.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l00098">SKMultiLayerRenderCanvas.cs:98</a></div></div>
-<div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_ab28d9c9dc4156695119b583fcffcc3da"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#ab28d9c9dc4156695119b583fcffcc3da">VectSharp.Canvas.SKMultiLayerRenderCanvas.Dispose</a></div><div class="ttdeci">void Dispose()</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l01169">SKMultiLayerRenderCanvas.cs:1169</a></div></div>
+<div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_ab28d9c9dc4156695119b583fcffcc3da"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#ab28d9c9dc4156695119b583fcffcc3da">VectSharp.Canvas.SKMultiLayerRenderCanvas.Dispose</a></div><div class="ttdeci">void Dispose()</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l01165">SKMultiLayerRenderCanvas.cs:1165</a></div></div>
 <div class="ttc" id="astruct_vect_sharp_1_1_colour_html"><div class="ttname"><a href="struct_vect_sharp_1_1_colour.html">VectSharp.Colour</a></div><div class="ttdoc">Represents an RGB colour.</div><div class="ttdef"><b>Definition:</b> <a href="_colour_8cs_source.html#l00025">Colour.cs:26</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_a4ca16a4f659a0fd5411c3d713aab4b4d"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a4ca16a4f659a0fd5411c3d713aab4b4d">VectSharp.Canvas.SKMultiLayerRenderCanvas.RenderAtResolution</a></div><div class="ttdeci">RenderTargetBitmap RenderAtResolution(int width, int height, SKColor? background=null)</div><div class="ttdoc">Render the image at to a bitmap at the specified resolution.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l00735">SKMultiLayerRenderCanvas.cs:735</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_a7ff6c67552e1715308850a5bba174941"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a7ff6c67552e1715308850a5bba174941">VectSharp.Canvas.SKMultiLayerRenderCanvas.RenderLock</a></div><div class="ttdeci">object RenderLock</div><div class="ttdoc">An lock for the rendering loop. The public methods of this class already lock on this,...</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l00726">SKMultiLayerRenderCanvas.cs:726</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_a65033e30e6cb9cf268c71f7a9949770e"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a65033e30e6cb9cf268c71f7a9949770e">VectSharp.Canvas.SKMultiLayerRenderCanvas.MoveLayer</a></div><div class="ttdeci">void MoveLayer(int oldIndex, int newIndex)</div><div class="ttdoc">Move the specified layer to the specified position, shifting all other layers as necessary.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l00389">SKMultiLayerRenderCanvas.cs:389</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_a84c5f8dc4c4351723414e55fa01eafe7"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a84c5f8dc4c4351723414e55fa01eafe7">VectSharp.Canvas.SKMultiLayerRenderCanvas.UpdateWith</a></div><div class="ttdeci">void UpdateWith(List&lt; SKRenderContext &gt; contents, List&lt; SKRenderAction &gt; contentTransforms, Colour backgroundColour, double width, double height)</div><div class="ttdoc">Replace the contents of the SKMultiLayerRenderCanvas with the specified layers.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l00166">SKMultiLayerRenderCanvas.cs:166</a></div></div>
-<div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_a1701ed51368b6dc5bb771b5ea858e4ee"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a1701ed51368b6dc5bb771b5ea858e4ee">VectSharp.Canvas.SKMultiLayerRenderCanvas.InvalidateDirty</a></div><div class="ttdeci">void InvalidateDirty()</div><div class="ttdoc">Invalidate the contents of the canvas, forcing it to redraw itself.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l00992">SKMultiLayerRenderCanvas.cs:992</a></div></div>
+<div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_a1701ed51368b6dc5bb771b5ea858e4ee"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a1701ed51368b6dc5bb771b5ea858e4ee">VectSharp.Canvas.SKMultiLayerRenderCanvas.InvalidateDirty</a></div><div class="ttdeci">void InvalidateDirty()</div><div class="ttdoc">Invalidate the contents of the canvas, forcing it to redraw itself.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l00988">SKMultiLayerRenderCanvas.cs:988</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_a8bc4e8c89dcb02f5beaa0a18c4c94bb5"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a8bc4e8c89dcb02f5beaa0a18c4c94bb5">VectSharp.Canvas.SKMultiLayerRenderCanvas.AddLayer</a></div><div class="ttdeci">void AddLayer(SKRenderContext newContent, SKRenderAction newTransform)</div><div class="ttdoc">Add a new layer to the image.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l00276">SKMultiLayerRenderCanvas.cs:276</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_document_html"><div class="ttname"><a href="class_vect_sharp_1_1_document.html">VectSharp.Document</a></div><div class="ttdoc">Represents a collection of pages.</div><div class="ttdef"><b>Definition:</b> <a href="_document_8cs_source.html#l00027">Document.cs:28</a></div></div>
-<div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_a28e9f0cfe4fa1286ac9b90b8ae33b2d2"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a28e9f0cfe4fa1286ac9b90b8ae33b2d2">VectSharp.Canvas.SKMultiLayerRenderCanvas.InvalidateZIndex</a></div><div class="ttdeci">void InvalidateZIndex()</div><div class="ttdoc">Invalidate the contents of the canvas, specifying that the order of the layers has changed.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l01001">SKMultiLayerRenderCanvas.cs:1001</a></div></div>
+<div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_a28e9f0cfe4fa1286ac9b90b8ae33b2d2"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a28e9f0cfe4fa1286ac9b90b8ae33b2d2">VectSharp.Canvas.SKMultiLayerRenderCanvas.InvalidateZIndex</a></div><div class="ttdeci">void InvalidateZIndex()</div><div class="ttdoc">Invalidate the contents of the canvas, specifying that the order of the layers has changed.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l00997">SKMultiLayerRenderCanvas.cs:997</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_a2afc05715ff7c9e4cb273943d70939ed"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a2afc05715ff7c9e4cb273943d70939ed">VectSharp.Canvas.SKMultiLayerRenderCanvas.UpdateLayer</a></div><div class="ttdeci">void UpdateLayer(int layer, SKRenderContext newContent, SKRenderAction newTransform)</div><div class="ttdoc">Replace a single layer with the specified content.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l00244">SKMultiLayerRenderCanvas.cs:244</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html">VectSharp.Canvas.SKMultiLayerRenderCanvas</a></div><div class="ttdoc">Represents a multi-threaded, triple-buffered canvas on which the image is drawn using SkiaSharp.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l00043">SKMultiLayerRenderCanvas.cs:44</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_a9a5fb8009c0eacdcfea4667f2dd21f1e"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a9a5fb8009c0eacdcfea4667f2dd21f1e">VectSharp.Canvas.SKMultiLayerRenderCanvas.SKMultiLayerRenderCanvas</a></div><div class="ttdeci">SKMultiLayerRenderCanvas(IEnumerable&lt; Page &gt; layers, Colour backgroundColour, double width, double height, List&lt; SKRenderAction &gt; layerTransforms=null)</div><div class="ttdoc">Create a new SKMultiLayerRenderCanvas from a collection of Pages, each representing a layer.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l00108">SKMultiLayerRenderCanvas.cs:108</a></div></div>
-<div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_render_action_html"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html">VectSharp.Canvas.SKRenderAction</a></div><div class="ttdoc">Represents a light-weight rendering action.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_render_context_8cs_source.html#l00029">SKRenderContext.cs:30</a></div></div>
+<div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_render_action_html"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html">VectSharp.Canvas.SKRenderAction</a></div><div class="ttdoc">Represents a light-weight rendering action.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_render_context_8cs_source.html#l00030">SKRenderContext.cs:31</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_a4fd73dc712c4f90ed8e00412eb50bdd2"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a4fd73dc712c4f90ed8e00412eb50bdd2">VectSharp.Canvas.SKMultiLayerRenderCanvas.PageWidth</a></div><div class="ttdeci">double PageWidth</div><div class="ttdoc">The width of the page that is rendered on this canvas.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l00048">SKMultiLayerRenderCanvas.cs:48</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_a777e28bd741c4a2f18f223f7cc628bbf"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a777e28bd741c4a2f18f223f7cc628bbf">VectSharp.Canvas.SKMultiLayerRenderCanvas.SKMultiLayerRenderCanvas</a></div><div class="ttdeci">SKMultiLayerRenderCanvas(List&lt; SKRenderContext &gt; contents, List&lt; SKRenderAction &gt; contentTransforms, Colour backgroundColour, double width, double height)</div><div class="ttdoc">Create a new SKMultiLayerRenderCanvas from a list of SKRenderContexts, each representing a layer.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l00143">SKMultiLayerRenderCanvas.cs:143</a></div></div>
-<div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_render_action_html_aa88ade8626d0abce8ded370480430f4f"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#aa88ade8626d0abce8ded370480430f4f">VectSharp.Canvas.SKRenderAction.Disposed</a></div><div class="ttdeci">bool Disposed</div><div class="ttdoc">Returns a boolean value indicating whether the current instance has been disposed.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_render_context_8cs_source.html#l00034">SKRenderContext.cs:34</a></div></div>
+<div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_render_action_html_aa88ade8626d0abce8ded370480430f4f"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#aa88ade8626d0abce8ded370480430f4f">VectSharp.Canvas.SKRenderAction.Disposed</a></div><div class="ttdeci">bool Disposed</div><div class="ttdoc">Returns a boolean value indicating whether the current instance has been disposed.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_render_context_8cs_source.html#l00035">SKRenderContext.cs:35</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_a6d4c4c30f79f3b6c45f848e7888e1765"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a6d4c4c30f79f3b6c45f848e7888e1765">VectSharp.Canvas.SKMultiLayerRenderCanvas.Spinner</a></div><div class="ttdeci">Func&lt; long, Bitmap &gt; Spinner</div><div class="ttdoc">If the image to draw is not already cached, this method is called with an argument containing the num...</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l00070">SKMultiLayerRenderCanvas.cs:70</a></div></div>
-<div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_a6bc35a6235e3f24da0d2c27d5868c587"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a6bc35a6235e3f24da0d2c27d5868c587">VectSharp.Canvas.SKMultiLayerRenderCanvas.Render</a></div><div class="ttdeci">override void Render(DrawingContext context)</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l01028">SKMultiLayerRenderCanvas.cs:1028</a></div></div>
+<div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_a6bc35a6235e3f24da0d2c27d5868c587"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a6bc35a6235e3f24da0d2c27d5868c587">VectSharp.Canvas.SKMultiLayerRenderCanvas.Render</a></div><div class="ttdeci">override void Render(DrawingContext context)</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l01024">SKMultiLayerRenderCanvas.cs:1024</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_a474ef13fd5ff3c54f679836ffd45af95"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a474ef13fd5ff3c54f679836ffd45af95">VectSharp.Canvas.SKMultiLayerRenderCanvas.RemoveLayer</a></div><div class="ttdeci">void RemoveLayer(int layer)</div><div class="ttdoc">Remove the specified layer from the image.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l00340">SKMultiLayerRenderCanvas.cs:340</a></div></div>
-<div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_render_action_html_a81405205be792374ef65bdf89cab3a4c"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a81405205be792374ef65bdf89cab3a4c">VectSharp.Canvas.SKRenderAction.TransformAction</a></div><div class="ttdeci">static SKRenderAction TransformAction(SKMatrix transform, string tag=null)</div><div class="ttdoc">Creates a new SKRenderAction representing a transform.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_render_context_8cs_source.html#l00406">SKRenderContext.cs:406</a></div></div>
+<div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_render_action_html_a81405205be792374ef65bdf89cab3a4c"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a81405205be792374ef65bdf89cab3a4c">VectSharp.Canvas.SKRenderAction.TransformAction</a></div><div class="ttdeci">static SKRenderAction TransformAction(SKMatrix transform, string tag=null)</div><div class="ttdoc">Creates a new SKRenderAction representing a transform.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_render_context_8cs_source.html#l00422">SKRenderContext.cs:422</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_ad13a708bdb0b9a7d533f78b8eb931260"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#ad13a708bdb0b9a7d533f78b8eb931260">VectSharp.Canvas.SKMultiLayerRenderCanvas.SwitchLayers</a></div><div class="ttdeci">void SwitchLayers(int layer1, int layer2)</div><div class="ttdoc">Switch the position of the two specified layers.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l00364">SKMultiLayerRenderCanvas.cs:364</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_aab220bda90e3a0c36f27b87bfbeff6f0"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#aab220bda90e3a0c36f27b87bfbeff6f0">VectSharp.Canvas.SKMultiLayerRenderCanvas.RenderActions</a></div><div class="ttdeci">List&lt; List&lt; SKRenderAction &gt; &gt; RenderActions</div><div class="ttdoc">The list of render actions, each element in this list is itself a list, containing the actions that c...</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l00059">SKMultiLayerRenderCanvas.cs:59</a></div></div>
 <div class="ttc" id="aclass_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas_html_aa8cabc258828463f73b9d90612d9abee"><div class="ttname"><a href="class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#aa8cabc258828463f73b9d90612d9abee">VectSharp.Canvas.SKMultiLayerRenderCanvas.LayerTransforms</a></div><div class="ttdeci">List&lt; SKRenderAction &gt; LayerTransforms</div><div class="ttdoc">The list of transforms associated with each layer.</div><div class="ttdef"><b>Definition:</b> <a href="_s_k_multi_layer_render_canvas_8cs_source.html#l00064">SKMultiLayerRenderCanvas.cs:64</a></div></div>

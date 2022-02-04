@@ -28,7 +28,7 @@
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VectSharp
-   &#160;<span id="projectnumber">2.1.0</span>
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -165,6 +165,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a531e68add8d9bf7ef60ca8ede6366bc7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_vect_sharp_1_1_i_graphics_context.html#a531e68add8d9bf7ef60ca8ede6366bc7">DrawRasterImage</a> (int sourceX, int sourceY, int sourceWidth, int sourceHeight, double destinationX, double destinationY, double destinationWidth, double destinationHeight, <a class="el" href="class_vect_sharp_1_1_raster_image.html">RasterImage</a> image)</td></tr>
 <tr class="memdesc:a531e68add8d9bf7ef60ca8ede6366bc7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a raster image.  <a href="interface_vect_sharp_1_1_i_graphics_context.html#a531e68add8d9bf7ef60ca8ede6366bc7">More...</a><br /></td></tr>
 <tr class="separator:a531e68add8d9bf7ef60ca8ede6366bc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f9a0624b075685623fd30d8555a54c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_vect_sharp_1_1_i_graphics_context.html#a6f9a0624b075685623fd30d8555a54c9">DrawFilteredGraphics</a> (<a class="el" href="class_vect_sharp_1_1_graphics.html">Graphics</a> graphics, <a class="el" href="interface_vect_sharp_1_1_filters_1_1_i_filter.html">IFilter</a> filter)</td></tr>
+<tr class="memdesc:a6f9a0624b075685623fd30d8555a54c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws a <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object, applying the specified <em>filter</em> .  <a href="interface_vect_sharp_1_1_i_graphics_context.html#a6f9a0624b075685623fd30d8555a54c9">More...</a><br /></td></tr>
+<tr class="separator:a6f9a0624b075685623fd30d8555a54c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
 Properties</h2></td></tr>
@@ -202,7 +205,7 @@ Properties</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This interface should be implemented by classes intended to provide graphics output capability to a <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object. </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00034">34</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00035">35</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="aee6422b22a12103db71ce2ae6095716e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aee6422b22a12103db71ce2ae6095716e">&#9670;&nbsp;</a></span>Close()</h2>
@@ -282,6 +285,43 @@ Properties</h2></td></tr>
     <tr><td class="paramname">p2Y</td><td>The vertical coordinate of the second control point.</td></tr>
     <tr><td class="paramname">p3X</td><td>The horizontal coordinate of the destination point.</td></tr>
     <tr><td class="paramname">p3Y</td><td>The vertical coordinate of the destination point.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a6f9a0624b075685623fd30d8555a54c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f9a0624b075685623fd30d8555a54c9">&#9670;&nbsp;</a></span>DrawFilteredGraphics()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void VectSharp.IGraphicsContext.DrawFilteredGraphics </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_graphics.html">Graphics</a>&#160;</td>
+          <td class="paramname"><em>graphics</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="interface_vect_sharp_1_1_filters_1_1_i_filter.html">IFilter</a>&#160;</td>
+          <td class="paramname"><em>filter</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Draws a <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object, applying the specified <em>filter</em> . </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">graphics</td><td>The <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object to draw on the current <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object.</td></tr>
+    <tr><td class="paramname">filter</td><td>An IFilter object, representing the filter to apply to the <em>graphics</em>  object.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1000,7 +1040,7 @@ Properties</h2></td></tr>
 
 <p>Current brush used to fill paths. </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00145">145</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00146">146</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1026,7 +1066,7 @@ Properties</h2></td></tr>
 
 <p>The current font. </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00090">90</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00091">91</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1052,7 +1092,7 @@ Properties</h2></td></tr>
 
 <p>Height of the graphic surface. </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00044">44</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00045">45</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1078,7 +1118,7 @@ Properties</h2></td></tr>
 
 <p>Current line cap used to stroke paths. </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00209">209</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00210">210</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1104,7 +1144,7 @@ Properties</h2></td></tr>
 
 <p>Current line join used to stroke paths. </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00214">214</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00215">215</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1130,7 +1170,7 @@ Properties</h2></td></tr>
 
 <p>Current line width used to stroke paths. </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00204">204</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00205">205</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1156,7 +1196,7 @@ Properties</h2></td></tr>
 
 <p>Current brush used to stroke paths. </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00162">162</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00163">163</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1182,7 +1222,7 @@ Properties</h2></td></tr>
 
 <p>The current tag. How this can be used depends on each implementation. </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00225">225</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00226">226</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1208,7 +1248,7 @@ Properties</h2></td></tr>
 
 <p>The current text baseline. </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00095">95</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00096">96</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1234,7 +1274,7 @@ Properties</h2></td></tr>
 
 <p>Width of the graphic surface. </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00039">39</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00040">40</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>

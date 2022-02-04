@@ -28,7 +28,7 @@
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VectSharp
-   &#160;<span id="projectnumber">2.1.0</span>
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -120,7 +120,8 @@ Public Types</h2></td></tr>
 <br />
 &#160;&#160;<a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4ac9cc8cce247e49bae79f15173ce97354">ActionTypes.Save</a>, 
 <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4a2bd339d85ee3b33e513359ce781b60cc">ActionTypes.Restore</a>, 
-<a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4a6adac929b615be2e0d213eb9d1ad15ba">ActionTypes.Clip</a>
+<a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4a6adac929b615be2e0d213eb9d1ad15ba">ActionTypes.Clip</a>, 
+<a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4a3808bd27ae920605b17574bced660f03">ActionTypes.DrawFiltered</a>
 <br />
  }</td></tr>
 <tr class="memdesc:afeb0838c89e91c66e8e6a35c846be3b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Types of rendering actions.  <a href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4">More...</a><br /></td></tr>
@@ -163,6 +164,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ab97c5a2ad6f3fd910a2139f0dcd6477f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html">SKRenderAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#ab97c5a2ad6f3fd910a2139f0dcd6477f">RestoreAction</a> (string tag=null)</td></tr>
 <tr class="memdesc:ab97c5a2ad6f3fd910a2139f0dcd6477f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html" title="Represents a light-weight rendering action.">SKRenderAction</a> that saves the current graphics state.  <a href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#ab97c5a2ad6f3fd910a2139f0dcd6477f">More...</a><br /></td></tr>
 <tr class="separator:ab97c5a2ad6f3fd910a2139f0dcd6477f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca6087f77473b617c971b955246971ae"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html">SKRenderAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#aca6087f77473b617c971b955246971ae">DrawFilteredGraphicsAction</a> (<a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_context.html">SKRenderContext</a> graphics, <a class="el" href="interface_vect_sharp_1_1_filters_1_1_i_filter.html">IFilter</a> filter, string tag=null)</td></tr>
+<tr class="memdesc:aca6087f77473b617c971b955246971ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html" title="Represents a light-weight rendering action.">SKRenderAction</a> that draws some graphics with a filter.  <a href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#aca6087f77473b617c971b955246971ae">More...</a><br /></td></tr>
+<tr class="separator:aca6087f77473b617c971b955246971ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -211,6 +215,12 @@ Properties</h2></td></tr>
 <tr class="memitem:a167e0f08833581485ad3306f02a13537"><td class="memItemLeft" align="right" valign="top">uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a167e0f08833581485ad3306f02a13537">ZIndex</a> = 0<code> [get, set]</code></td></tr>
 <tr class="memdesc:a167e0f08833581485ad3306f02a13537"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Z-index of the rendering action (an action with a higher Z-index will always appear above an action with a lower Z-index). The more different values there are for the Z-index, the slower the rendering, so keep use of this property to a minimum. If you change this, you probably want to call this object's <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a3fb3c03d67830bf7d59caef3ad2ef808">InvalidateZIndex</a> method.  <a href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a167e0f08833581485ad3306f02a13537">More...</a><br /></td></tr>
 <tr class="separator:a167e0f08833581485ad3306f02a13537"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fa7f375f631e3044f735bde2d2b2846"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_context.html">SKRenderContext</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a4fa7f375f631e3044f735bde2d2b2846">Graphics</a> = null<code> [get, set]</code></td></tr>
+<tr class="memdesc:a4fa7f375f631e3044f735bde2d2b2846"><td class="mdescLeft">&#160;</td><td class="mdescRight">The graphics that will be drawn with the specified <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#af5a5a7805268ad2ad412e90a8c3f4435" title="The filter with which the Graphics is drawn. If you change this, you probably want to call this objec...">Filter</a>. If you change this, you probably want to call this object's <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a4c87e8beb5b876c7d9026cf5eaa63e67">InvalidateVisual</a> method.  <a href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a4fa7f375f631e3044f735bde2d2b2846">More...</a><br /></td></tr>
+<tr class="separator:a4fa7f375f631e3044f735bde2d2b2846"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5a5a7805268ad2ad412e90a8c3f4435"><td class="memItemLeft" align="right" valign="top"><a class="el" href="interface_vect_sharp_1_1_filters_1_1_i_filter.html">IFilter</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#af5a5a7805268ad2ad412e90a8c3f4435">Filter</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:af5a5a7805268ad2ad412e90a8c3f4435"><td class="mdescLeft">&#160;</td><td class="mdescRight">The filter with which the <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> is drawn. If you change this, you probably want to call this object's <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a4c87e8beb5b876c7d9026cf5eaa63e67">InvalidateVisual</a> method.  <a href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#af5a5a7805268ad2ad412e90a8c3f4435">More...</a><br /></td></tr>
+<tr class="separator:af5a5a7805268ad2ad412e90a8c3f4435"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad531586a33d779eaf6e69caa474c8381"><td class="memItemLeft" align="right" valign="top">object&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#ad531586a33d779eaf6e69caa474c8381">Payload</a><code> [get, set]</code></td></tr>
 <tr class="memdesc:ad531586a33d779eaf6e69caa474c8381"><td class="mdescLeft">&#160;</td><td class="mdescRight">An arbitrary object associated with the <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html" title="Represents a light-weight rendering action.">RenderAction</a>.  <a href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#ad531586a33d779eaf6e69caa474c8381">More...</a><br /></td></tr>
 <tr class="separator:ad531586a33d779eaf6e69caa474c8381"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -236,7 +246,7 @@ Events</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a light-weight rendering action. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00029">29</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00030">30</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="afeb0838c89e91c66e8e6a35c846be3b4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afeb0838c89e91c66e8e6a35c846be3b4">&#9670;&nbsp;</a></span>ActionTypes</h2>
@@ -274,9 +284,11 @@ Events</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="afeb0838c89e91c66e8e6a35c846be3b4a6adac929b615be2e0d213eb9d1ad15ba"></a>Clip&#160;</td><td class="fielddoc"><p>The render action represents an update of the current clip path. </p>
 </td></tr>
+<tr><td class="fieldname"><a id="afeb0838c89e91c66e8e6a35c846be3b4a3808bd27ae920605b17574bced660f03"></a>DrawFiltered&#160;</td><td class="fielddoc"><p>The render action represents rendering a graphics object with a filter. </p>
+</td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00041">41</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00042">42</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -325,7 +337,54 @@ Events</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A new <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html" title="Represents a light-weight rendering action.">SKRenderAction</a> representing a clipping action.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00329">329</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00345">345</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+
+</div>
+</div>
+<a id="aca6087f77473b617c971b955246971ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca6087f77473b617c971b955246971ae">&#9670;&nbsp;</a></span>DrawFilteredGraphicsAction()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html">SKRenderAction</a> VectSharp.Canvas.SKRenderAction.DrawFilteredGraphicsAction </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_context.html">SKRenderContext</a>&#160;</td>
+          <td class="paramname"><em>graphics</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="interface_vect_sharp_1_1_filters_1_1_i_filter.html">IFilter</a>&#160;</td>
+          <td class="paramname"><em>filter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>tag</em> = <code>null</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a new <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html" title="Represents a light-weight rendering action.">SKRenderAction</a> that draws some graphics with a filter. </p>
+<dl class="section return"><dt>Returns</dt><dd>A new <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html" title="Represents a light-weight rendering action.">SKRenderAction</a> that draws some graphics with a filter.</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00464">464</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -387,7 +446,7 @@ Events</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A new <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html" title="Represents a light-weight rendering action.">SKRenderAction</a> representing an image.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00381">381</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00397">397</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -411,7 +470,7 @@ Events</h2></td></tr>
 <p>If you make changes to more than one <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html" title="Represents a light-weight rendering action.">SKRenderAction</a> contained in the same <a class="el" href="namespace_vect_sharp_1_1_canvas.html">Canvas</a>, you only need to invalidate the last one.</p>
 <p>This method should only be called after the output has been fully initialized.</p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00287">287</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00303">303</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -436,7 +495,7 @@ Events</h2></td></tr>
 <p>If you make changes to more than one <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html" title="Represents a light-weight rendering action.">SKRenderAction</a> contained in the same <a class="el" href="namespace_vect_sharp_1_1_canvas.html">Canvas</a>, you only need to invalidate the last one.</p>
 <p>This method should only be called after the output has been fully initialized.</p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00216">216</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00232">232</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -461,7 +520,7 @@ Events</h2></td></tr>
 <p>If you make changes to more than one <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html" title="Represents a light-weight rendering action.">SKRenderAction</a> contained in the same <a class="el" href="namespace_vect_sharp_1_1_canvas.html">Canvas</a>, you only need to invalidate the last one.</p>
 <p>This method should only be called after the output has been fully initialized.</p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00266">266</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00282">282</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -486,7 +545,7 @@ Events</h2></td></tr>
 <p>If you make changes to more than one <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html" title="Represents a light-weight rendering action.">SKRenderAction</a> contained in the same <a class="el" href="namespace_vect_sharp_1_1_canvas.html">Canvas</a>, you only need to invalidate the last one.</p>
 <p>This method should only be called after the output has been fully initialized.</p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00277">277</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00293">293</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -541,7 +600,7 @@ Events</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A new <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html" title="Represents a light-weight rendering action.">SKRenderAction</a> representing a path.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00305">305</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00321">321</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -578,7 +637,7 @@ Events</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A new <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html" title="Represents a light-weight rendering action.">SKRenderAction</a> that restores the last saved graphics state.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00435">435</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00451">451</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -615,7 +674,7 @@ Events</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A new <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html" title="Represents a light-weight rendering action.">SKRenderAction</a> that saves the current graphics state.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00421">421</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00437">437</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -691,7 +750,7 @@ Events</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A new <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html" title="Represents a light-weight rendering action.">SKRenderAction</a> representing text.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00349">349</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00365">365</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -739,7 +798,7 @@ Events</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A new <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html" title="Represents a light-weight rendering action.">SKRenderAction</a> representing a transform.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00406">406</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00422">422</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -758,7 +817,7 @@ Events</h2></td></tr>
 
 <p>Returns a boolean value indicating whether the current instance has been disposed. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00034">34</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00035">35</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -785,7 +844,33 @@ Events</h2></td></tr>
 
 <p>Type of the rendering action. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00082">82</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00088">88</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+
+</div>
+</div>
+<a id="af5a5a7805268ad2ad412e90a8c3f4435"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5a5a7805268ad2ad412e90a8c3f4435">&#9670;&nbsp;</a></span>Filter</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="interface_vect_sharp_1_1_filters_1_1_i_filter.html">IFilter</a> VectSharp.Canvas.SKRenderAction.Filter</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The filter with which the <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> is drawn. If you change this, you probably want to call this object's <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a4c87e8beb5b876c7d9026cf5eaa63e67">InvalidateVisual</a> method. </p>
+
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00163">163</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -811,7 +896,33 @@ Events</h2></td></tr>
 
 <p>The font that will be used to render the text (null if the action type is not <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4a9dffbf69ffba8bc38bc4e01abf4b1675" title="The render action represents a text object.">ActionTypes.Text</a>). If you change this, you probably want to call this object's <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a7b811701ff80b160c4cec38cf76fd84d">InvalidateHitTestPath</a> method. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00100">100</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00106">106</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+
+</div>
+</div>
+<a id="a4fa7f375f631e3044f735bde2d2b2846"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4fa7f375f631e3044f735bde2d2b2846">&#9670;&nbsp;</a></span>Graphics</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_context.html">SKRenderContext</a> VectSharp.Canvas.SKRenderAction.Graphics = null</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The graphics that will be drawn with the specified <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#af5a5a7805268ad2ad412e90a8c3f4435" title="The filter with which the Graphics is drawn. If you change this, you probably want to call this objec...">Filter</a>. If you change this, you probably want to call this object's <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a4c87e8beb5b876c7d9026cf5eaa63e67">InvalidateVisual</a> method. </p>
+
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00158">158</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -837,7 +948,7 @@ Events</h2></td></tr>
 
 <p>The destination rectangle of the image (<code>null</code> if the action type is not <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4a87ee62f0c2390b73f784732a13cce8cb" title="The render action represents a raster image.">ActionTypes.RasterImage</a>). If you change this, you probably want to call this object's <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a7b811701ff80b160c4cec38cf76fd84d">InvalidateHitTestPath</a> method. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00130">130</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00136">136</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -863,7 +974,7 @@ Events</h2></td></tr>
 
 <p>Univocal identifier of the image that needs to be drawn. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00120">120</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00126">126</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -889,7 +1000,7 @@ Events</h2></td></tr>
 
 <p>The source rectangle of the image (<code>null</code> if the action type is not <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4a87ee62f0c2390b73f784732a13cce8cb" title="The render action represents a raster image.">ActionTypes.RasterImage</a>). If you change this, you probably want to call this object's <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a4c87e8beb5b876c7d9026cf5eaa63e67">InvalidateVisual</a> method. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00125">125</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00131">131</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -915,7 +1026,7 @@ Events</h2></td></tr>
 
 <p>Paint used to render the text or path (<code>null</code> if the action type is neither <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4a9dffbf69ffba8bc38bc4e01abf4b1675" title="The render action represents a text object.">ActionTypes.Text</a> nor <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4aac70412e939d72a9234cdebb1af5867b" title="The render action represents a path object.">ActionTypes.Path</a>). If you change this, you probably want to call this object's <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a7b811701ff80b160c4cec38cf76fd84d">InvalidateHitTestPath</a> method. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00115">115</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00121">121</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -941,7 +1052,7 @@ Events</h2></td></tr>
 
 <p>The container of this <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html" title="Represents a light-weight rendering action.">SKRenderAction</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00159">159</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00175">175</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -967,7 +1078,7 @@ Events</h2></td></tr>
 
 <p>Path that needs to be rendered (null if the action type is not <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4aac70412e939d72a9234cdebb1af5867b" title="The render action represents a path object.">ActionTypes.Path</a>). If you change this, you probably want to call this object's <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a7b811701ff80b160c4cec38cf76fd84d">InvalidateHitTestPath</a> method. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00087">87</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00093">93</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -993,7 +1104,7 @@ Events</h2></td></tr>
 
 <p>An arbitrary object associated with the <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html" title="Represents a light-weight rendering action.">RenderAction</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00152">152</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00168">168</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -1019,7 +1130,7 @@ Events</h2></td></tr>
 
 <p>A tag to access the <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html" title="Represents a light-weight rendering action.">SKRenderAction</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00140">140</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00146">146</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -1045,7 +1156,7 @@ Events</h2></td></tr>
 
 <p>Text that needs to be rendered (null if the action type is not <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4a9dffbf69ffba8bc38bc4e01abf4b1675" title="The render action represents a text object.">ActionTypes.Text</a>). If you change this, you probably want to call this object's <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a7b811701ff80b160c4cec38cf76fd84d">InvalidateHitTestPath</a> method. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00095">95</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00101">101</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -1071,7 +1182,7 @@ Events</h2></td></tr>
 
 <p>The X coordainate at which the text will be drawn (null if the action type is not <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4a9dffbf69ffba8bc38bc4e01abf4b1675" title="The render action represents a text object.">ActionTypes.Text</a>). If you change this, you probably want to call this object's <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a7b811701ff80b160c4cec38cf76fd84d">InvalidateHitTestPath</a> method. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00105">105</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00111">111</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -1097,7 +1208,7 @@ Events</h2></td></tr>
 
 <p>The Y coordainate at which the text will be drawn (null if the action type is not <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4a9dffbf69ffba8bc38bc4e01abf4b1675" title="The render action represents a text object.">ActionTypes.Text</a>). If you change this, you probably want to call this object's <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a7b811701ff80b160c4cec38cf76fd84d">InvalidateHitTestPath</a> method. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00110">110</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00116">116</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -1123,7 +1234,7 @@ Events</h2></td></tr>
 
 <p>The transformation matrix that will be applied to the current coordinate system (<code>null</code> if the action type is not <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4a2ff4148554480a37f85efd299df04850" title="The render action represents a transformation of the coordinate space.">ActionTypes.Transform</a>). If you change this, you probably want to call this object's <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a4c87e8beb5b876c7d9026cf5eaa63e67">InvalidateVisual</a> method. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00135">135</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00141">141</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -1149,7 +1260,7 @@ Events</h2></td></tr>
 
 <p>The Z-index of the rendering action (an action with a higher Z-index will always appear above an action with a lower Z-index). The more different values there are for the Z-index, the slower the rendering, so keep use of this property to a minimum. If you change this, you probably want to call this object's <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a3fb3c03d67830bf7d59caef3ad2ef808">InvalidateZIndex</a> method. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00147">147</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00153">153</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -1168,7 +1279,7 @@ Events</h2></td></tr>
 
 <p>Raised when the pointer enters the area covered by the <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html" title="Represents a light-weight rendering action.">SKRenderAction</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00170">170</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00186">186</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -1186,7 +1297,7 @@ Events</h2></td></tr>
 
 <p>Raised when the pointer leaves the area covered by the <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html" title="Represents a light-weight rendering action.">SKRenderAction</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00175">175</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00191">191</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -1204,7 +1315,7 @@ Events</h2></td></tr>
 
 <p>Raised when the pointer is pressed while over the area covered by the <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html" title="Represents a light-weight rendering action.">SKRenderAction</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00180">180</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00196">196</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>
@@ -1222,7 +1333,7 @@ Events</h2></td></tr>
 
 <p>Raised when the pointer is released after a <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#ab107c394c719c319995ef2c901914cd3" title="Raised when the pointer is pressed while over the area covered by the SKRenderAction.">PointerPressed</a> event. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00185">185</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_k_render_context_8cs_source.html#l00201">201</a> of file <a class="el" href="_s_k_render_context_8cs_source.html">SKRenderContext.cs</a>.</p>
 
 </div>
 </div>

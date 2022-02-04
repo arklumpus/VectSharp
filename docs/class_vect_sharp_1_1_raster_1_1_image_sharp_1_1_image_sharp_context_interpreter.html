@@ -28,7 +28,7 @@
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VectSharp
-   &#160;<span id="projectnumber">2.1.0</span>
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -120,12 +120,77 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:aaff11e523678e0391524fe7de8802669"><td class="memItemLeft" align="right" valign="top">static byte[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_raster_1_1_image_sharp_1_1_image_sharp_context_interpreter.html#aaff11e523678e0391524fe7de8802669">SaveAsRawBytes</a> (this <a class="el" href="class_vect_sharp_1_1_page.html">Page</a> pag, out int width, out int height, double scale=1)</td></tr>
 <tr class="memdesc:aaff11e523678e0391524fe7de8802669"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the page to raw pixel data, in 32bpp RGBA format.  <a href="class_vect_sharp_1_1_raster_1_1_image_sharp_1_1_image_sharp_context_interpreter.html#aaff11e523678e0391524fe7de8802669">More...</a><br /></td></tr>
 <tr class="separator:aaff11e523678e0391524fe7de8802669"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b8165f5b1b95085f23e769f7d1761f0"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_vect_sharp_1_1_raster_image.html">RasterImage</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_raster_1_1_image_sharp_1_1_image_sharp_context_interpreter.html#a5b8165f5b1b95085f23e769f7d1761f0">Rasterise</a> (this <a class="el" href="class_vect_sharp_1_1_graphics.html">Graphics</a> graphics, <a class="el" href="struct_vect_sharp_1_1_rectangle.html">Rectangle</a> region, double scale, bool interpolate)</td></tr>
+<tr class="memdesc:a5b8165f5b1b95085f23e769f7d1761f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rasterise a region of a <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object.  <a href="class_vect_sharp_1_1_raster_1_1_image_sharp_1_1_image_sharp_context_interpreter.html#a5b8165f5b1b95085f23e769f7d1761f0">More...</a><br /></td></tr>
+<tr class="separator:a5b8165f5b1b95085f23e769f7d1761f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Contains methods to render a <a class="el" href="class_vect_sharp_1_1_page.html" title="Represents a Graphics object with a width and height.">Page</a> to an Image. </p>
 
-<p class="definition">Definition at line <a class="el" href="_image_sharp_context_8cs_source.html#l00856">856</a> of file <a class="el" href="_image_sharp_context_8cs_source.html">ImageSharpContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_image_sharp_context_8cs_source.html#l01001">1001</a> of file <a class="el" href="_image_sharp_context_8cs_source.html">ImageSharpContext.cs</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a5b8165f5b1b95085f23e769f7d1761f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b8165f5b1b95085f23e769f7d1761f0">&#9670;&nbsp;</a></span>Rasterise()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="class_vect_sharp_1_1_raster_image.html">RasterImage</a> VectSharp.Raster.ImageSharp.ImageSharpContextInterpreter.Rasterise </td>
+          <td>(</td>
+          <td class="paramtype">this <a class="el" href="class_vect_sharp_1_1_graphics.html">Graphics</a>&#160;</td>
+          <td class="paramname"><em>graphics</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_vect_sharp_1_1_rectangle.html">Rectangle</a>&#160;</td>
+          <td class="paramname"><em>region</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>scale</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>interpolate</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Rasterise a region of a <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">graphics</td><td>The <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object that will be rasterised.</td></tr>
+    <tr><td class="paramname">region</td><td>The region of the <em>graphics</em>  that will be rasterised.</td></tr>
+    <tr><td class="paramname">scale</td><td>The scale at which the image will be rendered.</td></tr>
+    <tr><td class="paramname">interpolate</td><td>Whether the resulting image should be interpolated or not when it is drawn on another <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> surface.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="class_vect_sharp_1_1_raster_image.html" title="Represents a raster image, created from raw pixel data. Consider using the derived classes included i...">RasterImage</a> containing the rasterised graphics.</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_image_sharp_context_8cs_source.html#l01233">1233</a> of file <a class="el" href="_image_sharp_context_8cs_source.html">ImageSharpContext.cs</a>.</p>
+
+</div>
+</div>
 <a id="a1d611ad7263e154e5dac7fda512d35f9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1d611ad7263e154e5dac7fda512d35f9">&#9670;&nbsp;</a></span>SaveAsImage() <span class="overload">[1/3]</span></h2>
 
@@ -170,7 +235,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An Image containing the rasterised page.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_image_sharp_context_8cs_source.html#l00864">864</a> of file <a class="el" href="_image_sharp_context_8cs_source.html">ImageSharpContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_image_sharp_context_8cs_source.html#l01009">1009</a> of file <a class="el" href="_image_sharp_context_8cs_source.html">ImageSharpContext.cs</a>.</p>
 
 </div>
 </div>
@@ -231,7 +296,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_image_sharp_context_8cs_source.html#l00880">880</a> of file <a class="el" href="_image_sharp_context_8cs_source.html">ImageSharpContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_image_sharp_context_8cs_source.html#l01025">1025</a> of file <a class="el" href="_image_sharp_context_8cs_source.html">ImageSharpContext.cs</a>.</p>
 
 </div>
 </div>
@@ -292,7 +357,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_image_sharp_context_8cs_source.html#l00938">938</a> of file <a class="el" href="_image_sharp_context_8cs_source.html">ImageSharpContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_image_sharp_context_8cs_source.html#l01083">1083</a> of file <a class="el" href="_image_sharp_context_8cs_source.html">ImageSharpContext.cs</a>.</p>
 
 </div>
 </div>
@@ -354,7 +419,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A byte array containing the raw pixel data.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_image_sharp_context_8cs_source.html#l01050">1050</a> of file <a class="el" href="_image_sharp_context_8cs_source.html">ImageSharpContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_image_sharp_context_8cs_source.html#l01196">1196</a> of file <a class="el" href="_image_sharp_context_8cs_source.html">ImageSharpContext.cs</a>.</p>
 
 </div>
 </div>
@@ -423,7 +488,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="class_vect_sharp_1_1_disposable_int_ptr.html" title="An IDisposable wrapper around an IntPtr that frees the allocated memory when it is disposed.">DisposableIntPtr</a> containing a pointer to the raw pixel data, stored in unmanaged memory. Dispose this object to release the unmanaged memory.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_image_sharp_context_8cs_source.html#l01008">1008</a> of file <a class="el" href="_image_sharp_context_8cs_source.html">ImageSharpContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_image_sharp_context_8cs_source.html#l01153">1153</a> of file <a class="el" href="_image_sharp_context_8cs_source.html">ImageSharpContext.cs</a>.</p>
 
 </div>
 </div>

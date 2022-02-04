@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['linecaps_1132',['LineCaps',['../namespace_vect_sharp.html#a6bde58d6aab37ea51e32240503678209',1,'VectSharp']]],
-  ['linejoins_1133',['LineJoins',['../namespace_vect_sharp.html#a58a4a36ea254b3d255755654fd9e61f6',1,'VectSharp']]]
+  ['filteroperations_1269',['FilterOperations',['../class_vect_sharp_1_1_canvas_1_1_filter_option.html#a13143e4551a9970972b4286c0ecdd0e6',1,'VectSharp.Canvas.FilterOption.FilterOperations()'],['../class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter_1_1_filter_option.html#a2c7355ec2e23e890dcb9d0a67883280a',1,'VectSharp.PDF.PDFContextInterpreter.FilterOption.FilterOperations()'],['../class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter_1_1_filter_option.html#aca0a81273256ce790da3790303e05c47',1,'VectSharp.SVG.SVGContextInterpreter.FilterOption.FilterOperations()']]]
 ];

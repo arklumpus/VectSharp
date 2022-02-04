@@ -51,7 +51,7 @@ var NAVTREE =
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", "functions_func" ],
-        [ "Variables", "functions_vars.html", null ],
+        [ "Variables", "functions_vars.html", "functions_vars" ],
         [ "Enumerations", "functions_enum.html", null ],
         [ "Properties", "functions_prop.html", "functions_prop" ],
         [ "Events", "functions_evnt.html", null ]
@@ -66,10 +66,11 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_avalonia_context_8cs_source.html",
-"class_vect_sharp_1_1_colours.html#a96faf63d4d087f3085c1e6d6e41dbfac",
-"class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html#a47befa9d0fd3973867287164f317b2b0",
-"class_vect_sharp_1_1_three_d_1_1_parallel_light_source.html#a929b54d55a24eb4b09c2b3617748a778",
-"namespace_vect_sharp_1_1_s_v_g.html"
+"class_vect_sharp_1_1_colours.html#a68e9fd6e3ec5fdd8569372f6c6100a70",
+"class_vect_sharp_1_1_font_library.html#ae281a6cc27fa36dc1ba639408837b2a2",
+"class_vect_sharp_1_1_raster_1_1_image_sharp_1_1_image_sharp_context_interpreter.html#ab089bbd435e9a39b3ac33d0db777fca1",
+"functions_func_b.html",
+"struct_vect_sharp_1_1_rectangle.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

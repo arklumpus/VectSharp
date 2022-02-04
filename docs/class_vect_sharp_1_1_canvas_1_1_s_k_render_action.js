@@ -7,10 +7,12 @@ var class_vect_sharp_1_1_canvas_1_1_s_k_render_action =
       [ "Transform", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4a2ff4148554480a37f85efd299df04850", null ],
       [ "Save", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4ac9cc8cce247e49bae79f15173ce97354", null ],
       [ "Restore", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4a2bd339d85ee3b33e513359ce781b60cc", null ],
-      [ "Clip", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4a6adac929b615be2e0d213eb9d1ad15ba", null ]
+      [ "Clip", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4a6adac929b615be2e0d213eb9d1ad15ba", null ],
+      [ "DrawFiltered", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#afeb0838c89e91c66e8e6a35c846be3b4a3808bd27ae920605b17574bced660f03", null ]
     ] ],
     [ "ClipAction", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a49e31010c7217438658c2a3110375c36", null ],
     [ "Dispose", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a262a4ea85bdc50b69ede51061ba3b2c5", null ],
+    [ "DrawFilteredGraphicsAction", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#aca6087f77473b617c971b955246971ae", null ],
     [ "ImageAction", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a46965eb1275e1ee3c3af12f26240507b", null ],
     [ "InvalidateAll", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a0719f798f39f9bb0c902a3c7ac9c6341", null ],
     [ "InvalidateHitTestPath", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a7b811701ff80b160c4cec38cf76fd84d", null ],
@@ -23,7 +25,9 @@ var class_vect_sharp_1_1_canvas_1_1_s_k_render_action =
     [ "TransformAction", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a81405205be792374ef65bdf89cab3a4c", null ],
     [ "Disposed", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#aa88ade8626d0abce8ded370480430f4f", null ],
     [ "ActionType", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a77c776e933cbf5e6a65711c39a00c380", null ],
+    [ "Filter", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#af5a5a7805268ad2ad412e90a8c3f4435", null ],
     [ "Font", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a9c1be77549dabcb7507092ac67e5b34c", null ],
+    [ "Graphics", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a4fa7f375f631e3044f735bde2d2b2846", null ],
     [ "HitTestPath", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a99d0824fceedc56973b6d9f5d5c0b0ba", null ],
     [ "ImageDestination", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a25186cbd80c5911e51ac963423b3865b", null ],
     [ "ImageId", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#ab46d947c0844b8a2a0f3a3503de45e6d", null ],

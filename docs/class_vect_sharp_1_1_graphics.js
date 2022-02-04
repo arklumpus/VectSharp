@@ -2,7 +2,9 @@ var class_vect_sharp_1_1_graphics =
 [
     [ "CopyToIGraphicsContext", "class_vect_sharp_1_1_graphics.html#a545b7fe5cea9fc34b7bd720020a4ce76", null ],
     [ "DrawGraphics", "class_vect_sharp_1_1_graphics.html#a496cb53eed27923d96b85f771afe1ed4", null ],
+    [ "DrawGraphics", "class_vect_sharp_1_1_graphics.html#a179bab5ba29b62ec2bb9ccdcf5bc12c5", null ],
     [ "DrawGraphics", "class_vect_sharp_1_1_graphics.html#a6d90f4e0abdc8266b62289528cc8fc0c", null ],
+    [ "DrawGraphics", "class_vect_sharp_1_1_graphics.html#aa73fff9c9ed43a9d5ecb926e69921145", null ],
     [ "DrawRasterImage", "class_vect_sharp_1_1_graphics.html#ae0cdf6b8d6a91949c5d075da8d296941", null ],
     [ "DrawRasterImage", "class_vect_sharp_1_1_graphics.html#af7e60f2fa19c7a4aa9cde6f0d5dd8b5f", null ],
     [ "DrawRasterImage", "class_vect_sharp_1_1_graphics.html#a4fb7e7abe8792e3d16d08482f532006c", null ],
@@ -20,6 +22,7 @@ var class_vect_sharp_1_1_graphics =
     [ "FillTextUnderline", "class_vect_sharp_1_1_graphics.html#a9e2316295ea3435ceb3685864c085661", null ],
     [ "FillTextUnderline", "class_vect_sharp_1_1_graphics.html#a048b3cb9b889440587fa06b3350f0776", null ],
     [ "FillTextUnderline", "class_vect_sharp_1_1_graphics.html#a85ee7f004854fa436180d56c820d4750", null ],
+    [ "GetBounds", "class_vect_sharp_1_1_graphics.html#a68f0d75308584d8ed0f99e414aab1aa2", null ],
     [ "Linearise", "class_vect_sharp_1_1_graphics.html#aa932cf37c0ff5356258473bb733def9d", null ],
     [ "MeasureText", "class_vect_sharp_1_1_graphics.html#a89675b6d8aa75268dd807f9e04a79358", null ],
     [ "MeasureText", "class_vect_sharp_1_1_graphics.html#ae359b157d9b5f943846fac7e70ecd522", null ],
@@ -47,5 +50,7 @@ var class_vect_sharp_1_1_graphics =
     [ "Transform", "class_vect_sharp_1_1_graphics.html#aeefde81aa7913d97f415615186b713ec", null ],
     [ "Translate", "class_vect_sharp_1_1_graphics.html#a1c353f23b9be14358cf8102fbeb2ea1d", null ],
     [ "Translate", "class_vect_sharp_1_1_graphics.html#a675df302f1821806025a0403ee6c2aef", null ],
+    [ "TryRasterise", "class_vect_sharp_1_1_graphics.html#a6d3ec4a011650e50171a888531e0c53c", null ],
+    [ "RasterisationMethod", "class_vect_sharp_1_1_graphics.html#a5033bbb29d924589df774638c31f93ad", null ],
     [ "UnbalancedStackAction", "class_vect_sharp_1_1_graphics.html#af32ad440108219e8600983cc6d0f6d49", null ]
 ];

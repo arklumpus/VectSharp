@@ -28,7 +28,7 @@
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VectSharp
-   &#160;<span id="projectnumber">2.1.0</span>
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -165,8 +165,14 @@ $(document).ready(function(){initNavTree('functions_t.html',''); initResizable()
 <li>this[int index]
 : <a class="el" href="class_vect_sharp_1_1_gradient_stops.html#a4e21f7fb0641f329d07f4a81e8c2d822">VectSharp.GradientStops</a>
 </li>
+<li>this[int y, int x]
+: <a class="el" href="class_vect_sharp_1_1_filters_1_1_colour_matrix.html#a916ceff2ef2151192989d918c1c29f09">VectSharp.Filters.ColourMatrix</a>
+</li>
 <li>Thistle
 : <a class="el" href="class_vect_sharp_1_1_colours.html#a07a937ba22a0e2ad7962e931ad82f4d8">VectSharp.Colours</a>
+</li>
+<li>ToColour()
+: <a class="el" href="class_vect_sharp_1_1_filters_1_1_colour_matrix.html#abd8ebd9336459bd1f98006036acf10c8">VectSharp.Filters.ColourMatrix</a>
 </li>
 <li>ToCSSString()
 : <a class="el" href="struct_vect_sharp_1_1_colour.html#a2ac682d76a238254e3d750254820a9af">VectSharp.Colour</a>
@@ -178,10 +184,19 @@ $(document).ready(function(){initNavTree('functions_t.html',''); initResizable()
 : <a class="el" href="class_vect_sharp_1_1_font_1_1_detailed_font_metrics.html#aa5aebb76cef45fc769bf9d896c6b37b7">VectSharp.Font.DetailedFontMetrics</a>
 , <a class="el" href="class_vect_sharp_1_1_markdown_1_1_margins.html#a4bbbf8780c9d7fc41884fdd3f0631dca">VectSharp.Markdown.Margins</a>
 </li>
+<li>TopLeftMargin
+: <a class="el" href="class_vect_sharp_1_1_filters_1_1_box_blur_filter.html#a3febe19b0eb78140e20c89fd6c088751">VectSharp.Filters.BoxBlurFilter</a>
+, <a class="el" href="class_vect_sharp_1_1_filters_1_1_colour_matrix_filter.html#afc1506adc610a7f1265cbc749d00c2a1">VectSharp.Filters.ColourMatrixFilter</a>
+, <a class="el" href="class_vect_sharp_1_1_filters_1_1_composite_location_invariant_filter.html#aa698c25bb2b5c97b26e7ed2fed168a94">VectSharp.Filters.CompositeLocationInvariantFilter</a>
+, <a class="el" href="class_vect_sharp_1_1_filters_1_1_convolution_filter.html#a32d973bf7389f4ac07d68ca9cf2a4dbc">VectSharp.Filters.ConvolutionFilter</a>
+, <a class="el" href="class_vect_sharp_1_1_filters_1_1_gaussian_blur_filter.html#a8bdd40a9a452705195f0a1655eaf322b">VectSharp.Filters.GaussianBlurFilter</a>
+, <a class="el" href="interface_vect_sharp_1_1_filters_1_1_i_filter.html#a212ac6130ecf7a68d6dfcd0a2cf35a61">VectSharp.Filters.IFilter</a>
+, <a class="el" href="class_vect_sharp_1_1_filters_1_1_mask_filter.html#a7eebe60112e031013256ef3fb22f6d97">VectSharp.Filters.MaskFilter</a>
+</li>
 <li>Transform
 : <a class="el" href="class_vect_sharp_1_1_canvas_1_1_render_action.html#a00f70e2e7337e9cf863ac0ee4cc576f8">VectSharp.Canvas.RenderAction</a>
 , <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#ae3a4a45722da29d9e94903cb5f72d0b8">VectSharp.Canvas.SKRenderAction</a>
-, <a class="el" href="class_vect_sharp_1_1_graphics.html#a2a53438684eb80483e692107575a6834">VectSharp.Graphics</a>
+, <a class="el" href="class_vect_sharp_1_1_graphics.html#aeefde81aa7913d97f415615186b713ec">VectSharp.Graphics</a>
 , <a class="el" href="class_vect_sharp_1_1_graphics_path.html#af4d2af10a6114152ef417091a5a2cfe7">VectSharp.GraphicsPath</a>
 , <a class="el" href="interface_vect_sharp_1_1_i_graphics_context.html#a81adc55cf1ea9b496434eeeb8c4b2194">VectSharp.IGraphicsContext</a>
 , <a class="el" href="class_vect_sharp_1_1_segment.html#a534e856e5cc189fe9b6b1604fcb76ca9">VectSharp.Segment</a>
@@ -190,7 +205,7 @@ $(document).ready(function(){initNavTree('functions_t.html',''); initResizable()
 : <a class="el" href="class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a81405205be792374ef65bdf89cab3a4c">VectSharp.Canvas.SKRenderAction</a>
 </li>
 <li>Translate()
-: <a class="el" href="class_vect_sharp_1_1_graphics.html#a1c353f23b9be14358cf8102fbeb2ea1d">VectSharp.Graphics</a>
+: <a class="el" href="class_vect_sharp_1_1_graphics.html#a675df302f1821806025a0403ee6c2aef">VectSharp.Graphics</a>
 , <a class="el" href="interface_vect_sharp_1_1_i_graphics_context.html#ab296e3082b056774bae627e54c14ce95">VectSharp.IGraphicsContext</a>
 </li>
 <li>Triangulate()
@@ -198,6 +213,9 @@ $(document).ready(function(){initNavTree('functions_t.html',''); initResizable()
 </li>
 <li>TrueTypeFile
 : <a class="el" href="class_vect_sharp_1_1_font_family.html#a01fbe58dd8f630ceb147439890bb786c">VectSharp.FontFamily</a>
+</li>
+<li>TryRasterise()
+: <a class="el" href="class_vect_sharp_1_1_graphics.html#a6d3ec4a011650e50171a888531e0c53c">VectSharp.Graphics</a>
 </li>
 <li>Turquoise
 : <a class="el" href="class_vect_sharp_1_1_colours.html#ace912b0601225eba25e5bf039adfa7f1">VectSharp.Colours</a>

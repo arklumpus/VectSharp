@@ -1,6 +1,7 @@
 var namespace_vect_sharp =
 [
     [ "Canvas", "namespace_vect_sharp_1_1_canvas.html", "namespace_vect_sharp_1_1_canvas" ],
+    [ "Filters", "namespace_vect_sharp_1_1_filters.html", "namespace_vect_sharp_1_1_filters" ],
     [ "Fonts", "namespace_vect_sharp_1_1_fonts.html", "namespace_vect_sharp_1_1_fonts" ],
     [ "Markdown", "namespace_vect_sharp_1_1_markdown.html", "namespace_vect_sharp_1_1_markdown" ],
     [ "MarkdownCanvas", "namespace_vect_sharp_1_1_markdown_canvas.html", "namespace_vect_sharp_1_1_markdown_canvas" ],
@@ -34,6 +35,7 @@ var namespace_vect_sharp =
     [ "Point", "struct_vect_sharp_1_1_point.html", "struct_vect_sharp_1_1_point" ],
     [ "RadialGradientBrush", "class_vect_sharp_1_1_radial_gradient_brush.html", "class_vect_sharp_1_1_radial_gradient_brush" ],
     [ "RasterImage", "class_vect_sharp_1_1_raster_image.html", "class_vect_sharp_1_1_raster_image" ],
+    [ "Rectangle", "struct_vect_sharp_1_1_rectangle.html", "struct_vect_sharp_1_1_rectangle" ],
     [ "ResourceFontFamily", "class_vect_sharp_1_1_resource_font_family.html", "class_vect_sharp_1_1_resource_font_family" ],
     [ "Segment", "class_vect_sharp_1_1_segment.html", "class_vect_sharp_1_1_segment" ],
     [ "SimpleFontLibrary", "class_vect_sharp_1_1_simple_font_library.html", "class_vect_sharp_1_1_simple_font_library" ],
