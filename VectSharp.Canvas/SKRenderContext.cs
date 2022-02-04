@@ -19,6 +19,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using VectSharp.Filters;
 
 namespace VectSharp.Canvas
 {
@@ -73,7 +74,12 @@ namespace VectSharp.Canvas
             /// <summary>
             /// The render action represents an update of the current clip path.
             /// </summary>
-            Clip
+            Clip,
+
+            /// <summary>
+            /// The render action represents rendering a graphics object with a filter.
+            /// </summary>
+            DrawFiltered
         }
 
         /// <summary>
@@ -145,6 +151,16 @@ namespace VectSharp.Canvas
         /// If you change this, you probably want to call this object's <see cref="InvalidateZIndex"/> method.
         /// </summary>
         public uint ZIndex { get; set; } = 0;
+
+        /// <summary>
+        /// The graphics that will be drawn with the specified <see cref="Filter"/>. If you change this, you probably want to call this object's <see cref="InvalidateVisual"/> method.
+        /// </summary>
+        public SKRenderContext Graphics { get; set; } = null;
+
+        /// <summary>
+        /// The filter with which the <see cref="Graphics"/> is drawn. If you change this, you probably want to call this object's <see cref="InvalidateVisual"/> method.
+        /// </summary>
+        public IFilter Filter { get; set; }
 
         /// <summary>
         /// An arbitrary object associated with the RenderAction.
@@ -441,6 +457,21 @@ namespace VectSharp.Canvas
             };
         }
 
+        /// <summary>
+        /// Create a new <see cref="SKRenderAction"/> that draws some graphics with a filter.
+        /// </summary>
+        /// <returns>A new <see cref="SKRenderAction"/> that draws some graphics with a filter.</returns>
+        public static SKRenderAction DrawFilteredGraphicsAction(SKRenderContext graphics, IFilter filter, string tag = null)
+        {
+            return new SKRenderAction()
+            {
+                ActionType = ActionTypes.DrawFiltered,
+                Graphics = graphics,
+                Filter = filter,
+                Tag = tag
+            };
+        }
+
         /// <inheritdoc cref="IDisposable.Dispose"/>
         protected virtual void Dispose(bool disposing)
         {
@@ -531,7 +562,9 @@ namespace VectSharp.Canvas
 
         internal override Dictionary<string, (SKBitmap, bool)> Images { get; set; }
 
-        public SKRenderContextImpl(double width, double height, bool removeTaggedActionsAfterExecution, AvaloniaContextInterpreter.TextOptions textOption, Dictionary<string, (SKBitmap, bool)> images)
+        private readonly FilterOption _filterOption;
+
+        public SKRenderContextImpl(double width, double height, bool removeTaggedActionsAfterExecution, AvaloniaContextInterpreter.TextOptions textOption, Dictionary<string, (SKBitmap, bool)> images, FilterOption filterOption)
         {
             this.Images = images;
 
@@ -545,6 +578,7 @@ namespace VectSharp.Canvas
             Height = height;
 
             _textOption = textOption;
+            _filterOption = filterOption;
         }
 
         internal override List<SKRenderAction> SKRenderActions { get; set; }
@@ -1308,6 +1342,107 @@ namespace VectSharp.Canvas
             AddAction(act);
         }
 
+        public void DrawFilteredGraphics(Graphics graphics, IFilter filter)
+        {
+            if (this._filterOption.Operation == FilterOption.FilterOperations.RasteriseAllWithSkia)
+            {
+                double scale = this._filterOption.RasterisationResolution;
+
+                Rectangle bounds = graphics.GetBounds();
+
+                bounds = new Rectangle(bounds.Location.X - filter.TopLeftMargin.X, bounds.Location.Y - filter.TopLeftMargin.Y, bounds.Size.Width + filter.TopLeftMargin.X + filter.BottomRightMargin.X, bounds.Size.Height + filter.TopLeftMargin.Y + filter.BottomRightMargin.Y);
+
+                if (bounds.Size.Width > 0 && bounds.Size.Height > 0)
+                {
+                    if (!this._filterOption.RasterisationResolutionRelative)
+                    {
+                        scale = scale / Math.Min(bounds.Size.Width, bounds.Size.Height);
+                    }
+
+                    RasterImage rasterised = SKRenderContextInterpreter.Rasterise(graphics, bounds, scale, true);
+                    RasterImage filtered = null;
+
+                    if (filter is IFilterWithRasterisableParameter filterWithRastParam)
+                    {
+                        filterWithRastParam.RasteriseParameter(SKRenderContextInterpreter.Rasterise, scale);
+                    }
+                    
+                    if (filter is ILocationInvariantFilter locInvFilter)
+                    {
+                        filtered = locInvFilter.Filter(rasterised, scale);
+                    }
+                    else if (filter is IFilterWithLocation filterWithLoc)
+                    {
+                        filtered = filterWithLoc.Filter(rasterised, bounds, scale);
+                    }
+
+                    if (filtered != null)
+                    {
+                        rasterised.Dispose();
+
+                        DrawRasterImage(0, 0, filtered.Width, filtered.Height, bounds.Location.X, bounds.Location.Y, bounds.Size.Width, bounds.Size.Height, filtered);
+                    }
+                }
+            }
+            else if (this._filterOption.Operation == FilterOption.FilterOperations.RasteriseAllWithVectSharp)
+            {
+                double scale = this._filterOption.RasterisationResolution;
+
+                Rectangle bounds = graphics.GetBounds();
+
+                bounds = new Rectangle(bounds.Location.X - filter.TopLeftMargin.X, bounds.Location.Y - filter.TopLeftMargin.Y, bounds.Size.Width + filter.TopLeftMargin.X + filter.BottomRightMargin.X, bounds.Size.Height + filter.TopLeftMargin.Y + filter.BottomRightMargin.Y);
+
+                if (bounds.Size.Width > 0 && bounds.Size.Height > 0)
+                {
+                    if (!this._filterOption.RasterisationResolutionRelative)
+                    {
+                        scale = scale / Math.Min(bounds.Size.Width, bounds.Size.Height);
+                    }
+
+                    if (graphics.TryRasterise(bounds, scale, true, out RasterImage rasterised))
+                    {
+                        RasterImage filtered = null;
+
+                        if (filter is IFilterWithRasterisableParameter filterWithRastParam)
+                        {
+                            filterWithRastParam.RasteriseParameter(SKRenderContextInterpreter.Rasterise, scale);
+                        }
+
+                        if (filter is ILocationInvariantFilter locInvFilter)
+                        {
+                            filtered = locInvFilter.Filter(rasterised, scale);
+                        }
+                        else if (filter is IFilterWithLocation filterWithLoc)
+                        {
+                            filtered = filterWithLoc.Filter(rasterised, bounds, scale);
+                        }
+
+                        if (filtered != null)
+                        {
+                            rasterised.Dispose();
+
+                            DrawRasterImage(0, 0, filtered.Width, filtered.Height, bounds.Location.X, bounds.Location.Y, bounds.Size.Width, bounds.Size.Height, filtered);
+                        }
+                    }
+                    else
+                    {
+                        throw new NotImplementedException(@"The filter could not be rasterised! You can avoid this error by doing one of the following:
+ • Add a reference to VectSharp.Raster or VectSharp.Raster.ImageSharp (you may also need to add a using directive somewhere to force the assembly to be loaded).
+ • Provide your own implementation of Graphics.RasterisationMethod.
+ • Set the FilterOption.Operation to ""RasteriseAllWithSkia"", ""IgnoreAll"" or ""SkipAll"".");
+                    }
+                }
+            }
+            else if (this._filterOption.Operation == FilterOption.FilterOperations.IgnoreAll)
+            {
+                graphics.CopyToIGraphicsContext(this);
+            }
+            else
+            {
+
+            }
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -1325,6 +1460,71 @@ namespace VectSharp.Canvas
         {
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
+        }
+    }
+
+    /// <summary>
+    /// Determines how and whether image filters are rasterised.
+    /// </summary>
+    public class FilterOption
+    {
+        /// <summary>
+        /// Defines whether image filters should be rasterised or not.
+        /// </summary>
+        public enum FilterOperations
+        {
+            /// <summary>
+            /// Image filters will always be rasterised using the SkiaSharp backend.
+            /// </summary>
+            RasteriseAllWithSkia,
+
+            /// <summary>
+            /// Image filters will always be rasterised using the VectSharp.Raster or VectSharp.Raster.ImageSharp. This option requires a reference to VectSharp.Raster or to VectSharp.Raster.ImageSharp to be added.
+            /// </summary>
+            RasteriseAllWithVectSharp,
+
+            /// <summary>
+            /// All image filters will be ignored.
+            /// </summary>
+            IgnoreAll,
+
+            /// <summary>
+            /// All the images that should be drawn with a filter will be ignored.
+            /// </summary>
+            SkipAll
+        }
+
+        /// <summary>
+        /// Defines whether image filters should be rasterised or not.
+        /// </summary>
+        public FilterOperations Operation { get; } = FilterOperations.RasteriseAllWithSkia;
+
+        /// <summary>
+        /// The resolution that will be used to rasterise image filters. Depending on the value of <see cref="RasterisationResolutionRelative"/>, this can either be an absolute resolution (i.e. a size in pixel), or a scale factor that is applied to the image size in graphics units.
+        /// </summary>
+        public double RasterisationResolution { get; } = 1;
+
+        /// <summary>
+        /// Determines whether the value of <see cref="RasterisationResolution"/> is absolute (i.e. a size in pixel), or relative (i.e. a scale factor that is applied to the image size in graphics units).
+        /// </summary>
+        public bool RasterisationResolutionRelative { get; } = true;
+
+        /// <summary>
+        /// The default options for image filter rasterisation.
+        /// </summary>
+        public static FilterOption Default = new FilterOption(FilterOperations.RasteriseAllWithSkia, 1, true);
+
+        /// <summary>
+        /// Create a new <see cref="FilterOption"/> object.
+        /// </summary>
+        /// <param name="operation">Defines whether image filters should be rasterised or not.</param>
+        /// <param name="rasterisationResolution">The resolution that will be used to rasterise image filters. Depending on the value of <see cref="RasterisationResolutionRelative"/>, this can either be an absolute resolution (i.e. a size in pixel), or a scale factor that is applied to the image size in graphics units.</param>
+        /// <param name="rasterisationResolutionRelative">Determines whether the value of <see cref="RasterisationResolution"/> is absolute (i.e. a size in pixel), or relative (i.e. a scale factor that is applied to the image size in graphics units).</param>
+        public FilterOption(FilterOperations operation, double rasterisationResolution, bool rasterisationResolutionRelative)
+        {
+            this.Operation = operation;
+            this.RasterisationResolution = rasterisationResolution;
+            this.RasterisationResolutionRelative = rasterisationResolutionRelative;
         }
     }
 
@@ -1356,10 +1556,11 @@ namespace VectSharp.Canvas
         /// <param name="height">The height of the document. If this is <see langword="null" />, the height of the largest page is used.</param>
         /// <param name="background">The background colour of the document. If this is <see langword="null" />, a transparent background is used.</param>
         /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
-        public static SKMultiLayerRenderCanvas PaintToSKCanvas(this Document document, double? width = null, double? height = null, Colour? background = null, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary)
+        public static SKMultiLayerRenderCanvas PaintToSKCanvas(this Document document, double? width = null, double? height = null, Colour? background = null, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
-            return new SKMultiLayerRenderCanvas((from el in document.Pages select el.CopyToSKRenderContext(textOption)).ToList(), (from el in document.Pages select SKRenderAction.TransformAction(SKMatrix.Identity)).ToList(), background ?? Colour.FromRgba(0, 0, 0, 0), width ?? (from el in document.Pages select el.Width).Max(), height ?? (from el in document.Pages select el.Height).Max());
+            return new SKMultiLayerRenderCanvas((from el in document.Pages select el.CopyToSKRenderContext(textOption, filterOption)).ToList(), (from el in document.Pages select SKRenderAction.TransformAction(SKMatrix.Identity)).ToList(), background ?? Colour.FromRgba(0, 0, 0, 0), width ?? (from el in document.Pages select el.Width).Max(), height ?? (from el in document.Pages select el.Height).Max());
         }
 
         /// <summary>
@@ -1373,10 +1574,11 @@ namespace VectSharp.Canvas
         /// <param name="height">The height of the document. If this is <see langword="null" />, the height of the largest page is used.</param>
         /// <param name="background">The background colour of the document. If this is <see langword="null" />, a transparent background is used.</param>
         /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
-        public static SKMultiLayerRenderCanvas PaintToSKCanvas(this Document document, Dictionary<string, Func<SKRenderAction, IEnumerable<SKRenderAction>>> taggedActions, bool removeTaggedActionsAfterExecution = true, double? width = null, double? height = null, Colour? background = null, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary)
+        public static SKMultiLayerRenderCanvas PaintToSKCanvas(this Document document, Dictionary<string, Func<SKRenderAction, IEnumerable<SKRenderAction>>> taggedActions, bool removeTaggedActionsAfterExecution = true, double? width = null, double? height = null, Colour? background = null, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
-            return new SKMultiLayerRenderCanvas((from el in document.Pages select el.CopyToSKRenderContext(taggedActions, removeTaggedActionsAfterExecution, textOption)).ToList(), (from el in document.Pages select SKRenderAction.TransformAction(SKMatrix.Identity)).ToList(), background ?? Colour.FromRgba(0, 0, 0, 0), width ?? (from el in document.Pages select el.Width).Max(), height ?? (from el in document.Pages select el.Height).Max());
+            return new SKMultiLayerRenderCanvas((from el in document.Pages select el.CopyToSKRenderContext(taggedActions, removeTaggedActionsAfterExecution, textOption, filterOption)).ToList(), (from el in document.Pages select SKRenderAction.TransformAction(SKMatrix.Identity)).ToList(), background ?? Colour.FromRgba(0, 0, 0, 0), width ?? (from el in document.Pages select el.Width).Max(), height ?? (from el in document.Pages select el.Height).Max());
         }
 
         /// <summary>
@@ -1392,10 +1594,11 @@ namespace VectSharp.Canvas
         /// <param name="height">The height of the document. If this is <see langword="null" />, the height of the largest page is used.</param>
         /// <param name="background">The background colour of the document. If this is <see langword="null" />, a transparent background is used.</param>
         /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
-        public static SKMultiLayerRenderCanvas PaintToSKCanvas(this Document document, Dictionary<string, Func<SKRenderAction, IEnumerable<SKRenderAction>>> taggedActions, Dictionary<string, (SKBitmap, bool)> images, bool removeTaggedActionsAfterExecution = true, double? width = null, double? height = null, Colour? background = null, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary)
+        public static SKMultiLayerRenderCanvas PaintToSKCanvas(this Document document, Dictionary<string, Func<SKRenderAction, IEnumerable<SKRenderAction>>> taggedActions, Dictionary<string, (SKBitmap, bool)> images, bool removeTaggedActionsAfterExecution = true, double? width = null, double? height = null, Colour? background = null, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
-            return new SKMultiLayerRenderCanvas((from el in document.Pages select el.CopyToSKRenderContext(taggedActions, images, removeTaggedActionsAfterExecution, textOption)).ToList(), (from el in document.Pages select SKRenderAction.TransformAction(SKMatrix.Identity)).ToList(), background ?? Colour.FromRgba(0, 0, 0, 0), width ?? (from el in document.Pages select el.Width).Max(), height ?? (from el in document.Pages select el.Height).Max());
+            return new SKMultiLayerRenderCanvas((from el in document.Pages select el.CopyToSKRenderContext(taggedActions, images, removeTaggedActionsAfterExecution, textOption, filterOption)).ToList(), (from el in document.Pages select SKRenderAction.TransformAction(SKMatrix.Identity)).ToList(), background ?? Colour.FromRgba(0, 0, 0, 0), width ?? (from el in document.Pages select el.Width).Max(), height ?? (from el in document.Pages select el.Height).Max());
         }
 
         /// <summary>
@@ -1403,10 +1606,11 @@ namespace VectSharp.Canvas
         /// </summary>
         /// <param name="page">The <see cref="Page"/> to render.</param>
         /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
-        public static SKMultiLayerRenderCanvas PaintToSKCanvas(this Page page, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary)
+        public static SKMultiLayerRenderCanvas PaintToSKCanvas(this Page page, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
-            return new SKMultiLayerRenderCanvas(new List<SKRenderContext>() { page.CopyToSKRenderContext(textOption) }, new List<SKRenderAction>() { SKRenderAction.TransformAction(SKMatrix.Identity) }, page.Background, page.Width, page.Height);
+            return new SKMultiLayerRenderCanvas(new List<SKRenderContext>() { page.CopyToSKRenderContext(textOption, filterOption) }, new List<SKRenderAction>() { SKRenderAction.TransformAction(SKMatrix.Identity) }, page.Background, page.Width, page.Height);
         }
 
         /// <summary>
@@ -1417,10 +1621,11 @@ namespace VectSharp.Canvas
         /// These should be functions that accept one parameter of type <see cref="SKRenderAction"/> and return an <see cref="IEnumerable{SKRenderAction}"/> of the render actions that will actually be added to the plot.</param>
         /// <param name="removeTaggedActionsAfterExecution">Whether the actions should be removed from <paramref name="taggedActions"/> after their execution. Set to false if the same action should be performed on multiple items with the same tag.</param>
         /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
-        public static SKMultiLayerRenderCanvas PaintToSKCanvas(this Page page, Dictionary<string, Func<SKRenderAction, IEnumerable<SKRenderAction>>> taggedActions, bool removeTaggedActionsAfterExecution = true, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary)
+        public static SKMultiLayerRenderCanvas PaintToSKCanvas(this Page page, Dictionary<string, Func<SKRenderAction, IEnumerable<SKRenderAction>>> taggedActions, bool removeTaggedActionsAfterExecution = true, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
-            return new SKMultiLayerRenderCanvas(new List<SKRenderContext>() { page.CopyToSKRenderContext(taggedActions, removeTaggedActionsAfterExecution, textOption) }, new List<SKRenderAction>() { SKRenderAction.TransformAction(SKMatrix.Identity) }, page.Background, page.Width, page.Height);
+            return new SKMultiLayerRenderCanvas(new List<SKRenderContext>() { page.CopyToSKRenderContext(taggedActions, removeTaggedActionsAfterExecution, textOption, filterOption) }, new List<SKRenderAction>() { SKRenderAction.TransformAction(SKMatrix.Identity) }, page.Background, page.Width, page.Height);
         }
 
         /// <summary>
@@ -1433,10 +1638,11 @@ namespace VectSharp.Canvas
         /// If you are rendering multiple <see cref="Page"/>s (or you are rendering the same page multiple times), it will be beneficial to keep a reference to this dictionary and pass it again on further rendering requests; otherwise, you can just pass an empty dictionary.</param>
         /// <param name="removeTaggedActionsAfterExecution">Whether the actions should be removed from <paramref name="taggedActions"/> after their execution. Set to false if the same action should be performed on multiple items with the same tag.</param>
         /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
-        public static SKMultiLayerRenderCanvas PaintToSKCanvas(this Page page, Dictionary<string, Func<SKRenderAction, IEnumerable<SKRenderAction>>> taggedActions, Dictionary<string, (SKBitmap, bool)> images, bool removeTaggedActionsAfterExecution = true, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary)
+        public static SKMultiLayerRenderCanvas PaintToSKCanvas(this Page page, Dictionary<string, Func<SKRenderAction, IEnumerable<SKRenderAction>>> taggedActions, Dictionary<string, (SKBitmap, bool)> images, bool removeTaggedActionsAfterExecution = true, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
-            return new SKMultiLayerRenderCanvas(new List<SKRenderContext>() { page.CopyToSKRenderContext(taggedActions, images, removeTaggedActionsAfterExecution, textOption) }, new List<SKRenderAction>() { SKRenderAction.TransformAction(SKMatrix.Identity) }, page.Background, page.Width, page.Height);
+            return new SKMultiLayerRenderCanvas(new List<SKRenderContext>() { page.CopyToSKRenderContext(taggedActions, images, removeTaggedActionsAfterExecution, textOption, filterOption) }, new List<SKRenderAction>() { SKRenderAction.TransformAction(SKMatrix.Identity) }, page.Background, page.Width, page.Height);
         }
 
         /// <summary>
@@ -1444,10 +1650,11 @@ namespace VectSharp.Canvas
         /// </summary>
         /// <param name="page">The <see cref="Page"/> to render.</param>
         /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
         /// <returns>A <see cref="SKRenderContext"/> containing the rendered graphics objects.</returns>
-        public static SKRenderContext CopyToSKRenderContext(this Page page, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary)
+        public static SKRenderContext CopyToSKRenderContext(this Page page, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
-            return CopyToSKRenderContext(page, new Dictionary<string, Func<SKRenderAction, IEnumerable<SKRenderAction>>>(), new Dictionary<string, (SKBitmap, bool)>(), textOption: textOption);
+            return CopyToSKRenderContext(page, new Dictionary<string, Func<SKRenderAction, IEnumerable<SKRenderAction>>>(), new Dictionary<string, (SKBitmap, bool)>(), textOption: textOption, filterOption: filterOption);
         }
 
         /// <summary>
@@ -1458,10 +1665,11 @@ namespace VectSharp.Canvas
         /// These should be functions that accept one parameter of type <see cref="SKRenderAction"/> and return an <see cref="IEnumerable{SKRenderAction}"/> of the render actions that will actually be added to the plot.</param>
         /// <param name="removeTaggedActionsAfterExecution">Whether the actions should be removed from <paramref name="taggedActions"/> after their execution. Set to false if the same action should be performed on multiple items with the same tag.</param>
         /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
         /// <returns>A <see cref="SKRenderContext"/> containing the rendered graphics objects.</returns>
-        public static SKRenderContext CopyToSKRenderContext(this Page page, Dictionary<string, Func<SKRenderAction, IEnumerable<SKRenderAction>>> taggedActions, bool removeTaggedActionsAfterExecution = true, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary)
+        public static SKRenderContext CopyToSKRenderContext(this Page page, Dictionary<string, Func<SKRenderAction, IEnumerable<SKRenderAction>>> taggedActions, bool removeTaggedActionsAfterExecution = true, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
-            return CopyToSKRenderContext(page, taggedActions, new Dictionary<string, (SKBitmap, bool)>(), removeTaggedActionsAfterExecution, textOption);
+            return CopyToSKRenderContext(page, taggedActions, new Dictionary<string, (SKBitmap, bool)>(), removeTaggedActionsAfterExecution, textOption, filterOption);
         }
 
         /// <summary>
@@ -1474,16 +1682,120 @@ namespace VectSharp.Canvas
         /// If you are rendering multiple <see cref="Page"/>s (or you are rendering the same page multiple times), it will be beneficial to keep a reference to this dictionary and pass it again on further rendering requests; otherwise, you can just pass an empty dictionary.</param>
         /// <param name="removeTaggedActionsAfterExecution">Whether the actions should be removed from <paramref name="taggedActions"/> after their execution. Set to false if the same action should be performed on multiple items with the same tag.</param>
         /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
         /// <returns>A <see cref="SKRenderContext"/> containing the rendered graphics objects.</returns>
-        public static SKRenderContext CopyToSKRenderContext(this Page page, Dictionary<string, Func<SKRenderAction, IEnumerable<SKRenderAction>>> taggedActions, Dictionary<string, (SKBitmap, bool)> images, bool removeTaggedActionsAfterExecution = true, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary)
+        public static SKRenderContext CopyToSKRenderContext(this Page page, Dictionary<string, Func<SKRenderAction, IEnumerable<SKRenderAction>>> taggedActions, Dictionary<string, (SKBitmap, bool)> images, bool removeTaggedActionsAfterExecution = true, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
-            SKRenderContextImpl tbr = new SKRenderContextImpl(page.Width, page.Height, removeTaggedActionsAfterExecution, textOption, images)
+            if (filterOption == null)
+            {
+                filterOption = FilterOption.Default;
+            }
+
+            SKRenderContextImpl tbr = new SKRenderContextImpl(page.Width, page.Height, removeTaggedActionsAfterExecution, textOption, images, filterOption)
             {
                 TaggedActions = taggedActions
             };
             page.Graphics.CopyToIGraphicsContext(tbr);
 
             return tbr;
+        }
+
+
+        /// <summary>
+        /// Rasterise a region of a <see cref="Graphics"/> object.
+        /// </summary>
+        /// <param name="graphics">The <see cref="Graphics"/> object that will be rasterised.</param>
+        /// <param name="region">The region of the <paramref name="graphics"/> that will be rasterised.</param>
+        /// <param name="scale">The scale at which the image will be rendered.</param>
+        /// <param name="interpolate">Whether the resulting image should be interpolated or not when it is drawn on another <see cref="Graphics"/> surface.</param>
+        /// <returns>A <see cref="RasterImage"/> containing the rasterised graphics.</returns>
+        public static RasterImage Rasterise(this Graphics graphics, Rectangle region, double scale, bool interpolate)
+        {
+            Page pag = new Page(1, 1);
+            pag.Graphics.DrawGraphics(0, 0, graphics);
+            pag.Crop(region.Location, region.Size);
+
+            //pag.PaintToSKCanvas().RenderAtResolution((int)Math.Round(region.Size.Width * scale), (int)Math.Round(region.Size.Height * scale), null);
+
+            int width = (int)Math.Round(region.Size.Width * scale);
+            int height = (int)Math.Round(region.Size.Height * scale);
+
+            SKRenderContext ctx = pag.CopyToSKRenderContext();
+
+            SKBitmap bitmap = new SKBitmap(width, height, SKColorType.Rgba8888, SKAlphaType.Unpremul);
+
+            SKCanvas canvas = new SKCanvas(bitmap);
+
+            canvas.Save();
+
+            for (int i = 0; i < ctx.SKRenderActions.Count; i++)
+            {
+                if (ctx.SKRenderActions[i].ActionType == SKRenderAction.ActionTypes.Clip)
+                {
+                    canvas.ClipPath(ctx.SKRenderActions[i].Path, antialias: true);
+                }
+                else if (ctx.SKRenderActions[i].ActionType == SKRenderAction.ActionTypes.Restore)
+                {
+                    canvas.Restore();
+                }
+                else if (ctx.SKRenderActions[i].ActionType == SKRenderAction.ActionTypes.Save)
+                {
+                    canvas.Save();
+                }
+                else if (ctx.SKRenderActions[i].ActionType == SKRenderAction.ActionTypes.Transform)
+                {
+                    SKMatrix mat = ctx.SKRenderActions[i].Transform.Value;
+                    canvas.Concat(ref mat);
+                }
+                else
+                {
+                    if (ctx.SKRenderActions[i].ActionType == SKRenderAction.ActionTypes.Path && ctx.SKRenderActions[i].Path != null)
+                    {
+                        canvas.DrawPath(ctx.SKRenderActions[i].Path, ctx.SKRenderActions[i].Paint);
+                    }
+                    else if (ctx.SKRenderActions[i].ActionType == SKRenderAction.ActionTypes.Text)
+                    {
+                        canvas.DrawText(ctx.SKRenderActions[i].Text, ctx.SKRenderActions[i].TextX, ctx.SKRenderActions[i].TextY, ctx.SKRenderActions[i].Font, ctx.SKRenderActions[i].Paint);
+                    }
+                    else if (ctx.SKRenderActions[i].ActionType == SKRenderAction.ActionTypes.RasterImage)
+                    {
+                        (SKBitmap image, bool interpolateIt) = ctx.Images[ctx.SKRenderActions[i].ImageId];
+
+                        SKPaint paint;
+
+                        if (!interpolateIt)
+                        {
+                            paint = null;
+                        }
+                        else
+                        {
+                            paint = new SKPaint() { FilterQuality = SKFilterQuality.Medium };
+                        }
+
+                        canvas.DrawBitmap(image, ctx.SKRenderActions[i].ImageSource.Value, ctx.SKRenderActions[i].ImageDestination.Value, paint);
+
+                        paint?.Dispose();
+                    }
+                }
+            }
+
+            canvas.Restore();
+
+            IntPtr pixels = bitmap.GetPixels(out IntPtr length);
+
+            IntPtr tbrData = System.Runtime.InteropServices.Marshal.AllocHGlobal(length);
+            GC.AddMemoryPressure((long)length);
+
+            unsafe
+            {
+                Buffer.MemoryCopy((void*)pixels, (void*)tbrData, (long)length, (long)length);
+            }
+
+            canvas.Dispose();
+            bitmap.Dispose();
+
+            DisposableIntPtr disp = new DisposableIntPtr(tbrData);
+            return new RasterImage(ref disp, width, height, true, interpolate);
         }
     }
 }

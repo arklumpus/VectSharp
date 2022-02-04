@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using VectSharp.Filters;
 
 namespace VectSharp.Canvas
 {
@@ -207,8 +208,9 @@ namespace VectSharp.Canvas
         private Avalonia.Controls.Canvas currControlElement;
 
         private Stack<Avalonia.Controls.Canvas> controlElements;
+        private FilterOption _filterOption;
 
-        public AvaloniaContext(double width, double height, bool removeTaggedActionsAfterExecution, AvaloniaContextInterpreter.TextOptions textOption)
+        public AvaloniaContext(double width, double height, bool removeTaggedActionsAfterExecution, AvaloniaContextInterpreter.TextOptions textOption, FilterOption filterOption)
         {
             currentPath = new PathGeometry();
             currentFigure = new PathFigure() { IsClosed = false };
@@ -229,6 +231,7 @@ namespace VectSharp.Canvas
             currControlElement = ControlItem;
             controlElements = new Stack<Avalonia.Controls.Canvas>();
             controlElements.Push(ControlItem);
+            _filterOption = filterOption;
         }
 
         public Avalonia.Controls.Canvas ControlItem { get; }
@@ -290,7 +293,7 @@ namespace VectSharp.Canvas
             if (_textOption == AvaloniaContextInterpreter.TextOptions.NeverConvert || (_textOption == AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary && Font.FontFamily.IsStandardFamily && Font.FontFamily.FileName != "ZapfDingbats" && Font.FontFamily.FileName != "Symbol"))
             {
                 TextBlock blk = new TextBlock() { ClipToBounds = false, Text = text, FontFamily = Avalonia.Media.FontFamily.Parse(FontFamily), FontSize = Font.FontSize, FontStyle = (Font.FontFamily.IsOblique ? FontStyle.Oblique : Font.FontFamily.IsItalic ? FontStyle.Italic : FontStyle.Normal), FontWeight = (Font.FontFamily.IsBold ? FontWeight.Bold : FontWeight.Regular) };
-                
+
                 double top = y;
                 double left = x;
 
@@ -837,6 +840,107 @@ namespace VectSharp.Canvas
                 }
             }
         }
+
+        public void DrawFilteredGraphics(Graphics graphics, IFilter filter)
+        {
+            if (this._filterOption.Operation == FilterOption.FilterOperations.RasteriseAllWithSkia)
+            {
+                double scale = this._filterOption.RasterisationResolution;
+
+                Rectangle bounds = graphics.GetBounds();
+
+                bounds = new Rectangle(bounds.Location.X - filter.TopLeftMargin.X, bounds.Location.Y - filter.TopLeftMargin.Y, bounds.Size.Width + filter.TopLeftMargin.X + filter.BottomRightMargin.X, bounds.Size.Height + filter.TopLeftMargin.Y + filter.BottomRightMargin.Y);
+
+                if (bounds.Size.Width > 0 && bounds.Size.Height > 0)
+                {
+                    if (!this._filterOption.RasterisationResolutionRelative)
+                    {
+                        scale = scale / Math.Min(bounds.Size.Width, bounds.Size.Height);
+                    }
+
+                    RasterImage rasterised = SKRenderContextInterpreter.Rasterise(graphics, bounds, scale, true);
+                    RasterImage filtered = null;
+
+                    if (filter is IFilterWithRasterisableParameter filterWithRastParam)
+                    {
+                        filterWithRastParam.RasteriseParameter(SKRenderContextInterpreter.Rasterise, scale);
+                    }
+
+                    if (filter is ILocationInvariantFilter locInvFilter)
+                    {
+                        filtered = locInvFilter.Filter(rasterised, scale);
+                    }
+                    else if (filter is IFilterWithLocation filterWithLoc)
+                    {
+                        filtered = filterWithLoc.Filter(rasterised, bounds, scale);
+                    }
+
+                    if (filtered != null)
+                    {
+                        rasterised.Dispose();
+
+                        DrawRasterImage(0, 0, filtered.Width, filtered.Height, bounds.Location.X, bounds.Location.Y, bounds.Size.Width, bounds.Size.Height, filtered);
+                    }
+                }
+            }
+            else if (this._filterOption.Operation == FilterOption.FilterOperations.RasteriseAllWithVectSharp)
+            {
+                double scale = this._filterOption.RasterisationResolution;
+
+                Rectangle bounds = graphics.GetBounds();
+
+                bounds = new Rectangle(bounds.Location.X - filter.TopLeftMargin.X, bounds.Location.Y - filter.TopLeftMargin.Y, bounds.Size.Width + filter.TopLeftMargin.X + filter.BottomRightMargin.X, bounds.Size.Height + filter.TopLeftMargin.Y + filter.BottomRightMargin.Y);
+
+                if (bounds.Size.Width > 0 && bounds.Size.Height > 0)
+                {
+                    if (!this._filterOption.RasterisationResolutionRelative)
+                    {
+                        scale = scale / Math.Min(bounds.Size.Width, bounds.Size.Height);
+                    }
+
+                    if (graphics.TryRasterise(bounds, scale, true, out RasterImage rasterised))
+                    {
+                        RasterImage filtered = null;
+
+                        if (filter is IFilterWithRasterisableParameter filterWithRastParam)
+                        {
+                            filterWithRastParam.RasteriseParameter(SKRenderContextInterpreter.Rasterise, scale);
+                        }
+
+                        if (filter is ILocationInvariantFilter locInvFilter)
+                        {
+                            filtered = locInvFilter.Filter(rasterised, scale);
+                        }
+                        else if (filter is IFilterWithLocation filterWithLoc)
+                        {
+                            filtered = filterWithLoc.Filter(rasterised, bounds, scale);
+                        }
+
+                        if (filtered != null)
+                        {
+                            rasterised.Dispose();
+
+                            DrawRasterImage(0, 0, filtered.Width, filtered.Height, bounds.Location.X, bounds.Location.Y, bounds.Size.Width, bounds.Size.Height, filtered);
+                        }
+                    }
+                    else
+                    {
+                        throw new NotImplementedException(@"The filter could not be rasterised! You can avoid this error by doing one of the following:
+ • Add a reference to VectSharp.Raster or VectSharp.Raster.ImageSharp (you may also need to add a using directive somewhere to force the assembly to be loaded).
+ • Provide your own implementation of Graphics.RasterisationMethod.
+ • Set the FilterOption.Operation to ""RasteriseAllWithSkia"", ""IgnoreAll"" or ""SkipAll"".");
+                    }
+                }
+            }
+            else if (this._filterOption.Operation == FilterOption.FilterOperations.IgnoreAll)
+            {
+                graphics.CopyToIGraphicsContext(this);
+            }
+            else
+            {
+
+            }
+        }
     }
 
     internal class RenderCanvas : Avalonia.Controls.Canvas
@@ -882,14 +986,14 @@ namespace VectSharp.Canvas
             }
         }
 
-        public RenderCanvas(Graphics content, Colour backgroundColour, double width, double height, Dictionary<string, Delegate> taggedActions, bool removeTaggedActionsAfterExecution, AvaloniaContextInterpreter.TextOptions textOption)
+        public RenderCanvas(Graphics content, Colour backgroundColour, double width, double height, Dictionary<string, Delegate> taggedActions, bool removeTaggedActionsAfterExecution, AvaloniaContextInterpreter.TextOptions textOption, FilterOption filterOption)
         {
             this.BackgroundBrush = new SolidColorBrush(Color.FromArgb((byte)(backgroundColour.A * 255), (byte)(backgroundColour.R * 255), (byte)(backgroundColour.G * 255), (byte)(backgroundColour.B * 255)));
 
             this.Width = width;
             this.Height = height;
             this.Images = new Dictionary<string, (IImage, bool)>();
-            AvaloniaDrawingContext ctx = new AvaloniaDrawingContext(this.Width, this.Height, removeTaggedActionsAfterExecution, textOption, this.Images);
+            AvaloniaDrawingContext ctx = new AvaloniaDrawingContext(this.Width, this.Height, removeTaggedActionsAfterExecution, textOption, this.Images, filterOption);
             foreach (KeyValuePair<string, Delegate> action in taggedActions)
             {
                 ctx.TaggedActions.Add(action.Key, (Func<RenderAction, IEnumerable<RenderAction>>)action.Value);
@@ -1438,8 +1542,9 @@ namespace VectSharp.Canvas
 
         private Geometry _clippingPath;
         private Stack<Geometry> clippingPaths;
+        private FilterOption _filterOption;
 
-        public AvaloniaDrawingContext(double width, double height, bool removeTaggedActionsAfterExecution, AvaloniaContextInterpreter.TextOptions textOption, Dictionary<string, (IImage, bool)> images)
+        public AvaloniaDrawingContext(double width, double height, bool removeTaggedActionsAfterExecution, AvaloniaContextInterpreter.TextOptions textOption, Dictionary<string, (IImage, bool)> images, FilterOption filterOption)
         {
             this.Images = images;
 
@@ -1466,6 +1571,8 @@ namespace VectSharp.Canvas
             _clippingPath = null;
             clippingPaths = new Stack<Geometry>();
             clippingPaths.Push(_clippingPath);
+
+            _filterOption = filterOption;
         }
 
         public List<RenderAction> RenderActions { get; set; }
@@ -2275,6 +2382,107 @@ namespace VectSharp.Canvas
                 RenderActions.Add(act);
             }
         }
+
+        public void DrawFilteredGraphics(Graphics graphics, IFilter filter)
+        {
+            if (this._filterOption.Operation == FilterOption.FilterOperations.RasteriseAllWithSkia)
+            {
+                double scale = this._filterOption.RasterisationResolution;
+
+                Rectangle bounds = graphics.GetBounds();
+
+                bounds = new Rectangle(bounds.Location.X - filter.TopLeftMargin.X, bounds.Location.Y - filter.TopLeftMargin.Y, bounds.Size.Width + filter.TopLeftMargin.X + filter.BottomRightMargin.X, bounds.Size.Height + filter.TopLeftMargin.Y + filter.BottomRightMargin.Y);
+
+                if (bounds.Size.Width > 0 && bounds.Size.Height > 0)
+                {
+                    if (!this._filterOption.RasterisationResolutionRelative)
+                    {
+                        scale = scale / Math.Min(bounds.Size.Width, bounds.Size.Height);
+                    }
+
+                    RasterImage rasterised = SKRenderContextInterpreter.Rasterise(graphics, bounds, scale, true);
+                    RasterImage filtered = null;
+
+                    if (filter is IFilterWithRasterisableParameter filterWithRastParam)
+                    {
+                        filterWithRastParam.RasteriseParameter(SKRenderContextInterpreter.Rasterise, scale);
+                    }
+
+                    if (filter is ILocationInvariantFilter locInvFilter)
+                    {
+                        filtered = locInvFilter.Filter(rasterised, scale);
+                    }
+                    else if (filter is IFilterWithLocation filterWithLoc)
+                    {
+                        filtered = filterWithLoc.Filter(rasterised, bounds, scale);
+                    }
+
+                    if (filtered != null)
+                    {
+                        rasterised.Dispose();
+
+                        DrawRasterImage(0, 0, filtered.Width, filtered.Height, bounds.Location.X, bounds.Location.Y, bounds.Size.Width, bounds.Size.Height, filtered);
+                    }
+                }
+            }
+            else if (this._filterOption.Operation == FilterOption.FilterOperations.RasteriseAllWithVectSharp)
+            {
+                double scale = this._filterOption.RasterisationResolution;
+
+                Rectangle bounds = graphics.GetBounds();
+
+                bounds = new Rectangle(bounds.Location.X - filter.TopLeftMargin.X, bounds.Location.Y - filter.TopLeftMargin.Y, bounds.Size.Width + filter.TopLeftMargin.X + filter.BottomRightMargin.X, bounds.Size.Height + filter.TopLeftMargin.Y + filter.BottomRightMargin.Y);
+
+                if (bounds.Size.Width > 0 && bounds.Size.Height > 0)
+                {
+                    if (!this._filterOption.RasterisationResolutionRelative)
+                    {
+                        scale = scale / Math.Min(bounds.Size.Width, bounds.Size.Height);
+                    }
+
+                    if (graphics.TryRasterise(bounds, scale, true, out RasterImage rasterised))
+                    {
+                        RasterImage filtered = null;
+
+                        if (filter is IFilterWithRasterisableParameter filterWithRastParam)
+                        {
+                            filterWithRastParam.RasteriseParameter(SKRenderContextInterpreter.Rasterise, scale);
+                        }
+
+                        if (filter is ILocationInvariantFilter locInvFilter)
+                        {
+                            filtered = locInvFilter.Filter(rasterised, scale);
+                        }
+                        else if (filter is IFilterWithLocation filterWithLoc)
+                        {
+                            filtered = filterWithLoc.Filter(rasterised, bounds, scale);
+                        }
+
+                        if (filtered != null)
+                        {
+                            rasterised.Dispose();
+
+                            DrawRasterImage(0, 0, filtered.Width, filtered.Height, bounds.Location.X, bounds.Location.Y, bounds.Size.Width, bounds.Size.Height, filtered);
+                        }
+                    }
+                    else
+                    {
+                        throw new NotImplementedException(@"The filter could not be rasterised! You can avoid this error by doing one of the following:
+ • Add a reference to VectSharp.Raster or VectSharp.Raster.ImageSharp (you may also need to add a using directive somewhere to force the assembly to be loaded).
+ • Provide your own implementation of Graphics.RasterisationMethod.
+ • Set the FilterOption.Operation to ""RasteriseAllWithSkia"", ""IgnoreAll"" or ""SkipAll"".");
+                    }
+                }
+            }
+            else if (this._filterOption.Operation == FilterOption.FilterOperations.IgnoreAll)
+            {
+                graphics.CopyToIGraphicsContext(this);
+            }
+            else
+            {
+
+            }
+        }
     }
 
 
@@ -2309,10 +2517,16 @@ namespace VectSharp.Canvas
         /// </summary>
         /// <param name="page">The <see cref="Page"/> to render.</param>
         /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
-        public static Avalonia.Controls.Canvas PaintToCanvas(this Page page, TextOptions textOption = TextOptions.ConvertIfNecessary)
+        public static Avalonia.Controls.Canvas PaintToCanvas(this Page page, TextOptions textOption = TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
-            AvaloniaContext ctx = new AvaloniaContext(page.Width, page.Height, true, textOption);
+            if (filterOption == null)
+            {
+                filterOption = FilterOption.Default;
+            }
+
+            AvaloniaContext ctx = new AvaloniaContext(page.Width, page.Height, true, textOption, filterOption);
             page.Graphics.CopyToIGraphicsContext(ctx);
             ctx.ControlItem.Background = new SolidColorBrush(Color.FromArgb((byte)(page.Background.A * 255), (byte)(page.Background.R * 255), (byte)(page.Background.G * 255), (byte)(page.Background.B * 255)));
             return ctx.ControlItem;
@@ -2324,18 +2538,19 @@ namespace VectSharp.Canvas
         /// <param name="page">The <see cref="Page"/> to render.</param>
         /// <param name="graphicsAsControls">If this is true, each graphics object (e.g. paths, text...) is rendered as a separate <see cref="Avalonia.Controls.Control"/>. Otherwise, they are directly rendered onto the drawing context (which is faster, but does not allow interactivity).</param>
         /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
-        public static Avalonia.Controls.Canvas PaintToCanvas(this Page page, bool graphicsAsControls, TextOptions textOption = TextOptions.ConvertIfNecessary)
+        public static Avalonia.Controls.Canvas PaintToCanvas(this Page page, bool graphicsAsControls, TextOptions textOption = TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
             if (graphicsAsControls)
             {
-                Avalonia.Controls.Canvas tbr = page.PaintToCanvas(textOption);
+                Avalonia.Controls.Canvas tbr = page.PaintToCanvas(textOption, filterOption);
                 tbr.Background = new SolidColorBrush(Color.FromArgb((byte)(page.Background.A * 255), (byte)(page.Background.R * 255), (byte)(page.Background.G * 255), (byte)(page.Background.B * 255)));
                 return tbr;
             }
             else
             {
-                return new RenderCanvas(page.Graphics, page.Background, page.Width, page.Height, new Dictionary<string, Delegate>(), true, textOption) { Background = new SolidColorBrush(Color.FromArgb((byte)(page.Background.A * 255), (byte)(page.Background.R * 255), (byte)(page.Background.G * 255), (byte)(page.Background.B * 255))) };
+                return new RenderCanvas(page.Graphics, page.Background, page.Width, page.Height, new Dictionary<string, Delegate>(), true, textOption, filterOption) { Background = new SolidColorBrush(Color.FromArgb((byte)(page.Background.A * 255), (byte)(page.Background.R * 255), (byte)(page.Background.G * 255), (byte)(page.Background.B * 255))) };
             }
         }
 
@@ -2348,18 +2563,19 @@ namespace VectSharp.Canvas
         /// If <paramref name="graphicsAsControls"/> is true, the delegates should be voids that accept one parameter of type <see cref="TextBlock"/> or <see cref="Path"/> (depending on the tagged item), otherwise, they should accept one parameter of type <see cref="RenderAction"/> and return an <see cref="IEnumerable{RenderAction}"/> of the actions that will actually be performed.</param>
         /// <param name="removeTaggedActionsAfterExecution">Whether the <see cref="Action"/>s should be removed from <paramref name="taggedActions"/> after their execution. Set to false if the same <see cref="Action"/> should be performed on multiple items with the same tag.</param>
         /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
-        public static Avalonia.Controls.Canvas PaintToCanvas(this Page page, bool graphicsAsControls, Dictionary<string, Delegate> taggedActions, bool removeTaggedActionsAfterExecution = true, TextOptions textOption = TextOptions.ConvertIfNecessary)
+        public static Avalonia.Controls.Canvas PaintToCanvas(this Page page, bool graphicsAsControls, Dictionary<string, Delegate> taggedActions, bool removeTaggedActionsAfterExecution = true, TextOptions textOption = TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
             if (graphicsAsControls)
             {
-                Avalonia.Controls.Canvas tbr = page.PaintToCanvas(taggedActions, removeTaggedActionsAfterExecution, textOption);
+                Avalonia.Controls.Canvas tbr = page.PaintToCanvas(taggedActions, removeTaggedActionsAfterExecution, textOption, filterOption);
                 tbr.Background = new SolidColorBrush(Color.FromArgb((byte)(page.Background.A * 255), (byte)(page.Background.R * 255), (byte)(page.Background.G * 255), (byte)(page.Background.B * 255)));
                 return tbr;
             }
             else
             {
-                return new RenderCanvas(page.Graphics, page.Background, page.Width, page.Height, taggedActions, removeTaggedActionsAfterExecution, textOption) { Background = new SolidColorBrush(Color.FromArgb((byte)(page.Background.A * 255), (byte)(page.Background.R * 255), (byte)(page.Background.G * 255), (byte)(page.Background.B * 255))) }; ;
+                return new RenderCanvas(page.Graphics, page.Background, page.Width, page.Height, taggedActions, removeTaggedActionsAfterExecution, textOption, filterOption) { Background = new SolidColorBrush(Color.FromArgb((byte)(page.Background.A * 255), (byte)(page.Background.R * 255), (byte)(page.Background.G * 255), (byte)(page.Background.B * 255))) }; ;
             }
         }
 
@@ -2371,10 +2587,16 @@ namespace VectSharp.Canvas
         /// The delegates should accept one parameter of type <see cref="TextBlock"/> or <see cref="Path"/> (depending on the tagged item).</param>
         /// <param name="removeTaggedActionsAfterExecution">Whether the <see cref="Action"/>s should be removed from <paramref name="taggedActions"/> after their execution. Set to false if the same <see cref="Action"/> should be performed on multiple items with the same tag.</param>
         /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
-        public static Avalonia.Controls.Canvas PaintToCanvas(this Page page, Dictionary<string, Delegate> taggedActions, bool removeTaggedActionsAfterExecution = true, TextOptions textOption = TextOptions.ConvertIfNecessary)
+        public static Avalonia.Controls.Canvas PaintToCanvas(this Page page, Dictionary<string, Delegate> taggedActions, bool removeTaggedActionsAfterExecution = true, TextOptions textOption = TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
-            AvaloniaContext ctx = new AvaloniaContext(page.Width, page.Height, removeTaggedActionsAfterExecution, textOption)
+            if (filterOption == null)
+            {
+                filterOption = FilterOption.Default;
+            }
+
+            AvaloniaContext ctx = new AvaloniaContext(page.Width, page.Height, removeTaggedActionsAfterExecution, textOption, filterOption)
             {
                 TaggedActions = taggedActions
             };

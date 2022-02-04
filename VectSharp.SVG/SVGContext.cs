@@ -22,6 +22,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using VectSharp.Filters;
 
 namespace VectSharp.SVG
 {
@@ -35,6 +36,16 @@ namespace VectSharp.SVG
             tbr[1] = matrix[1, 0] * vector[0] + matrix[1, 1] * vector[1] + matrix[1, 2];
 
             return tbr;
+        }
+
+        public static Point Multiply(double[,] matrix, Point vector)
+        {
+            double[] tbr = new double[2];
+
+            tbr[0] = matrix[0, 0] * vector.X + matrix[0, 1] * vector.Y + matrix[0, 2];
+            tbr[1] = matrix[1, 0] * vector.X + matrix[1, 1] * vector.Y + matrix[1, 2];
+
+            return new Point(tbr[0], tbr[1]);
         }
 
         public static double[,] Multiply(double[,] matrix1, double[,] matrix2)
@@ -171,7 +182,10 @@ namespace VectSharp.SVG
         XmlElement definitions;
         Dictionary<Brush, string> gradients;
 
-        public SVGContext(double width, double height, bool textToPaths, SVGContextInterpreter.TextOptions textOption, Dictionary<string, string> linkDestinations)
+        private SVGContextInterpreter.FilterOption FilterOption;
+
+
+        public SVGContext(double width, double height, bool textToPaths, SVGContextInterpreter.TextOptions textOption, Dictionary<string, string> linkDestinations, SVGContextInterpreter.FilterOption filterOption)
         {
             this.linkDestinations = linkDestinations;
 
@@ -224,6 +238,7 @@ namespace VectSharp.SVG
 
             this.TextToPaths = textToPaths;
             this.TextOption = textOption;
+            this.FilterOption = filterOption;
         }
 
 
@@ -1188,6 +1203,402 @@ namespace VectSharp.SVG
                 parent.InnerText = text.Replace(" ", "\u00A0");
             }
         }
+
+        public void DrawFilteredGraphics(Graphics graphics, IFilter filter)
+        {
+            if (FilterOption.Operation == SVGContextInterpreter.FilterOption.FilterOperations.IgnoreAll)
+            {
+                graphics.CopyToIGraphicsContext(this);
+            }
+            else if (FilterOption.Operation == SVGContextInterpreter.FilterOption.FilterOperations.SkipAll)
+            {
+
+            }
+            else
+            {
+                bool rasterisationNeeded = false;
+                bool justDraw = false;
+
+                if (FilterOption.Operation == SVGContextInterpreter.FilterOption.FilterOperations.RasteriseAll)
+                {
+                    rasterisationNeeded = true;
+                    justDraw = false;
+                }
+                else
+                {
+                    if (FilterOption.Operation == SVGContextInterpreter.FilterOption.FilterOperations.RasteriseIfNecessary)
+                    {
+                        justDraw = false;
+                        rasterisationNeeded = true;
+                    }
+                    else if (FilterOption.Operation == SVGContextInterpreter.FilterOption.FilterOperations.NeverRasteriseAndIgnore)
+                    {
+                        rasterisationNeeded = false;
+                        justDraw = true;
+                    }
+                    else if (FilterOption.Operation == SVGContextInterpreter.FilterOption.FilterOperations.NeverRasteriseAndSkip)
+                    {
+                        rasterisationNeeded = false;
+                        justDraw = false;
+                    }
+
+                    if (filter is MaskFilter mask)
+                    {
+                        rasterisationNeeded = false;
+                        justDraw = false;
+
+                        XmlElement currElement = currentElement;
+
+                        if (!string.IsNullOrEmpty(_currClipPath))
+                        {
+                            currentElement = Document.CreateElement("g", SVGNamespace);
+                            currentElement.SetAttribute("clip-path", _currClipPath);
+                            currElement.AppendChild(currentElement);
+                        }
+
+                        XmlElement currentElement2 = currentElement;
+
+                        string filterGuid = Guid.NewGuid().ToString("N");
+
+                        Rectangle bounds = graphics.GetBounds();
+
+                        Point p1 = new Point(bounds.Location.X, bounds.Location.Y);
+                        Point p2 = new Point(bounds.Location.X + bounds.Size.Width, bounds.Location.Y);
+                        Point p3 = new Point(bounds.Location.X + bounds.Size.Width, bounds.Location.Y + bounds.Size.Height);
+                        Point p4 = new Point(bounds.Location.X, bounds.Location.Y + bounds.Size.Height);
+
+                        /*p1 = MatrixUtils.Multiply(_transform, p1);
+                        p2 = MatrixUtils.Multiply(_transform, p2);
+                        p3 = MatrixUtils.Multiply(_transform, p3);
+                        p4 = MatrixUtils.Multiply(_transform, p4);*/
+
+                        bounds = Point.Bounds(p1, p2, p3, p4);
+
+                        XmlElement maskElement = Document.CreateElement("mask", SVGNamespace);
+                        maskElement.SetAttribute("id", filterGuid);
+                        maskElement.SetAttribute("maskUnits", "userSpaceOnUse");
+                        maskElement.SetAttribute("x", bounds.Location.X.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                        maskElement.SetAttribute("y", bounds.Location.Y.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                        maskElement.SetAttribute("width", bounds.Size.Width.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                        maskElement.SetAttribute("height", bounds.Size.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                        this.definitions.AppendChild(maskElement);
+
+                        currentElement = maskElement;
+
+                        double[,] currTransform = _transform;
+                        _transform = MatrixUtils.Identity;
+
+                        mask.Mask.CopyToIGraphicsContext(this);
+
+                        _transform = currTransform;
+
+                        currentElement = Document.CreateElement("g", SVGNamespace);
+                        currentElement.SetAttribute("mask", "url(#" + filterGuid + ")");
+                        currentElement2.AppendChild(currentElement);
+
+                        currentElement.SetAttribute("transform", "matrix(" + _transform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + _transform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + _transform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
+                        currTransform = _transform;
+                        _transform = MatrixUtils.Identity;
+
+                        graphics.CopyToIGraphicsContext(this);
+
+                        _transform = currTransform;
+
+                        currentElement = currElement;
+                    }
+                    if (filter is GaussianBlurFilter gauss)
+                    {
+                        rasterisationNeeded = false;
+                        justDraw = false;
+                        XmlElement currElement = currentElement;
+
+                        if (!string.IsNullOrEmpty(_currClipPath))
+                        {
+                            currentElement = Document.CreateElement("g", SVGNamespace);
+                            currentElement.SetAttribute("clip-path", _currClipPath);
+                            currElement.AppendChild(currentElement);
+                        }
+
+                        Rectangle bounds = graphics.GetBounds();
+
+                        Point p1 = new Point(bounds.Location.X - gauss.StandardDeviation * 3, bounds.Location.Y - gauss.StandardDeviation * 3);
+                        Point p2 = new Point(bounds.Location.X + bounds.Size.Width + gauss.StandardDeviation * 3, bounds.Location.Y - gauss.StandardDeviation * 3);
+                        Point p3 = new Point(bounds.Location.X + bounds.Size.Width + gauss.StandardDeviation * 3, bounds.Location.Y + bounds.Size.Height + gauss.StandardDeviation * 3);
+                        Point p4 = new Point(bounds.Location.X - gauss.StandardDeviation * 3, bounds.Location.Y + bounds.Size.Height + gauss.StandardDeviation * 3);
+
+                        /*p1 = MatrixUtils.Multiply(_transform, p1);
+                        p2 = MatrixUtils.Multiply(_transform, p2);
+                        p3 = MatrixUtils.Multiply(_transform, p3);
+                        p4 = MatrixUtils.Multiply(_transform, p4);*/
+
+                        bounds = Point.Bounds(p1, p2, p3, p4);
+
+                        string filterGuid = Guid.NewGuid().ToString("N");
+
+                        XmlElement filterElement = Document.CreateElement("filter", SVGNamespace);
+                        filterElement.SetAttribute("id", filterGuid);
+                        filterElement.SetAttribute("color-interpolation-filters", "sRGB");
+                        filterElement.SetAttribute("filterUnits", "userSpaceOnUse");
+                        filterElement.SetAttribute("x", bounds.Location.X.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                        filterElement.SetAttribute("y", bounds.Location.Y.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                        filterElement.SetAttribute("width", bounds.Size.Width.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                        filterElement.SetAttribute("height", bounds.Size.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                        this.definitions.AppendChild(filterElement);
+
+                        XmlElement feElement = Document.CreateElement("feGaussianBlur", SVGNamespace);
+                        feElement.SetAttribute("stdDeviation", gauss.StandardDeviation.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                        filterElement.AppendChild(feElement);
+
+                        XmlElement currentElement2 = currentElement;
+
+                        currentElement = Document.CreateElement("g", SVGNamespace);
+                        currentElement.SetAttribute("filter", "url(#" + filterGuid + ")");
+                        currentElement2.AppendChild(currentElement);
+
+                        currentElement.SetAttribute("transform", "matrix(" + _transform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + _transform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + _transform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
+                        double[,] currTransform = _transform;
+                        _transform = MatrixUtils.Identity;
+
+                        graphics.CopyToIGraphicsContext(this);
+
+                        currentElement = currElement;
+                    }
+                    else if (filter is ColourMatrixFilter cmf)
+                    {
+                        rasterisationNeeded = false;
+                        justDraw = false;
+                        XmlElement currElement = currentElement;
+
+                        if (!string.IsNullOrEmpty(_currClipPath))
+                        {
+                            currentElement = Document.CreateElement("g", SVGNamespace);
+                            currentElement.SetAttribute("clip-path", _currClipPath);
+                            currElement.AppendChild(currentElement);
+                        }
+
+                        Rectangle bounds = graphics.GetBounds();
+
+                        Point p1 = new Point(bounds.Location.X, bounds.Location.Y);
+                        Point p2 = new Point(bounds.Location.X + bounds.Size.Width, bounds.Location.Y);
+                        Point p3 = new Point(bounds.Location.X + bounds.Size.Width, bounds.Location.Y + bounds.Size.Height);
+                        Point p4 = new Point(bounds.Location.X, bounds.Location.Y + bounds.Size.Height);
+
+                       /* p1 = MatrixUtils.Multiply(_transform, p1);
+                        p2 = MatrixUtils.Multiply(_transform, p2);
+                        p3 = MatrixUtils.Multiply(_transform, p3);
+                        p4 = MatrixUtils.Multiply(_transform, p4);*/
+
+                        bounds = Point.Bounds(p1, p2, p3, p4);
+
+                        string filterGuid = Guid.NewGuid().ToString("N");
+
+                        XmlElement filterElement = Document.CreateElement("filter", SVGNamespace);
+                        filterElement.SetAttribute("id", filterGuid);
+                        filterElement.SetAttribute("color-interpolation-filters", "sRGB");
+                        filterElement.SetAttribute("filterUnits", "userSpaceOnUse");
+                        filterElement.SetAttribute("x", bounds.Location.X.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                        filterElement.SetAttribute("y", bounds.Location.Y.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                        filterElement.SetAttribute("width", bounds.Size.Width.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                        filterElement.SetAttribute("height", bounds.Size.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                        this.definitions.AppendChild(filterElement);
+
+                        XmlElement feElement = Document.CreateElement("feColorMatrix", SVGNamespace);
+                        feElement.SetAttribute("type", "matrix");
+
+                        StringBuilder matrix = new StringBuilder();
+
+                        for (int i = 0; i < 4; i++)
+                        {
+                            for (int j = 0; j < 5; j++)
+                            {
+                                matrix.Append(cmf.ColourMatrix[i, j].ToString(System.Globalization.CultureInfo.InvariantCulture));
+                                if (i != 3 || j != 4)
+                                {
+                                    matrix.Append(" ");
+                                }
+                            }
+                        }
+
+                        feElement.SetAttribute("values", matrix.ToString());
+                        filterElement.AppendChild(feElement);
+
+                        XmlElement currentElement2 = currentElement;
+
+                        currentElement = Document.CreateElement("g", SVGNamespace);
+                        currentElement.SetAttribute("filter", "url(#" + filterGuid + ")");
+                        currentElement2.AppendChild(currentElement);
+
+                        currentElement.SetAttribute("transform", "matrix(" + _transform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + _transform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + _transform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
+                        double[,] currTransform = _transform;
+                        _transform = MatrixUtils.Identity;
+
+                        graphics.CopyToIGraphicsContext(this);
+
+                        currentElement = currElement;
+                    }
+                    else if (filter is CompositeLocationInvariantFilter comp)
+                    {
+                        bool allSupported = true;
+
+                        foreach (IFilter filter2 in comp.Filters)
+                        {
+                            if (!(filter2 is GaussianBlurFilter) && !(filter2 is ColourMatrixFilter))
+                            {
+                                allSupported = false;
+                                break;
+                            }
+                        }
+
+                        if (allSupported)
+                        {
+                            rasterisationNeeded = false;
+                            justDraw = false;
+
+                            XmlElement currElement = currentElement;
+
+                            if (!string.IsNullOrEmpty(_currClipPath))
+                            {
+                                currentElement = Document.CreateElement("g", SVGNamespace);
+                                currentElement.SetAttribute("clip-path", _currClipPath);
+                                currElement.AppendChild(currentElement);
+                            }
+
+                            Rectangle bounds = graphics.GetBounds();
+
+                            Point p1 = new Point(bounds.Location.X - comp.TopLeftMargin.X, bounds.Location.Y - comp.TopLeftMargin.Y);
+                            Point p2 = new Point(bounds.Location.X + bounds.Size.Width + comp.BottomRightMargin.X, bounds.Location.Y - comp.TopLeftMargin.Y);
+                            Point p3 = new Point(bounds.Location.X + bounds.Size.Width + comp.BottomRightMargin.X, bounds.Location.Y + bounds.Size.Height + comp.BottomRightMargin.Y);
+                            Point p4 = new Point(bounds.Location.X - comp.TopLeftMargin.X, bounds.Location.Y + bounds.Size.Height + comp.BottomRightMargin.Y);
+
+                           /* p1 = MatrixUtils.Multiply(_transform, p1);
+                            p2 = MatrixUtils.Multiply(_transform, p2);
+                            p3 = MatrixUtils.Multiply(_transform, p3);
+                            p4 = MatrixUtils.Multiply(_transform, p4);*/
+
+                            bounds = Point.Bounds(p1, p2, p3, p4);
+
+                            string filterGuid = Guid.NewGuid().ToString("N");
+
+                            XmlElement filterElement = Document.CreateElement("filter", SVGNamespace);
+                            filterElement.SetAttribute("id", filterGuid);
+                            filterElement.SetAttribute("color-interpolation-filters", "sRGB");
+                            filterElement.SetAttribute("filterUnits", "userSpaceOnUse");
+                            filterElement.SetAttribute("x", bounds.Location.X.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                            filterElement.SetAttribute("y", bounds.Location.Y.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                            filterElement.SetAttribute("width", bounds.Size.Width.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                            filterElement.SetAttribute("height", bounds.Size.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                            this.definitions.AppendChild(filterElement);
+
+                            foreach (IFilter filter2 in comp.Filters)
+                            {
+                                if (filter2 is GaussianBlurFilter gauss2)
+                                {
+                                    XmlElement feElement = Document.CreateElement("feGaussianBlur", SVGNamespace);
+                                    feElement.SetAttribute("stdDeviation", gauss2.StandardDeviation.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                                    filterElement.AppendChild(feElement);
+                                }
+                                else if (filter2 is ColourMatrixFilter cmf2)
+                                {
+                                    XmlElement feElement = Document.CreateElement("feColorMatrix", SVGNamespace);
+                                    feElement.SetAttribute("type", "matrix");
+
+                                    StringBuilder matrix = new StringBuilder();
+
+                                    for (int i = 0; i < 4; i++)
+                                    {
+                                        for (int j = 0; j < 5; j++)
+                                        {
+                                            matrix.Append(cmf2.ColourMatrix[i, j].ToString(System.Globalization.CultureInfo.InvariantCulture));
+                                            if (i != 3 || j != 4)
+                                            {
+                                                matrix.Append(" ");
+                                            }
+                                        }
+                                    }
+
+                                    feElement.SetAttribute("values", matrix.ToString());
+                                    filterElement.AppendChild(feElement);
+                                }
+                            }
+
+                            XmlElement currentElement2 = currentElement;
+
+                            currentElement = Document.CreateElement("g", SVGNamespace);
+                            currentElement.SetAttribute("filter", "url(#" + filterGuid + ")");
+                            currentElement2.AppendChild(currentElement);
+
+                            currentElement.SetAttribute("transform", "matrix(" + _transform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + _transform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + _transform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
+                            double[,] currTransform = _transform;
+                            _transform = MatrixUtils.Identity;
+
+                            graphics.CopyToIGraphicsContext(this);
+
+                            currentElement = currElement;
+
+
+                        }
+                    }
+                }
+
+                if (rasterisationNeeded)
+                {
+                    double scale = FilterOption.RasterisationResolution;
+
+                    Rectangle bounds = graphics.GetBounds();
+
+                    bounds = new Rectangle(bounds.Location.X - filter.TopLeftMargin.X, bounds.Location.Y - filter.TopLeftMargin.Y, bounds.Size.Width + filter.TopLeftMargin.X + filter.BottomRightMargin.X, bounds.Size.Height + filter.TopLeftMargin.Y + filter.BottomRightMargin.Y);
+
+                    if (bounds.Size.Width > 0 && bounds.Size.Height > 0)
+                    {
+                        if (!FilterOption.RasterisationResolutionRelative)
+                        {
+                            scale = scale / Math.Min(bounds.Size.Width, bounds.Size.Height);
+                        }
+
+                        if (graphics.TryRasterise(bounds, scale, true, out RasterImage rasterised))
+                        {
+                            RasterImage filtered = null;
+
+                            if (filter is ILocationInvariantFilter locInvFilter)
+                            {
+                                filtered = locInvFilter.Filter(rasterised, scale);
+                            }
+                            else if (filter is IFilterWithLocation filterWithLoc)
+                            {
+                                filtered = filterWithLoc.Filter(rasterised, bounds, scale);
+                            }
+
+                            if (filtered != null)
+                            {
+                                rasterised.Dispose();
+
+                                DrawRasterImage(0, 0, filtered.Width, filtered.Height, bounds.Location.X, bounds.Location.Y, bounds.Size.Width, bounds.Size.Height, filtered);
+                            }
+                        }
+                        else
+                        {
+                            throw new NotImplementedException(@"The filter could not be rasterised! You can avoid this error by doing one of the following:
+ • Add a reference to VectSharp.Raster or VectSharp.Raster.ImageSharp (you may also need to add a using directive somewhere to force the assembly to be loaded).
+ • Provide your own implementation of Graphics.RasterisationMethod.
+ • Set the FilterOption.Operation to ""NeverRasteriseAndIgnore"", ""NeverRasteriseAndSkip"", ""IgnoreAll"" or ""SkipAll"".");
+                        }
+                    }
+                }
+
+                if (justDraw)
+                {
+                    graphics.CopyToIGraphicsContext(this);
+                }
+            }
+        }
     }
 
 
@@ -1204,11 +1615,12 @@ namespace VectSharp.SVG
         /// <param name="fileName">The full path to the file to save. If it exists, it will be overwritten.</param>
         /// <param name="textOption">Defines whether the used fonts should be included in the file.</param>
         /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
-        public static void SaveAsSVG(this Page page, string fileName, TextOptions textOption = TextOptions.SubsetFonts, Dictionary<string, string> linkDestinations = null)
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
+        public static void SaveAsSVG(this Page page, string fileName, TextOptions textOption = TextOptions.SubsetFonts, Dictionary<string, string> linkDestinations = null, FilterOption filterOption = default)
         {
             using (FileStream sr = new FileStream(fileName, FileMode.Create))
             {
-                page.SaveAsSVG(sr, textOption, linkDestinations);
+                page.SaveAsSVG(sr, textOption, linkDestinations, filterOption);
             }
         }
 
@@ -1239,22 +1651,103 @@ namespace VectSharp.SVG
         }
 
         /// <summary>
+        /// Determines how and whether image filters are rasterised.
+        /// </summary>
+        public class FilterOption
+        {
+            /// <summary>
+            /// Defines whether image filters should be rasterised or not.
+            /// </summary>
+            public enum FilterOperations
+            {
+                /// <summary>
+                /// Image filters will always be rasterised.
+                /// </summary>
+                RasteriseAll,
+
+                /// <summary>
+                /// Image filters will only be rasterised if they are not supported natively by the output file format.
+                /// </summary>
+                RasteriseIfNecessary,
+
+                /// <summary>
+                /// Image filters will never be rasterised; for filters that are not supported, the filter will be ignored.
+                /// </summary>
+                NeverRasteriseAndIgnore,
+
+                /// <summary>
+                /// Image filters will never be rasterised; if an image should be drawn with an unsupported filter, the image will not be drawn at all.
+                /// </summary>
+                NeverRasteriseAndSkip,
+
+                /// <summary>
+                /// All image filters (supported and unsupported) will be ignored.
+                /// </summary>
+                IgnoreAll,
+
+                /// <summary>
+                /// All the images that should be drawn with a filter will be ignored.
+                /// </summary>
+                SkipAll
+            }
+
+            /// <summary>
+            /// Defines whether image filters should be rasterised or not.
+            /// </summary>
+            public FilterOperations Operation { get; } = FilterOperations.RasteriseIfNecessary;
+
+            /// <summary>
+            /// The resolution that will be used to rasterise image filters. Depending on the value of <see cref="RasterisationResolutionRelative"/>, this can either be an absolute resolution (i.e. a size in pixel), or a scale factor that is applied to the image size in graphics units.
+            /// </summary>
+            public double RasterisationResolution { get; } = 1;
+
+            /// <summary>
+            /// Determines whether the value of <see cref="RasterisationResolution"/> is absolute (i.e. a size in pixel), or relative (i.e. a scale factor that is applied to the image size in graphics units).
+            /// </summary>
+            public bool RasterisationResolutionRelative { get; } = true;
+
+            /// <summary>
+            /// The default options for image filter rasterisation.
+            /// </summary>
+            public static FilterOption Default = new FilterOption(FilterOperations.RasteriseIfNecessary, 1, true);
+
+            /// <summary>
+            /// Create a new <see cref="FilterOption"/> object.
+            /// </summary>
+            /// <param name="operation">Defines whether image filters should be rasterised or not.</param>
+            /// <param name="rasterisationResolution">The resolution that will be used to rasterise image filters. Depending on the value of <see cref="RasterisationResolutionRelative"/>, this can either be an absolute resolution (i.e. a size in pixel), or a scale factor that is applied to the image size in graphics units.</param>
+            /// <param name="rasterisationResolutionRelative">Determines whether the value of <see cref="RasterisationResolution"/> is absolute (i.e. a size in pixel), or relative (i.e. a scale factor that is applied to the image size in graphics units).</param>
+            public FilterOption(FilterOperations operation, double rasterisationResolution, bool rasterisationResolutionRelative)
+            {
+                this.Operation = operation;
+                this.RasterisationResolution = rasterisationResolution;
+                this.RasterisationResolutionRelative = rasterisationResolutionRelative;
+            }
+        }
+
+        /// <summary>
         /// Render the page to an SVG stream.
         /// </summary>
         /// <param name="page">The <see cref="Page"/> to render.</param>
         /// <param name="stream">The stream to which the SVG data will be written.</param>
         /// <param name="textOption">Defines whether the used fonts should be included in the file.</param>
         /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
-        public static void SaveAsSVG(this Page page, Stream stream, TextOptions textOption = TextOptions.SubsetFonts, Dictionary<string, string> linkDestinations = null)
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
+        public static void SaveAsSVG(this Page page, Stream stream, TextOptions textOption = TextOptions.SubsetFonts, Dictionary<string, string> linkDestinations = null, FilterOption filterOption = default)
         {
             if (linkDestinations == null)
             {
                 linkDestinations = new Dictionary<string, string>();
             }
 
+            if (filterOption == null)
+            {
+                filterOption = FilterOption.Default;
+            }
+
             bool textToPaths = textOption == TextOptions.ConvertIntoPaths;
 
-            SVGContext ctx = new SVGContext(page.Width, page.Height, textToPaths, textOption, linkDestinations);
+            SVGContext ctx = new SVGContext(page.Width, page.Height, textToPaths, textOption, linkDestinations, filterOption);
 
             ctx.Rectangle(0, 0, page.Width, page.Height);
             ctx.SetFillStyle(page.Background);

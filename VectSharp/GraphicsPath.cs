@@ -40,6 +40,8 @@ namespace VectSharp
         /// <returns>The <see cref="GraphicsPath"/>, to allow for chained calls.</returns>
         public GraphicsPath MoveTo(Point p)
         {
+            cachedLength = double.NaN;
+            cachedBounds = Rectangle.NaN;
             Segments.Add(new MoveSegment(p));
             return this;
         }
@@ -63,6 +65,9 @@ namespace VectSharp
         /// <returns>The <see cref="GraphicsPath"/>, to allow for chained calls.</returns>
         public GraphicsPath LineTo(Point p)
         {
+            cachedLength = double.NaN;
+            cachedBounds = Rectangle.NaN;
+
             if (Segments.Count == 0)
             {
                 Segments.Add(new MoveSegment(p));
@@ -97,6 +102,9 @@ namespace VectSharp
         /// <returns>The <see cref="GraphicsPath"/>, to allow for chained calls.</returns>
         public GraphicsPath Arc(Point center, double radius, double startAngle, double endAngle)
         {
+            cachedLength = double.NaN;
+            cachedBounds = Rectangle.NaN;
+
             if (Segments.Count == 0)
             {
                 Segments.Add(new MoveSegment(center.X + radius * Math.Cos(startAngle), center.Y + radius * Math.Sin(startAngle)));
@@ -203,6 +211,9 @@ namespace VectSharp
                 }
             }
 
+            cachedLength = double.NaN;
+            cachedBounds = Rectangle.NaN;
+
             this.Segments.AddRange(segments);
 
             return this;
@@ -230,6 +241,9 @@ namespace VectSharp
         /// <returns>The <see cref="GraphicsPath"/>, to allow for chained calls.</returns>
         public GraphicsPath CubicBezierTo(Point control1, Point control2, Point endPoint)
         {
+            cachedLength = double.NaN;
+            cachedBounds = Rectangle.NaN;
+
             if (Segments.Count == 0)
             {
                 Segments.Add(new MoveSegment(control1));
@@ -261,6 +275,8 @@ namespace VectSharp
         /// <returns>The <see cref="GraphicsPath"/>, to allow for chained calls.</returns>
         public GraphicsPath Close()
         {
+            cachedLength = double.NaN;
+            cachedBounds = Rectangle.NaN;
             Segments.Add(new CloseSegment());
             return this;
         }
@@ -391,6 +407,9 @@ namespace VectSharp
         /// <returns>The <see cref="GraphicsPath"/>, to allow for chained calls.</returns>
         public GraphicsPath AddTextOnPath(GraphicsPath path, string text, Font font, double reference = 0, TextAnchors anchor = TextAnchors.Left, TextBaselines textBaseline = TextBaselines.Top)
         {
+            cachedLength = double.NaN;
+            cachedBounds = Rectangle.NaN;
+
             double currDelta = 0;
             double pathLength = path.MeasureLength();
 
@@ -1281,7 +1300,7 @@ namespace VectSharp
                                 if (currLen + segLength < length)
                                 {
                                     currLen += segLength;
-                                    currPoint = this.Segments[i].Point;
+                                    currPoint = figureStartPoint;
                                 }
                                 else
                                 {
@@ -1578,7 +1597,7 @@ namespace VectSharp
                                 if (currLen + segLength < length)
                                 {
                                     currLen += segLength;
-                                    currPoint = this.Segments[i].Point;
+                                    currPoint = figureStartPoint;
                                 }
                                 else
                                 {
@@ -2215,13 +2234,7 @@ namespace VectSharp
 
                         exploredEdges.RemoveAt(eiM1);
                         helpers.RemoveAt(eiM1);
-
-                        //gpr.FillRectangle(pt.X - 1, pt.Y - 1, 2, 2, Colours.Green);
                     }
-                    /*else
-                    {
-                        gpr.FillRectangle(pt.X - 1, pt.Y - 1, 2, 2, Colours.Blue);
-                    }*/
                 }
                 else if (vertexType == VertexType.Split)
                 {
@@ -2256,13 +2269,7 @@ namespace VectSharp
 
                         exploredEdges.Add((prev, vertex));
                         helpers.Add(vertex);
-
-                        //gpr.FillPath(new GraphicsPath().MoveTo(pt.X - 1, pt.Y + 1).LineTo(pt.X, pt.Y - 1).LineTo(pt.X + 1, pt.Y + 1).Close(), Colours.Green);
                     }
-                    /* else
-                     {
-                         gpr.FillPath(new GraphicsPath().MoveTo(pt.X - 1, pt.Y + 1).LineTo(pt.X, pt.Y - 1).LineTo(pt.X + 1, pt.Y + 1).Close(), Colours.Blue);
-                     }*/
 
 
                     /*(int, int) ej = (-1, -1);
@@ -2436,8 +2443,6 @@ namespace VectSharp
                 }
                 else if (vertexType == VertexType.Regular)
                 {
-
-                    //gpr.FillPath(new GraphicsPath().Arc(pt, 1, 0, 2 * Math.PI), Colours.Green);
                     if ((isAntiClockwise && (prevPoint.Y < pt.Y || pt.Y < nextPoint.Y)) || (!isAntiClockwise && (prevPoint.Y > pt.Y || pt.Y > nextPoint.Y)))
                     {
                         int eiM1 = -1;
@@ -2503,18 +2508,6 @@ namespace VectSharp
                 }
             }
 
-            /*foreach ((int, int) diag in diagonals)
-            {
-                yield return new GraphicsPath().MoveTo(vertices[diag.Item1]).LineTo(vertices[diag.Item2]);
-            }
-
-            yield break;*/
-
-
-            //List<(int, int, bool)> allEdges = new List<(int, int, bool)>((from el in edges select (el.Item1, el.Item2, false)).Concat(from el in diagonals select (el.Item1, el.Item2, true)).Concat(from el in diagonals select (el.Item1, el.Item2, true)));
-
-            //List<List<(int, int)>> polygons = SplitPolygons(allEdges);
-
             for (int i = diagonals.Count - 1; i >= 0; i--)
             {
                 for (int j = 0; j < edges.Count; j++)
@@ -2535,40 +2528,10 @@ namespace VectSharp
 
             foreach (List<(int, int)> polygon in polygons)
             {
-                /*GraphicsPath polygonPath = new GraphicsPath();
-                foreach ((int, int) edge in polygon)
-                {
-                    if (polygonPath.Segments.Count == 0)
-                    {
-                        polygonPath.MoveTo(vertices[edge.Item1]);
-                    }
-
-                    polygonPath.LineTo(vertices[edge.Item2]);
-                }
-
-                yield return polygonPath;*/
-
-                /*if (ind == 0)
-                {*/
-                /*GraphicsPath polygonPath = new GraphicsPath();
-                foreach ((int, int) edge in polygon)
-                {
-                    if (polygonPath.Segments.Count == 0)
-                    {
-                        polygonPath.MoveTo(vertices[edge.Item1]);
-                    }
-
-                    polygonPath.LineTo(vertices[edge.Item2]);
-                }
-
-                //gpr.FillPath(polygonPath, Colours.LightCoral);
-                yield return polygonPath;
-                */
-                foreach (GraphicsPath pth in TriangulateMonotone(vertices, polygon, directions, clockwise ? -1 : 1/*, gpr*/))
+                foreach (GraphicsPath pth in TriangulateMonotone(vertices, polygon, directions, clockwise ? -1 : 1))
                 {
                     yield return pth;
                 }
-                //}
 
                 ind++;
             }
@@ -2582,8 +2545,6 @@ namespace VectSharp
         private static List<List<(int, int)>> SplitPolygons(List<(int, int)> edges, List<(int, int)> diagonals, List<Point> vertices, int[] nexts)
         {
             List<List<(int, int)>> polygons = new List<List<(int, int)>>();
-
-            //List<(int, int, bool)> allEdges = new List<(int, int, bool)>(from el in edges select (el.Item1, el.Item2, false));
 
             List<int>[] outPaths = new List<int>[vertices.Count];
 
@@ -2739,8 +2700,6 @@ namespace VectSharp
                 }
                 else
                 {
-                    //directions[edges[i].Item1] = Math.Sign(vertices[edges[i].Item2].X - vertices[edges[i].Item1].X);
-
                     for (int i = 0; i < edges.Count; i++)
                     {
                         if (edges[i].Item2 == edge.Item1)
@@ -2770,11 +2729,6 @@ namespace VectSharp
                     return Math.Sign(vertices[a].X - vertices[b].X);
                 }
             })).ToArray();
-
-            /* for (int i = 0; i < sortedVertices.Length; i++)
-             {
-                 gpr.FillText(vertices[sortedVertices[i]], i.ToString(), new Font(new FontFamily(FontFamily.StandardFontFamilies.Helvetica), 4), Colours.Black);
-             }*/
 
             List<(int, int)> diagonals = new List<(int, int)>();
 
@@ -2811,24 +2765,9 @@ namespace VectSharp
                     {
                         int currVert = stack.Peek();
 
-                        // double angle = Math.Atan2(vertices[lastPopped].Y - vertices[sortedVertices[i]].Y, vertices[lastPopped].X - vertices[sortedVertices[i]].X) - Math.Atan2(vertices[currVert].Y - vertices[sortedVertices[i]].Y, vertices[currVert].X - vertices[sortedVertices[i]].X);
-
-                        //double angle2 = Math.Atan2(vertices[currVert].Y - vertices[lastPopped].Y, vertices[currVert].X - vertices[lastPopped].X) - Math.Atan2(vertices[sortedVertices[i]].Y - vertices[lastPopped].Y, vertices[sortedVertices[i]].X - vertices[lastPopped].X);
-
                         double areaSign = Math.Sign((vertices[currVert].X - vertices[lastPopped].X) * (vertices[sortedVertices[i]].Y - vertices[lastPopped].Y) - (vertices[currVert].Y - vertices[lastPopped].Y) * (vertices[sortedVertices[i]].X - vertices[lastPopped].X));
 
                         double dirSign = Math.Sign(vertices[currVert].X - vertices[lastPopped].X);
-
-
-                        /*if (angle2 < -Math.PI)
-                        {
-                            angle2 += 2 * Math.PI;
-                        }*/
-
-                        /* if (angle < -Math.PI)
-                         {
-                             angle += 2 * Math.PI;
-                         }*/
 
                         if (areaSign * dirSign > 0)
                         {
@@ -2855,13 +2794,6 @@ namespace VectSharp
 
                 diagonals.Add((v, sortedVertices[sortedVertices.Length - 1]));
             }
-
-            /*foreach ((int, int) diag in diagonals)
-            {
-                yield return new GraphicsPath().MoveTo(vertices[diag.Item1]).LineTo(vertices[diag.Item2]);
-            }
-
-            yield break;*/
 
             List<int>[] connections = new List<int>[vertices.Count];
 
@@ -2934,8 +2866,6 @@ namespace VectSharp
                 }
             }
 
-            //List<List<(int, int)>> polygons = SplitPolygons(edges, diagonals, vertices, nexts);
-
             foreach (List<(int, int)> polygon in polygons)
             {
                 GraphicsPath polygonPath = new GraphicsPath();
@@ -2968,6 +2898,271 @@ namespace VectSharp
             }
 
             return tbr;
+        }
+
+
+        private Rectangle cachedBounds = Rectangle.NaN;
+
+        /// <summary>
+        /// Compute the rectangular bounds of the path.
+        /// </summary>
+        /// <returns>The smallest <see cref="Rectangle"/> that contains the path.</returns>
+        public Rectangle GetBounds()
+        {
+            if (double.IsNaN(cachedBounds.Location.X) || double.IsNaN(cachedBounds.Location.Y) || double.IsNaN(cachedBounds.Size.Width) || double.IsNaN(cachedBounds.Size.Height))
+            {
+                Point min = new Point(double.MaxValue, double.MaxValue);
+                Point max = new Point(double.MinValue, double.MinValue);
+
+                Point currPoint = new Point();
+                Point figureStartPoint = new Point();
+
+                for (int i = 0; i < this.Segments.Count; i++)
+                {
+                    switch (this.Segments[i].Type)
+                    {
+                        case SegmentType.Move:
+                            currPoint = this.Segments[i].Point;
+                            figureStartPoint = this.Segments[i].Point;
+                            min = Point.Min(min, this.Segments[i].Point);
+                            max = Point.Max(max, this.Segments[i].Point);
+                            break;
+                        case SegmentType.Line:
+                            if (i > 0)
+                            {
+                                currPoint = this.Segments[i].Point;
+                            }
+                            else
+                            {
+                                currPoint = this.Segments[i].Point;
+                                figureStartPoint = this.Segments[i].Point;
+                            }
+                            min = Point.Min(min, this.Segments[i].Point);
+                            max = Point.Max(max, this.Segments[i].Point);
+                            break;
+                        case SegmentType.Arc:
+                            ArcSegment seg = (ArcSegment)this.Segments[i];
+
+                            if (i == 0)
+                            {
+                                figureStartPoint = new Point(seg.Points[0].X + Math.Cos(seg.StartAngle) * seg.Radius, seg.Points[0].Y + Math.Sin(seg.StartAngle) * seg.Radius);
+                                currPoint = figureStartPoint;
+
+                                min = Point.Min(min, currPoint);
+                                max = Point.Max(max, currPoint);
+                            }
+
+                            double theta1 = seg.StartAngle;
+                            double theta2 = seg.EndAngle;
+
+                            if (theta1 > theta2)
+                            {
+                                double temp = theta1;
+                                theta1 = theta2;
+                                theta2 = temp;
+                            }
+
+                            theta1 /= 2 * Math.PI;
+                            theta2 /= 2 * Math.PI;
+
+                            int minAngle = (int)Math.Min(0, Math.Floor(theta1)) * 4;
+                            int maxAngle = (int)Math.Max(1, Math.Ceiling(theta2)) * 4;
+
+                            theta1 *= 4;
+                            theta2 *= 4;
+
+                            bool right = false;
+                            bool bottom = false;
+                            bool left = false;
+                            bool top = false;
+
+                            for (int j = minAngle; j < maxAngle; j++)
+                            {
+                                if (theta1 <= j && theta2 >= j)
+                                {
+                                    switch (j % 4)
+                                    {
+                                        case 0:
+                                            right = true;
+                                            break;
+                                        case 1:
+                                            bottom = true;
+                                            break;
+                                        case 2:
+                                            left = true;
+                                            break;
+                                        case 3:
+                                            top = true;
+                                            break;
+                                    }
+                                }
+                            }
+
+                            if (right)
+                            {
+                                Point p = new Point(seg.Points[0].X + seg.Radius, seg.Points[0].Y);
+                                min = Point.Min(min, p);
+                                max = Point.Max(max, p);
+                            }
+
+                            if (bottom)
+                            {
+                                Point p = new Point(seg.Points[0].X, seg.Points[0].Y + seg.Radius);
+                                min = Point.Min(min, p);
+                                max = Point.Max(max, p);
+                            }
+
+                            if (left)
+                            {
+                                Point p = new Point(seg.Points[0].X - seg.Radius, seg.Points[0].Y);
+                                min = Point.Min(min, p);
+                                max = Point.Max(max, p);
+                            }
+
+                            if (top)
+                            {
+                                Point p = new Point(seg.Points[0].X, seg.Points[0].Y - seg.Radius);
+                                min = Point.Min(min, p);
+                                max = Point.Max(max, p);
+                            }
+
+                            min = Point.Min(min, this.Segments[i].Point);
+                            max = Point.Max(max, this.Segments[i].Point);
+
+                            currPoint = this.Segments[i].Point;
+                            break;
+                        case SegmentType.Close:
+                            currPoint = figureStartPoint;
+                            break;
+                        case SegmentType.CubicBezier:
+                            if (i == 0)
+                            {
+                                currPoint = this.Segments[i].Points[0];
+                                figureStartPoint = this.Segments[i].Points[0];
+                            }
+
+                            min = Point.Min(min, this.Segments[i].Point);
+                            max = Point.Max(max, this.Segments[i].Point);
+
+                            {
+                                double aX = -currPoint.X + 3 * this.Segments[i].Points[0].X - 3 * this.Segments[i].Points[1].X + this.Segments[i].Point.X;
+                                double bX = 2 * (currPoint.X - 2 * this.Segments[i].Points[0].X + this.Segments[i].Points[1].X);
+                                double cX = this.Segments[i].Points[0].X - currPoint.X;
+
+                                double t1X;
+                                double t2X;
+
+                                if (Math.Abs(aX) < 1e-5)
+                                {
+                                    if (Math.Abs(bX) >= 1e-5)
+                                    {
+                                        t1X = -cX / bX;
+                                        t2X = t1X;
+                                    }
+                                    else
+                                    {
+                                        t1X = double.NaN;
+                                        t2X = double.NaN;
+                                    }
+                                }
+                                else
+                                {
+                                    double delta = bX * bX - 4 * aX * cX;
+
+                                    if (delta >= -1e-5)
+                                    {
+                                        delta = Math.Max(delta, 0);
+
+                                        delta = Math.Sqrt(delta);
+                                        t1X = (-bX + delta) / (2 * aX);
+                                        t2X = (-bX - delta) / (2 * aX);
+                                    }
+                                    else
+                                    {
+                                        t1X = double.NaN;
+                                        t2X = double.NaN;
+                                    }
+                                }
+
+                                if (t1X >= 0 && t1X <= 1)
+                                {
+                                    Point p1 = ((CubicBezierSegment)this.Segments[i]).GetBezierPointAt(currPoint, t1X);
+                                    min = Point.Min(min, p1);
+                                    max = Point.Max(max, p1);
+                                }
+
+                                if (t2X >= 0 && t2X <= 1)
+                                {
+                                    Point p2 = ((CubicBezierSegment)this.Segments[i]).GetBezierPointAt(currPoint, t2X);
+                                    min = Point.Min(min, p2);
+                                    max = Point.Max(max, p2);
+                                }
+                            }
+
+                            {
+                                double aY = -currPoint.Y + 3 * this.Segments[i].Points[0].Y - 3 * this.Segments[i].Points[1].Y + this.Segments[i].Point.Y;
+                                double bY = 2 * (currPoint.Y - 2 * this.Segments[i].Points[0].Y + this.Segments[i].Points[1].Y);
+                                double cY = this.Segments[i].Points[0].Y - currPoint.Y;
+
+                                double t1Y;
+                                double t2Y;
+
+                                if (Math.Abs(aY) < 1e-5)
+                                {
+                                    if (Math.Abs(bY) >= 1e-5)
+                                    {
+                                        t1Y = -cY / bY;
+                                        t2Y = t1Y;
+                                    }
+                                    else
+                                    {
+                                        t1Y = double.NaN;
+                                        t2Y = double.NaN;
+                                    }
+                                }
+                                else
+                                {
+                                    double delta = bY * bY - 4 * aY * cY;
+
+                                    if (delta >= -1e-5)
+                                    {
+                                        delta = Math.Max(delta, 0);
+
+                                        delta = Math.Sqrt(delta);
+                                        t1Y = (-bY + delta) / (2 * aY);
+                                        t2Y = (-bY - delta) / (2 * aY);
+                                    }
+                                    else
+                                    {
+                                        t1Y = double.NaN;
+                                        t2Y = double.NaN;
+                                    }
+                                }
+
+                                if (t1Y >= 0 && t1Y <= 1)
+                                {
+                                    Point p1 = ((CubicBezierSegment)this.Segments[i]).GetBezierPointAt(currPoint, t1Y);
+                                    min = Point.Min(min, p1);
+                                    max = Point.Max(max, p1);
+                                }
+
+                                if (t2Y >= 0 && t2Y <= 1)
+                                {
+                                    Point p2 = ((CubicBezierSegment)this.Segments[i]).GetBezierPointAt(currPoint, t2Y);
+                                    min = Point.Min(min, p2);
+                                    max = Point.Max(max, p2);
+                                }
+                            }
+
+                            currPoint = this.Segments[i].Point;
+                            break;
+                    }
+                }
+
+                cachedBounds = new Rectangle(min, max);
+            }
+
+            return cachedBounds;
         }
     }
 }

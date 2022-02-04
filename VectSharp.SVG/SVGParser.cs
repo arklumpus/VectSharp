@@ -23,6 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
+using VectSharp.Filters;
 
 namespace VectSharp.SVG
 {
@@ -126,6 +127,8 @@ namespace VectSharp.SVG
             }
 
             Dictionary<string, Brush> gradients = new Dictionary<string, Brush>();
+            Dictionary<string, IFilter> filters = new Dictionary<string, IFilter>();
+            Dictionary<string, XmlNode> masks = new Dictionary<string, XmlNode>();
 
             foreach (XmlNode definitionsNode in svgDoc.GetElementsByTagName("defs"))
             {
@@ -133,11 +136,21 @@ namespace VectSharp.SVG
                 {
                     gradients.Add(fnt.Key, fnt.Value);
                 }
+
+                foreach (KeyValuePair<string, IFilter> filt in GetFilters(definitionsNode, styleSheets))
+                {
+                    filters.Add(filt.Key, filt.Value);
+                }
+
+                foreach (KeyValuePair<string, XmlNode> mask in GetMasks(definitionsNode, styleSheets))
+                {
+                    masks.Add(mask.Key, mask.Value);
+                }
             }
 
             Graphics gpr = new Graphics();
 
-            Size pageSize = InterpretSVGObject(svgDoc.GetElementsByTagName("svg")[0], gpr, new PresentationAttributes() { EmbeddedFonts = embeddedFonts }, styleSheets, gradients);
+            Size pageSize = InterpretSVGObject(svgDoc.GetElementsByTagName("svg")[0], gpr, new PresentationAttributes() { EmbeddedFonts = embeddedFonts }, styleSheets, gradients, filters, masks);
 
             Page pg = new Page(pageSize.Width, pageSize.Height);
 
@@ -169,7 +182,7 @@ namespace VectSharp.SVG
             }
         }
 
-        private static Size InterpretSVGObject(XmlNode svgObject, Graphics gpr, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients)
+        private static Size InterpretSVGObject(XmlNode svgObject, Graphics gpr, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients, Dictionary<string, IFilter> filters, Dictionary<string, XmlNode> masks)
         {
             double[] viewBox = ParseListOfDoubles(svgObject.Attributes?["viewBox"]?.Value);
 
@@ -248,30 +261,38 @@ namespace VectSharp.SVG
 
             attributes = InterpretPresentationAttributes(svgObject, attributes, viewBox[2], viewBox[3], diagonal, gpr, styleSheets, gradients);
 
-            InterpretSVGChildren(svgObject, gpr, attributes, viewBox[2], viewBox[3], diagonal, styleSheets, gradients);
+            foreach (KeyValuePair<string, XmlNode> mask in masks)
+            {
+                Graphics maskGpr = new Graphics();
+                InterpretGObject(mask.Value, maskGpr, viewBox[2], viewBox[3], diagonal, attributes, styleSheets, gradients, filters);
+
+                filters.Add(mask.Key, new MaskFilter(maskGpr));
+            }
+
+            InterpretSVGChildren(svgObject, gpr, attributes, viewBox[2], viewBox[3], diagonal, styleSheets, gradients, filters);
 
             gpr.Restore();
 
             return tbrSize;
         }
 
-        private static void InterpretSVGChildren(XmlNode svgObject, Graphics gpr, PresentationAttributes attributes, double width, double height, double diagonal, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients)
+        private static void InterpretSVGChildren(XmlNode svgObject, Graphics gpr, PresentationAttributes attributes, double width, double height, double diagonal, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients, Dictionary<string, IFilter> filters)
         {
             foreach (XmlNode child in svgObject.ChildNodes)
             {
-                InterpretSVGElement(child, gpr, attributes, width, height, diagonal, styleSheets, gradients);
+                InterpretSVGElement(child, gpr, attributes, width, height, diagonal, styleSheets, gradients, filters);
             }
         }
 
-        private static void InterpretSVGElement(XmlNode currObject, Graphics gpr, PresentationAttributes attributes, double width, double height, double diagonal, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients)
+        private static void InterpretSVGElement(XmlNode currObject, Graphics gpr, PresentationAttributes attributes, double width, double height, double diagonal, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients, Dictionary<string, IFilter> filters)
         {
             if (currObject.NodeType == XmlNodeType.EntityReference)
             {
-                InterpretSVGChildren(currObject, gpr, attributes, width, height, diagonal, styleSheets, gradients);
+                InterpretSVGChildren(currObject, gpr, attributes, width, height, diagonal, styleSheets, gradients, filters);
             }
             else if (currObject.Name.Equals("svg", StringComparison.OrdinalIgnoreCase))
             {
-                InterpretSVGObject(currObject, gpr, attributes, styleSheets, gradients);
+                InterpretSVGObject(currObject, gpr, attributes, styleSheets, gradients, filters, new Dictionary<string, XmlNode>());
             }
             else if (currObject.Name.Equals("line", StringComparison.OrdinalIgnoreCase))
             {
@@ -303,11 +324,11 @@ namespace VectSharp.SVG
             }
             else if (currObject.Name.Equals("use", StringComparison.OrdinalIgnoreCase))
             {
-                InterpretUseObject(currObject, gpr, width, height, diagonal, attributes, styleSheets, gradients);
+                InterpretUseObject(currObject, gpr, width, height, diagonal, attributes, styleSheets, gradients, filters);
             }
             else if (currObject.Name.Equals("g", StringComparison.OrdinalIgnoreCase) || currObject.Name.Equals("symbol", StringComparison.OrdinalIgnoreCase))
             {
-                InterpretGObject(currObject, gpr, width, height, diagonal, attributes, styleSheets, gradients);
+                InterpretGObject(currObject, gpr, width, height, diagonal, attributes, styleSheets, gradients, filters);
             }
             else if (currObject.Name.Equals("text", StringComparison.OrdinalIgnoreCase))
             {
@@ -387,7 +408,7 @@ namespace VectSharp.SVG
             textAlign = currObject.Attributes?["text-align"]?.Value ?? textAlign;
 
             bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes, styleSheets, gradients);
-            
+
             if (currObject.ChildNodes.OfType<XmlNode>().Any(a => a.NodeType != XmlNodeType.Text))
             {
                 foreach (XmlNode child in currObject.ChildNodes)
@@ -634,13 +655,30 @@ namespace VectSharp.SVG
             return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica);
         }
 
-        private static void InterpretGObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients)
+        private static void InterpretGObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients, Dictionary<string, IFilter> filters)
         {
             PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr, styleSheets, gradients);
 
             bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes, styleSheets, gradients);
 
-            InterpretSVGChildren(currObject, gpr, currAttributes, width, height, diagonal, styleSheets, gradients);
+            string filter = currObject.Attributes?["filter"]?.Value ?? currObject.Attributes?["mask"]?.Value;
+
+            if (!string.IsNullOrEmpty(filter) && filter.StartsWith("url(#"))
+            {
+                filter = filter.Substring(5, filter.Length - 6);
+            }
+
+            if (!string.IsNullOrEmpty(filter) && filters.ContainsKey(filter))
+            {
+                Graphics filteredGraphics = new Graphics();
+
+                InterpretSVGChildren(currObject, filteredGraphics, currAttributes, width, height, diagonal, styleSheets, gradients, filters);
+                gpr.DrawGraphics(0, 0, filteredGraphics, filters[filter]);
+            }
+            else
+            {
+                InterpretSVGChildren(currObject, gpr, currAttributes, width, height, diagonal, styleSheets, gradients, filters);
+            }
 
             if (hadClippingPath)
             {
@@ -653,7 +691,7 @@ namespace VectSharp.SVG
             }
         }
 
-        private static void InterpretUseObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients)
+        private static void InterpretUseObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients, Dictionary<string, IFilter> filters)
         {
             double x, y, w, h;
 
@@ -692,7 +730,7 @@ namespace VectSharp.SVG
                         ((XmlElement)clone).SetAttribute("height", h.ToString(System.Globalization.CultureInfo.InvariantCulture));
                     }
 
-                    InterpretSVGElement(clone, gpr, currAttributes, width, height, diagonal, styleSheets, gradients);
+                    InterpretSVGElement(clone, gpr, currAttributes, width, height, diagonal, styleSheets, gradients, filters);
 
                     gpr.Restore();
 
@@ -2075,6 +2113,96 @@ namespace VectSharp.SVG
             return tbr;
         }
 
+        private static IEnumerable<KeyValuePair<string, IFilter>> GetFilters(XmlNode definitionsNode, List<Stylesheet> styleSheets)
+        {
+            Dictionary<string, IFilter> tbr = new Dictionary<string, IFilter>();
+
+            foreach (XmlNode definition in definitionsNode.ChildNodes)
+            {
+                if (definition.Name.Equals("filter", StringComparison.OrdinalIgnoreCase))
+                {
+                    XmlElement filter = (XmlElement)definition;
+
+                    string id = filter.GetAttribute("id");
+
+                    List<ILocationInvariantFilter> filterElements = new List<ILocationInvariantFilter>();
+
+                    foreach (XmlNode filterDefinition in definition.ChildNodes)
+                    {
+                        if (filterDefinition.Name.Equals("feGaussianBlur", StringComparison.OrdinalIgnoreCase))
+                        {
+                            XmlElement actualFilter = (XmlElement)filterDefinition;
+
+                            string stdDeviation = actualFilter.GetAttribute("stdDeviation");
+
+                            filterElements.Add(new GaussianBlurFilter(double.Parse(stdDeviation, System.Globalization.CultureInfo.InvariantCulture)));
+                        }
+                        else if (filterDefinition.Name.Equals("feColorMatrix", StringComparison.OrdinalIgnoreCase))
+                        {
+                            XmlElement actualFilter = (XmlElement)filterDefinition;
+
+                            string type = actualFilter.GetAttribute("type");
+
+                            if (type.Equals("matrix", StringComparison.OrdinalIgnoreCase))
+                            {
+                                string values = actualFilter.GetAttribute("values");
+                                double[] parsedValues = (from el in System.Text.RegularExpressions.Regex.Split(values, "\\s") select double.Parse(el.Trim())).ToArray();
+
+                                if (parsedValues.Length == 20)
+                                {
+                                    double[,] matrix = new double[5, 5];
+                                    matrix[4, 4] = 1;
+
+                                    for (int i = 0; i < 20; i++)
+                                    {
+                                        int y = i / 5;
+                                        int x = i % 5;
+
+                                        matrix[y, x] = parsedValues[i];
+                                    }
+
+                                    filterElements.Add(new ColourMatrixFilter(new ColourMatrix(matrix)));
+                                }
+                            }
+                        }
+                    }
+
+                    if (filterElements.Count > 0)
+                    {
+                        if (filterElements.Count == 1)
+                        {
+                            tbr.Add(id, filterElements[0]);
+                        }
+                        else
+                        {
+                            tbr.Add(id, new CompositeLocationInvariantFilter(filterElements));
+                        }
+                    }
+                }
+            }
+
+            return tbr;
+        }
+
+        private static IEnumerable<KeyValuePair<string, XmlNode>> GetMasks(XmlNode definitionsNode, List<Stylesheet> styleSheets)
+        {
+            Dictionary<string, XmlNode> tbr = new Dictionary<string, XmlNode>();
+
+            foreach (XmlNode definition in definitionsNode.ChildNodes)
+            {
+                if (definition.Name.Equals("mask", StringComparison.OrdinalIgnoreCase))
+                {
+                    XmlElement mask = (XmlElement)definition;
+
+                    string id = mask.GetAttribute("id");
+
+                    tbr.Add(id, definition);
+                }
+            }
+
+            return tbr;
+        }
+
         private static IEnumerable<KeyValuePair<string, Brush>> GetGradients(XmlNode definitionsNode, List<Stylesheet> styleSheets)
         {
             Dictionary<string, Brush> tbr = new Dictionary<string, Brush>();
@@ -2720,6 +2848,11 @@ namespace VectSharp.SVG
         public void StrokeText(string text, double x, double y)
         {
             throw new NotImplementedException();
+        }
+
+        public void DrawFilteredGraphics(Graphics graphics, IFilter filter)
+        {
+            graphics.CopyToIGraphicsContext(this);
         }
     }
 }

@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using VectSharp.Filters;
 
 namespace VectSharp
 {
@@ -237,6 +238,13 @@ namespace VectSharp
         /// <param name="destinationHeight">The height of the rectangle delimiting the destination area of the image.</param>
         /// <param name="image">The image to draw.</param>
         void DrawRasterImage(int sourceX, int sourceY, int sourceWidth, int sourceHeight, double destinationX, double destinationY, double destinationWidth, double destinationHeight, RasterImage image);
+
+        /// <summary>
+        /// Draws a <see cref="Graphics"/> object, applying the specified <paramref name="filter"/>.
+        /// </summary>
+        /// <param name="graphics">The <see cref="Graphics"/> object to draw on the current <see cref="Graphics"/> object.</param>
+        /// <param name="filter">An <see cref="IFilter"/> object, representing the filter to apply to the <paramref name="graphics"/> object.</param>
+        void DrawFilteredGraphics(Graphics graphics, IFilter filter);
     }
 
     /// <summary>
@@ -778,6 +786,11 @@ namespace VectSharp
                     destinationContext.Tag = img.Tag;
                     destinationContext.DrawRasterImage(img.SourceX, img.SourceY, img.SourceWidth, img.SourceHeight, img.DestinationX, img.DestinationY, img.DestinationWidth, img.DestinationHeight, img.Image);
                 }
+                else if (this.Actions[i] is FilteredGraphicsAction)
+                {
+                    FilteredGraphicsAction fil = this.Actions[i] as FilteredGraphicsAction;
+                    destinationContext.DrawFilteredGraphics(fil.Content, fil.Filter);
+                }
             }
         }
 
@@ -807,6 +820,38 @@ namespace VectSharp
         public void DrawGraphics(double originX, double originY, Graphics graphics)
         {
             this.DrawGraphics(new Point(originX, originY), graphics);
+        }
+
+        /// <summary>
+        /// Draws a <see cref="Graphics"/> object on the current <see cref="Graphics"/> object, applying the specified <paramref name="filter"/>.
+        /// </summary>
+        /// <param name="origin">The point at which to place the origin of <paramref name="graphics"/>.</param>
+        /// <param name="graphics">The <see cref="Graphics"/> object to draw on the current <see cref="Graphics"/> object.</param>
+        /// <param name="filter">An <see cref="IFilter"/> object, representing the filter to apply to the <paramref name="graphics"/> object.</param>
+        public void DrawGraphics(Point origin, Graphics graphics, IFilter filter)
+        {
+            this.Save();
+            this.Translate(origin);
+
+            Graphics clone = new Graphics();
+            clone.Actions.AddRange(graphics.Actions);
+            clone.FixGraphicsStateStack();
+            
+            this.Actions.Add(new FilteredGraphicsAction(clone, filter));
+
+            this.Restore();
+        }
+
+        /// <summary>
+        /// Draws a <see cref="Graphics"/> object on the current <see cref="Graphics"/> object, applying the specified <paramref name="filter"/>.
+        /// </summary>
+        /// <param name="originX">The horizontal coordinate at which to place the origin of <paramref name="graphics"/>.</param>
+        /// <param name="originY">The vertical coordinate at which to place the origin of <paramref name="graphics"/>.</param>
+        /// <param name="graphics">The <see cref="Graphics"/> object to draw on the current <see cref="Graphics"/> object.</param>
+        /// <param name="filter">An <see cref="IFilter"/> object, representing the filter to apply to the <paramref name="graphics"/> object.</param>
+        public void DrawGraphics(double originX, double originY, Graphics graphics, IFilter filter)
+        {
+            this.DrawGraphics(new Point(originX, originY), graphics, filter);
         }
 
 
@@ -1057,6 +1102,142 @@ namespace VectSharp
             }
 
             return destinationGraphics;
+        }
+
+        /// <summary>
+        /// Computes the rectangular bounds of the region affected by the drawing operations performed on the <see cref="Graphics"/> object.
+        /// </summary>
+        /// <returns>The smallest rectangle that contains all the elements drawn on the <see cref="Graphics"/>.</returns>
+        public Rectangle GetBounds()
+        {
+            Rectangle tbr = Rectangle.NaN;
+            bool initialised = false;
+
+            Stack<double[,]> transformMatrix = new Stack<double[,]>();
+            double[,] currMatrix = new double[3, 3] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
+
+            for (int i = 0; i < this.Actions.Count; i++)
+            {
+                if (this.Actions[i] is IPrintableAction act)
+                {
+                    Rectangle bounds = act.GetBounds();
+
+                    double lineThickness = double.IsNaN(act.LineWidth) ? 0 : act.LineWidth;
+
+                    Point pt1 = Multiply(currMatrix, new Point(bounds.Location.X - lineThickness * 0.5, bounds.Location.Y - lineThickness * 0.5));
+                    Point pt2 = Multiply(currMatrix, new Point(bounds.Location.X + bounds.Size.Width + lineThickness * 0.5, bounds.Location.Y - lineThickness * 0.5));
+                    Point pt3 = Multiply(currMatrix, new Point(bounds.Location.X + bounds.Size.Width + lineThickness * 0.5, bounds.Location.Y + bounds.Size.Height + lineThickness * 0.5));
+                    Point pt4 = Multiply(currMatrix, new Point(bounds.Location.X - lineThickness * 0.5, bounds.Location.Y + bounds.Size.Height + lineThickness * 0.5));
+
+                    bounds = Point.Bounds(pt1, pt2, pt3, pt4);
+
+                    if (!double.IsNaN(bounds.Location.X) && !double.IsNaN(bounds.Location.Y) && !double.IsNaN(bounds.Size.Width) && !double.IsNaN(bounds.Size.Height))
+                    {
+                        if (!initialised)
+                        {
+                            tbr = bounds;
+                            initialised = true;
+                        }
+                        else
+                        {
+                            tbr = Rectangle.Union(tbr, bounds);
+                        }
+                    }
+                }
+                else if (this.Actions[i] is TransformAction)
+                {
+                    TransformAction trf = this.Actions[i] as TransformAction;
+
+                    if (trf.Delta != null)
+                    {
+                        currMatrix = Multiply(currMatrix, TranslationMatrix(trf.Delta.Value.X, trf.Delta.Value.Y));
+                    }
+                    else if (trf.Angle != null)
+                    {
+                        currMatrix = Multiply(currMatrix, RotationMatrix(trf.Angle.Value));
+                    }
+                    else if (trf.Scale != null)
+                    {
+                        currMatrix = Multiply(currMatrix, ScaleMatrix(trf.Scale.Value.Width, trf.Scale.Value.Height));
+                    }
+                    else if (trf.Matrix != null)
+                    {
+                        currMatrix = Multiply(currMatrix, trf.Matrix);
+                    }
+                }
+                else if (this.Actions[i] is StateAction)
+                {
+                    if (((StateAction)this.Actions[i]).StateActionType == StateAction.StateActionTypes.Save)
+                    {
+                        transformMatrix.Push(currMatrix);
+                    }
+                    else
+                    {
+                        currMatrix = transformMatrix.Pop();
+                    }
+                }
+            }
+
+            return tbr;
+        }
+
+        /// <summary>
+        /// A method that is used to rasterise a region of a <see cref="Graphics"/> object. Set this to <see langword="null"/> if you wish to use the default
+        /// rasterisation methods (implemented by either VectSharp.Raster, or VectSharp.Raster.ImageSharp). You will have to provide your own implementation
+        /// of this method if neither VectSharp.Raster nor VectSharp.Raster.ImageSharp are referenced by your project. The first argument of this method is
+        /// the <see cref="Graphics"/> to be rasterised, the second is a <see cref="Rectangle"/> representing the region to rasterise, the third is a
+        /// <see cref="double"/> representing the scale, and the third is a boolean value indicating whether the resulting <see cref="RasterImage"/> should
+        /// be interpolated.
+        /// </summary>
+        public static Func<Graphics, Rectangle, double, bool, RasterImage> RasterisationMethod = null;
+
+        /// <summary>
+        /// Tries to rasterise specified region of this <see cref="Graphics"/> object using the default rasterisation method.
+        /// </summary>
+        /// <param name="region">The region of the <see cref="Graphics"/> to rasterise.</param>
+        /// <param name="scale">The scale at which the image is rasterised.</param>
+        /// <param name="interpolate">Determines whether the resulting <see cref="RasterImage"/> should be interpolated or not.</param>
+        /// <param name="output">When this method returns, this will contain the rasterised image (or <see langword="null"/> if the image could not be rasterised.</param>
+        /// <returns><see langword="true"/> if the image could be rasterised; <see langword="false"/> if it could not be rasterised.</returns>
+        public bool TryRasterise(Rectangle region, double scale, bool interpolate, out RasterImage output)
+        {
+            if (RasterisationMethod != null)
+            {
+                output = RasterisationMethod(this, region, scale, interpolate);
+                return true;
+            }
+            else
+            {
+                System.Reflection.Assembly raster;
+
+                try
+                {
+                    raster = System.Reflection.Assembly.Load("VectSharp.Raster");
+                    if (raster != null)
+                    {
+                        System.Reflection.MethodInfo rasteriser = raster.GetType("VectSharp.Raster.Raster").GetMethod("Rasterise", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+                        output = (RasterImage)rasteriser.Invoke(null, new object[] { this, region, scale, interpolate });
+                        return true;
+                    }
+                }
+                catch { }
+
+                try
+                {
+                    raster = System.Reflection.Assembly.Load("VectSharp.Raster.ImageSharp");
+                    if (raster != null)
+                    {
+                        System.Reflection.MethodInfo rasteriser = raster.GetType("VectSharp.Raster.ImageSharp.ImageSharpContextInterpreter").GetMethod("Rasterise", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+                        output = (RasterImage)rasteriser.Invoke(null, new object[] { this, region, scale, interpolate });
+                        return true;
+                    }
+                }
+                catch { }
+
+
+                output = null;
+                return false;
+            }
         }
     }   
 }

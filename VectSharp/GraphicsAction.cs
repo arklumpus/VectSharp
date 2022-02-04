@@ -15,6 +15,8 @@
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
+using VectSharp.Filters;
+
 namespace VectSharp
 {
     internal interface IGraphicsAction
@@ -31,6 +33,7 @@ namespace VectSharp
         LineJoins LineJoin { get; }
         LineDash LineDash { get; }
         string Tag { get; }
+        Rectangle GetBounds();
     }
 
     internal class TransformAction : IGraphicsAction
@@ -107,6 +110,25 @@ namespace VectSharp
             this.Tag = tag;
             this.LineDash = lineDash;
         }
+
+        public Rectangle GetBounds()
+        {
+            Font.DetailedFontMetrics metrics = this.Font.MeasureTextAdvanced(this.Text);
+
+            switch (this.TextBaseline)
+            {
+                case TextBaselines.Top:
+                    return new Rectangle(this.Origin, new Size(metrics.Width, metrics.Height));
+                case TextBaselines.Bottom:
+                    return new Rectangle(this.Origin.X, this.Origin.Y - metrics.Height, metrics.Width, metrics.Height);
+                case TextBaselines.Middle:
+                    return new Rectangle(this.Origin.X, this.Origin.Y - metrics.Height * 0.5, metrics.Width, metrics.Height);
+                case TextBaselines.Baseline:
+                    return new Rectangle(this.Origin.X, this.Origin.Y - metrics.Top, metrics.Width, metrics.Height);
+                default:
+                    throw new System.ArgumentOutOfRangeException(nameof(TextBaseline), this.TextBaseline, "Invalid text baseline!");
+            }
+        }
     }
 
     internal class RectangleAction : IGraphicsAction, IPrintableAction
@@ -133,6 +155,11 @@ namespace VectSharp
             this.LineDash = lineDash;
             this.Tag = tag;
         }
+
+        public Rectangle GetBounds()
+        {
+            return new Rectangle(this.TopLeft, this.Size);
+        }
     }
 
     internal class PathAction : IGraphicsAction, IPrintableAction
@@ -146,6 +173,10 @@ namespace VectSharp
         public LineJoins LineJoin { get; }
         public LineDash LineDash { get; }
         public bool IsClipping { get; }
+        public Rectangle GetBounds()
+        {
+            return this.Path.GetBounds();
+        }
         public PathAction(GraphicsPath path, Brush fill, Brush stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, string tag, bool isClipping)
         {
             this.Path = path;
@@ -193,6 +224,46 @@ namespace VectSharp
 
             this.Image = image;
             this.Tag = tag;
+        }
+
+        public Rectangle GetBounds()
+        {
+            return new Rectangle(this.DestinationX, this.DestinationY, this.DestinationWidth, this.DestinationHeight);
+        }
+    }
+
+    internal class FilteredGraphicsAction : IGraphicsAction, IPrintableAction
+    {
+        public Brush Fill { get; }
+        public Brush Stroke { get; }
+        public string Tag { get; }
+        public double LineWidth { get; }
+        public LineCaps LineCap { get; }
+        public LineJoins LineJoin { get; }
+        public LineDash LineDash { get; }
+        public int SourceX { get; }
+        public int SourceY { get; }
+        public int SourceWidth { get; }
+        public int SourceHeight { get; }
+        public double DestinationX { get; }
+        public double DestinationY { get; }
+        public double DestinationWidth { get; }
+        public double DestinationHeight { get; }
+        public RasterImage Image { get; }
+        public Graphics Content { get; }
+        public IFilter Filter { get; }
+
+        public FilteredGraphicsAction(Graphics graphics, IFilter filter)
+        {
+            this.Content = graphics;
+            this.Filter = filter;
+        }
+
+        public Rectangle GetBounds()
+        {
+            Rectangle bounds = this.Content.GetBounds();
+
+            return new Rectangle(bounds.Location.X - this.Filter.TopLeftMargin.X, bounds.Location.Y - this.Filter.TopLeftMargin.Y, bounds.Size.Width + this.Filter.TopLeftMargin.X + this.Filter.BottomRightMargin.X, bounds.Size.Height + this.Filter.TopLeftMargin.Y + this.Filter.BottomRightMargin.Y);
         }
     }
 }

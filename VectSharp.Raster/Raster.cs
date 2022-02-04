@@ -16,7 +16,9 @@
 */
 
 using MuPDFCore;
+using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using VectSharp.PDF;
 
 namespace VectSharp.Raster
@@ -48,6 +50,8 @@ namespace VectSharp.Raster
                     muDoc.SaveImage(0, scale, MuPDFCore.PixelFormats.RGBA, fileName, RasterOutputFileTypes.PNG);
                 }
             }
+
+            ms.Dispose();
         }
 
         /// <summary>
@@ -71,6 +75,59 @@ namespace VectSharp.Raster
                     muDoc.WriteImage(0, scale, MuPDFCore.PixelFormats.RGBA, stream, RasterOutputFileTypes.PNG);
                 }
             }
+
+            ms.Dispose();
+        }
+
+        /// <summary>
+        /// Rasterise a region of a <see cref="Graphics"/> object.
+        /// </summary>
+        /// <param name="graphics">The <see cref="Graphics"/> object that will be rasterised.</param>
+        /// <param name="region">The region of the <paramref name="graphics"/> that will be rasterised.</param>
+        /// <param name="scale">The scale at which the image will be rendered.</param>
+        /// <param name="interpolate">Whether the resulting image should be interpolated or not when it is drawn on another <see cref="Graphics"/> surface.</param>
+        /// <returns>A <see cref="RasterImage"/> containing the rasterised graphics.</returns>
+        public static RasterImage Rasterise(this Graphics graphics, Rectangle region, double scale, bool interpolate)
+        {
+            Page pag = new Page(1, 1);
+            pag.Graphics.DrawGraphics(0, 0, graphics);
+            pag.Crop(region.Location, region.Size);
+
+            Document doc = new Document();
+            doc.Pages.Add(pag);
+
+            MemoryStream ms = new MemoryStream();
+            doc.SaveAsPDF(ms);
+
+            IntPtr imageDataAddress;
+
+            int width;
+            int height;
+
+            using (MuPDFContext context = new MuPDFContext())
+            {
+                using (MuPDFDocument muDoc = new MuPDFDocument(context, ref ms, InputFileTypes.PDF))
+                {
+                    int imageSize = muDoc.GetRenderedSize(0, scale, MuPDFCore.PixelFormats.RGBA);
+
+                    RoundedRectangle roundedBounds = muDoc.Pages[0].Bounds.Round(scale);
+
+                    width = roundedBounds.Width;
+                    height = roundedBounds.Height;
+
+
+                    imageDataAddress = Marshal.AllocHGlobal(imageSize);
+                    GC.AddMemoryPressure(imageSize);
+
+                    muDoc.Render(0, scale, MuPDFCore.PixelFormats.RGBA, imageDataAddress);
+                }
+            }
+
+            ms.Dispose();
+
+            DisposableIntPtr disposableAddress = new DisposableIntPtr(imageDataAddress);
+
+            return new RasterImage(ref disposableAddress, width, height, true, interpolate);
         }
     }
 }

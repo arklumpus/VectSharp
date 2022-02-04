@@ -7,10 +7,11 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Company>University of Bristol</Company>
     <Product>VectSharp</Product>
-    <Version>2.4.1</Version>
+    <Version>2.5.0</Version>
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/arklumpus/VectSharp</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,9 +32,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.10.11" />
-    <PackageReference Include="Avalonia.Skia" Version="0.10.11" />
-    <PackageReference Include="VectSharp" Version="2.1.0" />
+    <PackageReference Include="Avalonia" Version="0.10.12" />
+    <PackageReference Include="Avalonia.Skia" Version="0.10.12" />
+    <PackageReference Include="VectSharp" Version="2.2.0" />
   </ItemGroup>
 
 </Project>

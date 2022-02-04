@@ -23,6 +23,7 @@ using SixLabors.ImageSharp.Drawing.Processing;
 using System.Collections.Generic;
 using SixLabors.ImageSharp.Advanced;
 using System.IO;
+using VectSharp.Filters;
 
 namespace VectSharp.Raster.ImageSharp
 {
@@ -116,6 +117,11 @@ namespace VectSharp.Raster.ImageSharp
             tbr[2, 2] = (m[0, 0] * m[1, 1] - m[0, 1] * m[1, 0]) / (m[0, 0] * m[1, 1] * m[2, 2] - m[0, 0] * m[1, 2] * m[2, 1] - m[1, 0] * m[0, 1] * m[2, 2] + m[2, 0] * m[0, 1] * m[1, 2] + m[1, 0] * m[0, 2] * m[2, 1] - m[2, 0] * m[0, 2] * m[1, 1]);
 
             return tbr;
+        }
+
+        public static double Determinant(double[,] matrix)
+        {
+            return (matrix[0, 0] * matrix[1, 1] - matrix[1, 0] * matrix[0, 1]) * matrix[2, 2] - (matrix[0, 0] * matrix[1, 2] - matrix[1, 0] * matrix[0, 2]) * matrix[2, 1] + (matrix[0, 1] * matrix[1, 2] - matrix[1, 1] * matrix[0, 2]) * matrix[2, 0];
         }
     }
 
@@ -252,7 +258,12 @@ namespace VectSharp.Raster.ImageSharp
                 }
             }
 
-            sourceImage.Mutate(x => x.Crop(new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight)));
+            DrawImage(sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight, image.Interpolate, sourceImage);
+        }
+
+        internal void DrawImage(int sourceX, int sourceY, int sourceWidth, int sourceHeight, double destinationX, double destinationY, double destinationWidth, double destinationHeight, bool interpolate, Image sourceImage)
+        {
+            sourceImage.Mutate(x => x.Crop(new SixLabors.ImageSharp.Rectangle(sourceX, sourceY, sourceWidth, sourceHeight)));
 
             Point targetPoint = _transform.Multiply(new Point(destinationX, destinationY));
             Point targetPointX = _transform.Multiply(new Point(destinationX + destinationWidth, destinationY));
@@ -275,7 +286,7 @@ namespace VectSharp.Raster.ImageSharp
 
             SixLabors.ImageSharp.Processing.Processors.Transforms.IResampler resampler;
 
-            if (image.Interpolate)
+            if (interpolate)
             {
                 resampler = KnownResamplers.Bicubic;
             }
@@ -284,7 +295,7 @@ namespace VectSharp.Raster.ImageSharp
                 resampler = KnownResamplers.NearestNeighbor;
             }
 
-            sourceImage.Mutate(x => x.Transform(new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight), centeredTransform.ToMatrix(), new SixLabors.ImageSharp.Size((int)Math.Round(maxX - minX), (int)Math.Round(maxY - minY)), resampler));
+            sourceImage.Mutate(x => x.Transform(new SixLabors.ImageSharp.Rectangle(sourceX, sourceY, sourceWidth, sourceHeight), centeredTransform.ToMatrix(), new SixLabors.ImageSharp.Size((int)Math.Round(maxX - minX), (int)Math.Round(maxY - minY)), resampler));
 
             if (this.CurrentClip == null)
             {
@@ -543,6 +554,140 @@ namespace VectSharp.Raster.ImageSharp
 
             currentPath = new PathBuilder();
             figureInitialised = false;
+        }
+
+        public void DrawFilteredGraphics(Graphics graphics, IFilter filter)
+        {
+            double scale = this.scaleFactor * Math.Sqrt(MatrixUtils.Determinant(_transform));
+
+            Rectangle bounds = graphics.GetBounds();
+
+            bounds = new Rectangle(bounds.Location.X - filter.TopLeftMargin.X, bounds.Location.Y - filter.TopLeftMargin.Y, bounds.Size.Width + filter.TopLeftMargin.X + filter.BottomRightMargin.X, bounds.Size.Height + filter.TopLeftMargin.Y + filter.BottomRightMargin.Y);
+
+            if (bounds.Size.Width > 0 && bounds.Size.Height > 0)
+            {
+                bool rasterisationNeeded = true;
+
+                if (filter is GaussianBlurFilter gauss)
+                {
+                    rasterisationNeeded = false;
+
+                    Page pag = new Page(1, 1);
+                    pag.Graphics.DrawGraphics(0, 0, graphics);
+                    pag.Crop(bounds.Location, bounds.Size);
+
+                    Image<SixLabors.ImageSharp.PixelFormats.Rgba32> img = ImageSharpContextInterpreter.SaveAsImage(pag, scale);
+                    img.Mutate(x => x.GaussianBlur((float)(gauss.StandardDeviation * scale)));
+
+                    DrawImage(0, 0, img.Width, img.Height, bounds.Location.X, bounds.Location.Y, bounds.Size.Width, bounds.Size.Height, true, img);
+
+                    img.Dispose();
+                }
+                else if (filter is ColourMatrixFilter cmf)
+                {
+                    rasterisationNeeded = false;
+
+                    Page pag = new Page(1, 1);
+                    pag.Graphics.DrawGraphics(0, 0, graphics);
+                    pag.Crop(bounds.Location, bounds.Size);
+
+                    Image<SixLabors.ImageSharp.PixelFormats.Rgba32> img = ImageSharpContextInterpreter.SaveAsImage(pag, scale);
+
+                    img.Mutate(x => x.Filter(new ColorMatrix((float)cmf.ColourMatrix.R1, (float)cmf.ColourMatrix.G1, (float)cmf.ColourMatrix.B1, (float)cmf.ColourMatrix.A1, (float)cmf.ColourMatrix.R2, (float)cmf.ColourMatrix.G2, (float)cmf.ColourMatrix.B2, (float)cmf.ColourMatrix.A2, (float)cmf.ColourMatrix.R3, (float)cmf.ColourMatrix.G3, (float)cmf.ColourMatrix.B3, (float)cmf.ColourMatrix.A3, (float)cmf.ColourMatrix.R4, (float)cmf.ColourMatrix.G4, (float)cmf.ColourMatrix.B4, (float)cmf.ColourMatrix.A4, (float)cmf.ColourMatrix.R5, (float)cmf.ColourMatrix.G5, (float)cmf.ColourMatrix.B5, (float)cmf.ColourMatrix.A5)));
+
+                    DrawImage(0, 0, img.Width, img.Height, bounds.Location.X, bounds.Location.Y, bounds.Size.Width, bounds.Size.Height, true, img);
+
+                    img.Dispose();
+                }
+                else if (filter is BoxBlurFilter bbf)
+                {
+                    rasterisationNeeded = false;
+
+                    Page pag = new Page(1, 1);
+                    pag.Graphics.DrawGraphics(0, 0, graphics);
+                    pag.Crop(bounds.Location, bounds.Size);
+
+                    Image<SixLabors.ImageSharp.PixelFormats.Rgba32> img = ImageSharpContextInterpreter.SaveAsImage(pag, scale);
+
+                    img.Mutate(x => x.BoxBlur((int)Math.Round(bbf.BoxRadius * scale)));
+
+                    DrawImage(0, 0, img.Width, img.Height, bounds.Location.X, bounds.Location.Y, bounds.Size.Width, bounds.Size.Height, true, img);
+
+                    img.Dispose();
+                }
+                else if (filter is CompositeLocationInvariantFilter comp)
+                {
+                    bool allSupported = true;
+
+                    foreach (IFilter filter2 in comp.Filters)
+                    {
+                        if (!(filter2 is GaussianBlurFilter) && !(filter2 is ColourMatrixFilter) && !(filter2 is BoxBlurFilter))
+                        {
+                            allSupported = false;
+                            break;
+                        }
+                    }
+
+                    if (allSupported)
+                    {
+                        rasterisationNeeded = false;
+
+                        Page pag = new Page(1, 1);
+                        pag.Graphics.DrawGraphics(0, 0, graphics);
+                        pag.Crop(bounds.Location, bounds.Size);
+
+                        Image<SixLabors.ImageSharp.PixelFormats.Rgba32> img = ImageSharpContextInterpreter.SaveAsImage(pag, scale);
+
+                        foreach (IFilter filter2 in comp.Filters)
+                        {
+                            if (filter2 is GaussianBlurFilter gauss2)
+                            {
+                                img.Mutate(x => x.GaussianBlur((float)(gauss2.StandardDeviation * scale)));
+                            }
+                            else if (filter2 is ColourMatrixFilter cmf2)
+                            {
+                                img.Mutate(x => x.Filter(new ColorMatrix((float)cmf2.ColourMatrix.R1, (float)cmf2.ColourMatrix.G1, (float)cmf2.ColourMatrix.B1, (float)cmf2.ColourMatrix.A1, (float)cmf2.ColourMatrix.R2, (float)cmf2.ColourMatrix.G2, (float)cmf2.ColourMatrix.B2, (float)cmf2.ColourMatrix.A2, (float)cmf2.ColourMatrix.R3, (float)cmf2.ColourMatrix.G3, (float)cmf2.ColourMatrix.B3, (float)cmf2.ColourMatrix.A3, (float)cmf2.ColourMatrix.R4, (float)cmf2.ColourMatrix.G4, (float)cmf2.ColourMatrix.B4, (float)cmf2.ColourMatrix.A4, (float)cmf2.ColourMatrix.R5, (float)cmf2.ColourMatrix.G5, (float)cmf2.ColourMatrix.B5, (float)cmf2.ColourMatrix.A5)));
+                            }
+                            else if (filter2 is BoxBlurFilter bbf2)
+                            {
+                                img.Mutate(x => x.BoxBlur((int)Math.Round(bbf2.BoxRadius * scale)));
+                            }
+                        }
+
+
+                        DrawImage(0, 0, img.Width, img.Height, bounds.Location.X, bounds.Location.Y, bounds.Size.Width, bounds.Size.Height, true, img);
+
+                        img.Dispose();
+                    }
+                }
+
+                if (rasterisationNeeded)
+                {
+                    RasterImage rasterised = ImageSharpContextInterpreter.Rasterise(graphics, bounds, scale, true);
+                    RasterImage filtered = null;
+
+                    if (filter is IFilterWithRasterisableParameter filterWithRastParam)
+                    {
+                        filterWithRastParam.RasteriseParameter(ImageSharpContextInterpreter.Rasterise, scale);
+                    }
+
+                    if (filter is ILocationInvariantFilter locInvFilter)
+                    {
+                        filtered = locInvFilter.Filter(rasterised, scale);
+                    }
+                    else if (filter is IFilterWithLocation filterWithLoc)
+                    {
+                        filtered = filterWithLoc.Filter(rasterised, bounds, scale);
+                    }
+
+                    if (filtered != null)
+                    {
+                        rasterised.Dispose();
+
+                        DrawRasterImage(0, 0, filtered.Width, filtered.Height, bounds.Location.X, bounds.Location.Y, bounds.Size.Width, bounds.Size.Height, filtered);
+                    }
+                }
+            }
         }
     }
 
@@ -1013,6 +1158,7 @@ namespace VectSharp.Raster.ImageSharp
             int size = stride * img.Height;
 
             IntPtr tbr = System.Runtime.InteropServices.Marshal.AllocHGlobal(size);
+            GC.AddMemoryPressure(size);
 
             IntPtr pointer = tbr;
 
@@ -1074,6 +1220,53 @@ namespace VectSharp.Raster.ImageSharp
             img.Dispose();
 
             return tbr;
+        }
+
+        /// <summary>
+        /// Rasterise a region of a <see cref="Graphics"/> object.
+        /// </summary>
+        /// <param name="graphics">The <see cref="Graphics"/> object that will be rasterised.</param>
+        /// <param name="region">The region of the <paramref name="graphics"/> that will be rasterised.</param>
+        /// <param name="scale">The scale at which the image will be rendered.</param>
+        /// <param name="interpolate">Whether the resulting image should be interpolated or not when it is drawn on another <see cref="Graphics"/> surface.</param>
+        /// <returns>A <see cref="RasterImage"/> containing the rasterised graphics.</returns>
+        public static RasterImage Rasterise(this Graphics graphics, Rectangle region, double scale, bool interpolate)
+        {
+            Page pag = new Page(1, 1);
+            pag.Graphics.DrawGraphics(0, 0, graphics);
+            pag.Crop(region.Location, region.Size);
+
+            Image<SixLabors.ImageSharp.PixelFormats.Rgba32> img = SaveAsImage(pag, scale);
+
+            int stride = img.Width * 4;
+            int size = stride * img.Height;
+
+            IntPtr tbr = System.Runtime.InteropServices.Marshal.AllocHGlobal(size);
+            GC.AddMemoryPressure(size);
+
+            IntPtr pointer = tbr;
+
+            unsafe
+            {
+                for (int y = 0; y < img.Height; y++)
+                {
+                    Memory<SixLabors.ImageSharp.PixelFormats.Rgba32> row = img.DangerousGetPixelRowMemory(y);
+
+                    Span<SixLabors.ImageSharp.PixelFormats.Rgba32> newRow = new Span<SixLabors.ImageSharp.PixelFormats.Rgba32>(pointer.ToPointer(), row.Length);
+                    row.Span.CopyTo(newRow);
+
+                    pointer = IntPtr.Add(pointer, stride);
+                }
+            }
+
+            int width = img.Width;
+            int height = img.Height;
+
+            img.Dispose();
+
+            DisposableIntPtr disp = new DisposableIntPtr(tbr);
+
+            return new RasterImage(ref disp, width, height, true, interpolate);
         }
     }
 }

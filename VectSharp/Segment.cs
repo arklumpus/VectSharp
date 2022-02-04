@@ -295,7 +295,7 @@ namespace VectSharp
             return cachedLength;
         }
 
-        private Point GetBezierPointAt(Point previousPoint, double position)
+        public Point GetBezierPointAt(Point previousPoint, double position)
         {
             if (position <= 1 && position >= 0)
             {
