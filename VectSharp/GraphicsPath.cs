@@ -141,6 +141,16 @@ namespace VectSharp
         /// <returns></returns>
         public GraphicsPath EllipticalArc(double radiusX, double radiusY, double axisAngle, bool largeArc, bool sweepClockwise, Point endPoint)
         {
+            if (radiusX == 0 || radiusY == 0)
+            {
+                return this.LineTo(endPoint);
+            }
+            else
+            {
+                radiusX = Math.Abs(radiusX);
+                radiusY = Math.Abs(radiusY);
+            }
+
             double x1 = 0;
             double y1 = 0;
 
@@ -174,7 +184,16 @@ namespace VectSharp
                 y1P = 0;
             }
 
-            double sqrtTerm = (largeArc != sweepClockwise ? 1 : -1) * Math.Sqrt((radiusX * radiusX * radiusY * radiusY - radiusX * radiusX * y1P * y1P - radiusY * radiusY * x1P * x1P) / (radiusX * radiusX * y1P * y1P + radiusY * radiusY * x1P * x1P));
+            double lambda = x1P * x1P / (radiusX * radiusX) + y1P * y1P / (radiusY * radiusY);
+
+            if (lambda > 1)
+            {
+                double sqrtLambda = Math.Sqrt(lambda);
+                radiusX *= sqrtLambda;
+                radiusY *= sqrtLambda;
+            }
+
+            double sqrtTerm = (largeArc != sweepClockwise ? 1 : -1) * Math.Sqrt(Math.Max(0, (radiusX * radiusX * radiusY * radiusY - radiusX * radiusX * y1P * y1P - radiusY * radiusY * x1P * x1P) / (radiusX * radiusX * y1P * y1P + radiusY * radiusY * x1P * x1P)));
 
             double cXP = sqrtTerm * radiusX * y1P / radiusY;
             double cYP = -sqrtTerm * radiusY * x1P / radiusX;
