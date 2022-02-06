@@ -2356,43 +2356,74 @@ namespace VectSharp
 
                         double a = currPoint[1] - 2 * ctrlPoint[1] + endPoint[1];
 
-                        double[] ts = new double[4];
-
-                        ts[0] = (currPoint[1] - ctrlPoint[1] - Math.Sqrt(position * a + ctrlPoint[1] * ctrlPoint[1] - currPoint[1] * endPoint[1])) / a;
-                        ts[1] = (currPoint[1] - ctrlPoint[1] + Math.Sqrt(position * a + ctrlPoint[1] * ctrlPoint[1] - currPoint[1] * endPoint[1])) / a;
-
-                        ts[2] = (currPoint[1] - ctrlPoint[1] - Math.Sqrt((position + thickness) * a + ctrlPoint[1] * ctrlPoint[1] - currPoint[1] * endPoint[1])) / a;
-                        ts[3] = (currPoint[1] - ctrlPoint[1] + Math.Sqrt((position + thickness) * a + ctrlPoint[1] * ctrlPoint[1] - currPoint[1] * endPoint[1])) / a;
-
-                        double minT = double.MaxValue;
-                        double maxT = double.MinValue;
-                        bool found = false;
-
-                        for (int i = 0; i < 4; i++)
+                        if (Math.Abs(a) < 1e-7)
                         {
-                            if (!double.IsNaN(ts[i]) && ts[i] >= 0 && ts[i] <= 1)
-                            {
-                                minT = Math.Min(minT, ts[i]);
-                                maxT = Math.Max(maxT, ts[i]);
+                            k++;
 
-                                found = true;
+                            if (-glyphPaths[j][k].Y - currPoint[1] != 0)
+                            {
+                                double t = (position - currPoint[1]) / (-glyphPaths[j][k].Y - currPoint[1]);
+                                if (t >= 0 && t <= 1)
+                                {
+                                    intersections.Add(currPoint[0] + t * (glyphPaths[j][k].X - currPoint[0]));
+                                }
+
+                                t = (position + thickness - currPoint[1]) / (-glyphPaths[j][k].Y - currPoint[1]);
+                                if (t >= 0 && t <= 1)
+                                {
+                                    intersections.Add(currPoint[0] + t * (glyphPaths[j][k].X - currPoint[0]));
+                                }
+                            }
+                            else
+                            {
+                                if (position <= currPoint[1] && position + thickness >= currPoint[1])
+                                {
+                                    intersections.Add(currPoint[0]);
+                                    intersections.Add(glyphPaths[j][k].X);
+                                }
                             }
                         }
-
-                        if (found)
+                        else
                         {
-                            double critT = (currPoint[0] - ctrlPoint[0]) / (currPoint[0] - 2 * ctrlPoint[0] + endPoint[0]);
+                            double[] ts = new double[4];
 
-                            if (critT >= minT && critT <= maxT)
+                            ts[0] = (currPoint[1] - ctrlPoint[1] - Math.Sqrt(position * a + ctrlPoint[1] * ctrlPoint[1] - currPoint[1] * endPoint[1])) / a;
+                            ts[1] = (currPoint[1] - ctrlPoint[1] + Math.Sqrt(position * a + ctrlPoint[1] * ctrlPoint[1] - currPoint[1] * endPoint[1])) / a;
+
+                            ts[2] = (currPoint[1] - ctrlPoint[1] - Math.Sqrt((position + thickness) * a + ctrlPoint[1] * ctrlPoint[1] - currPoint[1] * endPoint[1])) / a;
+                            ts[3] = (currPoint[1] - ctrlPoint[1] + Math.Sqrt((position + thickness) * a + ctrlPoint[1] * ctrlPoint[1] - currPoint[1] * endPoint[1])) / a;
+
+                            double minT = double.MaxValue;
+                            double maxT = double.MinValue;
+                            bool found = false;
+
+                            for (int i = 0; i < 4; i++)
                             {
-                                intersections.Add((1 - critT) * (1 - critT) * currPoint[0] + 2 * critT * (1 - critT) * ctrlPoint[0] + critT * critT * endPoint[0]);
+                                if (!double.IsNaN(ts[i]) && ts[i] >= 0 && ts[i] <= 1)
+                                {
+                                    minT = Math.Min(minT, ts[i]);
+                                    maxT = Math.Max(maxT, ts[i]);
+
+                                    found = true;
+                                }
                             }
 
-                            intersections.Add((1 - minT) * (1 - minT) * currPoint[0] + 2 * minT * (1 - minT) * ctrlPoint[0] + minT * minT * endPoint[0]);
-                            intersections.Add((1 - maxT) * (1 - maxT) * currPoint[0] + 2 * maxT * (1 - maxT) * ctrlPoint[0] + maxT * maxT * endPoint[0]);
+                            if (found)
+                            {
+                                double critT = (currPoint[0] - ctrlPoint[0]) / (currPoint[0] - 2 * ctrlPoint[0] + endPoint[0]);
+
+                                if (critT >= minT && critT <= maxT)
+                                {
+                                    intersections.Add((1 - critT) * (1 - critT) * currPoint[0] + 2 * critT * (1 - critT) * ctrlPoint[0] + critT * critT * endPoint[0]);
+                                }
+
+                                intersections.Add((1 - minT) * (1 - minT) * currPoint[0] + 2 * minT * (1 - minT) * ctrlPoint[0] + minT * minT * endPoint[0]);
+                                intersections.Add((1 - maxT) * (1 - maxT) * currPoint[0] + 2 * maxT * (1 - maxT) * ctrlPoint[0] + maxT * maxT * endPoint[0]);
+                            }
+
+                            k++;
                         }
 
-                        k++;
                         currPoint = endPoint;
                     }
                 }
