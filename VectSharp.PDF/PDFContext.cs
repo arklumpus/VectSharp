@@ -614,10 +614,6 @@ namespace VectSharp.PDF
             else
             {
                 _figures.Add(new PathFigure(_currentFigure, GetGraphicsPath(_currentFigure).GetBounds(), _fillStyle, null, 0, LineCaps.Butt, LineJoins.Bevel, new LineDash(0, 0, 0), false, this.Tag));
-                /*Graphics mask = GetCurrentFigureMask(GetAlphaBrush(_fillStyle), false, true);
-                Graphics subject = GetCurrentFigureMask(RemoveAlpha(_fillStyle), false);
-
-                this.DrawFilteredGraphics(subject, new MaskFilter(mask));*/
             }
 
             _currentFigure = new List<Segment>();
@@ -633,14 +629,6 @@ namespace VectSharp.PDF
             {
                 _figures.Add(new PathFigure(_currentFigure, GetGraphicsPath(_currentFigure).GetBounds(), null, _strokeStyle, LineWidth, LineCap, LineJoin, _lineDash, false, this.Tag));
             }
-
-            /*else
-            {
-                Graphics mask = GetCurrentFigureMask(GetAlphaBrush(_strokeStyle), true, true);
-                Graphics subject = GetCurrentFigureMask(RemoveAlpha(_strokeStyle), true);
-
-                this.DrawFilteredGraphics(subject, new MaskFilter(mask));
-            }*/
 
             _currentFigure = new List<Segment>();
         }
