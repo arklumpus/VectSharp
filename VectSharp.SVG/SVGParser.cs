@@ -332,7 +332,10 @@ namespace VectSharp.SVG
             }
             else if (currObject.Name.Equals("text", StringComparison.OrdinalIgnoreCase))
             {
-                InterpretTextObject(currObject, gpr, width, height, diagonal, attributes, styleSheets, gradients);
+                double x = 0;
+                double y = 0;
+
+                InterpretTextObject(currObject, gpr, width, height, diagonal, attributes, styleSheets, gradients, ref x, ref y);
             }
             else if (currObject.Name.Equals("image", StringComparison.OrdinalIgnoreCase))
             {
@@ -396,12 +399,18 @@ namespace VectSharp.SVG
             }
         }
 
-        private static void InterpretTextObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients, double x = 0, double y = 0, double fontSize = double.NaN, string fontFamily = null, string textAlign = null)
+        private static void InterpretTextObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients, ref double x, ref double y, double fontSize = double.NaN, string fontFamily = null, string textAlign = null)
         {
             PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr, styleSheets, gradients);
 
             x = ParseLengthOrPercentage(currObject.Attributes?["x"]?.Value, width, x);
             y = ParseLengthOrPercentage(currObject.Attributes?["y"]?.Value, height, y);
+
+            double dx = ParseLengthOrPercentage(currObject.Attributes?["dx"]?.Value, width, 0);
+            double dy = ParseLengthOrPercentage(currObject.Attributes?["dy"]?.Value, height, 0);
+
+            x += dx;
+            y += dy;
 
             fontFamily = currObject.Attributes?["font-family"]?.Value ?? fontFamily;
             fontSize = ParseLengthOrPercentage(currObject.Attributes?["font-size"]?.Value, width, fontSize);
@@ -413,7 +422,7 @@ namespace VectSharp.SVG
             {
                 foreach (XmlNode child in currObject.ChildNodes)
                 {
-                    InterpretTextObject(child, gpr, width, height, diagonal, currAttributes, styleSheets, gradients, x, y, fontSize, fontFamily, textAlign);
+                    InterpretTextObject(child, gpr, width, height, diagonal, currAttributes, styleSheets, gradients, ref x, ref y, fontSize, fontFamily, textAlign);
                 }
 
                 if (hadClippingPath)
@@ -448,6 +457,8 @@ namespace VectSharp.SVG
 
                     Font fnt = new Font(parsedFontFamily, fontSize);
 
+                    double endX = x;
+
                     if (fnt.FontFamily.TrueTypeFile != null)
                     {
                         Font.DetailedFontMetrics metrics = fnt.MeasureTextAdvanced(text);
@@ -462,6 +473,7 @@ namespace VectSharp.SVG
                             x -= metrics.Width * 0.5;
                         }
 
+                        endX += metrics.AdvanceWidth;
                     }
 
                     TextBaselines baseline = TextBaselines.Baseline;
@@ -512,6 +524,8 @@ namespace VectSharp.SVG
                             gpr.StrokeText(x, y, text, fnt, strokeColour, baseline, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash);
                         }
                     }
+
+                    x = endX;
                 }
 
                 if (hadClippingPath)
