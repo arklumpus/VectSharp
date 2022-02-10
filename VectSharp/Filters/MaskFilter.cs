@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 namespace VectSharp.Filters
 {
     /// <summary>
-    /// Represents a filter that uses the alpha channel of an image to mask another image.
+    /// Represents a filter that uses the luminance of an image to mask another image.
     /// </summary>
     public class MaskFilter : FilterWithRasterisableParameter, IFilterWithLocation
     {
