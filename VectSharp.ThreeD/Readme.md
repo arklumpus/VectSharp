@@ -2,7 +2,7 @@
 
 <img src="icon.svg" width="256" align="right">
 
-**VectSharp.ThreeD** is a 3D graphics library addon for VectSharp that makes it possible to create vector and raster 3D images. VectSharp.ThreeD is released under a GPLv3 licence.
+**VectSharp.ThreeD** is a 3D graphics library addon for VectSharp that makes it possible to create vector and raster 3D images. VectSharp.ThreeD is released under an LGPLv3 licence.
 
 It should be noted that real-time performance for complex scenes was *not* a goal while developing VectSharp.ThreeD. Thus, to increase portability, this library does not use any GPU acceleration. However, parallelisation is used when possible, which should increase the performance of the library when it is used on systems with multicore processors.
 
