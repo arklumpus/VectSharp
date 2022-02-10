@@ -87,9 +87,45 @@ namespace VectSharp
         /// <param name="size">The size of the area to include in the page.</param>
         public void Crop(Point topLeft, Size size)
         {
-            this.Graphics.Actions[0] = new TransformAction(new Point(-topLeft.X, -topLeft.Y));
+            if (this.Graphics.Actions[0] is TransformAction transf)
+            {
+                double[,] currMatrix = transf.GetMatrix();
+
+                double[,] newMatrix = Graphics.Multiply(Graphics.TranslationMatrix(-topLeft.X, -topLeft.Y), currMatrix);
+
+                this.Graphics.Actions[0] = new TransformAction(newMatrix);
+            }
+            else
+            {
+                this.Graphics.Actions.Insert(0, new TransformAction(new Point(-topLeft.X, -topLeft.Y)));
+            }
+            
             this.Width = size.Width;
             this.Height = size.Height;
+        }
+
+        /// <summary>
+        /// Translate and resize the <see cref="Page"/> so that it displays the rectangle corresponding to the bounding box of its contents.
+        /// </summary>
+        public void Crop()
+        {
+            Rectangle bounds = this.Graphics.GetBounds();
+
+            if (this.Graphics.Actions[0] is TransformAction transf)
+            {
+                double[,] currMatrix = transf.GetMatrix();
+
+                double[,] newMatrix = Graphics.Multiply(Graphics.TranslationMatrix(-bounds.Location.X, -bounds.Location.Y), currMatrix);
+
+                this.Graphics.Actions[0] = new TransformAction(newMatrix);
+            }
+            else
+            {
+                this.Graphics.Actions.Insert(0, new TransformAction(new Point(-bounds.Location.X, -bounds.Location.Y)));
+            }
+
+            this.Width = bounds.Size.Width;
+            this.Height = bounds.Size.Height;
         }
     }
 }

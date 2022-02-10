@@ -65,6 +65,30 @@ namespace VectSharp
         {
             this.Matrix = matrix;
         }
+
+        public double[,] GetMatrix()
+        {
+            if (this.Matrix != null)
+            {
+                return this.Matrix;
+            }
+            else if (this.Delta != null)
+            {
+                return Graphics.TranslationMatrix(this.Delta.Value.X, this.Delta.Value.Y); 
+            }
+            else if (this.Angle != null)
+            {
+                return Graphics.RotationMatrix(this.Angle.Value);
+            }
+            else if (this.Scale != null)
+            {
+                return Graphics.ScaleMatrix(this.Scale.Value.Width, this.Scale.Value.Height);
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 
     internal class StateAction : IGraphicsAction
