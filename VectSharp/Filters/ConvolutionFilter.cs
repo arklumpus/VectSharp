@@ -80,6 +80,8 @@ namespace VectSharp.Filters
             this.BottomRightMargin = new Point(kernelWidth * scale, kernelHeight * scale);
             this.Scale = scale;
             this.PreserveAlpha = preserveAlpha;
+            this.Normalisation = normalisation;
+            this.Bias = bias;
         }
 
         /// <inheritdoc/>
