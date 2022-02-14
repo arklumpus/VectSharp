@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectSharp.Fonts.Nimbus", "V
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectSharp.Raster.ImageSharp", "VectSharp.Raster.ImageSharp\VectSharp.Raster.ImageSharp.csproj", "{AB5649FA-8451-4628-AE9B-6F68F1CE71D8}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectSharp.ImageSharpUtils", "VectSharp.ImageSharpUtils\VectSharp.ImageSharpUtils.csproj", "{53F3CC8D-B425-4855-A225-5210200C65C4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,10 @@ Global
 		{AB5649FA-8451-4628-AE9B-6F68F1CE71D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB5649FA-8451-4628-AE9B-6F68F1CE71D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB5649FA-8451-4628-AE9B-6F68F1CE71D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53F3CC8D-B425-4855-A225-5210200C65C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53F3CC8D-B425-4855-A225-5210200C65C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53F3CC8D-B425-4855-A225-5210200C65C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53F3CC8D-B425-4855-A225-5210200C65C4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

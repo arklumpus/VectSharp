@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageIcon>icon.png</PackageIcon>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Authors>Giorgio Bianchini</Authors>
+    <Company>University of Bristol</Company>
+    <Product>VectSharp</Product>
+    <Description>A library to produce vector graphics (including text) without too many dependencies. Extensible to support multiple output formats. This package provides utilities using ImageSharp to make it possible to include in VectSharp graphics images in various formats. For more information, see https://github.com/arklumpus/VectSharp</Description>
+    <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/arklumpus/VectSharp</PackageProjectUrl>
+    <Version>1.0.0-a1-beta13.20</Version>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\icon.png">
+      <Pack>true</Pack>
+      <PackagePath>.</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta13.20" />
+    <!--<PackageReference Include="VectSharp" Version="2.0.0" />-->
+    <ProjectReference Include="../VectSharp/VectSharp.csproj"/>
+  </ItemGroup>
+
+</Project>
