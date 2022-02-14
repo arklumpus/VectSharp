@@ -836,7 +836,7 @@ namespace VectSharp
             Graphics clone = new Graphics();
             clone.Actions.AddRange(graphics.Actions);
             clone.FixGraphicsStateStack();
-            
+
             this.Actions.Add(new FilteredGraphicsAction(clone, filter));
 
             this.Restore();
@@ -1047,6 +1047,208 @@ namespace VectSharp
             return destinationGraphics;
         }
 
+        private GraphicsPath ReduceMaximumLength(GraphicsPath path, double maxLength)
+        {
+            GraphicsPath shortLinearisedPath = new GraphicsPath();
+
+            // Square of the max length - so that we avoid the square roots.
+            double maxLengthSq = maxLength * maxLength;
+
+            Point currPoint = new Point();
+            Point startFigurePoint = new Point();
+
+            foreach (Segment seg in path.Segments)
+            {
+                if (seg is MoveSegment mov)
+                {
+                    shortLinearisedPath.MoveTo(mov.Point);
+                    startFigurePoint = mov.Point;
+                    currPoint = mov.Point;
+                }
+                else if (seg is LineSegment line)
+                {
+                    double lengthSq = (line.Point.X - currPoint.X) * (line.Point.X - currPoint.X) +
+                                      (line.Point.Y - currPoint.Y) * (line.Point.Y - currPoint.Y);
+
+                    if (lengthSq < maxLengthSq)
+                    {
+                        shortLinearisedPath.LineTo(line.Point);
+                    }
+                    else
+                    {
+                        int segmentCount = (int)Math.Ceiling(Math.Sqrt(lengthSq / maxLengthSq));
+
+                        for (int j = 0; j < segmentCount - 1; j++)
+                        {
+                            Point endPoint = new Point(currPoint.X + (line.Point.X - currPoint.X) * (j + 1) / segmentCount,
+                                                       currPoint.Y + (line.Point.Y - currPoint.Y) * (j + 1) / segmentCount);
+                            shortLinearisedPath.LineTo(endPoint);
+                        }
+
+                        shortLinearisedPath.LineTo(line.Point);
+                    }
+                    currPoint = line.Point;
+                }
+                else if (seg is CloseSegment close)
+                {
+                    double lengthSq = (startFigurePoint.X - currPoint.X) * (startFigurePoint.X - currPoint.X) +
+                                      (startFigurePoint.Y - currPoint.Y) * (startFigurePoint.Y - currPoint.Y);
+
+                    if (lengthSq < maxLengthSq)
+                    {
+                        shortLinearisedPath.Close();
+                    }
+                    else
+                    {
+                        int segmentCount = (int)Math.Ceiling(Math.Sqrt(lengthSq / maxLengthSq));
+
+                        for (int j = 0; j < segmentCount - 1; j++)
+                        {
+                            Point endPoint = new Point(currPoint.X + (startFigurePoint.X - currPoint.X) * (j + 1) / segmentCount,
+                                                       currPoint.Y + (startFigurePoint.Y - currPoint.Y) * (j + 1) / segmentCount);
+                            shortLinearisedPath.LineTo(endPoint);
+                        }
+
+                        shortLinearisedPath.Close();
+                    }
+                    currPoint = startFigurePoint;
+                }
+            }
+
+            return shortLinearisedPath;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Graphics"/> object in which all the graphics actions have been transformed using an arbitrary transformation function. Raster images are replaced by grey rectangles.
+        /// </summary>
+        /// <param name="transformationFunction">An arbitrary transformation function.</param>
+        /// <param name="linearisationResolution">The resolution that will be used to linearise curve segments.</param>
+        /// <param name="maxSegmentLength">The maximum length of line segments.</param>
+        /// <returns>A new <see cref="Graphics"/> object in which all graphics actions have been linearised and transformed using the <paramref name="transformationFunction"/>.</returns>
+        public Graphics Transform(Func<Point, Point> transformationFunction, double linearisationResolution, double maxSegmentLength)
+        {
+            Graphics destinationGraphics = new Graphics();
+
+            Stack<double[,]> transformMatrix = new Stack<double[,]>();
+            double[,] currMatrix = new double[3, 3] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
+
+            for (int i = 0; i < this.Actions.Count; i++)
+            {
+                if (this.Actions[i] is RectangleAction)
+                {
+                    RectangleAction rec = this.Actions[i] as RectangleAction;
+
+                    GraphicsPath rectanglePath = new GraphicsPath();
+
+                    Point pt1 = rec.TopLeft;
+                    Point pt2 = new Point(rec.TopLeft.X + rec.Size.Width, rec.TopLeft.Y);
+                    Point pt3 = new Point(rec.TopLeft.X + rec.Size.Width, rec.TopLeft.Y + rec.Size.Height);
+                    Point pt4 = new Point(rec.TopLeft.X, rec.TopLeft.Y + rec.Size.Height);
+
+                    rectanglePath.MoveTo(pt1).LineTo(pt2).LineTo(pt3).LineTo(pt4).Close();
+
+                    rectanglePath = ReduceMaximumLength(rectanglePath, maxSegmentLength).Transform(pt => transformationFunction(Multiply(currMatrix, pt)));
+
+                    if (rec.Fill != null)
+                    {
+                        destinationGraphics.FillPath(rectanglePath, rec.Fill, rec.Tag);
+                    }
+                    else if (rec.Stroke != null)
+                    {
+                        destinationGraphics.StrokePath(rectanglePath, rec.Stroke, rec.LineWidth, rec.LineCap, rec.LineJoin, rec.LineDash, rec.Tag);
+                    }
+                }
+                else if (this.Actions[i] is PathAction)
+                {
+                    PathAction pth = this.Actions[i] as PathAction;
+
+                    GraphicsPath newPath = ReduceMaximumLength(pth.Path.Linearise(linearisationResolution), maxSegmentLength).Transform(pt => transformationFunction(Multiply(currMatrix, pt)));
+
+                    if (pth.IsClipping)
+                    {
+                        destinationGraphics.SetClippingPath(newPath);
+                    }
+                    else
+                    {
+                        if (pth.Fill != null)
+                        {
+                            destinationGraphics.FillPath(newPath, pth.Fill, pth.Tag);
+                        }
+                        else if (pth.Stroke != null)
+                        {
+                            destinationGraphics.StrokePath(newPath, pth.Stroke, pth.LineWidth, pth.LineCap, pth.LineJoin, pth.LineDash, pth.Tag);
+                        }
+                    }
+                }
+                else if (this.Actions[i] is TextAction)
+                {
+                    TextAction txt = this.Actions[i] as TextAction;
+
+                    GraphicsPath textPath = ReduceMaximumLength(new GraphicsPath().AddText(txt.Origin, txt.Text, txt.Font, txt.TextBaseline).Linearise(linearisationResolution), maxSegmentLength).Transform(pt => transformationFunction(Multiply(currMatrix, pt)));
+
+                    if (txt.Fill != null)
+                    {
+                        destinationGraphics.FillPath(textPath, txt.Fill, txt.Tag);
+                    }
+                    else if (txt.Stroke != null)
+                    {
+                        destinationGraphics.StrokePath(textPath, txt.Stroke, txt.LineWidth, txt.LineCap, txt.LineJoin, txt.LineDash, txt.Tag);
+                    }
+                }
+                else if (this.Actions[i] is TransformAction)
+                {
+                    TransformAction trf = this.Actions[i] as TransformAction;
+
+                    if (trf.Delta != null)
+                    {
+                        currMatrix = Multiply(currMatrix, TranslationMatrix(trf.Delta.Value.X, trf.Delta.Value.Y));
+                    }
+                    else if (trf.Angle != null)
+                    {
+                        currMatrix = Multiply(currMatrix, RotationMatrix(trf.Angle.Value));
+                    }
+                    else if (trf.Scale != null)
+                    {
+                        currMatrix = Multiply(currMatrix, ScaleMatrix(trf.Scale.Value.Width, trf.Scale.Value.Height));
+                    }
+                    else if (trf.Matrix != null)
+                    {
+                        currMatrix = Multiply(currMatrix, trf.Matrix);
+                    }
+                }
+                else if (this.Actions[i] is StateAction)
+                {
+                    if (((StateAction)this.Actions[i]).StateActionType == StateAction.StateActionTypes.Save)
+                    {
+                        transformMatrix.Push(currMatrix);
+                    }
+                    else
+                    {
+                        currMatrix = transformMatrix.Pop();
+                    }
+                }
+                else if (this.Actions[i] is RasterImageAction)
+                {
+                    RasterImageAction img = this.Actions[i] as RasterImageAction;
+
+                    GraphicsPath rectanglePath = new GraphicsPath();
+
+                    Point pt1 = new Point(img.DestinationX, img.DestinationY);
+                    Point pt2 = new Point(img.DestinationX + img.DestinationWidth, img.DestinationY);
+                    Point pt3 = new Point(img.DestinationX + img.DestinationWidth, img.DestinationY + img.DestinationHeight);
+                    Point pt4 = new Point(img.DestinationX, img.DestinationY + img.DestinationHeight);
+
+                    rectanglePath.MoveTo(pt1).LineTo(pt2).LineTo(pt3).LineTo(pt4).Close();
+
+                    rectanglePath = ReduceMaximumLength(rectanglePath, maxSegmentLength).Transform(pt => transformationFunction(Multiply(currMatrix, pt)));
+
+                    destinationGraphics.FillPath(rectanglePath, Colour.FromRgb(220, 220, 220), img.Tag);
+                }
+            }
+
+            return destinationGraphics;
+        }
+
         /// <summary>
         /// Creates a new <see cref="Graphics"/> object by linearising all of the elements of the current instance, i.e. replacing curve segments with series of line segments that approximate them. Raster images are left unchanged.
         /// </summary>
@@ -1239,5 +1441,5 @@ namespace VectSharp
                 return false;
             }
         }
-    }   
+    }
 }
