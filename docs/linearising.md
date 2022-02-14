@@ -64,7 +64,7 @@ graphics.StrokePath(linearised, Colour.FromRgb(0, 158, 115), lineWidth: 2);
 page.SaveAsSVG("Linearise.svg");
 {% endhighlight %}
 
-[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics]({% link advanced.md %}){: .btn }
+[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics](advanced.html){: .btn }
 
 ## The `GetLinearisationPointsNormals` method
 
@@ -137,7 +137,7 @@ for (int i = 0; i < points.Count; i++)
 page.SaveAsSVG("GetLinearisationNormals.svg");
 {% endhighlight %}
 
-[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics]({% link advanced.md %}){: .btn }
+[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics](advanced.html){: .btn }
 
 ## The `Graphics.Linearise` method
 
@@ -149,4 +149,4 @@ Sometimes, you may want to linearise multiple `GraphicsPath`s that have been dra
 
 You can then use the new `Graphics` object as normal (e.g. drawing it on another `Graphics` surface).
 
-[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics]({% link advanced.md %}){: .btn }
+[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics](advanced.html){: .btn }

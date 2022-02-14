@@ -16,7 +16,7 @@ parent: Advanced topics
 {:toc}
 </details>
 
-The methods described when talking about [coordinate system transformations]({% link transformations.md %}) can be used to apply affine transformations to objects on the `Graphics` surface. However, sometimes you may also want to apply some sort of arbitrary transformation to a `GraphicsPath` or to a `Graphics` object. You can do so by using their `Transform` method, with the overload that takes a `Func<Point, Point>` delegate.
+The methods described when talking about [coordinate system transformations](transformations.html) can be used to apply affine transformations to objects on the `Graphics` surface. However, sometimes you may also want to apply some sort of arbitrary transformation to a `GraphicsPath` or to a `Graphics` object. You can do so by using their `Transform` method, with the overload that takes a `Func<Point, Point>` delegate.
 
 ## The `GraphicsPath.Transform` method
 
@@ -140,11 +140,11 @@ page.SaveAsSVG("PathTransformation.svg");
 {% endhighlight %}
 </details>
 
-[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics]({% link advanced.md %}){: .btn }
+[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics](advanced.html){: .btn }
 
 ## The `Graphics.Transform` method
 
-The `Graphics.Transform` method can be used to do the same thing as the `Transform` method of the `GraphicsPath` class. This method has three overloads: an overload that takes six `double` parameter describing an affine transformation matrix, which has already been discussed in the context of [coordinate system transformations]({% link transformations.md %}), and two overloads whose first parameter is a `Func<Point, Point>` like the `GraphicsPath.Transform` method.
+The `Graphics.Transform` method can be used to do the same thing as the `Transform` method of the `GraphicsPath` class. This method has three overloads: an overload that takes six `double` parameter describing an affine transformation matrix, which has already been discussed in the context of [coordinate system transformations](transformations.html), and two overloads whose first parameter is a `Func<Point, Point>` like the `GraphicsPath.Transform` method.
 
 One of these overloads takes just another parameter, a `double` representing the linearisation resolution; when this overload is used, the `Graphics` is linearised using the specified linearisation resolution, and then the transformation function is applied. The other overload, instead, in addition to the `linearisationResolution` also takes another parameter, representing the maximum length of any line segment in the plot. When this method is used, in addition to linearising all paths in the plot, line segments that are longer than the specified length are also divided in smaller segments, using a similar approach as the one used in the example above.
 
@@ -219,4 +219,4 @@ page.SaveAsSVG("GraphicsTransformation.svg");
 {% endhighlight %}
 </details>
 
-[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics]({% link advanced.md %}){: .btn }
+[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics](advanced.html){: .btn }

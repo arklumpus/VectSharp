@@ -5,7 +5,7 @@ nav_order: 2
 
 # Getting started
 
-To use the VectSharp library, you will need to install one of the VectSharp "output layers". Each of these packages produces images in different formats and can be useful in different situations. See [Choosing the output layer]({% link output_layer.md %}) for more information to help you choose the right output layer for your needs.
+To use the VectSharp library, you will need to install one of the VectSharp "output layers". Each of these packages produces images in different formats and can be useful in different situations. See [Choosing the output layer](output_layer.html) for more information to help you choose the right output layer for your needs.
 
 For simplicity, most of these tutorials will all use the [**VectSharp.SVG**](https://www.nuget.org/packages/VectSharp.SVG/) output layer. You can install it using your favourite NuGet package manager.
 

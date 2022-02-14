@@ -69,7 +69,7 @@ page.SaveAsSVG("GetPoints.svg");
 
 Note that the `IEnumerable` returned by this method is enumerated lazily; therefore, if you need to reuse the points multiple times, it may be beneficial to convert it to a `List` or an array, so that it does not have to be enumerated more than once.
 
-[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics]({% link advanced.md %}){: .btn }
+[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics](advanced.html){: .btn }
 
 ## The `GetPointAtAbsolute` and `GetPointAtRelative` methods
 
@@ -119,7 +119,7 @@ graphics.FillPath(new GraphicsPath().Arc(point, 2, 0, 2 * Math.PI), Colours.Gree
 page.SaveAsSVG("GetPointAtRelative.svg");
 {% endhighlight %}
 
-[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics]({% link advanced.md %}){: .btn }
+[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics](advanced.html){: .btn }
 
 ## Getting the tangent and normal at a specific point
 
@@ -188,4 +188,4 @@ page.SaveAsSVG("TangentNormal.svg");
 {% endhighlight %}
 
 
-[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics]({% link advanced.md %}){: .btn }
+[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics](advanced.html){: .btn }

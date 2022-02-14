@@ -118,7 +118,7 @@ If you wish, you can also avoid calling `Dispose` on the `RasterImage` at all; t
 
 Most of the time, the image will not be in raw pixel format; instead, you may want to include in the plot a file in a format such as PNG or JPEG (or more). To do this, you need to install either the [VectSharp.MuPDFUtils](https://nuget.org/packages/VectSharp.MuPDFUtils) package, or the [VectSharp.ImageSharpUtils](https://nuget.org/packages/VectSharp.ImageSharpUtils) package.
 
-These packages offer equivalent functionalities, but have the same differences as VectSharp.Raster and VectSharp.Raster.ImageSharp (see [Choosing the output layer]({% link output_layer.md %})). In these examples, we will use VectSharp.ImageSharpUtils, but the only change you need to make to use VectSharp.MuPDFUtils is the `using` directive at the top of the code (in addition to installing the appropriate NuGet package, of course).
+These packages offer equivalent functionalities, but have the same differences as VectSharp.Raster and VectSharp.Raster.ImageSharp (see [Choosing the output layer](output_layer.html)). In these examples, we will use VectSharp.ImageSharpUtils, but the only change you need to make to use VectSharp.MuPDFUtils is the `using` directive at the top of the code (in addition to installing the appropriate NuGet package, of course).
 
 Both of these packages provide two classes that inherit from `RasterImage`: `RasterImageFile` and `RasterImageStream`. As the name implies, `RasterImageFile` is used to create a `RasterImage` from an image file, while `RasterImageStream` is used to read the image data from a `Stream`.
 

@@ -510,7 +510,7 @@ page.SaveAsSVG("FormattedText.svg");
 
 Finally, in addition to directly drawing the text on the `Graphics` object, you may also want to add it to a `GraphicsPath` instead. To do this, you can use the `AddText`, `AddTextOnPath` and `AddTextUnderline` methods of the `GraphicsPath` object. These work in the same way as the `FillText`, `FillTextOnPath` and `FillTextUnderline` methods, and take the same arguments (of course, they do not require parameters to determine the fill or stroke colour or the stroke options).
 
-Adding the text to a `GraphicsPath` can be useful if you wish to perform some post-processing using the advanced path functions, which are described in [another section]({% link advanced_transformations.md %}). It can also be necessary in order to use the text as a clipping path (again, described in [another section]({% link clipping.md %})).
+Adding the text to a `GraphicsPath` can be useful if you wish to perform some post-processing using the advanced path functions, which are described in [another section](advanced_transformations.html). It can also be necessary in order to use the text as a clipping path (again, described in [another section](clipping.html)).
 
 [Back to top](#){: .btn }
 

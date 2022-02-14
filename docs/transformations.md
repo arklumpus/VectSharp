@@ -196,7 +196,7 @@ The transformation is applied to the point by multiplying the vector by the matr
 
 $$\mathbf{P^\prime} = \mathbf{M} \cdot \mathbf{P} = \begin{bmatrix} a & c & e \\ b & d & f \\ 0 & 0 & 1 \end{bmatrix} \cdot \begin{bmatrix} x \\ y \\ 1 \end{bmatrix} = \begin{bmatrix} ax + cy + e \\ bx + dy + f \\ 1 \end{bmatrix}$$
 
-This notation makes it possible to generalise the effect of the transformations described above by using the `Transform` method, which accepts 6 `double` parameters corresponding to $a$, $b$, $c$, $d$, $e$, and $f$ (this method has an overload which accepts a `Func<Point, Point>`, but this will be described in [another section]({% link advanced_transformations.md %})).
+This notation makes it possible to generalise the effect of the transformations described above by using the `Transform` method, which accepts 6 `double` parameters corresponding to $a$, $b$, $c$, $d$, $e$, and $f$ (this method has an overload which accepts a `Func<Point, Point>`, but this will be described in [another section](advanced_transformations.html)).
 
 You can easily verify that a translation by $\left (t_x, t_y \right )$ corresponds to the following matrix:
 

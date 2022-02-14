@@ -137,7 +137,7 @@ A [Convolution filter](https://en.wikipedia.org/wiki/Kernel_(image_processing)) 
 
 There are also three optional parameters: the `bool preserveAlpha` determines whether the alpha channel of the image is subject to the same convolution as the RGB channels, while the `double`s `normalisation` and `bias` are used to modify the result of the convolution.
 
-The following example shows the effect of a `ConvolutionFilter`. In order to produce a meaningful effect, the `filterSubject` graphics is obtained by importing an SVG image; you can read more about this in the [next section]({% link importing_svg.md %}). Note that applying a `ConvolutionFilter` can be rather slow (especially when the scale is high and on Blazor, as in the example below).
+The following example shows the effect of a `ConvolutionFilter`. In order to produce a meaningful effect, the `filterSubject` graphics is obtained by importing an SVG image; you can read more about this in the [next section](importing_svg.html). Note that applying a `ConvolutionFilter` can be rather slow (especially when the scale is high and on Blazor, as in the example below).
 
 <div class="code-example">
     <iframe src="Blazor?convolution" style="width: 100%; height: 15em; border: 0px solid black"></iframe>
@@ -309,7 +309,7 @@ As long as all the filters used in the composite filter are supported by the SVG
 
 A mask filter uses the luminance information of an image to mask another image. Essentially, the mask image is overlapped on the subject image; then, where the mask image is white, the subject image is preserved, while where the mask image is black the subject image becomes transparent. Intermediate colours apply intermediate alpha values.
 
-A mask is conceptually similar to a [clipping path]({% link clipping.md %}), in that both hide part of the image they are applied to. However, the differences between the two are:
+A mask is conceptually similar to a [clipping path](clipping.html), in that both hide part of the image they are applied to. However, the differences between the two are:
 
 * The clipping path is applied using the `SetClippingPath` method _before_ the drawing calls, while the mask is applied as a filter.
 * The clipping path operates a "binary" operation (a point is either visible or hidden by the clipping path), while masks allow intermediate values where a point's alpha is affected.

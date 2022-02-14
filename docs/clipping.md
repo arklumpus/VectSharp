@@ -41,6 +41,6 @@ page.SaveAsSVG("ClippingPath.svg");
 
 You can use the `SetClippingPath` method repeatedly, with different clipping paths. If you do this, the final clipping path will be the intersection of all the clipping paths that you provided (or, in other terms, only the parts of the image that fall within _all_ the clipping paths will be drawn).
 
-The clipping path is preserved and restored by the `Save` and `Restore` methods; therefore, if you wish to remove a clipping path after you have applied it, you can follow the same approach as described when talking about [coordinate system transformations]({% link transformations.md %}#saving-and-restoring-the-coordinate-system).
+The clipping path is preserved and restored by the `Save` and `Restore` methods; therefore, if you wish to remove a clipping path after you have applied it, you can follow the same approach as described when talking about [coordinate system transformations](transformations.html#saving-and-restoring-the-coordinate-system).
 
-A clipping path is a binary operation: either a point is within the path and it is drawn normally, or it is outside, and it is not drawn. If you need to use intermediate values, where some points are only partially hidden (i.e., made transparent), you should use a [mask filter]({% link filters.md %}#mask-filter) instead.
+A clipping path is a binary operation: either a point is within the path and it is drawn normally, or it is outside, and it is not drawn. If you need to use intermediate values, where some points are only partially hidden (i.e., made transparent), you should use a [mask filter](filters.html#mask-filter) instead.

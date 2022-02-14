@@ -338,7 +338,7 @@ page.SaveAsSVG("PathFigures.svg");
 
 ## Stroke options
 
-Like the `StrokeRectangle` method described in [Fill and stroke]({% link fill_stroke.md %}), the `StrokePath` method takes a number of arguments that make it possible to customise the appearance of the stroke, including the line thickness, the line caps, the line joints, and the dash style.
+Like the `StrokeRectangle` method described in [Fill and stroke](fill_stroke.html), the `StrokePath` method takes a number of arguments that make it possible to customise the appearance of the stroke, including the line thickness, the line caps, the line joints, and the dash style.
 
 The following example demonstrates the effect of these parameters. In particular, note how the line cap options interact with dashed lines.
 

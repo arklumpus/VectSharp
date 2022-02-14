@@ -35,7 +35,7 @@ This method returns a `Rectangle` object representing the bounding box of the pa
 
 Since computing the bounding box can be relatively expensive, the result of this method is cached, so that if it is called multiple times, the actual computation only takes place once. The cached bounding box is invalidated when any element is added to the `GraphicsPath`.
 
-[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics]({% link advanced.md %}){: .btn }
+[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics](advanced.html){: .btn }
 
 ## Determinining the bounding box of a `Graphics`
 
@@ -52,7 +52,7 @@ Rectangle bounds = graphics.GetBounds();
 
 Note that, unlike the `GraphicsPath.GetBounds` method, the results of this method are not cached. However, since it internally invokes the `GetBounds` method of any `GraphicsPath` object that has been drawn on the `Graphics`, successive calls to this method should be relatively cheap anyways (because the bounding boxes of all elements have been cached).
 
-[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics]({% link advanced.md %}){: .btn }
+[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics](advanced.html){: .btn }
 
 ## Cropping a `Page`
 
@@ -86,7 +86,7 @@ page.Graphics.FillRectangle(10, 10, 80, 80, Colours.Green);
 
 The `Crop` method has two overloads: one overload does not have any parameters, and crops the page to the bounding box of its `Graphics`; the other overload takes a `Point` and a `Size` defining the rectangular area to crop.
 
-[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics]({% link advanced.md %}){: .btn }
+[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics](advanced.html){: .btn }
 
 ## Measuring the length of a `GraphicsPath`
 
@@ -105,4 +105,4 @@ Since there is no analytical formula to compute the length of a cubic Bézier cu
 
 As a result, this is also a rather expensive operation (especially on Blazor, this can be very slow). However, the results of the computation are cached at the segment level, so that repeated calls do not result in unnecessary computations.
 
-[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics]({% link advanced.md %}){: .btn }
+[Back to top](#){: .btn }&nbsp;&nbsp;&nbsp;&nbsp;[Back to Advanced topics](advanced.html){: .btn }

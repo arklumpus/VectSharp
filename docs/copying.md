@@ -45,4 +45,4 @@ for (int i = 0; i < 10; i++)
 page.SaveAsSVG("DrawGraphics.svg");
 {% endhighlight %}
 
-The `DrawGraphics` method also has another overload, which accepts an additional parameter; this is used to apply filters to the image, and is described in the [next section]({% link filters.md %}).
+The `DrawGraphics` method also has another overload, which accepts an additional parameter; this is used to apply filters to the image, and is described in the [next section](filters.html).
