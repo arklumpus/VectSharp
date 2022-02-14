@@ -1866,6 +1866,33 @@ namespace VectSharp
             return null;
         }
 
+        /// <summary>
+        /// Obtains the full font family name from the TrueType file.
+        /// </summary>
+        /// <returns>The full font family name, if available; <see langword="null"/> otherwise.</returns>
+        public string GetFullFontFamilyName()
+        {
+            TrueTypeNameTable name = (TrueTypeNameTable)this.Tables["name"];
+
+            for (int i = 0; i < name.Count; i++)
+            {
+                if (name.NameRecords[i].NameID == 4)
+                {
+                    return name.Name[i];
+                }
+            }
+
+            for (int i = 0; i < name.Count; i++)
+            {
+                if (name.NameRecords[i].NameID == 6)
+                {
+                    return name.Name[i];
+                }
+            }
+
+            return null;
+        }
+
 
         /// <summary>
         /// Obtains the PostScript font name from the TrueType file.

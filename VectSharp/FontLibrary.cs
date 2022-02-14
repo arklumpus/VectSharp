@@ -205,7 +205,9 @@ namespace VectSharp
                 Fallbacks[stdFF] = resolved;
                 LoadedFonts[FontFamily.StandardFamilies[i]] = resolved;
                 KnownFonts[FontFamily.StandardFamilies[i]] = FontFamily.StandardFamilies[i];
+                KnownFonts[resolved.FamilyName] = FontFamily.StandardFamilies[i];
                 KnownFonts[resolved.TrueTypeFile.GetFontFamilyName()] = FontFamily.StandardFamilies[i];
+                KnownFonts[resolved.TrueTypeFile.GetFullFontFamilyName()] = FontFamily.StandardFamilies[i];
                 KnownFonts[resolved.TrueTypeFile.GetFontName()] = FontFamily.StandardFamilies[i];
             }
         }
@@ -264,10 +266,13 @@ namespace VectSharp
                 FontFamily resolved = Fallbacks[stdFF];
                 resolved.IsStandardFamily = true;
                 resolved.FileName = FontFamily.StandardFamilies[i];
+                resolved.FamilyName = FontFamily.StandardFamilies[i].Replace("-", " ");
 
                 LoadedFonts[FontFamily.StandardFamilies[i]] = resolved;
                 KnownFonts[FontFamily.StandardFamilies[i]] = FontFamily.StandardFamilies[i];
+                KnownFonts[resolved.FamilyName] = FontFamily.StandardFamilies[i];
                 KnownFonts[resolved.TrueTypeFile.GetFontFamilyName()] = FontFamily.StandardFamilies[i];
+                KnownFonts[resolved.TrueTypeFile.GetFullFontFamilyName()] = FontFamily.StandardFamilies[i];
                 KnownFonts[resolved.TrueTypeFile.GetFontName()] = FontFamily.StandardFamilies[i];
             }
         }
@@ -319,10 +324,13 @@ namespace VectSharp
                 FontFamily resolved = Fallbacks[stdFF];
                 resolved.IsStandardFamily = true;
                 resolved.FileName = FontFamily.StandardFamilies[i];
+                resolved.FamilyName = FontFamily.StandardFamilies[i].Replace("-", " ");
 
                 LoadedFonts[FontFamily.StandardFamilies[i]] = resolved;
                 KnownFonts[FontFamily.StandardFamilies[i]] = FontFamily.StandardFamilies[i];
+                KnownFonts[resolved.FamilyName] = FontFamily.StandardFamilies[i];
                 KnownFonts[resolved.TrueTypeFile.GetFontFamilyName()] = FontFamily.StandardFamilies[i];
+                KnownFonts[resolved.TrueTypeFile.GetFullFontFamilyName()] = FontFamily.StandardFamilies[i];
                 KnownFonts[resolved.TrueTypeFile.GetFontName()] = FontFamily.StandardFamilies[i];
             }
         }
@@ -341,6 +349,7 @@ namespace VectSharp
             if (fontFamily.TrueTypeFile != null)
             {
                 this.KnownFonts[fontFamily.TrueTypeFile.GetFontFamilyName()] = fontFamilyName;
+                this.KnownFonts[fontFamily.TrueTypeFile.GetFullFontFamilyName()] = fontFamilyName;
                 this.KnownFonts[fontFamily.TrueTypeFile.GetFontName()] = fontFamilyName;
             }
         }
@@ -353,11 +362,7 @@ namespace VectSharp
         {
             if (fontFamily.TrueTypeFile != null)
             {
-                string familyName = fontFamily.TrueTypeFile.GetFontFamilyName();
-
-                this.LoadedFonts[familyName] = fontFamily;
-                this.KnownFonts[familyName] = familyName;
-                this.KnownFonts[fontFamily.TrueTypeFile.GetFontName()] = familyName;
+                this.Add(fontFamily.TrueTypeFile.GetFullFontFamilyName(), fontFamily);
             }
         }
 
@@ -371,11 +376,7 @@ namespace VectSharp
 
             if (fontFamily.TrueTypeFile != null)
             {
-                string familyName = fontFamily.TrueTypeFile.GetFontFamilyName();
-
-                this.LoadedFonts[familyName] = fontFamily;
-                this.KnownFonts[familyName] = familyName;
-                this.KnownFonts[fontFamily.TrueTypeFile.GetFontName()] = familyName;
+                this.Add(fontFamily.TrueTypeFile.GetFullFontFamilyName(), fontFamily);
             }
         }
 
@@ -483,6 +484,7 @@ namespace VectSharp
                     FontFamily tbr = new FontFamily(ttfStream);
                     tbr.IsStandardFamily = true;
                     tbr.FileName = fontFamily;
+                    tbr.FamilyName = tbr.FileName.Replace("-", " ");
 
                     if (fontFamily == "Times-Italic" || fontFamily == "Times-BoldItalic" || fontFamily == "Helvetica-Oblique" || fontFamily == "Helvetica-BoldOblique" || fontFamily == "Courier-Oblique" || fontFamily == "Courier-BoldOblique")
                     {
@@ -503,12 +505,14 @@ namespace VectSharp
                     {
                         FontFamily tbr = new FontFamily(TrueTypeFile.CreateTrueTypeFile(fontFamily));
                         tbr.FileName = fontFamily;
+                        tbr.FamilyName = tbr.TrueTypeFile?.GetFullFontFamilyName() ?? tbr.FileName;
                         return tbr;
                     }
                     catch
                     {
                         FontFamily tbr = new FontFamily();
                         tbr.FileName = fontFamily;
+                        tbr.FamilyName = fontFamily;
                         return tbr;
                     }
                 }
@@ -527,6 +531,7 @@ namespace VectSharp
                 tbr.IsStandardFamily = true;
 
                 tbr.FileName = FontFamily.StandardFamilies[(int)standardFontFamily];
+                tbr.FamilyName = tbr.FileName.Replace("-", " ");
 
                 if (tbr.FileName == "Times-Italic" || tbr.FileName == "Times-BoldItalic" || tbr.FileName == "Helvetica-Oblique" || tbr.FileName == "Helvetica-BoldOblique" || tbr.FileName == "Courier-Oblique" || tbr.FileName == "Courier-BoldOblique")
                 {

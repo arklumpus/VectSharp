@@ -575,6 +575,11 @@ namespace VectSharp
         public string FileName { get; internal set; }
 
         /// <summary>
+        /// Name of the font family, including any variantes.
+        /// </summary>
+        public string FamilyName { get; internal set; }
+
+        /// <summary>
         /// Parsed TrueType font file for this font family.
         /// See also: <seealso cref="VectSharp.TrueTypeFile"/>.
         /// </summary>
@@ -607,6 +612,7 @@ namespace VectSharp
                 FontFamily resolved = DefaultFontLibrary.ResolveFontFamily(fileName);
 
                 this.FileName = resolved.FileName;
+                this.FamilyName = resolved.FamilyName;
                 this.TrueTypeFile = resolved.TrueTypeFile;
                 this.IsOblique = resolved.IsOblique;
                 this.IsBold = resolved.IsBold;
@@ -633,6 +639,7 @@ namespace VectSharp
                 TrueTypeFile = TrueTypeFile.CreateTrueTypeFile(ttfStream);
 
                 FileName = TrueTypeFile.GetFontFamilyName();
+                FamilyName = TrueTypeFile.GetFullFontFamilyName() ?? FileName;
                 this.IsBold = TrueTypeFile.IsBold();
                 this.IsItalic = TrueTypeFile.IsItalic();
                 this.IsOblique = TrueTypeFile.IsOblique();
@@ -652,6 +659,7 @@ namespace VectSharp
                 TrueTypeFile = ttf;
 
                 FileName = TrueTypeFile.GetFontFamilyName();
+                FamilyName = TrueTypeFile.GetFullFontFamilyName() ?? FileName;
                 this.IsBold = TrueTypeFile.IsBold();
                 this.IsItalic = TrueTypeFile.IsItalic();
                 this.IsOblique = TrueTypeFile.IsOblique();
@@ -670,6 +678,7 @@ namespace VectSharp
                 FontFamily resolved = DefaultFontLibrary.ResolveFontFamily(standardFontFamily);
 
                 this.FileName = resolved.FileName;
+                this.FamilyName = resolved.FamilyName;
                 this.TrueTypeFile = resolved.TrueTypeFile;
                 this.IsOblique = resolved.IsOblique;
                 this.IsBold = resolved.IsBold;

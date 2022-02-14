@@ -996,9 +996,9 @@ namespace VectSharp.PDF
             {
                 foreach (IFigure act in ctx._figures)
                 {
-                    if (act is TextFigure figure && !tbr.ContainsKey(figure.Font.FontFamily.FileName))
+                    if (act is TextFigure figure && !tbr.ContainsKey(figure.Font.FontFamily.FamilyName))
                     {
-                        tbr.Add(figure.Font.FontFamily.FileName, FontFamily.ResolveFontFamily(figure.Font.FontFamily.FileName));
+                        tbr.Add(figure.Font.FontFamily.FamilyName, FontFamily.ResolveFontFamily(figure.Font.FontFamily.FamilyName));
                     }
                 }
             }
@@ -1014,16 +1014,16 @@ namespace VectSharp.PDF
             {
                 foreach (IFigure act in ctx._figures)
                 {
-                    if (act is TextFigure figure && !tbr.ContainsKey(figure.Font.FontFamily.FileName))
+                    if (act is TextFigure figure && !tbr.ContainsKey(figure.Font.FontFamily.FamilyName))
                     {
-                        tbr.Add(figure.Font.FontFamily.FileName, new HashSet<char>(figure.Text));
+                        tbr.Add(figure.Font.FontFamily.FamilyName, new HashSet<char>(figure.Text));
                     }
                     else if (act is TextFigure figure1)
                     {
                         string txt = figure1.Text;
                         for (int i = 0; i < txt.Length; i++)
                         {
-                            tbr[figure1.Font.FontFamily.FileName].Add(txt[i]);
+                            tbr[figure1.Font.FontFamily.FamilyName].Add(txt[i]);
                         }
                     }
                 }
@@ -2810,13 +2810,13 @@ namespace VectSharp.PDF
                 {
                     if (!segments[i].isSymbolic)
                     {
-                        sb.Append("/" + nonSymbolFontIds[fig.Font.FontFamily.FileName] + " " + fig.Font.FontSize.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " Tf\n");
+                        sb.Append("/" + nonSymbolFontIds[fig.Font.FontFamily.FamilyName] + " " + fig.Font.FontSize.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " Tf\n");
                         sb.Append(GetKernedString(segments[i].txt, fig.Font) + " TJ\n");
                     }
                     else
                     {
-                        sb.Append("/" + symbolFontIds[fig.Font.FontFamily.FileName] + " " + fig.Font.FontSize.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " Tf\n");
-                        sb.Append("<" + EscapeSymbolStringForPDF(segments[i].txt, symbolGlyphIndices[fig.Font.FontFamily.FileName]) + "> Tj\n");
+                        sb.Append("/" + symbolFontIds[fig.Font.FontFamily.FamilyName] + " " + fig.Font.FontSize.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " Tf\n");
+                        sb.Append("<" + EscapeSymbolStringForPDF(segments[i].txt, symbolGlyphIndices[fig.Font.FontFamily.FamilyName]) + "> Tj\n");
                     }
                 }
 
