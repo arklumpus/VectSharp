@@ -59,7 +59,7 @@ The following example, instead, shows how to create a PDF file with an internal 
 
 <div class="code-example">
     <p style="text-align: center">
-        <a href="/assets/tutorials/InternalLinks.pdf" download>Download the example PDF</a>
+        <a href="assets/tutorials/InternalLinks.pdf" download>Download the example PDF</a>
     </p>
 </div>
 {% highlight CSharp %}

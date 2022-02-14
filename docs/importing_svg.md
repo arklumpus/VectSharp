@@ -15,7 +15,7 @@ To do this, you can use the static methods in the `VectSharp.SVG.Parser` class. 
 
 Each of these methods returns a `Page`, whose `Width` and `Height` correspond to the size of the viewbox defined in the SVG file, while the page's `Graphics` contains the image.
 
-For example, the following code loads an image from an SVG file, draws it on a new `Page`, overlays it with some text, and then saves it again as an SVG file. You can download the SVG file for this example from <a href="/assets/tutorials/SurgeonFish.svg" download>here</a>.
+For example, the following code loads an image from an SVG file, draws it on a new `Page`, overlays it with some text, and then saves it again as an SVG file. You can download the SVG file for this example from <a href="assets/tutorials/SurgeonFish.svg" download>here</a>.
 
 <div class="code-example">
     <p style="text-align: center">
