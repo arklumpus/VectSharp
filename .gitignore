@@ -2,6 +2,8 @@
 
 */bin/
 */obj/
+*/*/bin/
+*/*/obj/
 */nuget.config
 *.csproj.user
 *.pubxml.user
