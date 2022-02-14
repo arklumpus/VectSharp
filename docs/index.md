@@ -10,7 +10,7 @@ nav_order: 1
 
 This website contains a number of examples and tutorials to help you get started using VectSharp.
 
-You can also access the detailed API documentation from [here](/api/), or [download it as a PDF file](/api/VectSharp.pdf). You can find the source code for VectSharp in the [VectSharp GitHub repository](https://github.com/arklumpus/VectSharp).
+You can also access the detailed API documentation from [here](api/), or [download it as a PDF file](api/VectSharp.pdf). You can find the source code for VectSharp in the [VectSharp GitHub repository](https://github.com/arklumpus/VectSharp).
 
 ## The idea
 
