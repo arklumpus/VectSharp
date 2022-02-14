@@ -4,6 +4,9 @@
 
 <img src="icon.svg" width="256" align="right">
 
+[![License: LGPL v3](https://img.shields.io/badge/License-LGPL_v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
+[![Version](https://img.shields.io/nuget/v/VectSharp)](https://nuget.org/packages/VectSharp)
+
 ## Introduction
 **VectSharp** is a library to create vector graphics (including text) in C#, without too many dependencies.
 
@@ -13,7 +16,7 @@ It includes an abstract layer on top of which output layers can be written. Curr
 * **VectSharp.PDF** produces PDF documents.
 * **VectSharp.Canvas** produces an `Avalonia.Controls.Canvas` object ([https://avaloniaui.net/docs/controls/canvas](https://avaloniaui.net/docs/controls/canvas)) containing the rendered graphics objects.
 * **VectSharp.SVG** produces vector graphics in SVG format.
-* **VectSharp.Raster** produces raster images in PNG format, (this is done by rendering the image to a PDF document, and then using the [MuPDFCore](https://github.com/arklumpus/MuPDFCore) library to render the PDF). Since version 2.0.0, VectSharp.Raster is released under an AGPLv3 license.
+* **VectSharp.Raster** produces raster images in PNG format, (this is done by rendering the image to a PDF document, and then using the [MuPDFCore](https://github.com/arklumpus/MuPDFCore) library to render the PDF). Since version 2.0.0, VectSharp.Raster is released under an AGPLv3 licence.
 * **VectSharp.Raster.ImageSharp** produces raster images in multiple formats (BMP, GIF, JPEG, PBM, PNG, TGA, TIFF, WebP) using the [SixLabors.ImageSharp](https://github.com/SixLabors/ImageSharp) library.
 
 VectSharp.Raster and VectSharp.Raster.ImageSharp are somewhat overlapping, as both of them can be used to create PNG images. However, VectSharp.Raster is much faster, though it only supports the PNG format. Instead, VectSharp.Raster.ImageSharp is slower, but supports more formats and has a more permissive licence. Another difference is that VectSharp.Raster carries a native dependency (through MuPDFCore), while VectSharp.ImageSharp does not.
@@ -22,7 +25,9 @@ Furthermore:
 * [**VectSharp.ThreeD**](https://github.com/arklumpus/VectSharp/tree/master/VectSharp.ThreeD) adds support for 3D vector and raster graphics.
 * [**VectSharp.Markdown**](https://github.com/arklumpus/VectSharp/tree/master/VectSharp.Markdown) can be used to transform Markdown documents into VectSharp objects, that can then be exported e.g. as PDF or SVG files, or displayed in an Avalonia `Canvas`. **VectSharp.MarkdownCanvas** uses VectSharp.Markdown to render Markdown documents in Avalonia applications (an example of this is in the [MarkdownViewerDemo project](https://github.com/arklumpus/VectSharp/tree/master/MarkdownViewerDemo)).
 
-* **VectSharp.MuPDFUtils**, also released under an AGPLv3 license, contains some utility functions that use [MuPDFCore](https://github.com/arklumpus/MuPDFCore) to make it possible to include in VectSharp graphics images in various formats.
+* **VectSharp.MuPDFUtils**, released under an AGPLv3 licence, contains some utility functions that use [MuPDFCore](https://github.com/arklumpus/MuPDFCore) to make it possible to include in VectSharp graphics images in various formats.
+
+* **VectSharp.ImageSharpUtils** adds the same capabilities as VectSharp.MuPDFUtils, using ImageSharp instead of MuPDFCore; as a result, it is released under a more permissive LGPLv3 licence.
 
 * **VectSharp.Fonts.Nimbus** is a package released under a GPLv3 license, which contains the standard fonts that were used in VectSharp before version 2.0.0. Since these fonts are released under a GPL license, they had to be replaced when the VectSharp license changed to LGPL. See the [Font libraries](section) below for information on how to re-enable these fonts.
 
@@ -32,7 +37,7 @@ To include VectSharp in your project, you will need one of the output layer NuGe
 Note that to install VectSharp.Raster.ImageSharp you will need to add the [ImageSharp MyGet](https://www.myget.org/feed/sixlabors/package/nuget/SixLabors.ImageSharp) source to your package sources, so that you can obtain the latest nightly build (the version of SixLabors.ImageSharp.Drawing that is published on NuGet throws an exception whenever you try to draw outside the page bounds).
 
 ## Usage
-You can find the full documentation for the VectSharp library at the [documentation website](https://arklumpus.github.io/VectSharp). A [PDF reference manual](https://arklumpus.github.io/VectSharp/VectSharp.pdf) is also available.
+You can find detailed documentation for the VectSharp library, **including interactive examples**, at the [documentation website](https://arklumpus.github.io/VectSharp). A comprehensive API reference is also available, both as a [website](https://arklumpus.github.io/VectSharp/api) and as a [PDF manual](https://arklumpus.github.io/VectSharp/api/VectSharp.pdf).
 
 In general, working with VectSharp involves: creating a `Document`, adding `Page`s, drawing to the `Page`s' `Graphics` objects and, finally, exporting them to a PDF document, `Canvas`, PNG image or SVG document.
 
@@ -112,7 +117,7 @@ document.SaveAsPDF(@"Links.pdf", linkDestinations: links);
 ``` 
 This code produces a document with three rectangles: the grey one at the top links to the GitHub home page, while the red one in the middle is a hyperlink to the blue one at the bottom. Links in PDF documents can refer to objects that are in a different page than the one containing the link.
 
-The public classes and methods are [fully documented](https://arklumpus.github.io/VectSharp), and you can find a (much) more detailed code example in [MainWindow.xaml.cs](https://github.com/arklumpus/VectSharp/blob/master/VectSharp.Demo/MainWindow.xaml.cs). A detailed guide about 3D graphics in VectSharp.ThreeD is available in the [`VectSharp.ThreeD`](https://github.com/arklumpus/VectSharp/tree/master/VectSharp.ThreeD) folder.
+The public classes and methods are [fully documented](https://arklumpus.github.io/VectSharp) (with interactive examples created using Blazor), and you can find a (much) more detailed code example in [MainWindow.xaml.cs](https://github.com/arklumpus/VectSharp/blob/master/VectSharp.Demo/MainWindow.xaml.cs). A detailed guide about 3D graphics in VectSharp.ThreeD is available in the [`VectSharp.ThreeD`](https://github.com/arklumpus/VectSharp/tree/master/VectSharp.ThreeD) folder.
 
 ## Font libraries
 
@@ -177,7 +182,7 @@ To be able to compile VectSharp from source, you will need to install the latest
 
 You can use [Microsoft Visual Studio](https://visualstudio.microsoft.com/it/vs/) to compile the program. The following instructions will cover compiling VectSharp from the command line, instead.
 
-First of all, you will need to download the VectSharp source code: [VectSharp.tar.gz](https://github.com/arklumpus/VectSharp/archive/v1.7.0.tar.gz) and extract it somewhere.
+First of all, you will need to download the VectSharp source code: [VectSharp.tar.gz](https://github.com/arklumpus/VectSharp/archive/v2.2.1.tar.gz) and extract it somewhere.
 
 ### Windows
 Open a command-line window in the folder where you have extracted the source code, and type:

@@ -1,6 +1,0 @@
-<map id="VectSharp.RasterImage" name="VectSharp.RasterImage">
-<area shape="rect" id="node1" title="Represents a raster image, created from raw pixel data. Consider using the derived classes included i..." alt="" coords="135,80,295,107"/>
-<area shape="rect" id="node3" href="$class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_file.html" title="A RasterImage created from a file." alt="" coords="5,155,204,196"/>
-<area shape="rect" id="node4" href="$class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_stream.html" title="A RasterImage created from a stream." alt="" coords="228,155,427,196"/>
-<area shape="rect" id="node2" title=" " alt="" coords="171,5,260,32"/>
-</map>

@@ -1,0 +1,5 @@
+<map id="VectSharp.Filters.IFilterWithRasterisableParameter" name="VectSharp.Filters.IFilterWithRasterisableParameter">
+<area shape="rect" id="node1" title="Represents a filter with a parameter that needs to be rasterised at the same resolution as the subjec..." alt="" coords="9,5,190,47"/>
+<area shape="rect" id="node2" href="$class_vect_sharp_1_1_filters_1_1_filter_with_rasterisable_parameter.html" title="Represents a filter with a parameter that needs to be rasterised at the same resolution as the subjec..." alt="" coords="9,95,190,136"/>
+<area shape="rect" id="node3" href="$class_vect_sharp_1_1_filters_1_1_mask_filter.html" title="Represents a filter that uses the luminance of an image to mask another image." alt="" coords="5,184,193,211"/>
+</map>

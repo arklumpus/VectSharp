@@ -1,0 +1,23 @@
+var searchData=
+[
+  ['b1_1370',['B1',['../class_vect_sharp_1_1_filters_1_1_colour_matrix.html#a3730029deeaee40f2a7d78bacf8d028a',1,'VectSharp::Filters::ColourMatrix']]],
+  ['b2_1371',['B2',['../class_vect_sharp_1_1_filters_1_1_colour_matrix.html#a574c885492b87962afea72baa821e5fe',1,'VectSharp::Filters::ColourMatrix']]],
+  ['b3_1372',['B3',['../class_vect_sharp_1_1_filters_1_1_colour_matrix.html#aafd7c3f325a16bd7ac51ff14214824d0',1,'VectSharp::Filters::ColourMatrix']]],
+  ['b4_1373',['B4',['../class_vect_sharp_1_1_filters_1_1_colour_matrix.html#a5097e89292474002ee0976d466812982',1,'VectSharp::Filters::ColourMatrix']]],
+  ['b5_1374',['B5',['../class_vect_sharp_1_1_filters_1_1_colour_matrix.html#ab7bbf96a1951e578cdd472e68e86e3b8',1,'VectSharp::Filters::ColourMatrix']]],
+  ['background_1375',['Background',['../class_vect_sharp_1_1_page.html#ad4758fd1d5dac8e8f3b3402b92afe368',1,'VectSharp::Page']]],
+  ['backgroundcolour_1376',['BackgroundColour',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a705b87a48e9440a1cdbfd0aa0ad68d17',1,'VectSharp::Markdown::MarkdownRenderer']]],
+  ['basefontsize_1377',['BaseFontSize',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a526e8cc443eacebd5945764a8dee28df',1,'VectSharp::Markdown::MarkdownRenderer']]],
+  ['baseimageuri_1378',['BaseImageUri',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#abc128a21d2706ed5eb2f9b75d91f576d',1,'VectSharp::Markdown::MarkdownRenderer']]],
+  ['baselinkuri_1379',['BaseLinkUri',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a7426c75d7c234a4dafb8b972e8fce7ab',1,'VectSharp::Markdown::MarkdownRenderer']]],
+  ['beamwidthangle_1380',['BeamWidthAngle',['../class_vect_sharp_1_1_three_d_1_1_spotlight_light_source.html#a872664c90dfe1fe3860d3069d0655698',1,'VectSharp::ThreeD::SpotlightLightSource']]],
+  ['bias_1381',['Bias',['../class_vect_sharp_1_1_filters_1_1_convolution_filter.html#a8c83462414bf7df2ae2d2a957dbfbfc8',1,'VectSharp::Filters::ConvolutionFilter']]],
+  ['boldfontfamily_1382',['BoldFontFamily',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#af4e032e144cc1d3910a312cc622ea540',1,'VectSharp::Markdown::MarkdownRenderer']]],
+  ['bolditalicfontfamily_1383',['BoldItalicFontFamily',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ae5639d8fed32dfb6f8c3644db25ae6da',1,'VectSharp::Markdown::MarkdownRenderer']]],
+  ['boldunderlinethickness_1384',['BoldUnderlineThickness',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#aaef5febae4fd75bb56ed8c4ca356f42e',1,'VectSharp::Markdown::MarkdownRenderer']]],
+  ['bottom_1385',['Bottom',['../class_vect_sharp_1_1_font_1_1_detailed_font_metrics.html#a88411a7c57bc6613e62198c3cb8f2058',1,'VectSharp.Font.DetailedFontMetrics.Bottom()'],['../class_vect_sharp_1_1_markdown_1_1_margins.html#a2b4136972b8db8056d07e254b2c56982',1,'VectSharp.Markdown.Margins.Bottom()']]],
+  ['bottomrightmargin_1386',['BottomRightMargin',['../class_vect_sharp_1_1_filters_1_1_box_blur_filter.html#a162b7ca04422c6cd9ec8b506f1cd3a59',1,'VectSharp.Filters.BoxBlurFilter.BottomRightMargin()'],['../class_vect_sharp_1_1_filters_1_1_colour_matrix_filter.html#aac6a34d630e46698a0eda7cf230233f8',1,'VectSharp.Filters.ColourMatrixFilter.BottomRightMargin()'],['../class_vect_sharp_1_1_filters_1_1_composite_location_invariant_filter.html#a79c8d4cfb604adde16eacbe3a108afcf',1,'VectSharp.Filters.CompositeLocationInvariantFilter.BottomRightMargin()'],['../class_vect_sharp_1_1_filters_1_1_convolution_filter.html#ade808cf103a8c230dfa7d04440853b2b',1,'VectSharp.Filters.ConvolutionFilter.BottomRightMargin()'],['../interface_vect_sharp_1_1_filters_1_1_i_filter.html#ab006d719ef2f17f3ccd5d0641ece381e',1,'VectSharp.Filters.IFilter.BottomRightMargin()'],['../class_vect_sharp_1_1_filters_1_1_gaussian_blur_filter.html#ad98397284cd170193ca6b3fe73493f14',1,'VectSharp.Filters.GaussianBlurFilter.BottomRightMargin()']]],
+  ['boxradius_1387',['BoxRadius',['../class_vect_sharp_1_1_filters_1_1_box_blur_filter.html#a3e898540c4e0e6b917b7a18c3633a2c6',1,'VectSharp::Filters::BoxBlurFilter']]],
+  ['brush_1388',['Brush',['../class_vect_sharp_1_1_formatted_text.html#a04a80d0c9d59aeea79c8dadc104e82c0',1,'VectSharp::FormattedText']]],
+  ['bullets_1389',['Bullets',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a826c08ed75d817f6523b33f4b0920dfe',1,'VectSharp::Markdown::MarkdownRenderer']]]
+];

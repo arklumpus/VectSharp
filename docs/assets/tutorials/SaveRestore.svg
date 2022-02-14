@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" version="1.1" style="font-synthesis: none;" xmlns="http://www.w3.org/2000/svg">
+  <style></style>
+  <defs />
+  <path d="M 0 0 L 100 0 L 100 100 L 0 100 Z " stroke="none" fill="#FFFFFF" fill-opacity="0" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 10 10 L 20 10 L 20 20 L 10 20 Z " stroke="none" fill="#000000" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 10 10 L 20 10 L 20 20 L 10 20 Z " stroke="none" fill="#008000" fill-opacity="1" transform="matrix(2,0,0,2,20,20)" />
+  <path d="M 20 15 L 20 15 C 20 17.7595748, 17.7595748 20, 15 20 C 12.2404252 20, 10 17.7595748, 10 15 C 10 12.2404252, 12.240425199999999 10, 14.999999999999998 10 C 17.7595748 10, 20 12.240425199999999, 20 14.999999999999998 " stroke="none" fill="#808080" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+</svg>

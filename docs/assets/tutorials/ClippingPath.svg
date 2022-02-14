@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" version="1.1" style="font-synthesis: none;" xmlns="http://www.w3.org/2000/svg">
+  <style></style>
+  <defs />
+  <path d="M 0 0 L 100 0 L 100 100 L 0 100 Z " stroke="none" fill="#FFFFFF" fill-opacity="0" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 70 50 L 70 50 C 70 61.0382992, 61.0382992 70, 50 70 C 38.9617008 70, 30 61.0382992, 30 50 C 29.999999999999996 38.9617008, 38.961700799999996 30, 49.99999999999999 30 C 61.0382992 29.999999999999996, 70 38.961700799999996, 70 49.99999999999999 " stroke="#009E73" stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" fill="none" transform="matrix(1,0,0,1,0,0)" />
+  <clipPath id="cb554165f4ec4c78b5bb637ba994231c">
+    <path d="M 70 50 L 70 50 C 70 61.0382992, 61.0382992 70, 50 70 C 38.9617008 70, 30 61.0382992, 30 50 C 29.999999999999996 38.9617008, 38.961700799999996 30, 49.99999999999999 30 C 61.0382992 29.999999999999996, 70 38.961700799999996, 70 49.99999999999999 " stroke="#009E73" stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" fill="none" transform="matrix(1,0,0,1,0,0)" />
+  </clipPath>
+  <g clip-path="url(#cb554165f4ec4c78b5bb637ba994231c)">
+    <path d="M 10 10 L 60 10 L 60 60 L 10 60 Z " stroke="none" fill="#808080" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  </g>
+</svg>

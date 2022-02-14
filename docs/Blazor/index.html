@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Origin-Agent-Cluster" content="?1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>BlazorDemos</title>
+    <link href="_content/MatBlazor/dist/matBlazor.css" rel="stylesheet" />
+    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/app.css" rel="stylesheet" />
+    <link href="BlazorDemos.styles.css" rel="stylesheet" />
+    <script src="_content/MatBlazor/dist/matBlazor.js"></script>
+</head>
+
+<body>
+    <div id="app">Loading...</div>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+    <script src="_framework/blazor.webassembly.js" autostart="false"></script>
+	<script type="module">
+	  import { BrotliDecode } from './decode.min.js';
+	  Blazor.start({
+		loadBootResource: function (type, name, defaultUri, integrity) {
+		  if (type !== 'dotnetjs' && location.hostname !== 'localhost') {
+			return (async function () {
+			  const response = await fetch(defaultUri + '.br', { cache: 'no-cache' });
+			  if (!response.ok) {
+				throw new Error(response.statusText);
+			  }
+			  const originalResponseBuffer = await response.arrayBuffer();
+			  const originalResponseArray = new Int8Array(originalResponseBuffer);
+			  const decompressedResponseArray = BrotliDecode(originalResponseArray);
+			  const contentType = type === 
+				'dotnetwasm' ? 'application/wasm' : 'application/octet-stream';
+			  return new Response(decompressedResponseArray, 
+				{ headers: { 'content-type': contentType } });
+			})();
+		  }
+		}
+	  });
+	</script>
+</body>
+
+</html>
