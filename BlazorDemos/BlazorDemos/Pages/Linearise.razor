@@ -1,0 +1,182 @@
+﻿@page "/linearise"
+@using VectSharp;
+@using VectSharp.SVG;
+
+<style>
+	table {
+		table-layout: fixed;
+	}
+
+	td {
+		width: 400px;
+		padding: 10px;
+	}
+</style>
+
+<div style="width: 100vw; height: 100vh; position: relative;">
+	<div style="width: calc(100% - 400px); height: 100%; position: absolute; top: 0; left: 0; text-align: center">
+		<img src="@imgSource" style="max-width: 100%; max-height: 100%; margin-top: 50vh; transform: translate(0, -50%)" />
+	</div>
+
+	<div style="width: 400px; height: 100vh; position: absolute; top: 0; right: 0;">
+		<table style="margin-top: 50vh; transform: translate(0, -50%)">
+			<tr>
+				<td style="width: 400px; text-align: center">
+					<MatNumericUpDownField Label="Linearisation resolution"
+										   @bind-Value=@resolution
+										   Step="1">
+					</MatNumericUpDownField>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+@code {
+	private double _p2X = 30;
+	private double p2X
+	{
+		get
+		{
+			return _p2X;
+		}
+
+		set
+		{
+			_p2X = value;
+			Render();
+		}
+	}
+
+	private double _p2Y = 70;
+	private double p2Y
+	{
+		get
+		{
+			return _p2Y;
+		}
+
+		set
+		{
+			_p2Y = value;
+			Render();
+		}
+	}
+
+	private double _p3X = 50;
+	private double p3X
+	{
+		get
+		{
+			return _p3X;
+		}
+
+		set
+		{
+			_p3X = value;
+			Render();
+		}
+	}
+
+	private double _p3Y = 50;
+	private double p3Y
+	{
+		get
+		{
+			return _p3Y;
+		}
+
+		set
+		{
+			_p3Y = value;
+			Render();
+		}
+	}
+
+	private double _p4X = 70;
+	private double p4X
+	{
+		get
+		{
+			return _p4X;
+		}
+
+		set
+		{
+			_p4X = value;
+			Render();
+		}
+	}
+
+	private double _p4Y = 70;
+	private double p4Y
+	{
+		get
+		{
+			return _p4Y;
+		}
+
+		set
+		{
+			_p4Y = value;
+			Render();
+		}
+	}
+
+	private double _resolution = 10;
+	private double resolution
+	{
+		get
+		{
+			return _resolution;
+		}
+
+		set
+		{
+			_resolution = value;
+			Render();
+		}
+	}
+
+	private string imgSource = "";
+
+	GraphicsPath path;
+
+	protected override Task OnInitializedAsync()
+	{
+		double p1X = 10;
+		double p1Y = 30;
+
+		double p5X = 90;
+		double p5Y = 30;
+
+		path = new GraphicsPath().AddSmoothSpline(new Point(p1X, p1Y), new Point(p2X, p2Y), new Point(p3X, p3Y), new Point(p4X, p4Y), new Point(p5X, p5Y));
+
+		Render();
+		return Task.CompletedTask;
+	}
+
+	public void Render()
+	{
+		Page page = new Page(100, 100);
+		Graphics graphics = page.Graphics;
+
+		graphics.StrokePath(path, Colour.FromRgb(220, 220, 220), 4);
+
+		graphics.StrokePath(path.Linearise(resolution), Colour.FromRgb(0, 158, 115), 2);
+		
+
+		using (MemoryStream ms = new MemoryStream())
+		{
+			page.SaveAsSVG(ms);
+			ms.Seek(0, SeekOrigin.Begin);
+
+			using (StreamReader sr = new StreamReader(ms))
+			{
+				this.imgSource = "data:image/svg+xml;base64," + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(sr.ReadToEnd()));
+			}
+		}
+	}
+
+
+}

@@ -1,0 +1,22 @@
+﻿@page "/"
+@inject NavigationManager NavManager
+
+<PageTitle>VectSharp Examples</PageTitle>
+
+@code
+{
+	protected override Task OnInitializedAsync()
+	{
+		/*NavManager.NavigateTo("linearise");
+		return Task.CompletedTask;*/
+
+		Uri uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+
+		if (!string.IsNullOrEmpty(uri.Query))
+		{
+			NavManager.NavigateTo(uri.Query.Substring(1));
+		}
+
+		return Task.CompletedTask;
+	}
+}

@@ -1,0 +1,233 @@
+﻿@page "/affine"
+@using VectSharp;
+@using VectSharp.SVG;
+
+<style>
+	table {
+		table-layout: fixed;
+	}
+
+	td {
+		width: 200px;
+		padding: 10px;
+	}
+</style>
+
+<div style="width: 100vw; height: 100vh; position: relative;">
+	<div style="width: calc(100% - 400px); height: 100%; position: absolute; top: 0; left: 0; text-align: center">
+		<img src="@imgSource" style="max-width: 100%; max-height: 100%; margin-top: 50vh; transform: translate(0, -50%)" />
+	</div>
+
+	<div style="width: 400px; height: 100vh; position: absolute; top: 0; right: 0;">
+		<table style="margin-top: 50vh; transform: translate(0, -50%)">
+			<tr>
+				<td>
+					<MatNumericUpDownField Label="a"
+										   @bind-Value=@a
+										   Step="0.1"
+										   DecimalPlaces="2">
+					</MatNumericUpDownField>
+				</td>
+				<td>
+					<MatNumericUpDownField Label="b"
+										   @bind-Value=@b
+										   Step="0.1"
+										   DecimalPlaces="2">
+					</MatNumericUpDownField>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<MatNumericUpDownField Label="c"
+										   @bind-Value=@c
+										   Step="0.1"
+										   DecimalPlaces="2">
+					</MatNumericUpDownField>
+				</td>
+				<td>
+					<MatNumericUpDownField Label="d"
+										   @bind-Value=@d
+										   Step="0.1"
+										   DecimalPlaces="2">
+					</MatNumericUpDownField>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<MatNumericUpDownField Label="e"
+										   @bind-Value=@e
+										   Step="1">
+					</MatNumericUpDownField>
+				</td>
+				<td>
+					<MatNumericUpDownField Label="f"
+										   @bind-Value=@f
+										   Step="1">
+					</MatNumericUpDownField>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+@code {
+	private double _a = 1.5;
+	private double a
+	{
+		get
+		{
+			return _a;
+		}
+
+		set
+		{
+			_a = value;
+			Render();
+		}
+	}
+
+	private double _b = 0.75;
+	private double b
+	{
+		get
+		{
+			return _b;
+		}
+
+		set
+		{
+			_b = value;
+			Render();
+		}
+	}
+
+	private double _c = -1.5;
+	private double c
+	{
+		get
+		{
+			return _c;
+		}
+
+		set
+		{
+			_c = value;
+			Render();
+		}
+	}
+
+	private double _d = 0.75;
+	private double d
+	{
+		get
+		{
+			return _d;
+		}
+
+		set
+		{
+			_d = value;
+			Render();
+		}
+	}
+
+	private double _e = 40;
+	private double e
+	{
+		get
+		{
+			return _e;
+		}
+
+		set
+		{
+			_e = value;
+			Render();
+		}
+	}
+
+	private double _f = 35;
+	private double f
+	{
+		get
+		{
+			return _f;
+		}
+
+		set
+		{
+			_f = value;
+			Render();
+		}
+	}
+
+	private string imgSource = "";
+
+	protected override Task OnInitializedAsync()
+	{
+		Render();
+		return Task.CompletedTask;
+	}
+
+	public void Render()
+	{
+		Page page = new Page(170, 170);
+		Graphics graphics = page.Graphics;
+
+		Font fnt = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesItalic), 6);
+
+		graphics.Translate(10, 10);
+		graphics.Scale(2, 2);
+
+		graphics.StrokePath(new GraphicsPath().MoveTo(0, 0).LineTo(0, 20).MoveTo(10, 0).LineTo(10, 20).MoveTo(20, 0).LineTo(20, 20).MoveTo(0, 0).LineTo(20, 0).MoveTo(0, 10).LineTo(20, 10).MoveTo(0, 20).LineTo(20, 20), Colour.FromRgb(220, 220, 220), lineCap: LineCaps.Square);
+
+		graphics.StrokePath(new GraphicsPath().MoveTo(0, 0).LineTo(10, 0), Colour.FromRgb(127, 184, 216));
+		graphics.FillPath(new GraphicsPath().MoveTo(12, 0).LineTo(9, 2).LineTo(9, -2).Close(), Colour.FromRgb(127, 184, 216));
+		graphics.StrokePath(new GraphicsPath().MoveTo(0, 0).LineTo(0, 10), Colour.FromRgb(234, 174, 127));
+		graphics.FillPath(new GraphicsPath().MoveTo(0, 12).LineTo(2, 9).LineTo(-2, 9).Close(), Colour.FromRgb(234, 174, 127));
+		graphics.FillPath(new GraphicsPath().Arc(0, 0, 1, 0, 2 * Math.PI), Colour.FromRgb(220, 220, 220));
+		graphics.FillText(15 - fnt.MeasureText("x").Width * 0.5, 0, "x", fnt, Colour.FromRgb(128, 128, 128), TextBaselines.Middle);
+		graphics.FillText(- fnt.MeasureText("y").Width * 0.5, 16, "y", fnt, Colour.FromRgb(128, 128, 128), TextBaselines.Middle);
+
+		double p1X = e * 2;
+		double p1Y = f * 2;
+
+		Point direction = new Point(p1X, p1Y);
+		double modulus = direction.Modulus();
+		direction = new Point(direction.X / modulus, direction.Y / modulus);
+
+		double margin = 5;
+
+		graphics.StrokePath(new GraphicsPath().MoveTo(direction.X * margin, direction.Y * margin).LineTo(p1X * 0.5 - direction.X * margin, p1Y * 0.5 - direction.Y * margin), Colour.FromRgb(180, 180, 180), lineDash: new LineDash(2.5, 2.5, 0));
+
+		graphics.Save();
+		graphics.Translate(p1X * 0.5 - direction.X * margin, p1Y * 0.5 - direction.Y * margin);
+		graphics.Rotate(Math.Atan2(direction.Y, direction.X));
+		graphics.FillPath(new GraphicsPath().MoveTo(2, 0).LineTo(-1, 2).LineTo(-1, -2).Close(), Colour.FromRgb(180, 180, 180));
+
+		graphics.Restore();
+
+		graphics.Transform(a, b, c, d, e, f);
+
+		graphics.StrokePath(new GraphicsPath().MoveTo(0, 0).LineTo(0, 20).MoveTo(10, 0).LineTo(10, 20).MoveTo(20, 0).LineTo(20, 20).MoveTo(0, 0).LineTo(20, 0).MoveTo(0, 10).LineTo(20, 10).MoveTo(0, 20).LineTo(20, 20), Colour.FromRgb(180, 180, 180), lineCap: LineCaps.Square);
+
+		graphics.StrokePath(new GraphicsPath().MoveTo(0, 0).LineTo(10, 0), Colour.FromRgb(0, 114, 178));
+		graphics.FillPath(new GraphicsPath().MoveTo(12, 0).LineTo(9, 2).LineTo(9, -2).Close(), Colour.FromRgb(0, 114, 178));
+		graphics.StrokePath(new GraphicsPath().MoveTo(0, 0).LineTo(0, 10), Colour.FromRgb(213, 94, 0));
+		graphics.FillPath(new GraphicsPath().MoveTo(0, 12).LineTo(2, 9).LineTo(-2, 9).Close(), Colour.FromRgb(213, 94, 0));
+		graphics.FillPath(new GraphicsPath().Arc(0, 0, 1, 0, 2 * Math.PI), Colour.FromRgb(180, 180, 180));
+		graphics.FillText(15 - fnt.MeasureText("x").Width * 0.5, 0, "x", fnt, Colours.Black, TextBaselines.Middle);
+		graphics.FillText(- fnt.MeasureText("y").Width * 0.5, 16, "y", fnt, Colours.Black, TextBaselines.Middle);
+
+		using (MemoryStream ms = new MemoryStream())
+		{
+			page.SaveAsSVG(ms);
+			ms.Seek(0, SeekOrigin.Begin);
+
+			using (StreamReader sr = new StreamReader(ms))
+			{
+				this.imgSource = "data:image/svg+xml;base64," + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(sr.ReadToEnd()));
+			}
+		}
+	}
+}

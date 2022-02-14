@@ -1,0 +1,230 @@
+﻿@page "/getPointAtRelative"
+@using VectSharp;
+@using VectSharp.SVG;
+
+<style>
+	table {
+		table-layout: fixed;
+	}
+
+	td {
+		width: 400px;
+		padding: 10px;
+	}
+</style>
+
+<div style="width: 100vw; height: 100vh; position: relative;">
+	<div style="width: calc(100% - 400px); height: 100%; position: absolute; top: 0; left: 0; text-align: center">
+		<img src="@imgSource" style="max-width: 100%; max-height: 100%; margin-top: 50vh; transform: translate(0, -50%)" />
+	</div>
+
+	<div style="width: 400px; height: 100vh; position: absolute; top: 0; right: 0;">
+		<table style="margin-top: 50vh; transform: translate(0, -50%)">
+			<tr>
+				<td>
+					<div style="display: inline-block; position: relative; width: 380px">
+						<span class="mdc-floating-label mdc-floating-label--float-above" style="margin-left:0.5em; margin-top: 2em; color: rgba(0, 0, 0, 0.6)">Relative position</span><br />
+						<div style="position: relative">
+							<div style="display: inline-block; width: 300px">
+								<MatSlider ValueMin="0" ValueMax="100" @bind-Value="@position" Immediate="true"></MatSlider>
+							</div>
+							<span style="position: absolute; top: 50%; left: 320px; transform: translate(0, -50%)">@((position / 100.0).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture))</span>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+@code {
+	private double _p2X = 30;
+	private double p2X
+	{
+		get
+		{
+			return _p2X;
+		}
+
+		set
+		{
+			_p2X = value;
+			Render();
+		}
+	}
+
+	private double _p2Y = 70;
+	private double p2Y
+	{
+		get
+		{
+			return _p2Y;
+		}
+
+		set
+		{
+			_p2Y = value;
+			Render();
+		}
+	}
+
+	private double _p3X = 50;
+	private double p3X
+	{
+		get
+		{
+			return _p3X;
+		}
+
+		set
+		{
+			_p3X = value;
+			Render();
+		}
+	}
+
+	private double _p3Y = 50;
+	private double p3Y
+	{
+		get
+		{
+			return _p3Y;
+		}
+
+		set
+		{
+			_p3Y = value;
+			Render();
+		}
+	}
+
+	private double _p4X = 70;
+	private double p4X
+	{
+		get
+		{
+			return _p4X;
+		}
+
+		set
+		{
+			_p4X = value;
+			Render();
+		}
+	}
+
+	private double _p4Y = 70;
+	private double p4Y
+	{
+		get
+		{
+			return _p4Y;
+		}
+
+		set
+		{
+			_p4Y = value;
+			Render();
+		}
+	}
+
+	private double _position = 33;
+	private double position
+	{
+		get
+		{
+			return _position;
+		}
+
+		set
+		{
+			_position = value;
+			Render();
+		}
+	}
+
+	private string imgSource = "";
+
+	GraphicsPath path;
+
+	Point[] points;
+	Point[] normals;
+	double pathLength;
+
+	private void CreateCache()
+	{
+		points = path.Linearise(5).GetPoints().First().ToArray();
+		normals = path.GetLinearisationPointsNormals(5).First().ToArray();
+		pathLength = path.MeasureLength();
+	}
+
+	private Point GetPointAt(double position)
+	{
+		if (position < 0)
+		{
+			return new Point(points[0].X + normals[0].Y * position * pathLength, points[0].Y - normals[0].X * position * pathLength);
+		}
+		else if (position > 1)
+		{
+			return new Point(points[^1].X + normals[^1].Y * (position - 1) * pathLength, points[^1].Y - normals[^1].X * (position - 1) * pathLength);
+		}
+
+		int indLeft = (int)Math.Floor(position * (points.Length - 1));
+		int indRight = (int)Math.Ceiling(position * (points.Length - 1));
+
+		if (indLeft == indRight)
+		{
+			return points[indLeft];
+		}
+		else
+		{
+			double t = position * (points.Length - 1) - indLeft;
+
+			return new Point(points[indLeft].X * (1 - t) + points[indRight].X * t, points[indLeft].Y * (1 - t) + points[indRight].Y * t);
+		}
+	}
+
+	protected override Task OnInitializedAsync()
+	{
+		double p1X = 10;
+		double p1Y = 30;
+
+		double p5X = 90;
+		double p5Y = 30;
+
+		path = new GraphicsPath().AddSmoothSpline(new Point(p1X, p1Y), new Point(p2X, p2Y), new Point(p3X, p3Y), new Point(p4X, p4Y), new Point(p5X, p5Y));
+
+		CreateCache();
+
+		Render();
+		return Task.CompletedTask;
+	}
+
+	public void Render()
+	{
+		Page page = new Page(100, 100);
+		Graphics graphics = page.Graphics;
+
+		graphics.StrokePath(path, Colours.Black, 2);
+
+		// Get the point at position.
+		Point point = GetPointAt(position / 100.0);
+
+		// Draw the point as a green circle.
+		graphics.FillPath(new GraphicsPath().Arc(point, 2, 0, 2 * Math.PI), Colours.Green);
+		
+
+		using (MemoryStream ms = new MemoryStream())
+		{
+			page.SaveAsSVG(ms);
+			ms.Seek(0, SeekOrigin.Begin);
+
+			using (StreamReader sr = new StreamReader(ms))
+			{
+				this.imgSource = "data:image/svg+xml;base64," + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(sr.ReadToEnd()));
+			}
+		}
+	}
+
+
+}

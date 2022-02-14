@@ -1,0 +1,283 @@
+﻿@page "/smoothSpline"
+@using VectSharp;
+@using VectSharp.SVG;
+
+<style>
+	table {
+		table-layout: fixed;
+	}
+
+	td {
+		width: 200px;
+		padding: 10px;
+	}
+</style>
+
+<div style="width: 100vw; height: 100vh; position: relative;">
+	<div style="width: calc(100% - 400px); height: 100%; position: absolute; top: 0; left: 0; text-align: center">
+		<img src="@imgSource" style="max-width: 100%; max-height: 100%; margin-top: 50vh; transform: translate(0, -50%)" />
+	</div>
+
+	<div style="width: 400px; height: 100vh; position: absolute; top: 0; right: 0;">
+		<table style="margin-top: 50vh; transform: translate(0, -50%)">
+			<tr>
+				<td>
+					<MatNumericUpDownField Label="P2.X"
+										   @bind-Value=@p2X
+										   Step="1">
+					</MatNumericUpDownField>
+				</td>
+				<td>
+					<MatNumericUpDownField Label="P2.Y"
+										   @bind-Value=@p2Y
+										   Step="1">
+					</MatNumericUpDownField>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<MatNumericUpDownField Label="P3.X"
+										   @bind-Value=@p3X
+										   Step="1">
+					</MatNumericUpDownField>
+				</td>
+				<td>
+					<MatNumericUpDownField Label="P3.Y"
+										   @bind-Value=@p3Y
+										   Step="1">
+					</MatNumericUpDownField>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<MatNumericUpDownField Label="P4.X"
+										   @bind-Value=@p4X
+										   Step="1">
+					</MatNumericUpDownField>
+				</td>
+				<td>
+					<MatNumericUpDownField Label="P4.Y"
+										   @bind-Value=@p4Y
+										   Step="1">
+					</MatNumericUpDownField>
+				</td>
+			</tr>
+
+		</table>
+	</div>
+</div>
+
+@code {
+	private double _p2X = 30;
+	private double p2X
+	{
+		get
+		{
+			return _p2X;
+		}
+
+		set
+		{
+			_p2X = value;
+			Render();
+		}
+	}
+
+	private double _p2Y = 70;
+	private double p2Y
+	{
+		get
+		{
+			return _p2Y;
+		}
+
+		set
+		{
+			_p2Y = value;
+			Render();
+		}
+	}
+
+	private double _p3X = 50;
+	private double p3X
+	{
+		get
+		{
+			return _p3X;
+		}
+
+		set
+		{
+			_p3X = value;
+			Render();
+		}
+	}
+
+	private double _p3Y = 50;
+	private double p3Y
+	{
+		get
+		{
+			return _p3Y;
+		}
+
+		set
+		{
+			_p3Y = value;
+			Render();
+		}
+	}
+
+	private double _p4X = 70;
+	private double p4X
+	{
+		get
+		{
+			return _p4X;
+		}
+
+		set
+		{
+			_p4X = value;
+			Render();
+		}
+	}
+
+	private double _p4Y = 70;
+	private double p4Y
+	{
+		get
+		{
+			return _p4Y;
+		}
+
+		set
+		{
+			_p4Y = value;
+			Render();
+		}
+	}
+
+	private string imgSource = "";
+
+	protected override Task OnInitializedAsync()
+	{
+		Render();
+		return Task.CompletedTask;
+	}
+
+	public void Render()
+	{
+		Page page = new Page(100, 100);
+		Graphics graphics = page.Graphics;
+
+		double p1X = 10;
+		double p1Y = 30;
+
+		double p5X = 90;
+		double p5Y = 30;
+
+		IEnumerable<FormattedText> p1 = FormattedText.Format("P<sub>1</sub>", FontFamily.StandardFontFamilies.Helvetica, 10);
+		Font.DetailedFontMetrics metrics1 = p1.Measure();
+
+		IEnumerable<FormattedText> p2 = FormattedText.Format("P<sub>2</sub>", FontFamily.StandardFontFamilies.Helvetica, 10);
+		Font.DetailedFontMetrics metrics2 = p2.Measure();
+
+		IEnumerable<FormattedText> p3 = FormattedText.Format("P<sub>3</sub>", FontFamily.StandardFontFamilies.Helvetica, 10);
+		Font.DetailedFontMetrics metrics3 = p3.Measure();
+
+		IEnumerable<FormattedText> p4 = FormattedText.Format("P<sub>4</sub>", FontFamily.StandardFontFamilies.Helvetica, 10);
+		Font.DetailedFontMetrics metrics4 = p3.Measure();
+
+		IEnumerable<FormattedText> p5 = FormattedText.Format("P<sub>5</sub>", FontFamily.StandardFontFamilies.Helvetica, 10);
+		Font.DetailedFontMetrics metrics5 = p5.Measure();
+
+		Point direction1 = new Point(p2X - p1X, p2Y - p1Y);
+		double modulus = direction1.Modulus();
+
+		if (modulus == 0)
+		{
+			direction1 = new Point(0, 1);
+		}
+		else
+		{
+			direction1 = new Point(direction1.X / modulus, direction1.Y / modulus);
+		}
+
+		double centerP1X = p1X - direction1.X * 10;
+		double centerP1Y = p1Y - direction1.Y * 10;
+
+		(double centerP2X, double centerP2Y) = centerP(p1X, p1Y, p2X, p2Y, p3X, p3Y);
+
+		(double centerP3X, double centerP3Y) = centerP(p2X, p2Y, p3X, p3Y, p4X, p4Y);
+
+		(double centerP4X, double centerP4Y) = centerP(p3X, p3Y, p4X, p4Y, p5X, p5Y);
+
+		Point direction5 = new Point(p4X - p5X, p4Y - p5Y);
+		modulus = direction5.Modulus();
+
+		if (modulus == 0)
+		{
+			direction5 = new Point(0, 1);
+		}
+		else
+		{
+			direction5 = new Point(direction5.X / modulus, direction5.Y / modulus);
+		}
+
+		double centerP5X = p5X - direction5.X * 10;
+		double centerP5Y = p5Y - direction5.Y * 10;
+
+		graphics.StrokePath(new GraphicsPath().AddSmoothSpline(new Point(p1X, p1Y), new Point(p2X, p2Y), new Point(p3X, p3Y), new Point(p4X, p4Y), new Point(p5X, p5Y)), Colours.Black, 2);
+
+		graphics.StrokePath(new GraphicsPath().LineTo(p1X, p1Y).LineTo(p2X, p2Y).LineTo(p3X, p3Y).LineTo(p4X, p4Y).LineTo(p5X, p5Y), Colour.FromRgb(180, 180, 180), 1, lineDash: new LineDash(5, 5, 0));
+		graphics.FillPath(new GraphicsPath().Arc(p1X, p1Y, 2, 0, 2 * Math.PI), Colour.FromRgb(180, 180, 180));
+		graphics.FillPath(new GraphicsPath().Arc(p2X, p2Y, 2, 0, 2 * Math.PI), Colour.FromRgb(180, 180, 180));
+		graphics.FillPath(new GraphicsPath().Arc(p3X, p3Y, 2, 0, 2 * Math.PI), Colour.FromRgb(180, 180, 180));
+		graphics.FillPath(new GraphicsPath().Arc(p4X, p4Y, 2, 0, 2 * Math.PI), Colour.FromRgb(180, 180, 180));
+		graphics.FillPath(new GraphicsPath().Arc(p5X, p5Y, 2, 0, 2 * Math.PI), Colour.FromRgb(180, 180, 180));
+
+		graphics.FillText(centerP1X - metrics1.Width * 0.5, centerP1Y, p1, Colours.Black, TextBaselines.Middle);
+		graphics.FillText(centerP2X - metrics2.Width * 0.5, centerP2Y, p2, Colours.Black, TextBaselines.Middle);
+		graphics.FillText(centerP3X - metrics3.Width * 0.5, centerP3Y, p3, Colours.Black, TextBaselines.Middle);
+		graphics.FillText(centerP4X - metrics4.Width * 0.5, centerP4Y, p4, Colours.Black, TextBaselines.Middle);
+		graphics.FillText(centerP5X - metrics5.Width * 0.5, centerP5Y, p5, Colours.Black, TextBaselines.Middle);
+
+		using (MemoryStream ms = new MemoryStream())
+		{
+			page.SaveAsSVG(ms);
+			ms.Seek(0, SeekOrigin.Begin);
+
+			using (StreamReader sr = new StreamReader(ms))
+			{
+				this.imgSource = "data:image/svg+xml;base64," + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(sr.ReadToEnd()));
+			}
+		}
+	}
+
+	private static (double, double) centerP(double p1X, double p1Y, double p2X, double p2Y, double p3X, double p3Y)
+	{
+		Point direction2_3 = new Point(p3X - p2X, p3Y - p2Y);
+		Point direction2_1 = new Point(p1X - p2X, p1Y - p2Y);
+		double modulus = direction2_3.Modulus();
+		direction2_3 = new Point(direction2_3.X / modulus, direction2_3.Y / modulus);
+		modulus = direction2_1.Modulus();
+		direction2_1 = new Point(direction2_1.X / modulus, direction2_1.Y / modulus);
+		Point direction2 = new Point(direction2_3.X + direction2_1.X, direction2_3.Y + direction2_1.Y);
+		modulus = direction2.Modulus();
+
+		if (modulus == 0)
+		{
+			direction2 = new Point(0, 1);
+		}
+		else
+		{
+			direction2 = new Point(direction2.X / modulus, direction2.Y / modulus);
+		}
+
+		double centerP2X = p2X - direction2.X * 10;
+		double centerP2Y = p2Y - direction2.Y * 10;
+
+		return (centerP2X, centerP2Y);
+	}
+}

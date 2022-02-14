@@ -1,0 +1,144 @@
+﻿@page "/convolution"
+@using VectSharp;
+@using VectSharp.SVG;
+@using VectSharp.Filters;
+@using VectSharp.Raster.ImageSharp;
+
+<style>
+	table {
+		table-layout: fixed;
+	}
+
+	td {
+		width: 400px;
+		padding: 10px;
+	}
+</style>
+
+<div style="width: 100vw; height: 100vh; position: relative;">
+	<div style="width: calc(100% - 400px); height: 100%; position: absolute; top: 0; left: 0; text-align: center">
+		<img src="@imgSource" style="max-width: 100%; max-height: 100%; margin-top: 50vh; transform: translate(0, -50%)" />
+	</div>
+
+	<div style="width: 400px; height: 100vh; position: absolute; top: 0; right: 0;">
+		<table style="margin-top: 50vh; transform: translate(0, -50%)">
+			<tr>
+				<td style="text-align: center">
+					<MatNumericUpDownField Label="Scale"
+										   @bind-Value=@scale
+										   Step="0.1"
+										   Minimum="0"
+										   DecimalPlaces="2">
+					</MatNumericUpDownField>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" style="width: 400px; text-align: center; padding-top: 0">
+					<div style="display: inline-block; position: relative">
+						<span class="mdc-floating-label mdc-floating-label--float-above" style="margin-left:0.5em; margin-top: 2em; color: rgba(0, 0, 0, 0.6)">Kernel</span><br />
+						<MatRadioGroup @bind-Value="@kernelInd" TValue="int">
+							<MatRadioButton Value="0" TValue="int">Identity</MatRadioButton>
+							<MatRadioButton Value="1" TValue="int">Edge-detect</MatRadioButton>
+							<MatRadioButton Value="2" TValue="int">Sharpen</MatRadioButton>
+						</MatRadioGroup>
+					</div>
+				</td>
+
+
+			</tr>
+		</table>
+	</div>
+</div>
+
+@code {
+	private double _scale = 1;
+	private double scale
+	{
+		get
+		{
+			return _scale;
+		}
+
+		set
+		{
+			_scale = value;
+			Render();
+		}
+	}
+
+	private int _kernelInd = 1;
+	private int kernelInd
+	{
+		get
+		{
+			return _kernelInd;
+		}
+
+		set
+		{
+			_kernelInd = value;
+			Render();
+		}
+	}
+
+	private string imgSource = "";
+
+	protected override Task OnInitializedAsync()
+	{
+		Render();
+		return Task.CompletedTask;
+	}
+
+	public void Render()
+	{
+		Page page = new Page(178, 92);
+		Graphics graphics = page.Graphics;
+
+		Page subject = Parser.FromStream(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("BlazorDemos.SurgeonFish.svg"));
+
+		Graphics filterSubject = subject.Graphics;
+
+		double[,] kernel = new double[1, 1] { { 1 } };
+
+		switch (kernelInd)
+		{
+			case 0:
+				kernel = new double[1, 1] { { 1 } };
+				break;
+
+			case 1:
+				kernel = new double[3, 3]
+					{
+					{ -1, -1, -1 },
+					{ -1,  8, -1 },
+					{ -1, -1, -1 }
+					};
+				break;
+			case 2:
+				kernel = new double[3, 3]
+					{
+					{ 0, -1, 0 },
+					{ -1,  5, -1 },
+					{ 0, -1, 0 }
+					};
+				break;
+		}
+
+		IFilter filter = new ConvolutionFilter(kernel, scale);
+
+		// Draw the filterSubject on the graphics, using the filter.
+		graphics.DrawGraphics(10, 10, filterSubject, filter);
+
+		using (MemoryStream ms = new MemoryStream())
+		{
+			page.SaveAsSVG(ms, filterOption: new SVGContextInterpreter.FilterOption(SVGContextInterpreter.FilterOption.FilterOperations.RasteriseIfNecessary, 2, true));
+
+			ms.Seek(0, SeekOrigin.Begin);
+
+			using (StreamReader sr = new StreamReader(ms))
+			{
+				this.imgSource = "data:image/svg+xml;base64," + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(sr.ReadToEnd()));
+			}
+		}
+	}
+}

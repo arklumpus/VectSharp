@@ -1,0 +1,214 @@
+﻿@page "/strokeOptions"
+@using VectSharp;
+@using VectSharp.SVG;
+
+<style>
+	table {
+		table-layout: fixed;
+	}
+
+	td {
+		width: 200px;
+		padding: 10px;
+	}
+</style>
+
+<div style="width: 100vw; height: 100vh; position: relative;">
+	<div style="width: calc(100% - 400px); height: 100%; position: absolute; top: 0; left: 0; text-align: center">
+		<img src="@imgSource" style="max-width: 100%; max-height: 100%; margin-top: 50vh; transform: translate(0, -50%)" />
+	</div>
+
+	<div style="width: 400px; height: 100vh; position: absolute; top: 0; right: 0;">
+		<table style="margin-top: 50vh; transform: translate(0, -50%)">
+			<tr>
+				<td>
+					<MatNumericUpDownField Label="Line width"
+										   @bind-Value=@lineWidth
+										   Minimum="0"
+										   Step="1"
+										   DecimalPlaces=0>
+					</MatNumericUpDownField>
+				</td>
+				<td>
+					<MatNumericUpDownField Label="Dash units on"
+										   @bind-Value=@unitsOn
+										   Minimum="0"
+										   Step="1"
+										   DecimalPlaces=0>
+					</MatNumericUpDownField>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<MatNumericUpDownField Label="Dash units off"
+										   @bind-Value=@unitsOff
+										   Minimum="0"
+										   Step="1"
+										   DecimalPlaces=0>
+					</MatNumericUpDownField>
+				</td>
+				<td>
+					<MatNumericUpDownField Label="Dash phase"
+										   @bind-Value=@phase
+										   Step="1"
+										   DecimalPlaces=0>
+					</MatNumericUpDownField>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" style="width: 400px; text-align: center; padding-top: 0">
+					<div style="display: inline-block; position: relative">
+						<span class="mdc-floating-label mdc-floating-label--float-above" style="margin-left:0.5em; margin-top: 2em; color: rgba(0, 0, 0, 0.6)">Line join</span><br />
+						<MatRadioGroup @bind-Value="@lineJoin" TValue="int">
+							<MatRadioButton Value="0" TValue="int">Miter</MatRadioButton>
+							<MatRadioButton Value="1" TValue="int">Round</MatRadioButton>
+							<MatRadioButton Value="2" TValue="int">Bevel</MatRadioButton>
+						</MatRadioGroup>
+					</div>
+				</td>
+
+
+			</tr>
+			<tr>
+				<td colspan="2" style="width: 400px; text-align: center; padding-top: 0">
+					<div style="display: inline-block; position: relative">
+						<span class="mdc-floating-label mdc-floating-label--float-above" style="margin-left:0.5em; margin-top: 2em; color: rgba(0, 0, 0, 0.6)">Line cap</span><br />
+						<MatRadioGroup @bind-Value="@lineCap" TValue="int">
+							<MatRadioButton Value="0" TValue="int">Butt</MatRadioButton>
+							<MatRadioButton Value="1" TValue="int">Round</MatRadioButton>
+							<MatRadioButton Value="2" TValue="int">Square</MatRadioButton>
+						</MatRadioGroup>
+					</div>
+				</td>
+
+
+			</tr>
+
+		</table>
+	</div>
+</div>
+
+@code {
+
+	private double _lineWidth = 10;
+	private double lineWidth
+	{
+		get
+		{
+			return _lineWidth;
+		}
+		set
+		{
+			_lineWidth = value;
+			Render();
+		}
+	}
+
+
+	private double _unitsOn = 20;
+	private double unitsOn
+	{
+		get
+		{
+			return _unitsOn;
+		}
+		set
+		{
+			_unitsOn = value;
+			Render();
+		}
+	}
+
+	private double _unitsOff = 15;
+	private double unitsOff
+	{
+		get
+		{
+			return _unitsOff;
+		}
+		set
+		{
+			_unitsOff = value;
+			Render();
+		}
+	}
+
+	private double _phase = 0;
+	private double phase
+	{
+		get
+		{
+			return _phase;
+		}
+		set
+		{
+			_phase = value;
+			Render();
+		}
+	}
+
+	private int _lineJoin = 0;
+	private int lineJoin
+	{
+		get
+		{
+			return _lineJoin;
+		}
+
+		set
+		{
+			_lineJoin = value;
+			Render();
+		}
+	}
+
+	private int _lineCap = 0;
+	private int lineCap
+	{
+		get
+		{
+			return _lineCap;
+		}
+
+		set
+		{
+			_lineCap = value;
+			Render();
+		}
+	}
+
+	private string imgSource = "";
+
+	protected override Task OnInitializedAsync()
+	{
+		Render();
+		return Task.CompletedTask;
+	}
+
+	public void Render()
+	{
+		Page page = new Page(100, 100);
+		Graphics graphics = page.Graphics;
+
+		// Dashed line pattern.
+		LineDash lineDash = new LineDash(unitsOn, unitsOff, phase);
+
+		GraphicsPath path = new GraphicsPath().MoveTo(10, 10).LineTo(90, 10).CubicBezierTo(80, 50, 60, 70, 20, 80);
+
+
+		// Draw the rectangle.
+		graphics.StrokePath(path, Colours.Black, lineWidth: lineWidth, lineCap: (LineCaps)lineCap, lineJoin: (LineJoins)lineJoin,
+			lineDash: lineDash);
+
+		using (MemoryStream ms = new MemoryStream())
+		{
+			page.SaveAsSVG(ms);
+			ms.Seek(0, SeekOrigin.Begin);
+
+			using (StreamReader sr = new StreamReader(ms))
+			{
+				this.imgSource = "data:image/svg+xml;base64," + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(sr.ReadToEnd()));
+			}
+		}
+	}
+}

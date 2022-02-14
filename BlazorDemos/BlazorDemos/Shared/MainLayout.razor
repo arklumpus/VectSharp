@@ -1,0 +1,17 @@
+﻿@inherits LayoutComponentBase
+
+<MatThemeProvider Theme="@theme1">
+	<div class="page">
+		@Body
+	</div>
+</MatThemeProvider>
+
+@code
+{
+
+	MatTheme theme1 = new MatTheme()
+		{
+			Primary = "#009E73",
+			Secondary = "#3D7E6B"
+		};
+}

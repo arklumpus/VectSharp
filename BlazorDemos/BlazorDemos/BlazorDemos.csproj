@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="SurgeonFish.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="SurgeonFish.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.1" PrivateAssets="all" />
+    <PackageReference Include="VectSharp" Version="2.2.1-a3" />
+    <PackageReference Include="VectSharp.Raster.ImageSharp" Version="1.1.0-beta13.20" />
+    <PackageReference Include="VectSharp.SVG" Version="1.6.0" />
+    <PackageReference Include="MatBlazor" Version="2.9.0-develop-042" />
+  </ItemGroup>
+
+</Project>
