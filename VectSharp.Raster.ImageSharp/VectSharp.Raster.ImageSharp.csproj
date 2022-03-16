@@ -8,7 +8,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Product>VectSharp</Product>
     <Company>University of Bristol</Company>
-    <Version>1.1.1-beta14.3</Version>
+    <Version>1.1.2-beta14</Version>
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/arklumpus/VectSharp</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
@@ -32,7 +32,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta14.3" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta14" />
     <PackageReference Include="System.Memory" Version="4.5.4" />
     <PackageReference Include="VectSharp" Version="2.2.1" />
   </ItemGroup>
