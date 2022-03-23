@@ -228,41 +228,48 @@ namespace VectSharp
             {
                 cssString = cssString.Substring(1);
 
-                if (cssString.Length == 3)
+                try
                 {
-                    byte r = byte.Parse(cssString.Substring(0, 1) + cssString.Substring(0, 1), System.Globalization.NumberStyles.HexNumber);
-                    byte g = byte.Parse(cssString.Substring(1, 1) + cssString.Substring(1, 1), System.Globalization.NumberStyles.HexNumber);
-                    byte b = byte.Parse(cssString.Substring(2, 1) + cssString.Substring(2, 1), System.Globalization.NumberStyles.HexNumber);
+                    if (cssString.Length == 3)
+                    {
+                        byte r = byte.Parse(cssString.Substring(0, 1) + cssString.Substring(0, 1), System.Globalization.NumberStyles.HexNumber);
+                        byte g = byte.Parse(cssString.Substring(1, 1) + cssString.Substring(1, 1), System.Globalization.NumberStyles.HexNumber);
+                        byte b = byte.Parse(cssString.Substring(2, 1) + cssString.Substring(2, 1), System.Globalization.NumberStyles.HexNumber);
 
-                    return Colour.FromRgb(r, g, b);
-                }
-                else if (cssString.Length == 4)
-                {
-                    byte r = byte.Parse(cssString.Substring(0, 1) + cssString.Substring(0, 1), System.Globalization.NumberStyles.HexNumber);
-                    byte g = byte.Parse(cssString.Substring(1, 1) + cssString.Substring(1, 1), System.Globalization.NumberStyles.HexNumber);
-                    byte b = byte.Parse(cssString.Substring(2, 1) + cssString.Substring(2, 1), System.Globalization.NumberStyles.HexNumber);
-                    byte a = byte.Parse(cssString.Substring(3, 1) + cssString.Substring(3, 1), System.Globalization.NumberStyles.HexNumber);
+                        return Colour.FromRgb(r, g, b);
+                    }
+                    else if (cssString.Length == 4)
+                    {
+                        byte r = byte.Parse(cssString.Substring(0, 1) + cssString.Substring(0, 1), System.Globalization.NumberStyles.HexNumber);
+                        byte g = byte.Parse(cssString.Substring(1, 1) + cssString.Substring(1, 1), System.Globalization.NumberStyles.HexNumber);
+                        byte b = byte.Parse(cssString.Substring(2, 1) + cssString.Substring(2, 1), System.Globalization.NumberStyles.HexNumber);
+                        byte a = byte.Parse(cssString.Substring(3, 1) + cssString.Substring(3, 1), System.Globalization.NumberStyles.HexNumber);
 
-                    return Colour.FromRgba(r, g, b, a);
-                }
-                else if (cssString.Length == 6)
-                {
-                    byte r = byte.Parse(cssString.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
-                    byte g = byte.Parse(cssString.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
-                    byte b = byte.Parse(cssString.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
+                        return Colour.FromRgba(r, g, b, a);
+                    }
+                    else if (cssString.Length == 6)
+                    {
+                        byte r = byte.Parse(cssString.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+                        byte g = byte.Parse(cssString.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+                        byte b = byte.Parse(cssString.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
 
-                    return Colour.FromRgb(r, g, b);
-                }
-                else if (cssString.Length == 8)
-                {
-                    byte r = byte.Parse(cssString.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
-                    byte g = byte.Parse(cssString.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
-                    byte b = byte.Parse(cssString.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
-                    byte a = byte.Parse(cssString.Substring(6, 2), System.Globalization.NumberStyles.HexNumber);
+                        return Colour.FromRgb(r, g, b);
+                    }
+                    else if (cssString.Length == 8)
+                    {
+                        byte r = byte.Parse(cssString.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+                        byte g = byte.Parse(cssString.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+                        byte b = byte.Parse(cssString.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
+                        byte a = byte.Parse(cssString.Substring(6, 2), System.Globalization.NumberStyles.HexNumber);
 
-                    return Colour.FromRgba(r, g, b, a);
+                        return Colour.FromRgba(r, g, b, a);
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
-                else
+                catch
                 {
                     return null;
                 }
