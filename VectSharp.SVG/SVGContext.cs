@@ -184,8 +184,47 @@ namespace VectSharp.SVG
 
         private SVGContextInterpreter.FilterOption FilterOption;
 
+        private bool UseStyles;
+        internal Dictionary<string, Dictionary<string, string>> Styles;
+        XmlElement StyleElement;
 
-        public SVGContext(double width, double height, bool textToPaths, SVGContextInterpreter.TextOptions textOption, Dictionary<string, string> linkDestinations, SVGContextInterpreter.FilterOption filterOption)
+        private string GetClass(Dictionary<string, string> style)
+        {
+            foreach (KeyValuePair<string, Dictionary<string, string>> styleClass in Styles)
+            {
+                if (styleClass.Value.Count == style.Count)
+                {
+                    bool mismatch = false;
+
+                    foreach (KeyValuePair<string, string> styleItem in style)
+                    {
+                        if (!styleClass.Value.TryGetValue(styleItem.Key, out string value))
+                        {
+                            mismatch = true;
+                            break;
+                        }
+                        else if (value != styleItem.Value)
+                        {
+                            mismatch = true;
+                            break;
+                        }
+                    }
+
+                    if (!mismatch)
+                    {
+                        return styleClass.Key;
+                    }
+                }
+            }
+
+            string tbr = "class" + (Styles.Count + 1).ToString();
+
+            Styles.Add(tbr, style);
+
+            return tbr;
+        }
+
+        public SVGContext(double width, double height, bool textToPaths, SVGContextInterpreter.TextOptions textOption, Dictionary<string, string> linkDestinations, SVGContextInterpreter.FilterOption filterOption, bool useStyles)
         {
             this.linkDestinations = linkDestinations;
 
@@ -235,6 +274,12 @@ namespace VectSharp.SVG
             definitions = Document.CreateElement("defs", SVGNamespace);
             gradients = new Dictionary<Brush, string>();
             currentElement.AppendChild(definitions);
+
+            this.UseStyles = useStyles;
+            StyleElement = Document.CreateElement("style", SVGNamespace);
+            StyleElement.InnerText = "\t";
+            currentElement.AppendChild(StyleElement);
+            Styles = new Dictionary<string, Dictionary<string, string>>();
 
             this.TextToPaths = textToPaths;
             this.TextOption = textOption;
@@ -309,49 +354,86 @@ namespace VectSharp.SVG
 
             XmlElement path = Document.CreateElement("path", SVGNamespace);
             path.SetAttribute("d", currentPath.Figures.Aggregate("", (a, b) => a + b.Data));
-            path.SetAttribute("stroke", "none");
 
-            if (FillStyle is SolidColourBrush solid)
-            {
-                path.SetAttribute("fill", solid.Colour.ToCSSString(false));
-                path.SetAttribute("fill-opacity", solid.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
-            }
-            else if (FillStyle is LinearGradientBrush linearGradient)
-            {
-                string gradientName;
+            string gradientName = null;
 
-                if (!gradients.TryGetValue(linearGradient, out gradientName))
+            {
+                if (FillStyle is LinearGradientBrush linearGradient)
                 {
-                    gradientName = "gradient" + (gradients.Count + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
+                    if (!gradients.TryGetValue(linearGradient, out gradientName))
+                    {
+                        gradientName = "gradient" + (gradients.Count + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
 
-                    XmlElement gradientElement = linearGradient.ToLinearGradient(Document, gradientName);
-                    this.definitions.AppendChild(gradientElement);
+                        XmlElement gradientElement = linearGradient.ToLinearGradient(Document, gradientName);
+                        this.definitions.AppendChild(gradientElement);
 
-                    gradients.Add(linearGradient, gradientName);
+                        gradients.Add(linearGradient, gradientName);
+                    }
+                }
+                else if (FillStyle is RadialGradientBrush radialGradient)
+                {
+                    if (!gradients.TryGetValue(radialGradient, out gradientName))
+                    {
+                        gradientName = "gradient" + (gradients.Count + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+                        XmlElement gradientElement = radialGradient.ToRadialGradient(Document, gradientName);
+                        this.definitions.AppendChild(gradientElement);
+
+                        gradients.Add(radialGradient, gradientName);
+                    }
+                }
+            }
+
+            if (!UseStyles)
+            {
+                path.SetAttribute("stroke", "none");
+
+                if (FillStyle is SolidColourBrush solid)
+                {
+                    path.SetAttribute("fill", solid.Colour.ToCSSString(false));
+                    path.SetAttribute("fill-opacity", solid.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                }
+                else if (FillStyle is LinearGradientBrush linearGradient)
+                {
+                    path.SetAttribute("fill", "url(#" + gradientName + ")");
+                }
+                else if (FillStyle is RadialGradientBrush radialGradient)
+                {
+                    path.SetAttribute("fill", "url(#" + gradientName + ")");
                 }
 
-                path.SetAttribute("fill", "url(#" + gradientName + ")");
+                path.SetAttribute("transform", "matrix(" + _transform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + _transform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + _transform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
             }
-            else if (FillStyle is RadialGradientBrush radialGradient)
+            else
             {
-                string gradientName;
+                Dictionary<string, string> style = new Dictionary<string, string>();
 
-                if (!gradients.TryGetValue(radialGradient, out gradientName))
+                style.Add("stroke", "none");
+
+                if (FillStyle is SolidColourBrush solid)
                 {
-                    gradientName = "gradient" + (gradients.Count + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
-
-                    XmlElement gradientElement = radialGradient.ToRadialGradient(Document, gradientName);
-                    this.definitions.AppendChild(gradientElement);
-
-                    gradients.Add(radialGradient, gradientName);
+                    style.Add("fill", solid.Colour.ToCSSString(false));
+                    style.Add("fill-opacity", solid.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                }
+                else if (FillStyle is LinearGradientBrush linearGradient)
+                {
+                    style.Add("fill", "url(#" + gradientName + ")");
+                }
+                else if (FillStyle is RadialGradientBrush radialGradient)
+                {
+                    style.Add("fill", "url(#" + gradientName + ")");
                 }
 
-                path.SetAttribute("fill", "url(#" + gradientName + ")");
-            }
+                style.Add("transform", "matrix(" + _transform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + _transform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + _transform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
 
-            path.SetAttribute("transform", "matrix(" + _transform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
-                "," + _transform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
-                "," + _transform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
+                string className = GetClass(style);
+
+                path.SetAttribute("class", className);
+            }
 
             if (!string.IsNullOrEmpty(Tag))
             {
@@ -379,7 +461,6 @@ namespace VectSharp.SVG
         {
             if (!TextToPaths)
             {
-
                 if (!UsedFontFamilies.ContainsKey(Font.FontFamily.FileName))
                 {
                     UsedFontFamilies.Add(Font.FontFamily.FileName, Font.FontFamily);
@@ -428,76 +509,139 @@ namespace VectSharp.SVG
 
                 XmlElement textElement = Document.CreateElement("text", SVGNamespace);
 
-                textElement.SetAttribute("stroke", "none");
+                string gradientName = null;
 
-                if (FillStyle is SolidColourBrush solid)
                 {
-                    textElement.SetAttribute("fill", solid.Colour.ToCSSString(false));
-                    textElement.SetAttribute("fill-opacity", solid.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    if (FillStyle is LinearGradientBrush linearGradient)
+                    {
+                        gradientName = "g" + Guid.NewGuid().ToString("N");
+
+                        XmlElement gradientElement = linearGradient.ToLinearGradient(Document, gradientName);
+
+                        deltaTransform = MatrixUtils.Invert(deltaTransform);
+
+                        gradientElement.SetAttribute("gradientTransform", "matrix(" + deltaTransform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                        "," + deltaTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                        "," + deltaTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
+
+                        this.definitions.AppendChild(gradientElement);
+                    }
+                    else if (FillStyle is RadialGradientBrush radialGradient)
+                    {
+                        gradientName = "g" + Guid.NewGuid().ToString("N");
+
+                        XmlElement gradientElement = radialGradient.ToRadialGradient(Document, gradientName);
+
+                        deltaTransform = MatrixUtils.Invert(deltaTransform);
+
+                        gradientElement.SetAttribute("gradientTransform", "matrix(" + deltaTransform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                        "," + deltaTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                        "," + deltaTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
+
+                        this.definitions.AppendChild(gradientElement);
+                    }
                 }
-                else if (FillStyle is LinearGradientBrush linearGradient)
-                {
-                    string gradientName = "g" + Guid.NewGuid().ToString("N");
-
-                    XmlElement gradientElement = linearGradient.ToLinearGradient(Document, gradientName);
-
-                    deltaTransform = MatrixUtils.Invert(deltaTransform);
-
-                    gradientElement.SetAttribute("gradientTransform", "matrix(" + deltaTransform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
-                    "," + deltaTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
-                    "," + deltaTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
-
-                    this.definitions.AppendChild(gradientElement);
-
-                    textElement.SetAttribute("fill", "url(#" + gradientName + ")");
-                }
-                else if (FillStyle is RadialGradientBrush radialGradient)
-                {
-                    string gradientName = "g" + Guid.NewGuid().ToString("N");
-
-                    XmlElement gradientElement = radialGradient.ToRadialGradient(Document, gradientName);
-
-                    deltaTransform = MatrixUtils.Invert(deltaTransform);
-
-                    gradientElement.SetAttribute("gradientTransform", "matrix(" + deltaTransform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
-                    "," + deltaTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
-                    "," + deltaTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
-
-                    this.definitions.AppendChild(gradientElement);
-
-                    textElement.SetAttribute("fill", "url(#" + gradientName + ")");
-                }
-
-                textElement.SetAttribute("transform", "matrix(" + currTransform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + currTransform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
-                    "," + currTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + currTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
-                    "," + currTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + currTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
 
                 textElement.SetAttribute("x", "0");
                 textElement.SetAttribute("y", "0");
-                textElement.SetAttribute("font-size", Font.FontSize.ToString(System.Globalization.CultureInfo.InvariantCulture));
-                textElement.SetAttribute("font-family", Font.FontFamily.FileName);
 
-                if (Font.FontFamily.IsBold)
+                textElement.SetAttribute("transform", "matrix(" + currTransform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + currTransform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                        "," + currTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + currTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                        "," + currTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + currTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
+
+                if (!UseStyles)
                 {
-                    textElement.SetAttribute("font-weight", "bold");
+                    textElement.SetAttribute("stroke", "none");
+
+                    if (FillStyle is SolidColourBrush solid)
+                    {
+                        textElement.SetAttribute("fill", solid.Colour.ToCSSString(false));
+                        textElement.SetAttribute("fill-opacity", solid.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    }
+                    else if (FillStyle is LinearGradientBrush linearGradient)
+                    {
+                        textElement.SetAttribute("fill", "url(#" + gradientName + ")");
+                    }
+                    else if (FillStyle is RadialGradientBrush radialGradient)
+                    {
+                        textElement.SetAttribute("fill", "url(#" + gradientName + ")");
+                    }
+
+                    textElement.SetAttribute("font-size", Font.FontSize.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    textElement.SetAttribute("font-family", Font.FontFamily.FileName);
+
+                    if (Font.FontFamily.IsBold)
+                    {
+                        textElement.SetAttribute("font-weight", "bold");
+                    }
+                    else
+                    {
+                        textElement.SetAttribute("font-weight", "regular");
+                    }
+
+                    if (Font.FontFamily.IsItalic)
+                    {
+                        textElement.SetAttribute("font-style", "italic");
+                    }
+                    else
+                    {
+                        textElement.SetAttribute("font-style", "normal");
+                    }
+
+                    if (Font.FontFamily.IsOblique)
+                    {
+                        textElement.SetAttribute("font-style", "oblique");
+                    }
                 }
                 else
                 {
-                    textElement.SetAttribute("font-weight", "regular");
-                }
+                    Dictionary<string, string> style = new Dictionary<string, string>();
 
-                if (Font.FontFamily.IsItalic)
-                {
-                    textElement.SetAttribute("font-style", "italic");
-                }
-                else
-                {
-                    textElement.SetAttribute("font-style", "normal");
-                }
+                    style.Add("stroke", "none");
 
-                if (Font.FontFamily.IsOblique)
-                {
-                    textElement.SetAttribute("font-style", "oblique");
+                    if (FillStyle is SolidColourBrush solid)
+                    {
+                        style.Add("fill", solid.Colour.ToCSSString(false));
+                        style.Add("fill-opacity", solid.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    }
+                    else if (FillStyle is LinearGradientBrush linearGradient)
+                    {
+                        style.Add("fill", "url(#" + gradientName + ")");
+                    }
+                    else if (FillStyle is RadialGradientBrush radialGradient)
+                    {
+                        style.Add("fill", "url(#" + gradientName + ")");
+                    }
+
+                    style.Add("font-size", Font.FontSize.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px");
+                    style.Add("font-family", Font.FontFamily.FileName);
+
+                    if (Font.FontFamily.IsBold)
+                    {
+                        style.Add("font-weight", "bold");
+                    }
+                    else
+                    {
+                        style.Add("font-weight", "regular");
+                    }
+
+                    if (Font.FontFamily.IsItalic)
+                    {
+                        style["font-style"] = "italic";
+                    }
+                    else
+                    {
+                        style["font-style"] = "normal";
+                    }
+
+                    if (Font.FontFamily.IsOblique)
+                    {
+                        style["font-style"] = "oblique";
+                    }
+
+                    string className = GetClass(style);
+
+                    textElement.SetAttribute("class", className);
                 }
 
                 ProcessText(text, textElement);
@@ -633,82 +777,153 @@ namespace VectSharp.SVG
             XmlElement path = Document.CreateElement("path", SVGNamespace);
             path.SetAttribute("d", currentPath.Figures.Aggregate("", (a, b) => a + b.Data));
 
-            if (StrokeStyle is SolidColourBrush solid)
-            {
-                path.SetAttribute("stroke", solid.Colour.ToCSSString(false));
-                path.SetAttribute("stroke-opacity", solid.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
-            }
-            else if (StrokeStyle is LinearGradientBrush linearGradient)
-            {
-                string gradientName;
+            string gradientName = null;
 
-                if (!gradients.TryGetValue(linearGradient, out gradientName))
+            {
+                if (StrokeStyle is LinearGradientBrush linearGradient)
                 {
-                    gradientName = "gradient" + (gradients.Count + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
+                    if (!gradients.TryGetValue(linearGradient, out gradientName))
+                    {
+                        gradientName = "gradient" + (gradients.Count + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
 
-                    XmlElement gradientElement = linearGradient.ToLinearGradient(Document, gradientName);
-                    this.definitions.AppendChild(gradientElement);
+                        XmlElement gradientElement = linearGradient.ToLinearGradient(Document, gradientName);
+                        this.definitions.AppendChild(gradientElement);
 
-                    gradients.Add(linearGradient, gradientName);
+                        gradients.Add(linearGradient, gradientName);
+                    }
+                }
+                else if (StrokeStyle is RadialGradientBrush radialGradient)
+                {
+                    if (!gradients.TryGetValue(radialGradient, out gradientName))
+                    {
+                        gradientName = "gradient" + (gradients.Count + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+                        XmlElement gradientElement = radialGradient.ToRadialGradient(Document, gradientName);
+                        this.definitions.AppendChild(gradientElement);
+
+                        gradients.Add(radialGradient, gradientName);
+                    }
+                }
+            }
+
+            if (!UseStyles)
+            {
+
+                if (StrokeStyle is SolidColourBrush solid)
+                {
+                    path.SetAttribute("stroke", solid.Colour.ToCSSString(false));
+                    path.SetAttribute("stroke-opacity", solid.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                }
+                else if (StrokeStyle is LinearGradientBrush linearGradient)
+                {
+                    path.SetAttribute("stroke", "url(#" + gradientName + ")");
+                }
+                else if (StrokeStyle is RadialGradientBrush radialGradient)
+                {
+                    path.SetAttribute("stroke", "url(#" + gradientName + ")");
                 }
 
-                path.SetAttribute("stroke", "url(#" + gradientName + ")");
-            }
-            else if (StrokeStyle is RadialGradientBrush radialGradient)
-            {
-                string gradientName;
+                path.SetAttribute("stroke-width", LineWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
-                if (!gradients.TryGetValue(radialGradient, out gradientName))
+                switch (LineCap)
                 {
-                    gradientName = "gradient" + (gradients.Count + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
-
-                    XmlElement gradientElement = radialGradient.ToRadialGradient(Document, gradientName);
-                    this.definitions.AppendChild(gradientElement);
-
-                    gradients.Add(radialGradient, gradientName);
+                    case LineCaps.Butt:
+                        path.SetAttribute("stroke-linecap", "butt");
+                        break;
+                    case LineCaps.Round:
+                        path.SetAttribute("stroke-linecap", "round");
+                        break;
+                    case LineCaps.Square:
+                        path.SetAttribute("stroke-linecap", "square");
+                        break;
                 }
 
-                path.SetAttribute("stroke", "url(#" + gradientName + ")");
+                switch (LineJoin)
+                {
+                    case LineJoins.Bevel:
+                        path.SetAttribute("stroke-linejoin", "bevel");
+                        break;
+                    case LineJoins.Round:
+                        path.SetAttribute("stroke-linejoin", "round");
+                        break;
+                    case LineJoins.Miter:
+                        path.SetAttribute("stroke-linejoin", "miter");
+                        break;
+                }
+
+                if (_lineDash.Phase != 0 || _lineDash.UnitsOn != 0 || _lineDash.UnitsOff != 0)
+                {
+                    path.SetAttribute("stroke-dasharray", _lineDash.UnitsOn.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + _lineDash.UnitsOff.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    path.SetAttribute("stroke-dashoffset", _lineDash.Phase.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                }
+
+                path.SetAttribute("fill", "none");
+                path.SetAttribute("transform", "matrix(" + _transform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + _transform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + _transform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
+
             }
-
-            path.SetAttribute("stroke-width", LineWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
-
-            switch (LineCap)
+            else
             {
-                case LineCaps.Butt:
-                    path.SetAttribute("stroke-linecap", "butt");
-                    break;
-                case LineCaps.Round:
-                    path.SetAttribute("stroke-linecap", "round");
-                    break;
-                case LineCaps.Square:
-                    path.SetAttribute("stroke-linecap", "square");
-                    break;
-            }
+                Dictionary<string, string> style = new Dictionary<string, string>();
 
-            switch (LineJoin)
-            {
-                case LineJoins.Bevel:
-                    path.SetAttribute("stroke-linejoin", "bevel");
-                    break;
-                case LineJoins.Round:
-                    path.SetAttribute("stroke-linejoin", "round");
-                    break;
-                case LineJoins.Miter:
-                    path.SetAttribute("stroke-linejoin", "miter");
-                    break;
-            }
+                if (StrokeStyle is SolidColourBrush solid)
+                {
+                    style.Add("stroke", solid.Colour.ToCSSString(false));
+                    style.Add("stroke-opacity", solid.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                }
+                else if (StrokeStyle is LinearGradientBrush linearGradient)
+                {
+                    style.Add("stroke", "url(#" + gradientName + ")");
+                }
+                else if (StrokeStyle is RadialGradientBrush radialGradient)
+                {
+                    style.Add("stroke", "url(#" + gradientName + ")");
+                }
 
-            if (_lineDash.Phase != 0 || _lineDash.UnitsOn != 0 || _lineDash.UnitsOff != 0)
-            {
-                path.SetAttribute("stroke-dasharray", _lineDash.UnitsOn.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + _lineDash.UnitsOff.ToString(System.Globalization.CultureInfo.InvariantCulture));
-                path.SetAttribute("stroke-dashoffset", _lineDash.Phase.ToString(System.Globalization.CultureInfo.InvariantCulture));
-            }
+                style.Add("stroke-width", LineWidth.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px");
 
-            path.SetAttribute("fill", "none");
-            path.SetAttribute("transform", "matrix(" + _transform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
-                "," + _transform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
-                "," + _transform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
+                switch (LineCap)
+                {
+                    case LineCaps.Butt:
+                        style.Add("stroke-linecap", "butt");
+                        break;
+                    case LineCaps.Round:
+                        style.Add("stroke-linecap", "round");
+                        break;
+                    case LineCaps.Square:
+                        style.Add("stroke-linecap", "square");
+                        break;
+                }
+
+                switch (LineJoin)
+                {
+                    case LineJoins.Bevel:
+                        style.Add("stroke-linejoin", "bevel");
+                        break;
+                    case LineJoins.Round:
+                        style.Add("stroke-linejoin", "round");
+                        break;
+                    case LineJoins.Miter:
+                        style.Add("stroke-linejoin", "miter");
+                        break;
+                }
+
+                if (_lineDash.Phase != 0 || _lineDash.UnitsOn != 0 || _lineDash.UnitsOff != 0)
+                {
+                    style.Add("stroke-dasharray", _lineDash.UnitsOn.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px " + _lineDash.UnitsOff.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px");
+                    style.Add("stroke-dashoffset", _lineDash.Phase.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px");
+                }
+
+                style.Add("fill", "none");
+                style.Add("transform", "matrix(" + _transform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + _transform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    "," + _transform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
+
+                string className = GetClass(style);
+                path.SetAttribute("class", className);
+
+            }
 
             if (!string.IsNullOrEmpty(Tag))
             {
@@ -783,108 +998,205 @@ namespace VectSharp.SVG
 
                 XmlElement textElement = Document.CreateElement("text", SVGNamespace);
 
-                if (StrokeStyle is SolidColourBrush solid)
+                string gradientName = null;
+
                 {
-                    textElement.SetAttribute("stroke", solid.Colour.ToCSSString(false));
-                    textElement.SetAttribute("stroke-opacity", solid.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    if (StrokeStyle is LinearGradientBrush linearGradient)
+                    {
+                        gradientName = "g" + Guid.NewGuid().ToString("N");
+
+                        XmlElement gradientElement = linearGradient.ToLinearGradient(Document, gradientName);
+
+                        deltaTransform = MatrixUtils.Invert(deltaTransform);
+
+                        gradientElement.SetAttribute("gradientTransform", "matrix(" + deltaTransform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                        "," + deltaTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                        "," + deltaTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
+
+                        this.definitions.AppendChild(gradientElement);
+                    }
+                    else if (StrokeStyle is RadialGradientBrush radialGradient)
+                    {
+                        gradientName = "g" + Guid.NewGuid().ToString("N");
+
+                        XmlElement gradientElement = radialGradient.ToRadialGradient(Document, gradientName);
+
+                        deltaTransform = MatrixUtils.Invert(deltaTransform);
+
+                        gradientElement.SetAttribute("gradientTransform", "matrix(" + deltaTransform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                        "," + deltaTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                        "," + deltaTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
+
+                        this.definitions.AppendChild(gradientElement);
+                    }
                 }
-                else if (StrokeStyle is LinearGradientBrush linearGradient)
-                {
-                    string gradientName = "g" + Guid.NewGuid().ToString("N");
-
-                    XmlElement gradientElement = linearGradient.ToLinearGradient(Document, gradientName);
-
-                    deltaTransform = MatrixUtils.Invert(deltaTransform);
-
-                    gradientElement.SetAttribute("gradientTransform", "matrix(" + deltaTransform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
-                    "," + deltaTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
-                    "," + deltaTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
-
-                    this.definitions.AppendChild(gradientElement);
-
-                    textElement.SetAttribute("stroke", "url(#" + gradientName + ")");
-                }
-                else if (StrokeStyle is RadialGradientBrush radialGradient)
-                {
-                    string gradientName = "g" + Guid.NewGuid().ToString("N");
-
-                    XmlElement gradientElement = radialGradient.ToRadialGradient(Document, gradientName);
-
-                    deltaTransform = MatrixUtils.Invert(deltaTransform);
-
-                    gradientElement.SetAttribute("gradientTransform", "matrix(" + deltaTransform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
-                    "," + deltaTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
-                    "," + deltaTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
-
-                    this.definitions.AppendChild(gradientElement);
-
-                    textElement.SetAttribute("stroke", "url(#" + gradientName + ")");
-                }
-
-                textElement.SetAttribute("stroke-width", LineWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
-
-                switch (LineCap)
-                {
-                    case LineCaps.Butt:
-                        textElement.SetAttribute("stroke-linecap", "butt");
-                        break;
-                    case LineCaps.Round:
-                        textElement.SetAttribute("stroke-linecap", "round");
-                        break;
-                    case LineCaps.Square:
-                        textElement.SetAttribute("stroke-linecap", "square");
-                        break;
-                }
-
-                switch (LineJoin)
-                {
-                    case LineJoins.Bevel:
-                        textElement.SetAttribute("stroke-linejoin", "bevel");
-                        break;
-                    case LineJoins.Round:
-                        textElement.SetAttribute("stroke-linejoin", "round");
-                        break;
-                    case LineJoins.Miter:
-                        textElement.SetAttribute("stroke-linejoin", "miter");
-                        break;
-                }
-
-                if (_lineDash.Phase != 0 || _lineDash.UnitsOn != 0 || _lineDash.UnitsOff != 0)
-                {
-                    textElement.SetAttribute("stroke-dasharray", _lineDash.UnitsOn.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + _lineDash.UnitsOff.ToString(System.Globalization.CultureInfo.InvariantCulture));
-                    textElement.SetAttribute("stroke-dashoffset", _lineDash.Phase.ToString(System.Globalization.CultureInfo.InvariantCulture));
-                }
-                textElement.SetAttribute("fill", "none");
-                textElement.SetAttribute("transform", "matrix(" + currTransform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + currTransform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
-                    "," + currTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + currTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
-                    "," + currTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + currTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
 
                 textElement.SetAttribute("x", "0");
                 textElement.SetAttribute("y", "0");
-                textElement.SetAttribute("font-size", Font.FontSize.ToString(System.Globalization.CultureInfo.InvariantCulture));
-                textElement.SetAttribute("font-family", Font.FontFamily.FileName);
 
-                if (Font.FontFamily.IsBold)
+                textElement.SetAttribute("transform", "matrix(" + currTransform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + currTransform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                        "," + currTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + currTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                        "," + currTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + currTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
+
+                if (!UseStyles)
                 {
-                    textElement.SetAttribute("font-weight", "bold");
+                    if (StrokeStyle is SolidColourBrush solid)
+                    {
+                        textElement.SetAttribute("stroke", solid.Colour.ToCSSString(false));
+                        textElement.SetAttribute("stroke-opacity", solid.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    }
+                    else if (StrokeStyle is LinearGradientBrush linearGradient)
+                    {
+                        textElement.SetAttribute("stroke", "url(#" + gradientName + ")");
+                    }
+                    else if (StrokeStyle is RadialGradientBrush radialGradient)
+                    {
+                        textElement.SetAttribute("stroke", "url(#" + gradientName + ")");
+                    }
+
+                    textElement.SetAttribute("stroke-width", LineWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+                    switch (LineCap)
+                    {
+                        case LineCaps.Butt:
+                            textElement.SetAttribute("stroke-linecap", "butt");
+                            break;
+                        case LineCaps.Round:
+                            textElement.SetAttribute("stroke-linecap", "round");
+                            break;
+                        case LineCaps.Square:
+                            textElement.SetAttribute("stroke-linecap", "square");
+                            break;
+                    }
+
+                    switch (LineJoin)
+                    {
+                        case LineJoins.Bevel:
+                            textElement.SetAttribute("stroke-linejoin", "bevel");
+                            break;
+                        case LineJoins.Round:
+                            textElement.SetAttribute("stroke-linejoin", "round");
+                            break;
+                        case LineJoins.Miter:
+                            textElement.SetAttribute("stroke-linejoin", "miter");
+                            break;
+                    }
+
+                    if (_lineDash.Phase != 0 || _lineDash.UnitsOn != 0 || _lineDash.UnitsOff != 0)
+                    {
+                        textElement.SetAttribute("stroke-dasharray", _lineDash.UnitsOn.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + _lineDash.UnitsOff.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                        textElement.SetAttribute("stroke-dashoffset", _lineDash.Phase.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    }
+                    textElement.SetAttribute("fill", "none");
+
+                    textElement.SetAttribute("font-size", Font.FontSize.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    textElement.SetAttribute("font-family", Font.FontFamily.FileName);
+
+                    if (Font.FontFamily.IsBold)
+                    {
+                        textElement.SetAttribute("font-weight", "bold");
+                    }
+                    else
+                    {
+                        textElement.SetAttribute("font-weight", "regular");
+                    }
+
+                    if (Font.FontFamily.IsItalic)
+                    {
+                        textElement.SetAttribute("font-style", "italic");
+                    }
+                    else
+                    {
+                        textElement.SetAttribute("font-style", "normal");
+                    }
+
+                    if (Font.FontFamily.IsOblique)
+                    {
+                        textElement.SetAttribute("font-style", "oblique");
+                    }
                 }
                 else
                 {
-                    textElement.SetAttribute("font-weight", "regular");
-                }
+                    Dictionary<string, string> style = new Dictionary<string, string>();
 
-                if (Font.FontFamily.IsItalic)
-                {
-                    textElement.SetAttribute("font-style", "italic");
-                }
-                else
-                {
-                    textElement.SetAttribute("font-style", "normal");
-                }
+                    if (StrokeStyle is SolidColourBrush solid)
+                    {
+                        style.Add("stroke", solid.Colour.ToCSSString(false));
+                        style.Add("stroke-opacity", solid.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    }
+                    else if (StrokeStyle is LinearGradientBrush linearGradient)
+                    {
+                        style.Add("stroke", "url(#" + gradientName + ")");
+                    }
+                    else if (StrokeStyle is RadialGradientBrush radialGradient)
+                    {
+                        style.Add("stroke", "url(#" + gradientName + ")");
+                    }
 
-                if (Font.FontFamily.IsOblique)
-                {
-                    textElement.SetAttribute("font-style", "oblique");
+                    style.Add("stroke-width", LineWidth.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px");
+
+                    switch (LineCap)
+                    {
+                        case LineCaps.Butt:
+                            style.Add("stroke-linecap", "butt");
+                            break;
+                        case LineCaps.Round:
+                            style.Add("stroke-linecap", "round");
+                            break;
+                        case LineCaps.Square:
+                            style.Add("stroke-linecap", "square");
+                            break;
+                    }
+
+                    switch (LineJoin)
+                    {
+                        case LineJoins.Bevel:
+                            style.Add("stroke-linejoin", "bevel");
+                            break;
+                        case LineJoins.Round:
+                            style.Add("stroke-linejoin", "round");
+                            break;
+                        case LineJoins.Miter:
+                            style.Add("stroke-linejoin", "miter");
+                            break;
+                    }
+
+                    if (_lineDash.Phase != 0 || _lineDash.UnitsOn != 0 || _lineDash.UnitsOff != 0)
+                    {
+                        style.Add("stroke-dasharray", _lineDash.UnitsOn.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px " + _lineDash.UnitsOff.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px");
+                        style.Add("stroke-dashoffset", _lineDash.Phase.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px");
+                    }
+                    style.Add("fill", "none");
+
+                    style.Add("font-size", Font.FontSize.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px");
+                    style.Add("font-family", Font.FontFamily.FileName);
+
+                    if (Font.FontFamily.IsBold)
+                    {
+                        style.Add("font-weight", "bold");
+                    }
+                    else
+                    {
+                        style.Add("font-weight", "regular");
+                    }
+
+                    if (Font.FontFamily.IsItalic)
+                    {
+                        style["font-style"] = "italic";
+                    }
+                    else
+                    {
+                        style["font-style"] = "normal";
+                    }
+
+                    if (Font.FontFamily.IsOblique)
+                    {
+                        style["font-style"] = "oblique";
+                    }
+
+                    string className = GetClass(style);
+
+                    textElement.SetAttribute("class", className);
                 }
 
                 ProcessText(text, textElement);
@@ -1387,10 +1699,10 @@ namespace VectSharp.SVG
                         Point p3 = new Point(bounds.Location.X + bounds.Size.Width, bounds.Location.Y + bounds.Size.Height);
                         Point p4 = new Point(bounds.Location.X, bounds.Location.Y + bounds.Size.Height);
 
-                       /* p1 = MatrixUtils.Multiply(_transform, p1);
-                        p2 = MatrixUtils.Multiply(_transform, p2);
-                        p3 = MatrixUtils.Multiply(_transform, p3);
-                        p4 = MatrixUtils.Multiply(_transform, p4);*/
+                        /* p1 = MatrixUtils.Multiply(_transform, p1);
+                         p2 = MatrixUtils.Multiply(_transform, p2);
+                         p3 = MatrixUtils.Multiply(_transform, p3);
+                         p4 = MatrixUtils.Multiply(_transform, p4);*/
 
                         bounds = Point.Bounds(p1, p2, p3, p4);
 
@@ -1476,10 +1788,10 @@ namespace VectSharp.SVG
                             Point p3 = new Point(bounds.Location.X + bounds.Size.Width + comp.BottomRightMargin.X, bounds.Location.Y + bounds.Size.Height + comp.BottomRightMargin.Y);
                             Point p4 = new Point(bounds.Location.X - comp.TopLeftMargin.X, bounds.Location.Y + bounds.Size.Height + comp.BottomRightMargin.Y);
 
-                           /* p1 = MatrixUtils.Multiply(_transform, p1);
-                            p2 = MatrixUtils.Multiply(_transform, p2);
-                            p3 = MatrixUtils.Multiply(_transform, p3);
-                            p4 = MatrixUtils.Multiply(_transform, p4);*/
+                            /* p1 = MatrixUtils.Multiply(_transform, p1);
+                             p2 = MatrixUtils.Multiply(_transform, p2);
+                             p3 = MatrixUtils.Multiply(_transform, p3);
+                             p4 = MatrixUtils.Multiply(_transform, p4);*/
 
                             bounds = Point.Bounds(p1, p2, p3, p4);
 
@@ -1616,11 +1928,12 @@ namespace VectSharp.SVG
         /// <param name="textOption">Defines whether the used fonts should be included in the file.</param>
         /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
         /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
-        public static void SaveAsSVG(this Page page, string fileName, TextOptions textOption = TextOptions.SubsetFonts, Dictionary<string, string> linkDestinations = null, FilterOption filterOption = default)
+        /// <param name="useStyles">If this is <see langword="false"/>, presentation attributes are set as attributes on SVG elements. If this is <see langword="true"/>, CSS classes are used to set presentation attributes.</param>
+        public static void SaveAsSVG(this Page page, string fileName, TextOptions textOption = TextOptions.SubsetFonts, Dictionary<string, string> linkDestinations = null, FilterOption filterOption = default, bool useStyles = false)
         {
             using (FileStream sr = new FileStream(fileName, FileMode.Create))
             {
-                page.SaveAsSVG(sr, textOption, linkDestinations, filterOption);
+                page.SaveAsSVG(sr, textOption, linkDestinations, filterOption, useStyles);
             }
         }
 
@@ -1733,7 +2046,8 @@ namespace VectSharp.SVG
         /// <param name="textOption">Defines whether the used fonts should be included in the file.</param>
         /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
         /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
-        public static void SaveAsSVG(this Page page, Stream stream, TextOptions textOption = TextOptions.SubsetFonts, Dictionary<string, string> linkDestinations = null, FilterOption filterOption = default)
+        /// <param name="useStyles">If this is <see langword="false"/>, presentation attributes are set as attributes on SVG elements. If this is <see langword="true"/>, CSS classes are used to set presentation attributes.</param>
+        public static void SaveAsSVG(this Page page, Stream stream, TextOptions textOption = TextOptions.SubsetFonts, Dictionary<string, string> linkDestinations = null, FilterOption filterOption = default, bool useStyles = false)
         {
             if (linkDestinations == null)
             {
@@ -1747,7 +2061,7 @@ namespace VectSharp.SVG
 
             bool textToPaths = textOption == TextOptions.ConvertIntoPaths;
 
-            SVGContext ctx = new SVGContext(page.Width, page.Height, textToPaths, textOption, linkDestinations, filterOption);
+            SVGContext ctx = new SVGContext(page.Width, page.Height, textToPaths, textOption, linkDestinations, filterOption, useStyles);
 
             ctx.Rectangle(0, 0, page.Width, page.Height);
             ctx.SetFillStyle(page.Background);
@@ -1790,9 +2104,9 @@ namespace VectSharp.SVG
                     }
 
 
-                    cssFonts.Append("\n\t\t@font-face\n\t\t{\t\t\tfont-family: \"" + newFontFamilies[kvp.Key] + "\";\n\t\t\tsrc: url(\"data:font/ttf;charset=utf-8;base64,");
+                    cssFonts.Append("\n    @font-face\n    {\n      font-family: \"" + newFontFamilies[kvp.Key] + "\";\n      src: url(\"data:font/ttf;charset=utf-8;base64,");
                     cssFonts.Append(Convert.ToBase64String(fontBytes));
-                    cssFonts.Append("\");\n\t\t}\n");
+                    cssFonts.Append("\");\n    }\n  ");
                 }
 
                 XmlElement style = ctx.Document.CreateElement("style", SVGContext.SVGNamespace);
@@ -1802,117 +2116,205 @@ namespace VectSharp.SVG
 
                 svgElement.InsertBefore(style, svgElement.FirstChild);
 
+                HashSet<string> updatedClasses = new HashSet<string>();
+
                 foreach (XmlNode text in ctx.Document.GetElementsByTagName("text"))
                 {
-                    string fontFamily = text.Attributes["font-family"].Value;
+                    string fontFamily;
 
-                    string fallbackFontFamily = "";
-
-                    switch (fontFamily)
+                    if (!useStyles)
                     {
-                        case "Helvetica":
-                        case "Helvetica-Bold":
-                        case "Helvetica-Oblique":
-                        case "Helvetica-BoldOblique":
-                            fallbackFontFamily = "sans-serif";
-                            break;
-
-                        case "Times-Roman":
-                        case "Times-Bold":
-                        case "Times-Italic":
-                        case "Times-BoldItalic":
-                            fallbackFontFamily = "serif";
-                            break;
-
-                        case "Courier":
-                        case "Courier-Bold":
-                        case "Courier-Oblique":
-                        case "Courier-BoldOblique":
-                            fallbackFontFamily = "monospace";
-                            break;
-
-                        default:
-                            if (ctx.UsedFontFamilies[fontFamily].TrueTypeFile.IsFixedPitch())
-                            {
-                                fallbackFontFamily = "monospace";
-                            }
-                            else if (ctx.UsedFontFamilies[fontFamily].TrueTypeFile.IsScript() || ctx.UsedFontFamilies[fontFamily].TrueTypeFile.IsSerif())
-                            {
-                                fallbackFontFamily = "serif";
-                            }
-                            else
-                            {
-                                fallbackFontFamily = "sans-serif";
-                            }
-                            break;
-                    }
-
-
-                    if (!string.IsNullOrEmpty(fallbackFontFamily))
-                    {
-                        ((XmlElement)text).SetAttribute("font-family", newFontFamilies[fontFamily] + ", " + fallbackFontFamily);
+                        fontFamily = text.Attributes["font-family"].Value;
                     }
                     else
                     {
-                        ((XmlElement)text).SetAttribute("font-family", newFontFamilies[fontFamily]);
+                        fontFamily = ctx.Styles[text.Attributes["class"].Value]["font-family"];
                     }
 
+                    if (!useStyles || updatedClasses.Add(text.Attributes["class"].Value))
+                    {
+
+                        string fallbackFontFamily = "";
+
+                        switch (fontFamily)
+                        {
+                            case "Helvetica":
+                            case "Helvetica-Bold":
+                            case "Helvetica-Oblique":
+                            case "Helvetica-BoldOblique":
+                                fallbackFontFamily = "sans-serif";
+                                break;
+
+                            case "Times-Roman":
+                            case "Times-Bold":
+                            case "Times-Italic":
+                            case "Times-BoldItalic":
+                                fallbackFontFamily = "serif";
+                                break;
+
+                            case "Courier":
+                            case "Courier-Bold":
+                            case "Courier-Oblique":
+                            case "Courier-BoldOblique":
+                                fallbackFontFamily = "monospace";
+                                break;
+
+                            default:
+                                if (ctx.UsedFontFamilies[fontFamily].TrueTypeFile.IsFixedPitch())
+                                {
+                                    fallbackFontFamily = "monospace";
+                                }
+                                else if (ctx.UsedFontFamilies[fontFamily].TrueTypeFile.IsScript() || ctx.UsedFontFamilies[fontFamily].TrueTypeFile.IsSerif())
+                                {
+                                    fallbackFontFamily = "serif";
+                                }
+                                else
+                                {
+                                    fallbackFontFamily = "sans-serif";
+                                }
+                                break;
+                        }
+
+                        if (!useStyles)
+                        {
+                            if (!string.IsNullOrEmpty(fallbackFontFamily))
+                            {
+                                ((XmlElement)text).SetAttribute("font-family", newFontFamilies[fontFamily] + ", " + fallbackFontFamily);
+                            }
+                            else
+                            {
+                                ((XmlElement)text).SetAttribute("font-family", newFontFamilies[fontFamily]);
+                            }
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(fallbackFontFamily))
+                            {
+                                ctx.Styles[text.Attributes["class"].Value]["font-family"] = newFontFamilies[fontFamily] + ", " + fallbackFontFamily;
+                            }
+                            else
+                            {
+                                ctx.Styles[text.Attributes["class"].Value]["font-family"] = newFontFamilies[fontFamily];
+                            }
+                        }
+                    }
                 }
             }
             else if (!textToPaths && textOption == TextOptions.DoNotEmbed)
             {
+                HashSet<string> updatedClasses = new HashSet<string>();
+
                 foreach (XmlNode text in ctx.Document.GetElementsByTagName("text"))
                 {
-                    string fontFamily = text.Attributes["font-family"].Value;
+                    string fontFamily;
 
-                    string newFontFamily = ctx.UsedFontFamilies[fontFamily].TrueTypeFile.GetFontFamilyName();
-
-                    switch (fontFamily)
+                    if (!useStyles)
                     {
-                        case "Helvetica":
-                        case "Helvetica-Bold":
-                        case "Helvetica-Oblique":
-                        case "Helvetica-BoldOblique":
-                            newFontFamily = newFontFamily + ", sans-serif";
-                            break;
-
-                        case "Times-Roman":
-                        case "Times-Bold":
-                        case "Times-Italic":
-                        case "Times-BoldItalic":
-                            newFontFamily = newFontFamily + ", serif";
-                            break;
-
-                        case "Courier":
-                        case "Courier-Bold":
-                        case "Courier-Oblique":
-                        case "Courier-BoldOblique":
-                            newFontFamily = newFontFamily + ", monospace";
-                            break;
-
-                        default:
-                            if (ctx.UsedFontFamilies[fontFamily].TrueTypeFile.IsFixedPitch())
-                            {
-                                newFontFamily = newFontFamily + ", monospace";
-                            }
-                            else if (ctx.UsedFontFamilies[fontFamily].TrueTypeFile.IsScript())
-                            {
-                                newFontFamily = newFontFamily + ", cursive";
-                            }
-                            else if (ctx.UsedFontFamilies[fontFamily].TrueTypeFile.IsSerif())
-                            {
-                                newFontFamily = newFontFamily + ", serif";
-                            }
-                            else
-                            {
-                                newFontFamily = newFontFamily + ", sans-serif";
-                            }
-                            break;
+                        fontFamily = text.Attributes["font-family"].Value;
+                    }
+                    else
+                    {
+                        fontFamily = ctx.Styles[text.Attributes["class"].Value]["font-family"];
                     }
 
-                    ((XmlElement)text).SetAttribute("font-family", newFontFamily);
+                    if (!useStyles || updatedClasses.Add(text.Attributes["class"].Value))
+                    {
+
+                        string newFontFamily = ctx.UsedFontFamilies[fontFamily].TrueTypeFile.GetFontFamilyName();
+
+                        switch (fontFamily)
+                        {
+                            case "Helvetica":
+                            case "Helvetica-Bold":
+                            case "Helvetica-Oblique":
+                            case "Helvetica-BoldOblique":
+                                newFontFamily = newFontFamily + ", sans-serif";
+                                break;
+
+                            case "Times-Roman":
+                            case "Times-Bold":
+                            case "Times-Italic":
+                            case "Times-BoldItalic":
+                                newFontFamily = newFontFamily + ", serif";
+                                break;
+
+                            case "Courier":
+                            case "Courier-Bold":
+                            case "Courier-Oblique":
+                            case "Courier-BoldOblique":
+                                newFontFamily = newFontFamily + ", monospace";
+                                break;
+
+                            default:
+                                if (ctx.UsedFontFamilies[fontFamily].TrueTypeFile.IsFixedPitch())
+                                {
+                                    newFontFamily = newFontFamily + ", monospace";
+                                }
+                                else if (ctx.UsedFontFamilies[fontFamily].TrueTypeFile.IsScript())
+                                {
+                                    newFontFamily = newFontFamily + ", cursive";
+                                }
+                                else if (ctx.UsedFontFamilies[fontFamily].TrueTypeFile.IsSerif())
+                                {
+                                    newFontFamily = newFontFamily + ", serif";
+                                }
+                                else
+                                {
+                                    newFontFamily = newFontFamily + ", sans-serif";
+                                }
+                                break;
+                        }
+
+                        if (!useStyles)
+                        {
+                            ((XmlElement)text).SetAttribute("font-family", newFontFamily);
+                        }
+                        else
+                        {
+                            ctx.Styles[text.Attributes["class"].Value]["font-family"] = newFontFamily;
+                        }
+                    }
                 }
             }
+
+            if (useStyles)
+            {
+                StringBuilder classStyle = new StringBuilder();
+
+                if (ctx.Styles.Count > 0)
+                {
+                    classStyle.Append("\n  ");
+                }
+
+                foreach (KeyValuePair<string, Dictionary<string, string>> style in ctx.Styles)
+                {
+                    classStyle.Append("  .");
+                    classStyle.Append(style.Key);
+                    classStyle.Append("\n");
+                    classStyle.Append("    {\n");
+
+                    foreach (KeyValuePair<string, string> kvp in style.Value)
+                    {
+                        classStyle.Append("      ");
+                        classStyle.Append(kvp.Key);
+                        classStyle.Append(": ");
+                        classStyle.Append(kvp.Value);
+                        classStyle.Append(";\n");
+                    }
+
+                    classStyle.Append("    }\n  ");
+                }
+
+
+                XmlElement styleElement = ctx.Document.CreateElement("style", SVGContext.SVGNamespace);
+                styleElement.InnerText = classStyle.ToString();
+
+                XmlNode svgElement = ctx.Document.GetElementsByTagName("svg")[0];
+
+                svgElement.InsertBefore(styleElement, svgElement.FirstChild);
+            }
+
+
 
             ctx.Document.DocumentElement.SetAttribute("style", "font-synthesis: none;");
 
