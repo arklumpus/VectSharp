@@ -3793,7 +3793,14 @@ namespace VectSharp
             {
                 if (this.ClassFormat == 1)
                 {
-                    return this.ClassValueArray[glyphIndex - StartGlyphID];
+                    if (glyphIndex >= StartGlyphID && glyphIndex - StartGlyphID < this.ClassValueArray.Length)
+                    {
+                        return this.ClassValueArray[glyphIndex - StartGlyphID];
+                    }
+                    else
+                    {
+                        return -1;
+                    }
                 }
                 else if (this.ClassFormat == 2)
                 {
@@ -4392,6 +4399,11 @@ namespace VectSharp
                 {
                     int glyph1Class = this.ClassDef1.GetClass(glyph1Index);
                     int glyph2Class = this.ClassDef2.GetClass(glyph2Index);
+
+                    if (glyph1Class < 0 || glyph2Class < 0)
+                    {
+                        return null;
+                    }
 
                     return new PairKerning(new Point(this.Class1Records[glyph1Class][glyph2Class].ValueRecord1.XPlacement, this.Class1Records[glyph1Class][glyph2Class].ValueRecord1.YPlacement),
                                 new Point(this.Class1Records[glyph1Class][glyph2Class].ValueRecord1.XAdvance, this.Class1Records[glyph1Class][glyph2Class].ValueRecord1.YAdvance),
