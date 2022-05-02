@@ -1147,6 +1147,17 @@ namespace VectSharp
             return this;
         }
 
+        /// <summary>
+        /// Adds another <see cref="GraphicsPath"/> to the current <see cref="GraphicsPath"/>.
+        /// </summary>
+        /// <param name="path">The existing <see cref="GraphicsPath"/> that should be added to the current <see cref="GraphicsPath"/>.</param>
+        /// <returns>The <see cref="GraphicsPath"/>, to allow for chained calls.</returns>
+        public GraphicsPath AddPath(GraphicsPath path)
+        {
+            this.Segments.AddRange(path.Segments);
+            return this;
+        }
+
         private double cachedLength = double.NaN;
 
         /// <summary>
@@ -1863,6 +1874,35 @@ namespace VectSharp
             }
 
             return tbr;
+        }
+
+        /// <summary>
+        /// Discretises a <see cref="GraphicsPath"/>, replacing curve segments with series of line segments that approximate them and ensuring that all line segments are shorter than the specified <paramref name="resolution"/>.
+        /// </summary>
+        /// <param name="resolution">The maximum length (in absolute units) of line segments in the resulting <see cref="GraphicsPath"/>.</param>
+        /// <returns>A <see cref="GraphicsPath"/> composed only of linear segments that are shorter than <paramref name="resolution"/> and approximate the current <see cref="GraphicsPath"/>.</returns>
+        public GraphicsPath Discretise(double resolution)
+        {
+            if (!(resolution > 0))
+            {
+                throw new ArgumentOutOfRangeException(nameof(resolution), resolution, "The resolution must be greater than 0!");
+            }
+
+            GraphicsPath tbr = new GraphicsPath();
+
+            Point? previousPoint = null;
+
+            foreach (Segment seg in this.Segments)
+            {
+                tbr.Segments.AddRange(seg.Linearise(previousPoint, resolution));
+
+                if (seg.Type != SegmentType.Close)
+                {
+                    previousPoint = seg.Point;
+                }
+            }
+
+            return Graphics.ReduceMaximumLength(tbr, resolution);
         }
 
         /// <summary>

@@ -1047,7 +1047,7 @@ namespace VectSharp
             return destinationGraphics;
         }
 
-        private GraphicsPath ReduceMaximumLength(GraphicsPath path, double maxLength)
+        internal static GraphicsPath ReduceMaximumLength(GraphicsPath path, double maxLength)
         {
             GraphicsPath shortLinearisedPath = new GraphicsPath();
 
