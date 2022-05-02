@@ -468,7 +468,7 @@ namespace VectSharp
             {
                 bool isStandardFamily;
 
-                if (FontFamily.StandardFamilies.Contains(fontFamily))
+                if (FontFamily.StandardFamilies.Contains(fontFamily) || FontFamily.StandardFamilies.Contains(fontFamily.Replace(" ", "-")))
                 {
                     isStandardFamily = true;
                 }
@@ -479,6 +479,7 @@ namespace VectSharp
 
                 if (isStandardFamily)
                 {
+                    fontFamily = fontFamily.Replace(" ", "-");
                     Stream ttfStream = FontFamily.GetManifestResourceStream(FontFamily.StandardFontFamilyResources[Array.IndexOf(FontFamily.StandardFamilies, fontFamily)]);
 
                     FontFamily tbr = new FontFamily(ttfStream);
