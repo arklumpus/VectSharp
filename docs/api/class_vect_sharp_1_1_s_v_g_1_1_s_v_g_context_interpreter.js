@@ -7,6 +7,6 @@ var class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter =
       [ "ConvertIntoPaths", "class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#ac7b4162096a35c9a1954a0e347f88188a7f3652c450cd2f48bfe0c61ef2fe4a8d", null ],
       [ "DoNotEmbed", "class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#ac7b4162096a35c9a1954a0e347f88188a20dade34d645bcdd032c02dd7d53a4e1", null ]
     ] ],
-    [ "SaveAsSVG", "class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#a0b23d54e26eba6e598bb7aec98322fce", null ],
-    [ "SaveAsSVG", "class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#a072100c81545b6b49f6d740126841eb5", null ]
+    [ "SaveAsSVG", "class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#a3b4ea00f257f1456d9397a8c268f1b0d", null ],
+    [ "SaveAsSVG", "class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#aa60e1ea20f6ba17c15c1eea3222a6c20", null ]
 ];

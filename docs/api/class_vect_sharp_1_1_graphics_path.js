@@ -1,5 +1,6 @@
 var class_vect_sharp_1_1_graphics_path =
 [
+    [ "AddPath", "class_vect_sharp_1_1_graphics_path.html#af23ab3e86705bdb813ea54bd4740ee4b", null ],
     [ "AddSmoothSpline", "class_vect_sharp_1_1_graphics_path.html#ada2e070a89f252e4a3021ddad200a370", null ],
     [ "AddText", "class_vect_sharp_1_1_graphics_path.html#acb6657677bfcf1f40485fa17281acee2", null ],
     [ "AddText", "class_vect_sharp_1_1_graphics_path.html#a1b20f74ab48870b64774179eb1c925b1", null ],
@@ -10,6 +11,7 @@ var class_vect_sharp_1_1_graphics_path =
     [ "Close", "class_vect_sharp_1_1_graphics_path.html#aed7e7730ed904883e3a0fb2b901c2783", null ],
     [ "CubicBezierTo", "class_vect_sharp_1_1_graphics_path.html#a92b12bcc311a890448cbc75d402730ac", null ],
     [ "CubicBezierTo", "class_vect_sharp_1_1_graphics_path.html#af86483dc1b86c204fa8b07598b14df99", null ],
+    [ "Discretise", "class_vect_sharp_1_1_graphics_path.html#a56c6b00c9974bf78c35395c4d458e101", null ],
     [ "EllipticalArc", "class_vect_sharp_1_1_graphics_path.html#a02f9585dd8e00b27c840cbcd604b6cd3", null ],
     [ "GetBounds", "class_vect_sharp_1_1_graphics_path.html#aaa1c750dec2cccec037b2dcdc97cb249", null ],
     [ "GetLinearisationPointsNormals", "class_vect_sharp_1_1_graphics_path.html#a5080d51dd3c82a7c8f45df3f49a4b637", null ],

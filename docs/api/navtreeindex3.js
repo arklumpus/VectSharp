@@ -1,5 +1,7 @@
 var NAVTREEINDEX3 =
 {
+"class_vect_sharp_1_1_page.html#ad4758fd1d5dac8e8f3b3402b92afe368":[2,0,0,32,3],
+"class_vect_sharp_1_1_page.html#ad526058ea8d2032e71fdd499e24a7407":[2,0,0,32,5],
 "class_vect_sharp_1_1_radial_gradient_brush.html":[2,0,0,34],
 "class_vect_sharp_1_1_radial_gradient_brush.html#a0c7b9bb987b7e2129038d26cc93688f9":[2,0,0,34,1],
 "class_vect_sharp_1_1_radial_gradient_brush.html#a114bea8fc8cc6ff00709a8e217eb5590":[2,0,0,34,4],
@@ -44,8 +46,8 @@ var NAVTREEINDEX3 =
 "class_vect_sharp_1_1_s_v_g_1_1_parser.html#a717b3d9deac5e07c9451495c107f2933":[2,0,0,9,0,1],
 "class_vect_sharp_1_1_s_v_g_1_1_parser.html#ab061b23582543541eeeb43896c28689a":[2,0,0,9,0,4],
 "class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html":[2,0,0,9,1],
-"class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#a072100c81545b6b49f6d740126841eb5":[2,0,0,9,1,3],
-"class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#a0b23d54e26eba6e598bb7aec98322fce":[2,0,0,9,1,2],
+"class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#a3b4ea00f257f1456d9397a8c268f1b0d":[2,0,0,9,1,2],
+"class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#aa60e1ea20f6ba17c15c1eea3222a6c20":[2,0,0,9,1,3],
 "class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#ac7b4162096a35c9a1954a0e347f88188":[2,0,0,9,1,1],
 "class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#ac7b4162096a35c9a1954a0e347f88188a20dade34d645bcdd032c02dd7d53a4e1":[2,0,0,9,1,1,3],
 "class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#ac7b4162096a35c9a1954a0e347f88188a7f3652c450cd2f48bfe0c61ef2fe4a8d":[2,0,0,9,1,1,2],
@@ -247,7 +249,5 @@ var NAVTREEINDEX3 =
 "dir_447e7251831f7a754b854db7376cd107.html":[3,0,5],
 "dir_452a51251142bc7d9d54a0dbe0aed850.html":[3,0,6],
 "dir_6122bcdbfb78af90ae38c94803da6468.html":[3,0,4],
-"dir_6606a654b81dd4b591284b66e8a5eb76.html":[3,0,0],
-"dir_664d029dbe81cf7a6e60c51e20570786.html":[3,0,8],
-"dir_885bba5288a8b333208632535de9ccc7.html":[3,0,10]
+"dir_6606a654b81dd4b591284b66e8a5eb76.html":[3,0,0]
 };

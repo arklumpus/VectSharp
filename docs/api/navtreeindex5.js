@@ -1,5 +1,7 @@
 var NAVTREEINDEX5 =
 {
+"struct_vect_sharp_1_1_line_dash.html#ae7f1ec43760f311d6ab9379309e719b6":[2,0,0,31,3],
+"struct_vect_sharp_1_1_markdown_1_1_formatted_string.html":[2,0,0,4,0],
 "struct_vect_sharp_1_1_markdown_1_1_formatted_string.html#a3dacadc234fcf99c4171c466e7d84c04":[2,0,0,4,0,1],
 "struct_vect_sharp_1_1_markdown_1_1_formatted_string.html#a50d810e22b1ae371ecb27167f569fde3":[2,0,0,4,0,0],
 "struct_vect_sharp_1_1_markdown_1_1_formatted_string.html#a611bff3d46b30ce678958b2414909c1b":[2,0,0,4,0,3],
