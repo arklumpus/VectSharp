@@ -498,7 +498,7 @@ namespace VectSharp.SVG
 
                     if (currAttributes.StrokeFirst)
                     {
-                        if (currAttributes.Stroke != null)
+                        if (currAttributes.Stroke != null && currAttributes.StrokeThickness > 0)
                         {
                             Brush strokeColour = currAttributes.Stroke.MultiplyOpacity(currAttributes.Opacity * currAttributes.StrokeOpacity);
                             gpr.StrokeText(x, y, text, fnt, strokeColour, baseline, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash);
@@ -518,7 +518,7 @@ namespace VectSharp.SVG
                             gpr.FillText(x, y, text, fnt, fillColour, baseline);
                         }
 
-                        if (currAttributes.Stroke != null)
+                        if (currAttributes.Stroke != null && currAttributes.StrokeThickness > 0)
                         {
                             Brush strokeColour = currAttributes.Stroke.MultiplyOpacity(currAttributes.Opacity * currAttributes.StrokeOpacity);
                             gpr.StrokeText(x, y, text, fnt, strokeColour, baseline, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash);
