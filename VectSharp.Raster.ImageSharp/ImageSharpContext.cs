@@ -506,24 +506,26 @@ namespace VectSharp.Raster.ImageSharp
 
         public void Stroke()
         {
-            if (this.CurrentClip == null)
+            if (this.LineWidth > 0)
             {
-                this.Image.Mutate(x => x.Fill(new DrawingOptions() { Transform = _transform.ToMatrix() }, this.StrokeStyle.ToImageSharpBrush(_transform), this.currentPath.Build().GenerateOutline((float)(this.LineWidth), this.Dash.ToImageSharpDash(this.LineWidth), false, this.LineJoin.ToImageSharpJoint(), this.LineCap.ToImageSharpCap())));
+                if (this.CurrentClip == null)
+                {
+                    this.Image.Mutate(x => x.Fill(new DrawingOptions() { Transform = _transform.ToMatrix() }, this.StrokeStyle.ToImageSharpBrush(_transform), this.currentPath.Build().GenerateOutline((float)(this.LineWidth), this.Dash.ToImageSharpDash(this.LineWidth), false, this.LineJoin.ToImageSharpJoint(), this.LineCap.ToImageSharpCap())));
+                }
+                else
+                {
+                    this.ClipBuffer.Mutate(x => x.Clear(Color.FromRgba(0, 0, 0, 0)));
+                    this.ClipBuffer.Mutate(x => x.Fill(new DrawingOptions() { Transform = _transform.ToMatrix() }, this.StrokeStyle.ToImageSharpBrush(_transform), this.currentPath.Build().GenerateOutline((float)(this.LineWidth), this.Dash.ToImageSharpDash(this.LineWidth), false, this.LineJoin.ToImageSharpJoint(), this.LineCap.ToImageSharpCap())));
+
+                    GraphicsOptions opt = new GraphicsOptions() { AlphaCompositionMode = SixLabors.ImageSharp.PixelFormats.PixelAlphaCompositionMode.SrcIn };
+
+                    this.Buffer.Dispose();
+
+                    this.Buffer = this.CurrentClip.Clone(x => x.DrawImage(this.ClipBuffer, opt));
+
+                    this.Image.Mutate(x => x.DrawImage(this.Buffer, 1));
+                }
             }
-            else
-            {
-                this.ClipBuffer.Mutate(x => x.Clear(Color.FromRgba(0, 0, 0, 0)));
-                this.ClipBuffer.Mutate(x => x.Fill(new DrawingOptions() { Transform = _transform.ToMatrix() }, this.StrokeStyle.ToImageSharpBrush(_transform), this.currentPath.Build().GenerateOutline((float)(this.LineWidth), this.Dash.ToImageSharpDash(this.LineWidth), false, this.LineJoin.ToImageSharpJoint(), this.LineCap.ToImageSharpCap())));
-
-                GraphicsOptions opt = new GraphicsOptions() { AlphaCompositionMode = SixLabors.ImageSharp.PixelFormats.PixelAlphaCompositionMode.SrcIn };
-
-                this.Buffer.Dispose();
-
-                this.Buffer = this.CurrentClip.Clone(x => x.DrawImage(this.ClipBuffer, opt));
-
-                this.Image.Mutate(x => x.DrawImage(this.Buffer, 1));
-            }
-
 
             this.currentPath = new PathBuilder();
             this.figureInitialised = false;
