@@ -364,6 +364,8 @@ namespace VectSharp.SVG
 
             bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes, styleSheets, gradients);
 
+            string tag = currObject.Attributes?["id"]?.Value;
+
             if (!string.IsNullOrEmpty(href) && w > 0 && h > 0)
             {
                 Page image = ParseImageURI(href, interpolate);
@@ -377,14 +379,14 @@ namespace VectSharp.SVG
 
                     gpr.Scale(scaleX, scaleY);
 
-                    gpr.DrawGraphics(x / scaleX, y / scaleY, image.Graphics);
+                    gpr.DrawGraphics(x / scaleX, y / scaleY, image.Graphics, tag: tag);
 
                     gpr.Restore();
                 }
                 else
                 {
-                    gpr.StrokeRectangle(x, y, w, h, Colours.Red, 0.1);
-                    gpr.StrokePath(new GraphicsPath().MoveTo(x, y).LineTo(x + w, y + h).MoveTo(x + w, y).LineTo(x, y + h), Colours.Red, 0.1);
+                    gpr.StrokeRectangle(x, y, w, h, Colours.Red, 0.1, tag: tag);
+                    gpr.StrokePath(new GraphicsPath().MoveTo(x, y).LineTo(x + w, y + h).MoveTo(x + w, y).LineTo(x, y + h), Colours.Red, 0.1, tag: tag);
                 }
             }
 
@@ -417,6 +419,8 @@ namespace VectSharp.SVG
             textAlign = currObject.Attributes?["text-align"]?.Value ?? textAlign;
 
             bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes, styleSheets, gradients);
+
+            string tag = currObject.Attributes?["id"]?.Value;
 
             if (currObject.ChildNodes.OfType<XmlNode>().Any(a => a.NodeType != XmlNodeType.Text))
             {
@@ -501,13 +505,13 @@ namespace VectSharp.SVG
                         if (currAttributes.Stroke != null)
                         {
                             Brush strokeColour = currAttributes.Stroke.MultiplyOpacity(currAttributes.Opacity * currAttributes.StrokeOpacity);
-                            gpr.StrokeText(x, y, text, fnt, strokeColour, baseline, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash);
+                            gpr.StrokeText(x, y, text, fnt, strokeColour, baseline, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
                         }
 
                         if (currAttributes.Fill != null)
                         {
                             Brush fillColour = currAttributes.Fill.MultiplyOpacity(currAttributes.Opacity * currAttributes.FillOpacity);
-                            gpr.FillText(x, y, text, fnt, fillColour, baseline);
+                            gpr.FillText(x, y, text, fnt, fillColour, baseline, tag: tag);
                         }
                     }
                     else
@@ -515,13 +519,13 @@ namespace VectSharp.SVG
                         if (currAttributes.Fill != null)
                         {
                             Brush fillColour = currAttributes.Fill.MultiplyOpacity(currAttributes.Opacity * currAttributes.FillOpacity);
-                            gpr.FillText(x, y, text, fnt, fillColour, baseline);
+                            gpr.FillText(x, y, text, fnt, fillColour, baseline, tag: tag);
                         }
 
                         if (currAttributes.Stroke != null)
                         {
                             Brush strokeColour = currAttributes.Stroke.MultiplyOpacity(currAttributes.Opacity * currAttributes.StrokeOpacity);
-                            gpr.StrokeText(x, y, text, fnt, strokeColour, baseline, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash);
+                            gpr.StrokeText(x, y, text, fnt, strokeColour, baseline, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
                         }
                     }
 
@@ -867,18 +871,20 @@ namespace VectSharp.SVG
 
                 bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes, styleSheets, gradients);
 
+                string tag = currObject.Attributes?["id"]?.Value;
+
                 if (currAttributes.StrokeFirst)
                 {
                     if (currAttributes.Stroke != null)
                     {
                         Brush strokeColour = currAttributes.Stroke.MultiplyOpacity(currAttributes.Opacity * currAttributes.StrokeOpacity);
-                        gpr.StrokePath(path, strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash);
+                        gpr.StrokePath(path, strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
                     }
 
                     if (currAttributes.Fill != null)
                     {
                         Brush fillColour = currAttributes.Fill.MultiplyOpacity(currAttributes.Opacity * currAttributes.FillOpacity);
-                        gpr.FillPath(path, fillColour);
+                        gpr.FillPath(path, fillColour, tag: tag);
                     }
                 }
                 else
@@ -886,13 +892,13 @@ namespace VectSharp.SVG
                     if (currAttributes.Fill != null)
                     {
                         Brush fillColour = currAttributes.Fill.MultiplyOpacity(currAttributes.Opacity * currAttributes.FillOpacity);
-                        gpr.FillPath(path, fillColour);
+                        gpr.FillPath(path, fillColour, tag: tag);
                     }
 
                     if (currAttributes.Stroke != null)
                     {
                         Brush strokeColour = currAttributes.Stroke.MultiplyOpacity(currAttributes.Opacity * currAttributes.StrokeOpacity);
-                        gpr.StrokePath(path, strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash);
+                        gpr.StrokePath(path, strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
                     }
                 }
 
@@ -932,18 +938,20 @@ namespace VectSharp.SVG
 
                 bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes, styleSheets, gradients);
 
+                string tag = currObject.Attributes?["id"]?.Value;
+
                 if (currAttributes.StrokeFirst)
                 {
                     if (currAttributes.Stroke != null)
                     {
                         Brush strokeColour = currAttributes.Stroke.MultiplyOpacity(currAttributes.Opacity * currAttributes.StrokeOpacity);
-                        gpr.StrokePath(path, strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash);
+                        gpr.StrokePath(path, strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
                     }
 
                     if (currAttributes.Fill != null)
                     {
                         Brush fillColour = currAttributes.Fill.MultiplyOpacity(currAttributes.Opacity * currAttributes.FillOpacity);
-                        gpr.FillPath(path, fillColour);
+                        gpr.FillPath(path, fillColour, tag: tag);
                     }
                 }
                 else
@@ -951,13 +959,13 @@ namespace VectSharp.SVG
                     if (currAttributes.Fill != null)
                     {
                         Brush fillColour = currAttributes.Fill.MultiplyOpacity(currAttributes.Opacity * currAttributes.FillOpacity);
-                        gpr.FillPath(path, fillColour);
+                        gpr.FillPath(path, fillColour, tag: tag);
                     }
 
                     if (currAttributes.Stroke != null)
                     {
                         Brush strokeColour = currAttributes.Stroke.MultiplyOpacity(currAttributes.Opacity * currAttributes.StrokeOpacity);
-                        gpr.StrokePath(path, strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash);
+                        gpr.StrokePath(path, strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
                     }
                 }
 
@@ -1375,18 +1383,20 @@ namespace VectSharp.SVG
 
                 bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes, styleSheets, gradients);
 
+                string tag = currObject.Attributes?["id"]?.Value;
+
                 if (currAttributes.StrokeFirst)
                 {
                     if (currAttributes.Stroke != null)
                     {
                         Brush strokeColour = currAttributes.Stroke.MultiplyOpacity(currAttributes.Opacity * currAttributes.StrokeOpacity);
-                        gpr.StrokePath(path, strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash);
+                        gpr.StrokePath(path, strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
                     }
 
                     if (currAttributes.Fill != null)
                     {
                         Brush fillColour = currAttributes.Fill.MultiplyOpacity(currAttributes.Opacity * currAttributes.FillOpacity);
-                        gpr.FillPath(path, fillColour);
+                        gpr.FillPath(path, fillColour, tag: tag);
                     }
                 }
                 else
@@ -1394,13 +1404,13 @@ namespace VectSharp.SVG
                     if (currAttributes.Fill != null)
                     {
                         Brush fillColour = currAttributes.Fill.MultiplyOpacity(currAttributes.Opacity * currAttributes.FillOpacity);
-                        gpr.FillPath(path, fillColour);
+                        gpr.FillPath(path, fillColour, tag: tag);
                     }
 
                     if (currAttributes.Stroke != null)
                     {
                         Brush strokeColour = currAttributes.Stroke.MultiplyOpacity(currAttributes.Opacity * currAttributes.StrokeOpacity);
-                        gpr.StrokePath(path, strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash);
+                        gpr.StrokePath(path, strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
                     }
                 }
 
@@ -1491,6 +1501,8 @@ namespace VectSharp.SVG
             cy = ParseLengthOrPercentage(circleObject.Attributes?["cy"]?.Value, height);
             r = ParseLengthOrPercentage(circleObject.Attributes?["r"]?.Value, diagonal);
 
+            string tag = circleObject.Attributes?["id"]?.Value;
+
             PresentationAttributes circleAttributes = InterpretPresentationAttributes(circleObject, attributes, width, height, diagonal, gpr, styleSheets, gradients);
 
             bool hadClippingPath = ApplyClipPath(circleObject, gpr, width, height, diagonal, attributes, styleSheets, gradients);
@@ -1500,13 +1512,13 @@ namespace VectSharp.SVG
                 if (circleAttributes.Stroke != null)
                 {
                     Brush strokeColour = circleAttributes.Stroke.MultiplyOpacity(circleAttributes.Opacity * circleAttributes.StrokeOpacity);
-                    gpr.StrokePath(new GraphicsPath().Arc(cx, cy, r, 0, 2 * Math.PI).Close(), strokeColour, circleAttributes.StrokeThickness, circleAttributes.LineCap, circleAttributes.LineJoin, circleAttributes.LineDash);
+                    gpr.StrokePath(new GraphicsPath().Arc(cx, cy, r, 0, 2 * Math.PI).Close(), strokeColour, circleAttributes.StrokeThickness, circleAttributes.LineCap, circleAttributes.LineJoin, circleAttributes.LineDash, tag: tag);
                 }
 
                 if (circleAttributes.Fill != null)
                 {
                     Brush fillColour = circleAttributes.Fill.MultiplyOpacity(circleAttributes.Opacity * circleAttributes.FillOpacity);
-                    gpr.FillPath(new GraphicsPath().Arc(cx, cy, r, 0, 2 * Math.PI).Close(), fillColour);
+                    gpr.FillPath(new GraphicsPath().Arc(cx, cy, r, 0, 2 * Math.PI).Close(), fillColour, tag: tag);
                 }
             }
             else
@@ -1514,13 +1526,13 @@ namespace VectSharp.SVG
                 if (circleAttributes.Fill != null)
                 {
                     Brush fillColour = circleAttributes.Fill.MultiplyOpacity(circleAttributes.Opacity * circleAttributes.FillOpacity);
-                    gpr.FillPath(new GraphicsPath().Arc(cx, cy, r, 0, 2 * Math.PI).Close(), fillColour);
+                    gpr.FillPath(new GraphicsPath().Arc(cx, cy, r, 0, 2 * Math.PI).Close(), fillColour, tag: tag);
                 }
 
                 if (circleAttributes.Stroke != null)
                 {
                     Brush strokeColour = circleAttributes.Stroke.MultiplyOpacity(circleAttributes.Opacity * circleAttributes.StrokeOpacity);
-                    gpr.StrokePath(new GraphicsPath().Arc(cx, cy, r, 0, 2 * Math.PI).Close(), strokeColour, circleAttributes.StrokeThickness, circleAttributes.LineCap, circleAttributes.LineJoin, circleAttributes.LineDash);
+                    gpr.StrokePath(new GraphicsPath().Arc(cx, cy, r, 0, 2 * Math.PI).Close(), strokeColour, circleAttributes.StrokeThickness, circleAttributes.LineCap, circleAttributes.LineJoin, circleAttributes.LineDash, tag: tag);
                 }
             }
 
@@ -1543,6 +1555,8 @@ namespace VectSharp.SVG
             cy = ParseLengthOrPercentage(currObject.Attributes?["cy"]?.Value, height);
             rx = ParseLengthOrPercentage(currObject.Attributes?["rx"]?.Value, width, double.NaN);
             ry = ParseLengthOrPercentage(currObject.Attributes?["ry"]?.Value, height, double.NaN);
+
+            string tag = currObject.Attributes?["id"]?.Value;
 
             if (double.IsNaN(rx) && !double.IsNaN(ry))
             {
@@ -1571,13 +1585,13 @@ namespace VectSharp.SVG
                     if (currAttributes.Stroke != null)
                     {
                         Brush strokeColour = currAttributes.Stroke.MultiplyOpacity(currAttributes.Opacity * currAttributes.StrokeOpacity);
-                        gpr.StrokePath(new GraphicsPath().Arc(0, 0, r, 0, 2 * Math.PI).Close(), strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash);
+                        gpr.StrokePath(new GraphicsPath().Arc(0, 0, r, 0, 2 * Math.PI).Close(), strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
                     }
 
                     if (currAttributes.Fill != null)
                     {
                         Brush fillColour = currAttributes.Fill.MultiplyOpacity(currAttributes.Opacity * currAttributes.FillOpacity);
-                        gpr.FillPath(new GraphicsPath().Arc(0, 0, r, 0, 2 * Math.PI).Close(), fillColour);
+                        gpr.FillPath(new GraphicsPath().Arc(0, 0, r, 0, 2 * Math.PI).Close(), fillColour, tag: tag);
                     }
                 }
                 else
@@ -1585,13 +1599,13 @@ namespace VectSharp.SVG
                     if (currAttributes.Fill != null)
                     {
                         Brush fillColour = currAttributes.Fill.MultiplyOpacity(currAttributes.Opacity * currAttributes.FillOpacity);
-                        gpr.FillPath(new GraphicsPath().Arc(0, 0, r, 0, 2 * Math.PI).Close(), fillColour);
+                        gpr.FillPath(new GraphicsPath().Arc(0, 0, r, 0, 2 * Math.PI).Close(), fillColour, tag: tag);
                     }
 
                     if (currAttributes.Stroke != null)
                     {
                         Brush strokeColour = currAttributes.Stroke.MultiplyOpacity(currAttributes.Opacity * currAttributes.StrokeOpacity);
-                        gpr.StrokePath(new GraphicsPath().Arc(0, 0, r, 0, 2 * Math.PI).Close(), strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash);
+                        gpr.StrokePath(new GraphicsPath().Arc(0, 0, r, 0, 2 * Math.PI).Close(), strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
                     }
                 }
 
@@ -1622,10 +1636,12 @@ namespace VectSharp.SVG
 
             bool hadClippingPath = ApplyClipPath(lineObject, gpr, width, height, diagonal, attributes, styleSheets, gradients);
 
+            string tag = lineObject.Attributes?["id"]?.Value;
+
             if (lineAttributes.Stroke != null)
             {
                 Brush strokeColour = lineAttributes.Stroke.MultiplyOpacity(lineAttributes.Opacity * lineAttributes.StrokeOpacity);
-                gpr.StrokePath(new GraphicsPath().MoveTo(x1, y1).LineTo(x2, y2), strokeColour, lineAttributes.StrokeThickness, lineAttributes.LineCap, lineAttributes.LineJoin, lineAttributes.LineDash);
+                gpr.StrokePath(new GraphicsPath().MoveTo(x1, y1).LineTo(x2, y2), strokeColour, lineAttributes.StrokeThickness, lineAttributes.LineCap, lineAttributes.LineJoin, lineAttributes.LineDash, tag: tag);
             }
 
             if (hadClippingPath)
