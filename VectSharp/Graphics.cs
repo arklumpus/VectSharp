@@ -812,6 +812,53 @@ namespace VectSharp
         }
 
         /// <summary>
+        /// Draws a <see cref="Graphics"/> object on the current <see cref="Graphics"/> object, prepending the supplied <paramref name="tag"/> to the tags contained in the <see cref="Graphics"/> object being drawn.
+        /// </summary>
+        /// <param name="originX">The horizontal coordinate at which to place the origin of <paramref name="graphics"/>.</param>
+        /// <param name="originY">The vertical coordinate at which to place the origin of <paramref name="graphics"/>.</param>
+        /// <param name="graphics">The <see cref="Graphics"/> object to draw on the current <see cref="Graphics"/> object.</param>
+        /// <param name="tag">The tag to prepend to the tags contained in the <paramref name="graphics"/> object.</param>
+        public void DrawGraphics(double originX, double originY, Graphics graphics, string tag)
+        {
+            this.DrawGraphics(new Point(originX, originY), graphics, tag);
+        }
+
+        /// <summary>
+        /// Draws a <see cref="Graphics"/> object on the current <see cref="Graphics"/> object, prepending the supplied <paramref name="tag"/> to the tags contained in the <see cref="Graphics"/> object being drawn.
+        /// </summary>
+        /// <param name="origin">The point at which to place the origin of <paramref name="graphics"/>.</param>
+        /// <param name="graphics">The <see cref="Graphics"/> object to draw on the current <see cref="Graphics"/> object.</param>
+        /// <param name="tag">The tag to prepend to the tags contained in the <paramref name="graphics"/> object.</param>
+        public void DrawGraphics(Point origin, Graphics graphics, string tag)
+        {
+            this.Save();
+            this.Translate(origin);
+
+            graphics.FixGraphicsStateStack();
+
+            foreach (IGraphicsAction action in graphics.Actions)
+            {
+                IGraphicsAction clone = action.ShallowClone();
+
+                if (clone is IPrintableAction print)
+                {
+                    if (string.IsNullOrEmpty(print.Tag))
+                    {
+                        print.Tag = tag;
+                    }
+                    else
+                    {
+                        print.Tag = tag + "/" + print.Tag;
+                    }
+                }
+
+                this.Actions.Add(clone);
+            }
+
+            this.Restore();
+        }
+
+        /// <summary>
         /// Draws a <see cref="Graphics"/> object on the current <see cref="Graphics"/> object.
         /// </summary>
         /// <param name="originX">The horizontal coordinate at which to place the origin of <paramref name="graphics"/>.</param>

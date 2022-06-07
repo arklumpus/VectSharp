@@ -21,7 +21,7 @@ namespace VectSharp
 {
     internal interface IGraphicsAction
     {
-
+        IGraphicsAction ShallowClone();
     }
 
     internal interface IPrintableAction
@@ -32,7 +32,7 @@ namespace VectSharp
         LineCaps LineCap { get; }
         LineJoins LineJoin { get; }
         LineDash LineDash { get; }
-        string Tag { get; }
+        string Tag { get; set; }
         Rectangle GetBounds();
     }
 
@@ -45,6 +45,8 @@ namespace VectSharp
         public Size? Scale { get; } = null;
 
         public double[,] Matrix { get; } = null;
+
+        public IGraphicsAction ShallowClone() => (IGraphicsAction)MemberwiseClone();
 
         public TransformAction(Point delta)
         {
@@ -93,6 +95,8 @@ namespace VectSharp
 
     internal class StateAction : IGraphicsAction
     {
+        public IGraphicsAction ShallowClone() => (IGraphicsAction)MemberwiseClone();
+
         public enum StateActionTypes
         {
             Save, Restore
@@ -108,13 +112,15 @@ namespace VectSharp
 
     internal class TextAction : IGraphicsAction, IPrintableAction
     {
+        public IGraphicsAction ShallowClone() => (IGraphicsAction)MemberwiseClone();
+
         public Brush Fill { get; }
         public Brush Stroke { get; }
         public double LineWidth { get; }
         public LineCaps LineCap { get; }
         public LineJoins LineJoin { get; }
         public LineDash LineDash { get; }
-        public string Tag { get; }
+        public string Tag { get; set; }
         public string Text { get; }
         public Point Origin { get; }
         public TextBaselines TextBaseline { get; }
@@ -157,13 +163,14 @@ namespace VectSharp
 
     internal class RectangleAction : IGraphicsAction, IPrintableAction
     {
+        public IGraphicsAction ShallowClone() => (IGraphicsAction)MemberwiseClone();
         public Brush Fill { get; }
         public Brush Stroke { get; }
         public double LineWidth { get; }
         public LineCaps LineCap { get; }
         public LineJoins LineJoin { get; }
         public LineDash LineDash { get; }
-        public string Tag { get; }
+        public string Tag { get; set; }
         public Point TopLeft { get; }
         public Size Size { get; }
 
@@ -188,10 +195,11 @@ namespace VectSharp
 
     internal class PathAction : IGraphicsAction, IPrintableAction
     {
+        public IGraphicsAction ShallowClone() => (IGraphicsAction)MemberwiseClone();
         public GraphicsPath Path { get; }
         public Brush Fill { get; }
         public Brush Stroke { get; }
-        public string Tag { get; }
+        public string Tag { get; set; }
         public double LineWidth { get; }
         public LineCaps LineCap { get; }
         public LineJoins LineJoin { get; }
@@ -217,9 +225,10 @@ namespace VectSharp
 
     internal class RasterImageAction : IGraphicsAction, IPrintableAction
     {
+        public IGraphicsAction ShallowClone() => (IGraphicsAction)MemberwiseClone();
         public Brush Fill { get; }
         public Brush Stroke { get; }
-        public string Tag { get; }
+        public string Tag { get; set; }
         public double LineWidth { get; }
         public LineCaps LineCap { get; }
         public LineJoins LineJoin { get; }
@@ -258,9 +267,10 @@ namespace VectSharp
 
     internal class FilteredGraphicsAction : IGraphicsAction, IPrintableAction
     {
+        public IGraphicsAction ShallowClone() => (IGraphicsAction)MemberwiseClone();
         public Brush Fill { get; }
         public Brush Stroke { get; }
-        public string Tag { get; }
+        public string Tag { get; set; }
         public double LineWidth { get; }
         public LineCaps LineCap { get; }
         public LineJoins LineJoin { get; }
