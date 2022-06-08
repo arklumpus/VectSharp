@@ -828,7 +828,7 @@ namespace VectSharp.Raster.ImageSharp
             }
             else
             {
-                return new float[] { 1, 0 };
+                return new float[] {  };
             }
         }
 
