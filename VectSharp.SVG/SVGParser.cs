@@ -445,6 +445,8 @@ namespace VectSharp.SVG
 
                 if (!double.IsNaN(fontSize) && !string.IsNullOrEmpty(text))
                 {
+                    text = text.Replace("\u00A0", " ");
+                    
                     FontFamily parsedFontFamily = ParseFontFamily(fontFamily, currAttributes.EmbeddedFonts);
                     string fontWeight = currObject.Attributes?["font-weight"]?.Value;
                     string fontStyle = currObject.Attributes?["font-style"]?.Value;
