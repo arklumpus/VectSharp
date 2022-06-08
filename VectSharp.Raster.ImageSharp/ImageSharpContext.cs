@@ -229,7 +229,7 @@ namespace VectSharp.Raster.ImageSharp
                 Point p1 = new Point(p1X, p1Y);
                 Point p2 = new Point(p2X, p2Y);
                 Point p3 = new Point(p3X, p3Y);
-                currentPath.AddBezier(currentPoint.ToPointF(1), p1.ToPointF(1), p2.ToPointF(1), p3.ToPointF(1));
+                currentPath.AddCubicBezier(currentPoint.ToPointF(1), p1.ToPointF(1), p2.ToPointF(1), p3.ToPointF(1));
                 currentPoint = p3;
             }
             else
