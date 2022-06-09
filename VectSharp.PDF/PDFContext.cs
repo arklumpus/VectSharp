@@ -1276,7 +1276,7 @@ namespace VectSharp.PDF
                     nonSymbolFontIDs.Add(kvp.Key, "F" + fontId.ToString());
                     symbolFontIDs.Add(kvp.Key, "F" + fontId.ToString());
                     objectPositions.Add(position);
-                    currObject = objectNum.ToString() + " 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /" + (kvp.Value.IsStandardFamily ? kvp.Key.Replace(" ", "-") : kvp.Key) + " >>\nendobj\n";
+                    currObject = objectNum.ToString() + " 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /" + (kvp.Value.IsStandardFamily ? kvp.Value.FileName.Replace(" ", "-") : kvp.Key) + " >>\nendobj\n";
                     sw.Write(currObject);
                     position += currObject.Length;
                     objectNum++;
