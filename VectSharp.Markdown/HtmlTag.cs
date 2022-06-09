@@ -266,8 +266,17 @@ namespace VectSharp.Markdown
 
                 Directory.CreateDirectory(tempFile);
 
-                VectSharp.Page pag = VectSharp.SVG.Parser.ParseImageURI(uri, true);
-                VectSharp.SVG.SVGContextInterpreter.SaveAsSVG(pag, Path.Combine(tempFile, "temp.svg"));
+                if (!uri.StartsWith("data:image/svg+xml;base64,"))
+                {
+                    VectSharp.Page pag = VectSharp.SVG.Parser.ParseImageURI(uri, true);
+                    VectSharp.SVG.SVGContextInterpreter.SaveAsSVG(pag, Path.Combine(tempFile, "temp.svg"));
+                }
+                else
+                {
+                    string base64 = uri.Substring("data:image/svg+xml;base64,".Length);
+
+                    File.WriteAllBytes(Path.Combine(tempFile, "temp.svg"), Convert.FromBase64String(base64));
+                }
 
                 return (Path.Combine(tempFile, "temp.svg"), true);
             }
