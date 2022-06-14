@@ -299,20 +299,20 @@ namespace VectSharp.Raster.ImageSharp
 
             if (this.CurrentClip == null)
             {
-                this.Image.Mutate(x => x.DrawImage(sourceImage, new SixLabors.ImageSharp.Point((int)Math.Round(minX), (int)Math.Round(minY)), 1));
+                this.Image.Mutate(x => x.CheckedDrawImage(sourceImage, new SixLabors.ImageSharp.Point((int)Math.Round(minX), (int)Math.Round(minY)), 1));
             }
             else
             {
                 this.ClipBuffer.Mutate(x => x.Clear(Color.FromRgba(0, 0, 0, 0)));
-                this.ClipBuffer.Mutate(x => x.DrawImage(sourceImage, new SixLabors.ImageSharp.Point((int)Math.Round(minX), (int)Math.Round(minY)), 1));
+                this.ClipBuffer.Mutate(x => x.CheckedDrawImage(sourceImage, new SixLabors.ImageSharp.Point((int)Math.Round(minX), (int)Math.Round(minY)), 1));
 
                 GraphicsOptions opt = new GraphicsOptions() { AlphaCompositionMode = SixLabors.ImageSharp.PixelFormats.PixelAlphaCompositionMode.SrcIn };
 
                 this.Buffer.Dispose();
 
-                this.Buffer = this.CurrentClip.Clone(x => x.DrawImage(this.ClipBuffer, opt));
+                this.Buffer = this.CurrentClip.Clone(x => x.CheckedDrawImage(this.ClipBuffer, opt));
 
-                this.Image.Mutate(x => x.DrawImage(this.Buffer, 1));
+                this.Image.Mutate(x => x.CheckedDrawImage(this.Buffer, 1));
             }
         }
 
@@ -333,9 +333,9 @@ namespace VectSharp.Raster.ImageSharp
 
                 this.Buffer.Dispose();
 
-                this.Buffer = this.CurrentClip.Clone(x => x.DrawImage(this.ClipBuffer, opt));
+                this.Buffer = this.CurrentClip.Clone(x => x.CheckedDrawImage(this.ClipBuffer, opt));
 
-                this.Image.Mutate(x => x.DrawImage(this.Buffer, 1));
+                this.Image.Mutate(x => x.CheckedDrawImage(this.Buffer, 1));
             }
 
             this.currentPath = new PathBuilder();
@@ -468,7 +468,7 @@ namespace VectSharp.Raster.ImageSharp
                 this.Buffer.Mutate(x => x.Clear(Color.FromRgba(0, 0, 0, 0)));
                 this.Buffer.Mutate(x => x.Fill(opt, Color.FromRgb(0, 0, 0), path));
 
-                newClip = this.CurrentClip.Clone(x => x.DrawImage(this.Buffer, new GraphicsOptions() { AlphaCompositionMode = SixLabors.ImageSharp.PixelFormats.PixelAlphaCompositionMode.SrcIn }));
+                newClip = this.CurrentClip.Clone(x => x.CheckedDrawImage(this.Buffer, new GraphicsOptions() { AlphaCompositionMode = SixLabors.ImageSharp.PixelFormats.PixelAlphaCompositionMode.SrcIn }));
 
                 disposables.Add(this.CurrentClip);
             }
@@ -521,9 +521,9 @@ namespace VectSharp.Raster.ImageSharp
 
                     this.Buffer.Dispose();
 
-                    this.Buffer = this.CurrentClip.Clone(x => x.DrawImage(this.ClipBuffer, opt));
+                    this.Buffer = this.CurrentClip.Clone(x => x.CheckedDrawImage(this.ClipBuffer, opt));
 
-                    this.Image.Mutate(x => x.DrawImage(this.Buffer, 1));
+                    this.Image.Mutate(x => x.CheckedDrawImage(this.Buffer, 1));
                 }
             }
 
@@ -695,6 +695,39 @@ namespace VectSharp.Raster.ImageSharp
 
     internal static class Utils
     {
+        public static IImageProcessingContext CheckedDrawImage(this IImageProcessingContext x, Image image, SixLabors.ImageSharp.Point point, float opacity)
+        {
+            int x0A = 0;
+            int y0A = 0;
+            SixLabors.ImageSharp.Size size = x.GetCurrentSize();
+            int x1A = size.Width;
+            int y1A = size.Height;
+
+            int x0B = point.X;
+            int y0B = point.Y;
+            int x1B = point.X + image.Width;
+            int y1B = point.Y + image.Height;
+
+            if (!(x0A >= x1B || x1A <= x0B || y0A >= y1B || y1A <= y0B))
+            {
+                return x.DrawImage(image, point, opacity);
+            }
+            else
+            {
+                return x;
+            }
+        }
+
+        public static IImageProcessingContext CheckedDrawImage(this IImageProcessingContext x, Image image, float opacity)
+        {
+            return x.DrawImage(image, opacity);
+        }
+
+        public static IImageProcessingContext CheckedDrawImage(this IImageProcessingContext x, Image image, GraphicsOptions options)
+        {
+            return x.DrawImage(image, options);
+        }
+
         public static PointF ToPointF(this Point pt, double scaleFactor)
         {
             return new PointF((float)(pt.X * scaleFactor), (float)(pt.Y * scaleFactor));
