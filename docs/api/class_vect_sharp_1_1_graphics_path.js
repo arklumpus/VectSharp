@@ -14,12 +14,12 @@ var class_vect_sharp_1_1_graphics_path =
     [ "Discretise", "class_vect_sharp_1_1_graphics_path.html#a56c6b00c9974bf78c35395c4d458e101", null ],
     [ "EllipticalArc", "class_vect_sharp_1_1_graphics_path.html#a02f9585dd8e00b27c840cbcd604b6cd3", null ],
     [ "GetBounds", "class_vect_sharp_1_1_graphics_path.html#aaa1c750dec2cccec037b2dcdc97cb249", null ],
-    [ "GetLinearisationPointsNormals", "class_vect_sharp_1_1_graphics_path.html#a5080d51dd3c82a7c8f45df3f49a4b637", null ],
+    [ "GetLinearisationPointsNormals", "class_vect_sharp_1_1_graphics_path.html#a1ffd5cd6b7bf50b562148159a45a6ec6", null ],
     [ "GetNormalAtAbsolute", "class_vect_sharp_1_1_graphics_path.html#a0e28048a9f5a2d678b1ba360c006b078", null ],
     [ "GetNormalAtRelative", "class_vect_sharp_1_1_graphics_path.html#a375abcfb69b00fe3f57c9e117e2ccc09", null ],
     [ "GetPointAtAbsolute", "class_vect_sharp_1_1_graphics_path.html#ab47c3e86afbca5dcb1b19f9ae8dfbd93", null ],
     [ "GetPointAtRelative", "class_vect_sharp_1_1_graphics_path.html#a7e96cbf6dabbed6556fa9a642703962e", null ],
-    [ "GetPoints", "class_vect_sharp_1_1_graphics_path.html#aab7a438fa6a317c0b2ee64aeede8b127", null ],
+    [ "GetPoints", "class_vect_sharp_1_1_graphics_path.html#acab81d6f423c46f488a35179ffb385cf", null ],
     [ "GetTangentAtAbsolute", "class_vect_sharp_1_1_graphics_path.html#a6347416ab7839e9da6bb6a3bbcce8f33", null ],
     [ "GetTangentAtRelative", "class_vect_sharp_1_1_graphics_path.html#a30491590f93bc7707e3f965621d03337", null ],
     [ "Linearise", "class_vect_sharp_1_1_graphics_path.html#a1c356121020c459a88a737e753122661", null ],
@@ -29,6 +29,6 @@ var class_vect_sharp_1_1_graphics_path =
     [ "MoveTo", "class_vect_sharp_1_1_graphics_path.html#a749970086b591276a0739ca92d1948b7", null ],
     [ "MoveTo", "class_vect_sharp_1_1_graphics_path.html#a6de53d6feda0965d3951507915607b80", null ],
     [ "Transform", "class_vect_sharp_1_1_graphics_path.html#af4d2af10a6114152ef417091a5a2cfe7", null ],
-    [ "Triangulate", "class_vect_sharp_1_1_graphics_path.html#ae6031e2cf0f7b3d45080c8e245fde3ed", null ],
+    [ "Triangulate", "class_vect_sharp_1_1_graphics_path.html#a7c7b34d888318669f458c72027b06559", null ],
     [ "Segments", "class_vect_sharp_1_1_graphics_path.html#aabd97b02c49fc2de576d76710af8fedc", null ]
 ];

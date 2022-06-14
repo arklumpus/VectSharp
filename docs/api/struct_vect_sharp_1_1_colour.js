@@ -19,21 +19,15 @@ var struct_vect_sharp_1_1_colour =
     [ "operator!=", "struct_vect_sharp_1_1_colour.html#a0e7aca2b6d5ca6a18ec9090b2ea54e63", null ],
     [ "operator==", "struct_vect_sharp_1_1_colour.html#ab7f6945a159dbb984e9fb1148c6db532", null ],
     [ "ToCSSString", "struct_vect_sharp_1_1_colour.html#a2ac682d76a238254e3d750254820a9af", null ],
-    [ "ToHSL", "struct_vect_sharp_1_1_colour.html#aee3a20f7e437b6e8e5acc65f8cc04dd8", null ],
-    [ "ToLab", "struct_vect_sharp_1_1_colour.html#a4764d6a4992651f7e718ba61eda93d01", null ],
-    [ "ToXYZ", "struct_vect_sharp_1_1_colour.html#a023d9996aac7d87cf6d88ad7ab6ffdba", null ],
     [ "WithAlpha", "struct_vect_sharp_1_1_colour.html#ad2de8feb0735ee2b49cb79604f3c1e98", null ],
     [ "WithAlpha", "struct_vect_sharp_1_1_colour.html#a101beca37dee249c59d615aac6943c89", null ],
     [ "WithAlpha", "struct_vect_sharp_1_1_colour.html#aa13c5ba1a5131ecaf5cae5c4504b728f", null ],
     [ "WithAlpha", "struct_vect_sharp_1_1_colour.html#afccab5755d0a369205b1af623b088495", null ],
     [ "A", "struct_vect_sharp_1_1_colour.html#a782d99b814c42de20e4ab90422752788", null ],
-    [ "a", "struct_vect_sharp_1_1_colour.html#a9f001c4dc10e6dc58d9517e44f04aa7e", null ],
     [ "B", "struct_vect_sharp_1_1_colour.html#af8fa726997f5d224f447571818fd9054", null ],
     [ "G", "struct_vect_sharp_1_1_colour.html#ad3312c38e132d1ed0eaf1177dcfb29af", null ],
     [ "H", "struct_vect_sharp_1_1_colour.html#a68497c53ff0fead819d2c166f186866e", null ],
     [ "L", "struct_vect_sharp_1_1_colour.html#a082c62de97d68e4e9c39c174b1a8b115", null ],
     [ "R", "struct_vect_sharp_1_1_colour.html#a4477a64d804a1624ec1fa27773be1885", null ],
-    [ "S", "struct_vect_sharp_1_1_colour.html#aeaf4e38fa77a8b316cccea23c2bb9e0f", null ],
-    [ "X", "struct_vect_sharp_1_1_colour.html#a5ed47990a818398b78ad058114fb6ee3", null ],
-    [ "Y", "struct_vect_sharp_1_1_colour.html#ae7af0ce54d9c8ef45378f297e715e23c", null ]
+    [ "X", "struct_vect_sharp_1_1_colour.html#a5ed47990a818398b78ad058114fb6ee3", null ]
 ];

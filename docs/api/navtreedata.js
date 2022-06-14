@@ -38,8 +38,8 @@ var NAVTREE =
       [ "Note about VectSharp.MuPDFUtils and .NET Framework", "index.html#autotoc_md9", null ]
     ] ],
     [ "Packages", "namespaces.html", [
-      [ "Packages", "namespaces.html", "namespaces_dup" ],
-      [ "Package Functions", "namespacemembers.html", [
+      [ "Package List", "namespaces.html", "namespaces_dup" ],
+      [ "Package Members", "namespacemembers.html", [
         [ "All", "namespacemembers.html", null ],
         [ "Enumerations", "namespacemembers_enum.html", null ]
       ] ]
@@ -66,11 +66,15 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_avalonia_context_8cs_source.html",
-"class_vect_sharp_1_1_colours.html#a67c56e13a176c1bab3acca2af607971b",
-"class_vect_sharp_1_1_font_library.html#a230216ba67571ee0d48e346a8e3ae69f",
-"class_vect_sharp_1_1_page.html#ad4758fd1d5dac8e8f3b3402b92afe368",
-"dir_664d029dbe81cf7a6e60c51e20570786.html",
-"struct_vect_sharp_1_1_line_dash.html#ae7f1ec43760f311d6ab9379309e719b6"
+"class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#ab107c394c719c319995ef2c901914cd3",
+"class_vect_sharp_1_1_colours.html#aa88049a8dbbb943d31c30640008bd6ac",
+"class_vect_sharp_1_1_filters_1_1_convolution_filter.html#a4f2be240a6de3ec430e6b47cb22c3a31",
+"class_vect_sharp_1_1_graphics.html#a2d94c1dbd115c0642c514420b75dd260",
+"class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a6dc6656bdcacd61de9fb47070300d36a",
+"class_vect_sharp_1_1_raster_image.html#af83687d608eeb00d2f121bf04321f317",
+"class_vect_sharp_1_1_three_d_1_1_phong_material.html#af4fe3212a8500073ed4a1fa7b0e890f7",
+"index.html",
+"struct_vect_sharp_1_1_colour.html#ad3312c38e132d1ed0eaf1177dcfb29af"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

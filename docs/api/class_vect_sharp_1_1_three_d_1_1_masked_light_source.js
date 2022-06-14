@@ -11,6 +11,5 @@ var class_vect_sharp_1_1_three_d_1_1_masked_light_source =
     [ "DistanceAttenuationExponent", "class_vect_sharp_1_1_three_d_1_1_masked_light_source.html#a4a00095fb8bf52ef53c1ff49b018b408", null ],
     [ "Intensity", "class_vect_sharp_1_1_three_d_1_1_masked_light_source.html#a5c39aabb3788738f50974651f08504ae", null ],
     [ "Origin", "class_vect_sharp_1_1_three_d_1_1_masked_light_source.html#a7d691ed7328aeec4de160a180582760f", null ],
-    [ "Position", "class_vect_sharp_1_1_three_d_1_1_masked_light_source.html#aec1e3d72451a22404b5c9477af9764b4", null ],
-    [ "TriangulatedMask", "class_vect_sharp_1_1_three_d_1_1_masked_light_source.html#a046bf73920374cfff2041229cfd5d871", null ]
+    [ "Position", "class_vect_sharp_1_1_three_d_1_1_masked_light_source.html#aec1e3d72451a22404b5c9477af9764b4", null ]
 ];

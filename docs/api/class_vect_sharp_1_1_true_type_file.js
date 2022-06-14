@@ -13,7 +13,7 @@ var class_vect_sharp_1_1_true_type_file =
     [ "Get1000EmGlyphWidth", "class_vect_sharp_1_1_true_type_file.html#ada8a81ebe29794884fd957163fbd99e8", null ],
     [ "Get1000EmKerning", "class_vect_sharp_1_1_true_type_file.html#a31fea5eeabcaa93b2637eaba8ed69c27", null ],
     [ "Get1000EmKerning", "class_vect_sharp_1_1_true_type_file.html#a533bb576f83c40d4a148e7357b34f89c", null ],
-    [ "Get1000EmUnderlineIntersections", "class_vect_sharp_1_1_true_type_file.html#a516d107a5b03f7d26306a2baeca6467a", null ],
+    [ "Get1000EmUnderlineIntersections", "class_vect_sharp_1_1_true_type_file.html#af6f502beab49ecafcd5a674c91dbf6e8", null ],
     [ "Get1000EmUnderlinePosition", "class_vect_sharp_1_1_true_type_file.html#a1388de7ef1645e051578d813649bc69b", null ],
     [ "Get1000EmUnderlineThickness", "class_vect_sharp_1_1_true_type_file.html#a5b5bb2fb701f97516051c590d799e969", null ],
     [ "Get1000EmWinAscent", "class_vect_sharp_1_1_true_type_file.html#ad54089217ce9110b5efb0b1668238761", null ],
@@ -26,8 +26,8 @@ var class_vect_sharp_1_1_true_type_file =
     [ "GetFontName", "class_vect_sharp_1_1_true_type_file.html#a282ffb486dc20d30f55f64941ab32720", null ],
     [ "GetFullFontFamilyName", "class_vect_sharp_1_1_true_type_file.html#ae7115a200c1dd75ec210d55b361fb776", null ],
     [ "GetGlyphIndex", "class_vect_sharp_1_1_true_type_file.html#a9c43d885920fab37a9314aa390453bc3", null ],
-    [ "GetGlyphPath", "class_vect_sharp_1_1_true_type_file.html#ac88599818d6e845a6a212e2737422576", null ],
-    [ "GetGlyphPath", "class_vect_sharp_1_1_true_type_file.html#af3cd75d018082a8265b07cac951ef585", null ],
+    [ "GetGlyphPath", "class_vect_sharp_1_1_true_type_file.html#a2d71c3bc53966321e3888fd7a9b21751", null ],
+    [ "GetGlyphPath", "class_vect_sharp_1_1_true_type_file.html#a221adc71cec5fc5f0949a3e1488d5627", null ],
     [ "GetItalicAngle", "class_vect_sharp_1_1_true_type_file.html#a7bfa118192a7224fce438753c6667994", null ],
     [ "GetLastCharIndex", "class_vect_sharp_1_1_true_type_file.html#acc93935c524ad9ec77d8ca0b1d44055b", null ],
     [ "IsBold", "class_vect_sharp_1_1_true_type_file.html#a7e8376d45118eef1099fe0ad33d0e21b", null ],
@@ -37,12 +37,5 @@ var class_vect_sharp_1_1_true_type_file =
     [ "IsScript", "class_vect_sharp_1_1_true_type_file.html#a7fde1c54dbe0648291951d248aebee18", null ],
     [ "IsSerif", "class_vect_sharp_1_1_true_type_file.html#aee6f8fdf0984954c8ad83a2d9dbd91cc", null ],
     [ "SubsetFont", "class_vect_sharp_1_1_true_type_file.html#aa41ed2707565995122286e3ada899244", null ],
-    [ "EntrySelector", "class_vect_sharp_1_1_true_type_file.html#ae9a3e5d34a3a9f510c0ea9d32da13f87", null ],
-    [ "FontStream", "class_vect_sharp_1_1_true_type_file.html#a8df9028202564d2a8ca841102e558a1f", null ],
-    [ "NumTables", "class_vect_sharp_1_1_true_type_file.html#a48b7414ab08ca5fbfc323a1bbe68bc5e", null ],
-    [ "RangeShift", "class_vect_sharp_1_1_true_type_file.html#ac1a274b05240ab72038715f00c167568", null ],
-    [ "ScalarType", "class_vect_sharp_1_1_true_type_file.html#ae5e06d44243f3952b4526fb0e2ff88c0", null ],
-    [ "SearchRange", "class_vect_sharp_1_1_true_type_file.html#aaed5338439be75d3ed0389e73c94f99d", null ],
-    [ "TableOffsets", "class_vect_sharp_1_1_true_type_file.html#a87736fe557daabfe17699f179b3e6e28", null ],
-    [ "Tables", "class_vect_sharp_1_1_true_type_file.html#a9c49e903bb4ae1f77259b6dd1cf0e814", null ]
+    [ "FontStream", "class_vect_sharp_1_1_true_type_file.html#a8df9028202564d2a8ca841102e558a1f", null ]
 ];

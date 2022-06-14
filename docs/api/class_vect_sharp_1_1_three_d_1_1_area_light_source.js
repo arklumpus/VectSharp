@@ -12,7 +12,5 @@ var class_vect_sharp_1_1_three_d_1_1_area_light_source =
     [ "PenumbraRadius", "class_vect_sharp_1_1_three_d_1_1_area_light_source.html#ac6733ad7ade0c156002bfb567e69749b", null ],
     [ "Radius", "class_vect_sharp_1_1_three_d_1_1_area_light_source.html#a31f4ee050eac024c8a9c46ac9356500e", null ],
     [ "ShadowSamplingPointCount", "class_vect_sharp_1_1_three_d_1_1_area_light_source.html#a331229e5fe64af0e5efbe38d9a2216da", null ],
-    [ "ShadowSamplingPoints", "class_vect_sharp_1_1_three_d_1_1_area_light_source.html#ad60e37a6d2c6d4ed1a73ac76e91e5372", null ],
-    [ "SourceDistance", "class_vect_sharp_1_1_three_d_1_1_area_light_source.html#a21e9c219b36d363fbea41c4b753a99d5", null ],
-    [ "VirtualSource", "class_vect_sharp_1_1_three_d_1_1_area_light_source.html#a0b8e3b14721d4deb7449c407b2628f82", null ]
+    [ "SourceDistance", "class_vect_sharp_1_1_three_d_1_1_area_light_source.html#a21e9c219b36d363fbea41c4b753a99d5", null ]
 ];

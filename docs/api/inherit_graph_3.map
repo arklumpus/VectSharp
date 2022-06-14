@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$class_vect_sharp_1_1_canvas_1_1_render_action.html" title="Represents a light&#45;weight rendering action." alt="" coords="5,5,216,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,108,32"/>
+<area shape="rect" id="node2" href="$class_vect_sharp_1_1_gradient_stops.html" title="Represents a read&#45;only list of GradientStops." alt="" coords="156,5,327,32"/>
 </map>

@@ -9,7 +9,7 @@ var hierarchy =
       ] ],
       [ "VectSharp.SolidColourBrush", "class_vect_sharp_1_1_solid_colour_brush.html", null ]
     ] ],
-    [ "Canvas", null, [
+    [ "Avalonia.Controls.Canvas", null, [
       [ "VectSharp.Canvas.SKMultiLayerRenderCanvas", "class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html", null ]
     ] ],
     [ "VectSharp.TrueTypeFile.ClassDefinitionTable.ClassRangeRecord", "struct_vect_sharp_1_1_true_type_file_1_1_class_definition_table_1_1_class_range_record.html", null ],
@@ -85,8 +85,8 @@ var hierarchy =
       [ "VectSharp.ThreeD.SpotlightLightSource", "class_vect_sharp_1_1_three_d_1_1_spotlight_light_source.html", null ]
     ] ],
     [ "VectSharp.Raster.ImageSharp.ImageSharpContextInterpreter", "class_vect_sharp_1_1_raster_1_1_image_sharp_1_1_image_sharp_context_interpreter.html", null ],
-    [ "VectSharp.MuPDFUtils.ImageURIParser", "class_vect_sharp_1_1_mu_p_d_f_utils_1_1_image_u_r_i_parser.html", null ],
     [ "VectSharp.ImageSharpUtils.ImageURIParser", "class_vect_sharp_1_1_image_sharp_utils_1_1_image_u_r_i_parser.html", null ],
+    [ "VectSharp.MuPDFUtils.ImageURIParser", "class_vect_sharp_1_1_mu_p_d_f_utils_1_1_image_u_r_i_parser.html", null ],
     [ "VectSharp.ThreeD.IMaterial", "interface_vect_sharp_1_1_three_d_1_1_i_material.html", [
       [ "VectSharp.ThreeD.ColourMaterial", "class_vect_sharp_1_1_three_d_1_1_colour_material.html", null ],
       [ "VectSharp.ThreeD.PhongMaterial", "class_vect_sharp_1_1_three_d_1_1_phong_material.html", null ]
