@@ -34,6 +34,9 @@ Furthermore:
 ## Installing VectSharp
 To include VectSharp in your project, you will need one of the output layer NuGet packages: [VectSharp.PDF](https://www.nuget.org/packages/VectSharp.PDF/), [VectSharp.Canvas](https://www.nuget.org/packages/VectSharp.Canvas/), [VectSharp.Raster](https://www.nuget.org/packages/VectSharp.Raster/), [VectSharp.Raster.ImageSharp](https://www.nuget.org/packages/VectSharp.Raster.ImageSharp/), or [VectSharp.SVG](https://www.nuget.org/packages/VectSharp.SVG/). You will need [VectSharp.ThreeD](https://www.nuget.org/packages/VectSharp.ThreeD/) to work with 3D graphics. You may want the [VectSharp.MuPDFUtils](https://www.nuget.org/packages/VectSharp.MuPDFUtils/) package if you wish to manipulate raster images, and the [VectSharp.Fonts.Nimbus](https://www.nuget.org/packages/VectSharp.Fonts.Nimbus/) if you want to restore the GPL-licensed fonts used in previous versions of the library.
 
+Note that to install the latest version of VectSharp.Raster.ImageSharp you will need to add the [ImageSharp MyGet](https://www.myget.org/feed/sixlabors/package/nuget/SixLabors.ImageSharp) source to your package sources, so that you can obtain the latest nightly build (there has been an API change in ImageSharp between the version that is published on NuGet and the latest version).
+
+
 ## Usage
 You can find detailed documentation for the VectSharp library, **including interactive examples**, at the [documentation website](https://arklumpus.github.io/VectSharp). A comprehensive API reference is also available, both as a [website](https://arklumpus.github.io/VectSharp/api) and as a [PDF manual](https://arklumpus.github.io/VectSharp/api/VectSharp.pdf).
 
