@@ -1362,6 +1362,9 @@ namespace VectSharp
             Rectangle tbr = Rectangle.NaN;
             bool initialised = false;
 
+            Stack<Rectangle> clippingPaths = new Stack<Rectangle>();
+            Rectangle currClippingPath = Rectangle.NaN;
+
             Stack<double[,]> transformMatrix = new Stack<double[,]>();
             double[,] currMatrix = new double[3, 3] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
 
@@ -1380,16 +1383,28 @@ namespace VectSharp
 
                     bounds = Point.Bounds(pt1, pt2, pt3, pt4);
 
-                    if (!double.IsNaN(bounds.Location.X) && !double.IsNaN(bounds.Location.Y) && !double.IsNaN(bounds.Size.Width) && !double.IsNaN(bounds.Size.Height))
+                    if (act is PathAction pth && pth.IsClipping)
                     {
-                        if (!initialised)
+                        currClippingPath = bounds;
+                    }
+                    else
+                    {
+                        if (!currClippingPath.IsNaN())
                         {
-                            tbr = bounds;
-                            initialised = true;
+                            bounds = Rectangle.Intersection(bounds, currClippingPath);
                         }
-                        else
+
+                        if (!double.IsNaN(bounds.Location.X) && !double.IsNaN(bounds.Location.Y) && !double.IsNaN(bounds.Size.Width) && !double.IsNaN(bounds.Size.Height))
                         {
-                            tbr = Rectangle.Union(tbr, bounds);
+                            if (!initialised)
+                            {
+                                tbr = bounds;
+                                initialised = true;
+                            }
+                            else
+                            {
+                                tbr = Rectangle.Union(tbr, bounds);
+                            }
                         }
                     }
                 }
@@ -1419,10 +1434,12 @@ namespace VectSharp
                     if (((StateAction)this.Actions[i]).StateActionType == StateAction.StateActionTypes.Save)
                     {
                         transformMatrix.Push(currMatrix);
+                        clippingPaths.Push(currClippingPath);
                     }
                     else
                     {
                         currMatrix = transformMatrix.Pop();
+                        currClippingPath = clippingPaths.Pop();
                     }
                 }
             }
