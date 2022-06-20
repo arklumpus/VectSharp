@@ -1943,7 +1943,7 @@ namespace VectSharp.PDF
                         using (StreamWriter ctW = new StreamWriter(contentStream, Encoding.ASCII, 1024, true))
                         {
                             ctW.Write("q\n");
-                            ctW.Write(bbox.Location.X.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + bbox.Location.Y.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + (bbox.Location.X + bbox.Size.Width).ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + (bbox.Location.Y + bbox.Size.Height).ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " re\n");
+                            ctW.Write(bbox.Location.X.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + bbox.Location.Y.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + bbox.Size.Width.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + bbox.Size.Height.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " re\n");
                             ctW.Write("/Pattern cs\n");
                             ctW.Write("/pa" + gradientAlphaIndices.Count + " scn\n");
                             ctW.Write("f\n");
