@@ -177,6 +177,15 @@ namespace VectSharp
         public static readonly Rectangle NaN = new Rectangle(double.NaN, double.NaN, double.NaN, double.NaN);
 
         /// <summary>
+        /// Checks whether the rectangle is equivalent to <see cref="Rectangle.NaN"/>.
+        /// </summary>
+        /// <returns><see langword="true"/> if all the dimensions of the rectangle are <see cref="double.NaN"/>, <see langword="false"/> otherwise.</returns>
+        public bool IsNaN()
+        {
+            return double.IsNaN(this.Location.X) && double.IsNaN(this.Location.Y) && double.IsNaN(this.Size.Width) && double.IsNaN(this.Size.Height);
+        }
+
+        /// <summary>
         /// The top-left corner of the rectangle.
         /// </summary>
         public Point Location;
@@ -252,6 +261,31 @@ namespace VectSharp
             maxY = Math.Max(maxY, rectangle2.Location.Y + rectangle2.Size.Height);
 
             return new Rectangle(minX, minY, maxX - minX, maxY - minY);
+        }
+
+        /// <summary>
+        /// Computes the intersection of two <see cref="Rectangle"/>s.
+        /// </summary>
+        /// <param name="rectangle1">The first <see cref="Rectangle"/>.</param>
+        /// <param name="rectangle2">The second <see cref="Rectangle"/>.</param>
+        /// <returns>The rectangle corresponding to the intersection of <paramref name="rectangle1"/> and <paramref name="rectangle2"/>, or <see cref="Rectangle.NaN"/> if the intersection is empty.</returns>
+        public static Rectangle Intersection(Rectangle rectangle1, Rectangle rectangle2)
+        {
+            double x0 = Math.Max(rectangle1.Location.X, rectangle2.Location.X);
+            double x1 = Math.Min(rectangle1.Location.X + rectangle1.Size.Width, rectangle2.Location.X + rectangle2.Size.Width);
+
+            double y0 = Math.Max(rectangle1.Location.Y, rectangle2.Location.Y);
+            double y1 = Math.Min(rectangle1.Location.Y + rectangle1.Size.Height, rectangle2.Location.Y + rectangle2.Size.Height);
+
+            if (x1 >= x0 && y1 >= y0)
+            {
+                return new Rectangle(x0, y0, x1 - x0, y1 - y0);
+            }
+            else
+            {
+                return Rectangle.NaN;
+            }
+            
         }
 
         /// <summary>
