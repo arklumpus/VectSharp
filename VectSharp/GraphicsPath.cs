@@ -289,6 +289,52 @@ namespace VectSharp
         }
 
         /// <summary>
+        /// Trace a quadratic Bezier curve from the current point to a destination point, with a single control point.
+        /// The current point is updated to the end point of the Bezier curve.
+        /// </summary>
+        /// <param name="control">The control point.</param>
+        /// <param name="endPoint">The destination point.</param>
+        /// <returns>The <see cref="GraphicsPath"/>, to allow for chained calls.</returns>
+        public GraphicsPath QuadraticBezierTo(Point control, Point endPoint)
+        {
+            Point currentPoint = control;
+
+            if (Segments.Count > 0)
+            {
+                for (int i = Segments.Count - 1; i >= 0; i--)
+                {
+                    if (Segments[i].Type != SegmentType.Close)
+                    {
+                        currentPoint = Segments[i].Point;
+                        break;
+                    }
+                }
+            }
+
+            Point control1 = new Point((currentPoint.X + 2 * control.X) / 3, (currentPoint.Y + 2 * control.Y) / 3);
+            Point control2 = new Point((endPoint.X + 2 * control.X) / 3, (endPoint.Y + 2 * control.Y) / 3);
+
+            CubicBezierTo(control1, control2, endPoint);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Trace a quadratic Bezier curve from the current point to a destination point, with a single control point.
+        /// The current point is updated to the end point of the Bezier curve.
+        /// </summary>
+        /// <param name="controlX">The horizontal coordinate of the control point.</param>
+        /// <param name="controlY">The vertical coordinate of the control point.</param>
+        /// <param name="endPointX">The horizontal coordinate of the destination point.</param>
+        /// <param name="endPointY">The vertical coordinate of the destination point.</param>
+        /// <returns>The <see cref="GraphicsPath"/>, to allow for chained calls.</returns>
+        public GraphicsPath QuadraticBezierTo(double controlX, double controlY, double endPointX, double endPointY)
+        {
+            QuadraticBezierTo(new Point(controlX, controlY), new Point(endPointX, endPointY));
+            return this;
+        }
+
+        /// <summary>
         /// Trace a segment from the current point to the start point of the figure and flag the figure as closed.
         /// </summary>
         /// <returns>The <see cref="GraphicsPath"/>, to allow for chained calls.</returns>
