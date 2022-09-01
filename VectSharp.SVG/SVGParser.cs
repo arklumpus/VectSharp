@@ -84,6 +84,19 @@ namespace VectSharp.SVG
                             throw new InvalidDataException("Unknown data stream type!");
                     }
 
+                    try
+                    {
+                        StringReader sr = new StringReader(data);
+                        string firstLine = sr.ReadLine();
+                        sr.Dispose();
+
+                        if (firstLine.StartsWith("<?xml") && firstLine.EndsWith("?>"))
+                        {
+                            data = data.Substring(firstLine.Length + 1);
+                        }
+                    }
+                    catch { }
+
                     return FromString(data);
                 }
                 else
