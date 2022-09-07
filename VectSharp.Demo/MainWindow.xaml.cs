@@ -24,9 +24,9 @@ using System.Collections.Generic;
 using System.Linq;
 using VectSharp;
 using VectSharp.Canvas;
-using VectSharp.MuPDFUtils;
 using VectSharp.PDF;
 using VectSharp.Raster;
+using VectSharp.Raster.ImageSharp;
 using VectSharp.SVG;
 using VectSharp.Filters;
 
@@ -354,8 +354,10 @@ namespace VectSharp.Demo
             rasterPage.SaveAsPNG(rasterStream, 2);
 
             //Load the raster image from the stream (we load it twice: once with interpolation enabled and once with interpolation disabled).
-            RasterImage nonInterpolatedRasterImage = new RasterImageStream(rasterStream, MuPDFCore.InputFileTypes.PNG, interpolate: false);
-            RasterImage interpolatedRasterImage = new RasterImageStream(rasterStream, MuPDFCore.InputFileTypes.PNG, interpolate: true);
+            //We are also using two different packages: VectSharp.MuPDFUtils and VectSharp.ImageSharpUtils. They provide the same classes, but they
+            //use different libraries internally. VectSharp.MuPDFUtils has a native dependency, while VectSharp.ImageSharp utils only uses managed code.
+            RasterImage nonInterpolatedRasterImage = new VectSharp.MuPDFUtils.RasterImageStream(rasterStream, MuPDFCore.InputFileTypes.PNG, interpolate: false);
+            RasterImage interpolatedRasterImage = new VectSharp.ImageSharpUtils.RasterImageStream(rasterStream, interpolate: true);
 
             //Create and set clipping path
             GraphicsPath clippingPathLeft = new GraphicsPath().MoveTo(1050, 250).LineTo(1275, 250).LineTo(1325, 300).LineTo(1275, 350).LineTo(1325, 400).LineTo(1275, 450).LineTo(1325, 500).LineTo(1275, 550).LineTo(1050, 550).Close();
@@ -432,8 +434,11 @@ namespace VectSharp.Demo
                  }) },
              };
 
-            //Save the image as a PNG file
+            //Save the image as a PNG file using VectSharp.Raster
             doc.Pages.Last().SaveAsPNG(@"Sample.png");
+
+            //Save the image as a JPEG file using VectSharp.Raster.ImageSharp - note that the alpha channel will be lost
+            doc.Pages.Last().SaveAsImage(@"Sample.jpg");
 
             //Save the image as an SVG file
             doc.Pages.Last().SaveAsSVG("Sample.svg");
