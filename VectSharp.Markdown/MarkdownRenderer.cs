@@ -15,6 +15,7 @@
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
+using VectSharp.Markdown.CSharpMath.VectSharp;
 using Markdig;
 using Markdig.Extensions;
 using Markdig.Extensions.Tables;
@@ -24,6 +25,7 @@ using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -38,6 +40,11 @@ namespace VectSharp.Markdown
         /// The base font size to use when rendering the document. This will be the size of regular elements, and the size of header elements will be expressed as a multiple of this.
         /// </summary>
         public double BaseFontSize { get; set; } = 9.71424;
+
+        /// <summary>
+        /// Scaling factor for the font size to use when rendering math.
+        /// </summary>
+        public double MathFontScalingFactor { get; set; } = 0.85;
 
         /// <summary>
         /// The font size for elements at each header level. The values in this array will be multiplied by the <see cref="BaseFontSize"/>.
@@ -399,6 +406,8 @@ namespace VectSharp.Markdown
             return (MarkdownRenderer)this.MemberwiseClone();
         }
 
+        private MathPainter MathPainter = new MathPainter() { DisplayErrorInline = false };
+
         /// <summary>
         /// Parses the supplied <paramref name="markdownSource"/> using all the supported extensions and renders the resulting document. Page breaks are disabled, and the document is rendered as a single page with the specified <paramref name="width"/>. The page will be cropped at the appropriate height to contain the entire document.
         /// </summary>
@@ -635,9 +644,20 @@ namespace VectSharp.Markdown
                             mathBuilder.Append("\n");
                         }
 
-                        string imageUri = "https://render.githubusercontent.com/render/math?math=" + System.Web.HttpUtility.UrlEncode(mathBuilder.ToString());
+                        byte[] svgData;
 
-                        RenderHTMLBlock("<img src=\"" + imageUri + "\">", false, ref context, ref graphics, newPageAction, true, true);
+                        using (MemoryStream ms = new MemoryStream())
+                        {
+                            MathPainter.LineStyle = global::CSharpMath.Atom.LineStyle.Display;
+                            MathPainter.FontSize = (float)(context.Font.FontSize * MathFontScalingFactor / ImageMultiplier);
+                            MathPainter.LaTeX = mathBuilder.ToString();
+                            Page pag = MathPainter.DrawToPage();
+                            VectSharp.SVG.SVGContextInterpreter.SaveAsSVG(pag, ms);
+                            svgData = ms.ToArray();
+                        }
+
+                        string imageUri = "<img align=\"center\" src=\"data:image/svg+xml;base64," + Convert.ToBase64String(svgData) + "\">";
+                        RenderHTMLBlock(imageUri, false, ref context, ref graphics, newPageAction, true, true);
                     }
                     else if (leaf is FencedCodeBlock fenced)
                     {
@@ -1060,9 +1080,29 @@ namespace VectSharp.Markdown
                 }
                 else if (inline is Markdig.Extensions.Mathematics.MathInline math)
                 {
-                    string imageUri = "https://render.githubusercontent.com/render/math?math=" + System.Web.HttpUtility.UrlEncode(math.Content.ToString());
+                    byte[] svgData;
 
-                    RenderHTMLBlock("<img src=\"" + imageUri + "\">", true, ref context, ref graphics, newPageAction, true, true);
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        if (math.DelimiterCount == 1)
+                        {
+                            MathPainter.LineStyle = global::CSharpMath.Atom.LineStyle.Text;
+                        }
+                        else
+                        {
+                            MathPainter.LineStyle = global::CSharpMath.Atom.LineStyle.Display;
+                        }
+
+                        MathPainter.FontSize = (float)(context.Font.FontSize * MathFontScalingFactor / ImageMultiplier);
+
+                        MathPainter.LaTeX = math.Content.ToString();
+                        Page pag = MathPainter.DrawToPage();
+                        VectSharp.SVG.SVGContextInterpreter.SaveAsSVG(pag, ms);
+                        svgData = ms.ToArray();
+                    }
+
+                    string imageUri = "<img src=\"data:image/svg+xml;base64," + Convert.ToBase64String(svgData) + "\">";
+                    RenderHTMLBlock(imageUri, true, ref context, ref graphics, newPageAction, true, true);
                 }
                 else if (inline is Markdig.Extensions.SmartyPants.SmartyPant smartyPant)
                 {
