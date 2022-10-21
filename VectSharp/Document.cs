@@ -85,7 +85,8 @@ namespace VectSharp
         /// </summary>
         /// <param name="topLeft">The top left corner of the area to include in the page.</param>
         /// <param name="size">The size of the area to include in the page.</param>
-        public void Crop(Point topLeft, Size size)
+        /// <param name="tag">A tag to identify the transform.</param>
+        public void Crop(Point topLeft, Size size, string tag = null)
         {
             if (this.Graphics.Actions[0] is TransformAction transf)
             {
@@ -93,11 +94,11 @@ namespace VectSharp
 
                 double[,] newMatrix = Graphics.Multiply(Graphics.TranslationMatrix(-topLeft.X, -topLeft.Y), currMatrix);
 
-                this.Graphics.Actions[0] = new TransformAction(newMatrix);
+                this.Graphics.Actions[0] = new TransformAction(newMatrix, tag);
             }
             else
             {
-                this.Graphics.Actions.Insert(0, new TransformAction(new Point(-topLeft.X, -topLeft.Y)));
+                this.Graphics.Actions.Insert(0, new TransformAction(new Point(-topLeft.X, -topLeft.Y), tag));
             }
             
             this.Width = size.Width;
@@ -107,7 +108,8 @@ namespace VectSharp
         /// <summary>
         /// Translate and resize the <see cref="Page"/> so that it displays the rectangle corresponding to the bounding box of its contents.
         /// </summary>
-        public void Crop()
+        /// <param name="tag">A tag to identify the transform.</param>
+        public void Crop(string tag = null)
         {
             Rectangle bounds = this.Graphics.GetBounds();
 
@@ -117,11 +119,11 @@ namespace VectSharp
 
                 double[,] newMatrix = Graphics.Multiply(Graphics.TranslationMatrix(-bounds.Location.X, -bounds.Location.Y), currMatrix);
 
-                this.Graphics.Actions[0] = new TransformAction(newMatrix);
+                this.Graphics.Actions[0] = new TransformAction(newMatrix, tag);
             }
             else
             {
-                this.Graphics.Actions.Insert(0, new TransformAction(new Point(-bounds.Location.X, -bounds.Location.Y)));
+                this.Graphics.Actions.Insert(0, new TransformAction(new Point(-bounds.Location.X, -bounds.Location.Y), tag));
             }
 
             this.Width = bounds.Size.Width;
