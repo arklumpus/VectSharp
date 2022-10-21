@@ -329,9 +329,10 @@ namespace VectSharp
         /// Rotate the coordinate system around the origin.
         /// </summary>
         /// <param name="angle">The angle (in radians) by which to rotate the coordinate system.</param>
-        public void Rotate(double angle)
+        /// <param name="tag">A tag to identify the transform.</param>
+        public void Rotate(double angle, string tag = null)
         {
-            Actions.Add(new TransformAction(angle));
+            Actions.Add(new TransformAction(angle, tag));
         }
 
         /// <summary>
@@ -339,11 +340,12 @@ namespace VectSharp
         /// </summary>
         /// <param name="angle">The angle (in radians) by which to rotate the coordinate system.</param>
         /// <param name="pivot">The pivot around which the coordinate system is to be rotated.</param>
-        public void RotateAt(double angle, Point pivot)
+        /// <param name="tag">A tag to identify the transform.</param>
+        public void RotateAt(double angle, Point pivot, string tag = null)
         {
-            Actions.Add(new TransformAction(pivot));
-            Actions.Add(new TransformAction(angle));
-            Actions.Add(new TransformAction(new Point(-pivot.X, -pivot.Y)));
+            Actions.Add(new TransformAction(pivot, tag));
+            Actions.Add(new TransformAction(angle, tag));
+            Actions.Add(new TransformAction(new Point(-pivot.X, -pivot.Y), tag));
         }
 
 
@@ -356,10 +358,11 @@ namespace VectSharp
         /// <param name="d">The second element of the second column.</param>
         /// <param name="e">The first element of the third column.</param>
         /// <param name="f">The second element of the third column.</param>
-        public void Transform(double a, double b, double c, double d, double e, double f)
+        /// <param name="tag">A tag to identify the transform.</param>
+        public void Transform(double a, double b, double c, double d, double e, double f, string tag = null)
         {
             double[,] matrix = new double[,] { { a, c, e }, { b, d, f }, { 0, 0, 1 } };
-            Actions.Add(new TransformAction(matrix));
+            Actions.Add(new TransformAction(matrix, tag));
         }
 
         /// <summary>
@@ -367,18 +370,20 @@ namespace VectSharp
         /// </summary>
         /// <param name="x">The horizontal translation.</param>
         /// <param name="y">The vertical translation.</param>
-        public void Translate(double x, double y)
+        /// <param name="tag">A tag to identify the transform.</param>
+        public void Translate(double x, double y, string tag = null)
         {
-            Actions.Add(new TransformAction(new Point(x, y)));
+            Actions.Add(new TransformAction(new Point(x, y), tag));
         }
 
         /// <summary>
         /// Translate the coordinate system origin.
         /// </summary>
         /// <param name="delta">The new origin point.</param>
-        public void Translate(Point delta)
+        /// <param name="tag">A tag to identify the transform.</param>
+        public void Translate(Point delta, string tag = null)
         {
-            Actions.Add(new TransformAction(delta));
+            Actions.Add(new TransformAction(delta, tag));
         }
 
         /// <summary>
@@ -386,9 +391,10 @@ namespace VectSharp
         /// </summary>
         /// <param name="scaleX">The horizontal scale.</param>
         /// <param name="scaleY">The vertical scale.</param>
-        public void Scale(double scaleX, double scaleY)
+        /// <param name="tag">A tag to identify the transform.</param>
+        public void Scale(double scaleX, double scaleY, string tag = null)
         {
-            Actions.Add(new TransformAction(new Size(scaleX, scaleY)));
+            Actions.Add(new TransformAction(new Size(scaleX, scaleY), tag));
         }
 
         /// <summary>
@@ -875,7 +881,7 @@ namespace VectSharp
         /// <param name="origin">The point at which to place the origin of <paramref name="graphics"/>.</param>
         /// <param name="graphics">The <see cref="Graphics"/> object to draw on the current <see cref="Graphics"/> object.</param>
         /// <param name="filter">An <see cref="IFilter"/> object, representing the filter to apply to the <paramref name="graphics"/> object.</param>
-        public void DrawGraphics(Point origin, Graphics graphics, IFilter filter)
+        public void DrawGraphics(Point origin, Graphics graphics, IFilter filter, string tag = null)
         {
             this.Save();
             this.Translate(origin);
@@ -884,7 +890,7 @@ namespace VectSharp
             clone.Actions.AddRange(graphics.Actions);
             clone.FixGraphicsStateStack();
 
-            this.Actions.Add(new FilteredGraphicsAction(clone, filter));
+            this.Actions.Add(new FilteredGraphicsAction(clone, filter) { Tag = tag });
 
             this.Restore();
         }
@@ -896,9 +902,9 @@ namespace VectSharp
         /// <param name="originY">The vertical coordinate at which to place the origin of <paramref name="graphics"/>.</param>
         /// <param name="graphics">The <see cref="Graphics"/> object to draw on the current <see cref="Graphics"/> object.</param>
         /// <param name="filter">An <see cref="IFilter"/> object, representing the filter to apply to the <paramref name="graphics"/> object.</param>
-        public void DrawGraphics(double originX, double originY, Graphics graphics, IFilter filter)
+        public void DrawGraphics(double originX, double originY, Graphics graphics, IFilter filter, string tag = null)
         {
-            this.DrawGraphics(new Point(originX, originY), graphics, filter);
+            this.DrawGraphics(new Point(originX, originY), graphics, filter, tag);
         }
 
 
