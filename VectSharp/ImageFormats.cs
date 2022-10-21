@@ -16,6 +16,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
@@ -23,9 +24,164 @@ using System.Threading;
 
 namespace VectSharp
 {
+    /// <summary>
+    /// Contains methods to create animated PNG image files.
+    /// </summary>
+    public static class AnimatedPNG
+    {
+        internal enum InterframeCompression
+        {
+            None, Previous, First
+        }
+
+        /// <summary>
+        /// Represents an individual frame of a PNG animation.
+        /// </summary>
+        public class CompressedFrame : IDisposable
+        {
+            internal MemoryStream compressedStream;
+            private bool disposedValue;
+
+            /// <summary>
+            /// The duration of the frame in milliseconds.
+            /// </summary>
+            public double Duration { get; }
+
+            internal InterframeCompression InterframeCompression { get; } = InterframeCompression.None;
+
+            /// <summary>
+            /// Creates a new <see cref="CompressedFrame"/> from raw pixel data in RGB or RGBA format.
+            /// </summary>
+            /// <param name="rawFrameData">A pointer to the raw pixel data for the frame.</param>
+            /// <param name="width">The width of the image in pixels.</param>
+            /// <param name="height">The height of the image in pixels.</param>
+            /// <param name="hasAlpha">If the image data is in RGBA format, set this to <see langword="true"/>; if it is in RGB format, set it to <see langword="false"/>.</param>
+            /// <param name="duration">The duration of the frame in milliseconds.</param>
+            public unsafe CompressedFrame(DisposableIntPtr rawFrameData, int width, int height, bool hasAlpha, double duration)
+            {
+                this.compressedStream = PNGEncoder.CompressAPNGFrame((byte*)rawFrameData.InternalPointer, width, height, hasAlpha, PNGEncoder.FilterModes.Adaptive, 1);
+                this.Duration = duration;
+                this.InterframeCompression = InterframeCompression.None;
+            }
+
+            /// <summary>
+            /// Creates a new <see cref="CompressedFrame"/> from raw pixel data in RGB or RGBA format, applying inter-frame compression based on another frame.
+            /// </summary>
+            /// <param name="rawFrameData">A pointer to the raw pixel data for the new frame.</param>
+            /// <param name="otherFrameData">A pointer to the raw pixel data for the frame to use as a reference. This can either be the first frame in the animation, or the frame immediately preceeding the current frame.</param>
+            /// <param name="isFirstFrame">If <paramref name="otherFrameData"/> is the raw pixel data for the first frame in the animation, set this to <see langword="true"/>; if it is the immediately preceeding frame, set this to <see langword="false"/>.</param>
+            /// <param name="width">The width of the image in pixels.</param>
+            /// <param name="height">The height of the image in pixels.</param>
+            /// <param name="hasAlpha">If the image data is in RGBA format, set this to <see langword="true"/>; if it is in RGB format, set it to <see langword="false"/>.</param>
+            /// <param name="duration">The duration of the frame in milliseconds.</param>
+            public unsafe CompressedFrame(DisposableIntPtr rawFrameData, DisposableIntPtr otherFrameData, bool isFirstFrame, int width, int height, bool hasAlpha, double duration)
+            {
+                int pixelSize = hasAlpha ? 4 : 3;
+
+                IntPtr frameDiff = Marshal.AllocHGlobal(width * height * 4);
+
+                byte* frameDiffData = (byte*)frameDiff;
+                byte* previousFrame = (byte*)otherFrameData.InternalPointer;
+                byte* currentFrame = (byte*)rawFrameData.InternalPointer;
+
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        int pixelIndex = (y * width + x) * pixelSize;
+
+                        if (previousFrame[pixelIndex] != currentFrame[pixelIndex] || previousFrame[pixelIndex + 1] != currentFrame[pixelIndex + 1] ||
+                            previousFrame[pixelIndex + 2] != currentFrame[pixelIndex + 2] || (hasAlpha && previousFrame[pixelIndex + 3] != currentFrame[pixelIndex + 3]))
+                        {
+                            frameDiffData[pixelIndex] = currentFrame[pixelIndex];
+                            frameDiffData[pixelIndex + 1] = currentFrame[pixelIndex + 1];
+                            frameDiffData[pixelIndex + 2] = currentFrame[pixelIndex + 2];
+
+                            if (hasAlpha)
+                            {
+                                frameDiffData[pixelIndex + 3] = currentFrame[pixelIndex + 3];
+                            }
+                            else
+                            {
+                                frameDiffData[pixelIndex + 3] = 255;
+                            }
+                        }
+                        else
+                        {
+                            frameDiffData[pixelIndex] = 0;
+                            frameDiffData[pixelIndex + 1] = 0;
+                            frameDiffData[pixelIndex + 2] = 0;
+                            frameDiffData[pixelIndex + 3] = 0;
+                        }
+                    }
+                }
+
+                this.compressedStream = PNGEncoder.CompressAPNGFrame((byte*)frameDiff, width, height, true, PNGEncoder.FilterModes.Adaptive, 1);
+                this.Duration = duration;
+
+                if (isFirstFrame)
+                {
+                    this.InterframeCompression = InterframeCompression.First;
+                }
+                else
+                {
+                    this.InterframeCompression = InterframeCompression.Previous;
+                }
+
+                Marshal.FreeHGlobal(frameDiff);
+            }
+
+            /// <inheritdoc/>
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!disposedValue)
+                {
+                    if (disposing)
+                    {
+                        this.compressedStream.Dispose();
+                    }
+
+                    disposedValue = true;
+                }
+            }
+
+            /// <inheritdoc/>
+            public void Dispose()
+            {
+                Dispose(disposing: true);
+                GC.SuppressFinalize(this);
+            }
+        }
+
+        /// <summary>
+        /// Create a new animated PNG image, outputting it to the specified stream.
+        /// </summary>
+        /// <param name="outputStream">The stream to which the animated PNG image will be written.</param>
+        /// <param name="width">The width of the image in pixels.</param>
+        /// <param name="height">The height of the image in pixels.</param>
+        /// <param name="hasAlpha">If the frames of the image have an alpha channel, set this to <see langword="true"/>; otherwise, set it to <see langword="false"/>.</param>
+        /// <param name="compressedFrames">The frames that will be used to create the animated PNG image.</param>
+        /// <param name="repeatCount">The number of times that the animation should loop. Set this to 0 for an infinitely repeating animation.</param>
+        public static unsafe void Create(Stream outputStream, int width, int height, bool hasAlpha, IReadOnlyList<CompressedFrame> compressedFrames, int repeatCount)
+        {
+            PNGEncoder.StartAPNG(width, height, hasAlpha, outputStream, compressedFrames.Count, repeatCount);
+
+            for (int i = 0; i < compressedFrames.Count; i++)
+            {
+                ushort frameDurationNumerator = (ushort)Math.Round(compressedFrames[i].Duration * 60);
+                ushort frameDurationDenominator = 60000;
+                PNGEncoder.AddPreCompressedAPNGFrame(compressedFrames[i], width, height, hasAlpha, outputStream, i, frameDurationNumerator, frameDurationDenominator);
+            }
+
+            PNGEncoder.FinishAPNG(outputStream);
+        }
+    }
+
+
+
     internal static class PNGEncoder
     {
-        public unsafe static void SavePNG(byte* image, int width, int height, bool hasAlpha, Stream fs, FilterModes filter, int threadCount = 0)
+        internal unsafe static void SavePNG(byte* image, int width, int height, bool hasAlpha, Stream fs, FilterModes filter, int threadCount = 0)
         {
             if (threadCount == 0)
             {
@@ -43,7 +199,7 @@ namespace VectSharp
                 ihdr.WriteInt(width);
                 ihdr.WriteInt(height);
                 ihdr.WriteByte(8); //Bit depth
-                
+
                 if (hasAlpha)
                 {
                     ihdr.WriteByte(6); //Colour type
@@ -52,7 +208,7 @@ namespace VectSharp
                 {
                     ihdr.WriteByte(2); //Colour type
                 }
-                
+
                 ihdr.WriteByte(0); //Compression method
                 ihdr.WriteByte(0); //Filter method
                 ihdr.WriteByte(0); //Interlace
@@ -65,16 +221,16 @@ namespace VectSharp
 
             //IDAT chunk
             IntPtr filteredImage;
-            
+
             if (threadCount > 1)
             {
-                filteredImage = FilterImageData(image, width, height, hasAlpha ? 4 : 3, FilterModes.Adaptive, threadCount);
+                filteredImage = FilterImageData(image, width, height, hasAlpha ? 4 : 3, filter, threadCount);
             }
             else
             {
-                filteredImage = FilterImageData(image, width, height, hasAlpha ? 4 : 3, FilterModes.Adaptive);
+                filteredImage = FilterImageData(image, width, height, hasAlpha ? 4 : 3, filter);
             }
-            
+
             using (MemoryStream compressedImage = StreamUtils.ZLibCompress(filteredImage, height * (width * (hasAlpha ? 4 : 3) + 1)))
             {
                 compressedImage.Seek(0, SeekOrigin.Begin);
@@ -93,6 +249,226 @@ namespace VectSharp
             fs.WriteASCIIString("IEND");
             fs.Write(new byte[] { 0xAE, 0x42, 0x60, 0x82 }, 0, 4);
 
+        }
+
+        public unsafe static void StartAPNG(int width, int height, bool hasAlpha, Stream fs, int frameCount, int repeatCount)
+        {
+            //Header
+            fs.Write(new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A }, 0, 8);
+
+            //IHDR chunk
+            fs.WriteInt(13);
+            using (MemoryStream ihdr = new MemoryStream(17))
+            {
+                ihdr.WriteASCIIString("IHDR");
+                ihdr.WriteInt(width);
+                ihdr.WriteInt(height);
+                ihdr.WriteByte(8); //Bit depth
+
+                if (hasAlpha)
+                {
+                    ihdr.WriteByte(6); //Colour type
+                }
+                else
+                {
+                    ihdr.WriteByte(2); //Colour type
+                }
+
+                ihdr.WriteByte(0); //Compression method
+                ihdr.WriteByte(0); //Filter method
+                ihdr.WriteByte(0); //Interlace
+
+                ihdr.Seek(0, SeekOrigin.Begin);
+                ihdr.CopyTo(fs);
+
+                fs.WriteUInt(CRC32.ComputeCRC(ihdr));
+            }
+
+            //acTL chunk
+            fs.WriteInt(8);
+            using (MemoryStream actl = new MemoryStream(12))
+            {
+                actl.WriteASCIIString("acTL");
+                actl.WriteInt(frameCount);
+                actl.WriteInt(repeatCount);
+
+                actl.Seek(0, SeekOrigin.Begin);
+                actl.CopyTo(fs);
+
+                fs.WriteUInt(CRC32.ComputeCRC(actl));
+            }
+        }
+
+        internal unsafe static void AddAPNGFrame(byte* image, int width, int height, bool hasAlpha, Stream fs, FilterModes filter, int frameNumber, ushort frameDelayNumerator, ushort frameDelayDenominator, int threadCount = 0)
+        {
+            if (threadCount == 0)
+            {
+                threadCount = filter == FilterModes.Adaptive ? Math.Max(1, Math.Min(width / 600, Environment.ProcessorCount - 2)) : 1;
+            }
+
+            int fcTLIndex = frameNumber == 0 ? 0 : ((frameNumber - 1) * 2 + 1);
+            int fDATIndex = frameNumber == 0 ? 0 : (frameNumber * 2);
+
+            //fcTL chunk
+            fs.WriteInt(26);
+            using (MemoryStream fctl = new MemoryStream(30))
+            {
+                fctl.WriteASCIIString("fcTL");
+                fctl.WriteInt(fcTLIndex);
+                fctl.WriteInt(width);
+                fctl.WriteInt(height);
+                fctl.WriteInt(0);
+                fctl.WriteInt(0);
+                fctl.WriteUShort(frameDelayNumerator);
+                fctl.WriteUShort(frameDelayDenominator);
+                fctl.WriteByte(1);
+                fctl.WriteByte(0);
+
+                fctl.Seek(0, SeekOrigin.Begin);
+                fctl.CopyTo(fs);
+
+                fs.WriteUInt(CRC32.ComputeCRC(fctl));
+            }
+
+            //fDAT chunk
+            IntPtr filteredImage;
+
+            if (threadCount > 1)
+            {
+                filteredImage = FilterImageData(image, width, height, hasAlpha ? 4 : 3, filter, threadCount);
+            }
+            else
+            {
+                filteredImage = FilterImageData(image, width, height, hasAlpha ? 4 : 3, filter);
+            }
+
+            if (frameNumber > 0)
+            {
+                using (MemoryStream compressedImage = StreamUtils.ZLibCompress(filteredImage, height * (width * (hasAlpha ? 4 : 3) + 1)))
+                {
+                    fs.WriteUInt((uint)compressedImage.Length + 4);
+
+                    fs.WriteASCIIString("fdAT");
+                    fs.WriteInt(fDATIndex);
+
+                    compressedImage.Seek(0, SeekOrigin.Begin);
+                    compressedImage.CopyTo(fs);
+
+                    fs.WriteUInt(CRC32.ComputeCRC(compressedImage.GetBuffer(), (int)compressedImage.Length, new byte[] { 102, 100, 65, 84, (byte)(fDATIndex >> 24), (byte)((fDATIndex >> 16) & 255), (byte)((fDATIndex >> 8) & 255), (byte)(fDATIndex & 255) }));
+                    //fs.WriteUInt(CRC32.ComputeCRC(chunkStream.GetBuffer(), (int)chunkStream.Length, new byte[] { 73, 68, 65, 84 }));
+                    //fs.WriteUInt(CRC32.ComputeCRC(chunkStream));   
+                }
+            }
+            else
+            {
+                using (MemoryStream compressedImage = StreamUtils.ZLibCompress(filteredImage, height * (width * (hasAlpha ? 4 : 3) + 1)))
+                {
+                    compressedImage.Seek(0, SeekOrigin.Begin);
+                    fs.WriteUInt((uint)compressedImage.Length);
+                    fs.WriteASCIIString("IDAT");
+                    compressedImage.Seek(0, SeekOrigin.Begin);
+                    compressedImage.CopyTo(fs);
+
+                    fs.WriteUInt(CRC32.ComputeCRC(compressedImage.GetBuffer(), (int)compressedImage.Length, new byte[] { 73, 68, 65, 84 }));
+                }
+            }
+
+            Marshal.FreeHGlobal(filteredImage);
+        }
+
+        internal static unsafe MemoryStream CompressAPNGFrame(byte* image, int width, int height, bool hasAlpha, FilterModes filter, int threadCount)
+        {
+            //fDAT chunk
+            IntPtr filteredImage;
+
+            if (threadCount > 1)
+            {
+                filteredImage = FilterImageData(image, width, height, hasAlpha ? 4 : 3, filter, threadCount);
+            }
+            else
+            {
+                filteredImage = FilterImageData(image, width, height, hasAlpha ? 4 : 3, filter);
+            }
+
+            MemoryStream compressedImage = StreamUtils.ZLibCompress(filteredImage, height * (width * (hasAlpha ? 4 : 3) + 1));
+
+            Marshal.FreeHGlobal(filteredImage);
+
+            return compressedImage;
+        }
+
+        internal static void AddPreCompressedAPNGFrame(AnimatedPNG.CompressedFrame compressedFrame, int width, int height, bool hasAlpha, Stream fs, int frameNumber, ushort frameDelayNumerator, ushort frameDelayDenominator)
+        {
+            int fcTLIndex = frameNumber == 0 ? 0 : ((frameNumber - 1) * 2 + 1);
+            int fDATIndex = frameNumber == 0 ? 0 : (frameNumber * 2);
+
+            //fcTL chunk
+            fs.WriteInt(26);
+            using (MemoryStream fctl = new MemoryStream(30))
+            {
+                fctl.WriteASCIIString("fcTL");
+                fctl.WriteInt(fcTLIndex);
+                fctl.WriteInt(width);
+                fctl.WriteInt(height);
+                fctl.WriteInt(0);
+                fctl.WriteInt(0);
+                fctl.WriteUShort(frameDelayNumerator);
+                fctl.WriteUShort(frameDelayDenominator);
+
+                if (compressedFrame.InterframeCompression == AnimatedPNG.InterframeCompression.None || frameNumber == 0)
+                {
+                    fctl.WriteByte(0);
+                    fctl.WriteByte(0);
+                }
+                else if (compressedFrame.InterframeCompression == AnimatedPNG.InterframeCompression.First)
+                {
+                    fctl.WriteByte(2);
+                    fctl.WriteByte(1);
+                }
+                else if (compressedFrame.InterframeCompression == AnimatedPNG.InterframeCompression.Previous)
+                {
+                    fctl.WriteByte(0);
+                    fctl.WriteByte(1);
+                }
+
+                fctl.Seek(0, SeekOrigin.Begin);
+                fctl.CopyTo(fs);
+
+                fs.WriteUInt(CRC32.ComputeCRC(fctl));
+            }
+
+            MemoryStream compressedImage = compressedFrame.compressedStream;
+
+            if (frameNumber > 0)
+            {
+                fs.WriteUInt((uint)compressedImage.Length + 4);
+
+                fs.WriteASCIIString("fdAT");
+                fs.WriteInt(fDATIndex);
+
+                compressedImage.Seek(0, SeekOrigin.Begin);
+                compressedImage.CopyTo(fs);
+
+                fs.WriteUInt(CRC32.ComputeCRC(compressedImage.GetBuffer(), (int)compressedImage.Length, new byte[] { 102, 100, 65, 84, (byte)(fDATIndex >> 24), (byte)((fDATIndex >> 16) & 255), (byte)((fDATIndex >> 8) & 255), (byte)(fDATIndex & 255) }));
+            }
+            else
+            {
+                compressedImage.Seek(0, SeekOrigin.Begin);
+                fs.WriteUInt((uint)compressedImage.Length);
+                fs.WriteASCIIString("IDAT");
+                compressedImage.Seek(0, SeekOrigin.Begin);
+                compressedImage.CopyTo(fs);
+
+                fs.WriteUInt(CRC32.ComputeCRC(compressedImage.GetBuffer(), (int)compressedImage.Length, new byte[] { 73, 68, 65, 84 }));
+            }
+        }
+
+        internal unsafe static void FinishAPNG(Stream fs)
+        {
+            //IEND chunk
+            fs.WriteInt(0);
+            fs.WriteASCIIString("IEND");
+            fs.Write(new byte[] { 0xAE, 0x42, 0x60, 0x82 }, 0, 4);
         }
 
         internal enum FilterModes
