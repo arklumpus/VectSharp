@@ -1994,6 +1994,47 @@ namespace VectSharp
             }
         }
 
+        /// <summary>
+        /// Gets a collection of all the figures in the <see cref="GraphicsPath"/>, returned as individual <see cref="GraphicsPath"/>s.
+        /// </summary>
+        /// <returns>A collection of all the figures in the <see cref="GraphicsPath"/>, returned as individual <see cref="GraphicsPath"/>s.</returns>
+        public IEnumerable<GraphicsPath> GetFigures()
+        {
+            GraphicsPath currFigure = null;
+            bool returned = true;
+
+            foreach (Segment seg in this.Segments)
+            {
+                if (seg.Type != SegmentType.Close)
+                {
+                    Point currPoint = seg.Point;
+                    if (seg.Type == SegmentType.Move)
+                    {
+                        if (!returned)
+                        {
+                            yield return currFigure;
+                        }
+
+                        currFigure = new GraphicsPath();
+                        returned = false;
+                    }
+
+                    currFigure.Segments.Add(seg);
+                }
+                else
+                {
+                    currFigure.Close();
+                    yield return currFigure;
+                    returned = true;
+                }
+            }
+
+            if (!returned)
+            {
+                yield return currFigure;
+            }
+        }
+
 
         /// <summary>
         /// Gets a collection of the tangents at the end point of the segments in which the <see cref="GraphicsPath"/> would be linearised, divided by figure.
