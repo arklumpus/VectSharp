@@ -22,6 +22,7 @@ namespace VectSharp
     internal interface IGraphicsAction
     {
         IGraphicsAction ShallowClone();
+        string Tag { get; set; }
     }
 
     internal interface IPrintableAction
@@ -45,27 +46,32 @@ namespace VectSharp
         public Size? Scale { get; } = null;
 
         public double[,] Matrix { get; } = null;
+        public string Tag { get; set; }
 
         public IGraphicsAction ShallowClone() => (IGraphicsAction)MemberwiseClone();
 
-        public TransformAction(Point delta)
+        public TransformAction(Point delta, string tag)
         {
             this.Delta = delta;
+            this.Tag = tag;
         }
 
-        public TransformAction(double angle)
+        public TransformAction(double angle, string tag)
         {
             this.Angle = angle;
+            this.Tag = tag;
         }
 
-        public TransformAction(Size scale)
+        public TransformAction(Size scale, string tag)
         {
             this.Scale = scale;
+            this.Tag = tag;
         }
 
-        public TransformAction(double[,] matrix)
+        public TransformAction(double[,] matrix, string tag)
         {
             this.Matrix = matrix;
+            this.Tag = tag;
         }
 
         public double[,] GetMatrix()
@@ -76,7 +82,7 @@ namespace VectSharp
             }
             else if (this.Delta != null)
             {
-                return Graphics.TranslationMatrix(this.Delta.Value.X, this.Delta.Value.Y); 
+                return Graphics.TranslationMatrix(this.Delta.Value.X, this.Delta.Value.Y);
             }
             else if (this.Angle != null)
             {
@@ -95,6 +101,8 @@ namespace VectSharp
 
     internal class StateAction : IGraphicsAction
     {
+        public string Tag { get; set; } = null;
+
         public IGraphicsAction ShallowClone() => (IGraphicsAction)MemberwiseClone();
 
         public enum StateActionTypes
