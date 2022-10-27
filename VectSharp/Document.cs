@@ -50,7 +50,7 @@ namespace VectSharp
         /// Width of the page.
         /// </summary>
         public double Width { get; set; }
-        
+
         /// <summary>
         /// Height of the page.
         /// </summary>
@@ -65,7 +65,7 @@ namespace VectSharp
         /// Background colour of the page.
         /// </summary>
         public Colour Background { get; set; } = Colour.FromRgba(255, 255, 255, 0);
-        
+
         /// <summary>
         /// Create a new page.
         /// </summary>
@@ -81,13 +81,30 @@ namespace VectSharp
         }
 
         /// <summary>
+        /// Translate and resize the <see cref="Page"/> so that it displays the specified <paramref name="region"/>.
+        /// </summary>
+        /// <param name="region">The area to include in the page.</param>
+        /// <param name="removeClippedGraphics">If this is <see langword="true"/>, graphics actions that fall outside of the specified region are completely removed from the plot, otherwise they are just hidden.</param>
+        /// <param name="tag">A tag to identify the transform.</param>
+        public void Crop(Rectangle region, bool removeClippedGraphics = false, string tag = null)
+        {
+            this.Crop(region.Location, region.Size, removeClippedGraphics, tag);
+        }
+
+        /// <summary>
         /// Translate and resize the <see cref="Page"/> so that it displays the rectangle defined by <paramref name="topLeft"/> and <paramref name="size"/>.
         /// </summary>
         /// <param name="topLeft">The top left corner of the area to include in the page.</param>
         /// <param name="size">The size of the area to include in the page.</param>
+        /// <param name="removeClippedGraphics">If this is <see langword="true"/>, graphics actions that fall outside of the specified region are completely removed from the plot, otherwise they are just hidden.</param>
         /// <param name="tag">A tag to identify the transform.</param>
-        public void Crop(Point topLeft, Size size, string tag = null)
+        public void Crop(Point topLeft, Size size, bool removeClippedGraphics = false, string tag = null)
         {
+            if (removeClippedGraphics)
+            {
+                this.Graphics.Crop(new Rectangle(topLeft, size));
+            }
+
             if (this.Graphics.Actions[0] is TransformAction transf)
             {
                 double[,] currMatrix = transf.GetMatrix();
@@ -100,7 +117,7 @@ namespace VectSharp
             {
                 this.Graphics.Actions.Insert(0, new TransformAction(new Point(-topLeft.X, -topLeft.Y), tag));
             }
-            
+
             this.Width = size.Width;
             this.Height = size.Height;
         }
