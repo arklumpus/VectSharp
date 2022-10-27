@@ -343,9 +343,20 @@ namespace VectSharp
         /// <param name="tag">A tag to identify the transform.</param>
         public void RotateAt(double angle, Point pivot, string tag = null)
         {
-            Actions.Add(new TransformAction(pivot, tag));
-            Actions.Add(new TransformAction(angle, tag));
-            Actions.Add(new TransformAction(new Point(-pivot.X, -pivot.Y), tag));
+            string tag1 = null;
+            string tag2 = null;
+            string tag3 = null;
+
+            if (!string.IsNullOrEmpty(tag))
+            {
+                tag1 = tag + "_@1";
+                tag2 = tag + "_@2";
+                tag3 = tag + "_@3";
+            }
+
+            Actions.Add(new TransformAction(pivot, tag1));
+            Actions.Add(new TransformAction(angle, tag2));
+            Actions.Add(new TransformAction(new Point(-pivot.X, -pivot.Y), tag3));
         }
 
 
@@ -758,6 +769,8 @@ namespace VectSharp
                 {
                     TransformAction trf = this.Actions[i] as TransformAction;
 
+                    destinationContext.Tag = trf.Tag;
+
                     if (trf.Delta != null)
                     {
                         destinationContext.Translate(((Point)trf.Delta).X, ((Point)trf.Delta).Y);
@@ -777,6 +790,8 @@ namespace VectSharp
                 }
                 else if (this.Actions[i] is StateAction)
                 {
+                    destinationContext.Tag = ((StateAction)this.Actions[i]).Tag;
+
                     if (((StateAction)this.Actions[i]).StateActionType == StateAction.StateActionTypes.Save)
                     {
                         destinationContext.Save();
@@ -795,6 +810,7 @@ namespace VectSharp
                 else if (this.Actions[i] is FilteredGraphicsAction)
                 {
                     FilteredGraphicsAction fil = this.Actions[i] as FilteredGraphicsAction;
+                    destinationContext.Tag = fil.Tag;
                     destinationContext.DrawFilteredGraphics(fil.Content, fil.Filter);
                 }
             }
