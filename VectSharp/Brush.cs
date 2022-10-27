@@ -196,7 +196,7 @@ namespace VectSharp
             {
                 bool closeToPrevious = (stops[i].Offset - stops[i - 1].Offset < StopTolerance);
                 bool closeToNext = (stops[i + 1].Offset - stops[i].Offset < StopTolerance);
-                
+
                 if (closeToPrevious && !closeToNext)
                 {
                     stops[i] = new GradientStop(stops[i].Colour, stops[i - 1].Offset + StopTolerance);
@@ -222,6 +222,39 @@ namespace VectSharp
         public GradientStops(params GradientStop[] gradientStops) : this((IEnumerable<GradientStop>)gradientStops)
         {
 
+        }
+
+        /// <summary>
+        /// Gets the colour at a certain position on the gradient.
+        /// </summary>
+        /// <param name="position">The position in the gradient (ranging from 0 to 1).</param>
+        /// <returns>The colour of the gradient at the specified position.</returns>
+        public Colour GetColourAt(double position)
+        {
+            if (position <= 0)
+            {
+                return this.gradientStops[0].Colour;
+            }
+            else if (position >= 1)
+            {
+                return this.gradientStops[this.gradientStops.Count - 1].Colour;
+            }
+            else
+            {
+                for (int i = 1; i < this.gradientStops.Count; i++)
+                {
+                    if (this.gradientStops[i - 1].Offset < position && this.gradientStops[i].Offset >= position)
+                    {
+                        double factor = (position - this.gradientStops[i - 1].Offset) / (this.gradientStops[i].Offset - this.gradientStops[i - 1].Offset);
+
+                        return Colour.FromRgba(this.gradientStops[i - 1].Colour.R * (1 - factor) + this.gradientStops[i].Colour.R * factor,
+                            this.gradientStops[i - 1].Colour.G * (1 - factor) + this.gradientStops[i].Colour.G * factor,
+                            this.gradientStops[i - 1].Colour.B * (1 - factor) + this.gradientStops[i].Colour.B * factor,
+                            this.gradientStops[i - 1].Colour.A * (1 - factor) + this.gradientStops[i].Colour.A * factor);
+                    }
+                }
+                return Colour.FromRgba(0, 0, 0, 0);
+            }
         }
     }
 
