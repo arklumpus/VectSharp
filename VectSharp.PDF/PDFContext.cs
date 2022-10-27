@@ -18,6 +18,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -2580,6 +2581,8 @@ namespace VectSharp.PDF
 
             StringBuilder sb = new StringBuilder();
 
+            bool restoreAtEnd = false;
+
             if (figure.Fill != null)
             {
                 if (figure.Fill is SolidColourBrush solid)
@@ -2594,9 +2597,13 @@ namespace VectSharp.PDF
 
                     gradients.Add((gradient, clonedMatrix, figure));
 
-                    if (!PDFContext.IsCompatible(gradient))
+                    bool gradientCompatible = PDFContext.IsCompatible(gradient);
+
+                    if (!gradientCompatible)
                     {
+                        sb.Append("q\n");
                         sb.Append("/ma" + brushIndex.ToString(System.Globalization.CultureInfo.InvariantCulture) + " gs ");
+                        restoreAtEnd = true;
                     }
 
                     sb.Append("/Pattern cs /p" + brushIndex.ToString(System.Globalization.CultureInfo.InvariantCulture) + " scn /a" + Array.IndexOf(alphas, 1.0).ToString() + " gs\n");
@@ -2617,9 +2624,13 @@ namespace VectSharp.PDF
 
                     gradients.Add((gradient, clonedMatrix, figure));
 
-                    if (!PDFContext.IsCompatible(gradient))
+                    bool gradientCompatible = PDFContext.IsCompatible(gradient);
+
+                    if (!gradientCompatible)
                     {
+                        sb.Append("q\n");
                         sb.Append("/ma" + brushIndex.ToString(System.Globalization.CultureInfo.InvariantCulture) + " gs ");
+                        restoreAtEnd = true;
                     }
 
                     sb.Append("/Pattern CS /p" + brushIndex.ToString(System.Globalization.CultureInfo.InvariantCulture) + " SCN /a" + Array.IndexOf(alphas, 1.0).ToString() + " gs\n");
@@ -2849,6 +2860,11 @@ namespace VectSharp.PDF
                 int imageNum = imageObjectNums[fig.Image.Id];
 
                 sb.Append("/Img" + imageNum.ToString() + " Do\n");
+            }
+
+            if (restoreAtEnd)
+            {
+                sb.Append("Q\n");
             }
 
             return sb.ToString();
