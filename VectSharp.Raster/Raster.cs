@@ -19,6 +19,7 @@ using MuPDFCore;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using VectSharp.PDF;
 
 namespace VectSharp.Raster
@@ -41,7 +42,7 @@ namespace VectSharp.Raster
             doc.Pages.Add(page);
 
             MemoryStream ms = new MemoryStream();
-            doc.SaveAsPDF(ms);
+            doc.SaveAsPDF(ms, filterOption: new PDFContextInterpreter.FilterOption(PDFContextInterpreter.FilterOption.FilterOperations.RasteriseAll, scale, true));
 
             using (MuPDFContext context = new MuPDFContext())
             {
@@ -66,7 +67,7 @@ namespace VectSharp.Raster
             doc.Pages.Add(page);
 
             MemoryStream ms = new MemoryStream();
-            doc.SaveAsPDF(ms);
+            doc.SaveAsPDF(ms, filterOption: new PDFContextInterpreter.FilterOption(PDFContextInterpreter.FilterOption.FilterOperations.RasteriseAll, scale, true));
 
             using (MuPDFContext context = new MuPDFContext())
             {
@@ -97,7 +98,7 @@ namespace VectSharp.Raster
             doc.Pages.Add(pag);
 
             MemoryStream ms = new MemoryStream();
-            doc.SaveAsPDF(ms);
+            doc.SaveAsPDF(ms, filterOption: new PDFContextInterpreter.FilterOption(PDFContextInterpreter.FilterOption.FilterOperations.RasteriseAll, scale, true));
 
             IntPtr imageDataAddress;
 
