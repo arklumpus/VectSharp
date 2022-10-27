@@ -130,5 +130,46 @@ namespace VectSharp.Raster
 
             return new RasterImage(ref disposableAddress, width, height, true, interpolate);
         }
+
+        /// <summary>
+        /// Render the page to raw pixel data, in 32bpp RGBA format.
+        /// </summary>
+        /// <param name="pag">The <see cref="Page"/> to render.</param>
+        /// <param name="scale">The scale to be used when rasterising the page. This will determine the width and height of the image.</param>
+        /// <param name="width">The width of the rendered image.</param>
+        /// <param name="height">The height of the rendered image.</param>
+        /// <param name="totalSize">The size in bytes of the raw pixel data.</param>
+        /// <returns>A <see cref="DisposableIntPtr"/> containing a pointer to the raw pixel data, stored in unmanaged memory. Dispose this object to release the unmanaged memory.</returns>
+        public static DisposableIntPtr SaveAsRawBytes(this Page pag, out int width, out int height, out int totalSize, double scale = 1)
+        {
+            Document doc = new Document();
+            doc.Pages.Add(pag);
+
+            MemoryStream ms = new MemoryStream();
+            doc.SaveAsPDF(ms, filterOption: new PDFContextInterpreter.FilterOption(PDFContextInterpreter.FilterOption.FilterOperations.RasteriseAll, scale, true));
+
+            IntPtr renderedPage;
+
+            using (MuPDFContext context = new MuPDFContext())
+            {
+                using (MuPDFDocument muDoc = new MuPDFDocument(context, ref ms, InputFileTypes.PDF))
+                {
+                    totalSize = muDoc.GetRenderedSize(0, scale, MuPDFCore.PixelFormats.RGBA);
+
+                    renderedPage = Marshal.AllocHGlobal(totalSize);
+
+                    RoundedRectangle bounds = muDoc.Pages[0].Bounds.Round(scale);
+
+                    width = bounds.Width;
+                    height = bounds.Height;
+
+                    muDoc.Render(0, scale, MuPDFCore.PixelFormats.RGBA, renderedPage);
+                }
+            }
+
+            ms.Dispose();
+
+            return new DisposableIntPtr(renderedPage);
+        }
     }
 }
