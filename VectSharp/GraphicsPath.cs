@@ -3108,6 +3108,12 @@ namespace VectSharp
                                 theta2 = temp;
                             }
 
+                            while (theta1 < 0)
+                            {
+                                theta1 += 2 * Math.PI;
+                                theta2 += 2 * Math.PI;
+                            }
+
                             theta1 /= 2 * Math.PI;
                             theta2 /= 2 * Math.PI;
 
