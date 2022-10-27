@@ -1527,5 +1527,104 @@ namespace VectSharp
                 return false;
             }
         }
+
+        /// <summary>
+        /// Removes graphics actions that fall completely outside of the specified <paramref name="region"/>.
+        /// </summary>
+        /// <param name="region">The area to preserve.</param>
+        public void Crop(Rectangle region)
+        {
+            List<int> itemsToRemove = new List<int>();
+
+            Stack<Rectangle> clippingPaths = new Stack<Rectangle>();
+            Rectangle currClippingPath = Rectangle.NaN;
+
+            Stack<double[,]> transformMatrix = new Stack<double[,]>();
+            double[,] currMatrix = new double[3, 3] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
+
+            for (int i = 0; i < this.Actions.Count; i++)
+            {
+                if (this.Actions[i] is IPrintableAction act)
+                {
+                    Rectangle bounds = act.GetBounds();
+
+                    double lineThickness = double.IsNaN(act.LineWidth) ? 0 : act.LineWidth;
+
+                    Point pt1 = Multiply(currMatrix, new Point(bounds.Location.X - lineThickness * 0.5, bounds.Location.Y - lineThickness * 0.5));
+                    Point pt2 = Multiply(currMatrix, new Point(bounds.Location.X + bounds.Size.Width + lineThickness * 0.5, bounds.Location.Y - lineThickness * 0.5));
+                    Point pt3 = Multiply(currMatrix, new Point(bounds.Location.X + bounds.Size.Width + lineThickness * 0.5, bounds.Location.Y + bounds.Size.Height + lineThickness * 0.5));
+                    Point pt4 = Multiply(currMatrix, new Point(bounds.Location.X - lineThickness * 0.5, bounds.Location.Y + bounds.Size.Height + lineThickness * 0.5));
+
+                    bounds = Point.Bounds(pt1, pt2, pt3, pt4);
+
+                    if (act is PathAction pth && pth.IsClipping)
+                    {
+                        currClippingPath = bounds;
+                    }
+                    else
+                    {
+                        if (!currClippingPath.IsNaN())
+                        {
+                            bounds = Rectangle.Intersection(bounds, currClippingPath);
+                        }
+
+                        if (double.IsNaN(bounds.Location.X) || double.IsNaN(bounds.Location.Y) || double.IsNaN(bounds.Size.Width) || double.IsNaN(bounds.Size.Height) || Rectangle.Intersection(bounds, region).IsNaN())
+                        {
+                            itemsToRemove.Add(i);
+                        }
+                    }
+                }
+                else if (this.Actions[i] is TransformAction)
+                {
+                    TransformAction trf = this.Actions[i] as TransformAction;
+
+                    if (trf.Delta != null)
+                    {
+                        currMatrix = Multiply(currMatrix, TranslationMatrix(trf.Delta.Value.X, trf.Delta.Value.Y));
+                    }
+                    else if (trf.Angle != null)
+                    {
+                        currMatrix = Multiply(currMatrix, RotationMatrix(trf.Angle.Value));
+                    }
+                    else if (trf.Scale != null)
+                    {
+                        currMatrix = Multiply(currMatrix, ScaleMatrix(trf.Scale.Value.Width, trf.Scale.Value.Height));
+                    }
+                    else if (trf.Matrix != null)
+                    {
+                        currMatrix = Multiply(currMatrix, trf.Matrix);
+                    }
+                }
+                else if (this.Actions[i] is StateAction)
+                {
+                    if (((StateAction)this.Actions[i]).StateActionType == StateAction.StateActionTypes.Save)
+                    {
+                        transformMatrix.Push(currMatrix);
+                        clippingPaths.Push(currClippingPath);
+                    }
+                    else
+                    {
+                        currMatrix = transformMatrix.Pop();
+                        currClippingPath = clippingPaths.Pop();
+                    }
+                }
+            }
+
+            for (int i = itemsToRemove.Count - 1; i >= 0; i--)
+            {
+                this.Actions.RemoveAt(itemsToRemove[i]);
+            }
+        }
+
+        /// <summary>
+        /// Removes graphics actions that fall completely outside of the specified region.
+        /// </summary>
+        /// <param name="topLeft">The top-left corner of the area to preserve.</param>
+        /// <param name="size">The size of the area to preserve.</param>
+        public void Crop(Point topLeft, Size size)
+        {
+            Rectangle region = new Rectangle(topLeft, size);
+            this.Crop(region);
+        }
     }
 }
