@@ -3316,5 +3316,24 @@ namespace VectSharp
 
             return cachedBounds;
         }
+
+        internal GraphicsPath ConvertArcsToBeziers()
+        {
+            GraphicsPath tbr = new GraphicsPath();
+
+            foreach (Segment seg in this.Segments)
+            {
+                if (seg is ArcSegment arc)
+                {
+                    tbr.Segments.AddRange(arc.ToBezierSegments());
+                }
+                else
+                {
+                    tbr.Segments.Add(seg);
+                }
+            }
+
+            return tbr;
+        }
     }
 }
