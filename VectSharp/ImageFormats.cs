@@ -29,9 +29,25 @@ namespace VectSharp
     /// </summary>
     public static class AnimatedPNG
     {
-        internal enum InterframeCompression
+        /// <summary>
+        /// Types of inter-frame compression.
+        /// </summary>
+        public enum InterframeCompression
         {
-            None, Previous, First
+            /// <summary>
+            /// No inter-frame compression is performed (fastest, but produces the largest files).
+            /// </summary>
+            None,
+
+            /// <summary>
+            /// Inter-frame compression is performed by encoding the difference between each frame and the first frame in the animation.
+            /// </summary>
+            First,
+
+            /// <summary>
+            /// Inter-frame compression is performed by encoding the difference between each frame and the previous frame (produces the smallest files, but it is the slowest and requires large amounts of memory).
+            /// </summary>
+            Previous
         }
 
         /// <summary>
