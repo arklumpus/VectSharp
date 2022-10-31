@@ -298,9 +298,10 @@ namespace VectSharp
         /// Intersect the current clipping path with the specified <see cref="GraphicsPath"/>.
         /// </summary>
         /// <param name="path">The <see cref="GraphicsPath"/> to intersect with the current clipping path.</param>
-        public void SetClippingPath(GraphicsPath path)
+        /// <param name="tag">A tag to identify the clipping path.</param>
+        public void SetClippingPath(GraphicsPath path, string tag = null)
         {
-            Actions.Add(new PathAction(path, null, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, null, true));
+            Actions.Add(new PathAction(path, null, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, tag, true));
         }
 
         /// <summary>
@@ -310,9 +311,10 @@ namespace VectSharp
         /// <param name="topY">The vertical coordinate of the top-left corner of the rectangle.</param>
         /// <param name="width">The width of the rectangle.</param>
         /// <param name="height">The height of the rectangle.</param>
-        public void SetClippingPath(double leftX, double topY, double width, double height)
+        /// <param name="tag">A tag to identify the clipping path.</param>
+        public void SetClippingPath(double leftX, double topY, double width, double height, string tag = null)
         {
-            SetClippingPath(new Point(leftX, topY), new Size(width, height));
+            SetClippingPath(new Point(leftX, topY), new Size(width, height), tag);
         }
 
         /// <summary>
@@ -320,9 +322,10 @@ namespace VectSharp
         /// </summary>
         /// <param name="topLeft">The top-left corner of the rectangle.</param>
         /// <param name="size">The size of the rectangle.</param>
-        public void SetClippingPath(Point topLeft, Size size)
+        /// <param name="tag">A tag to identify the clipping path.</param>
+        public void SetClippingPath(Point topLeft, Size size, string tag = null)
         {
-            Actions.Add(new PathAction(new GraphicsPath().MoveTo(topLeft).LineTo(topLeft.X + size.Width, topLeft.Y).LineTo(topLeft.X + size.Width, topLeft.Y + size.Height).LineTo(topLeft.X, topLeft.Y + size.Height).Close(), null, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, null, true));
+            Actions.Add(new PathAction(new GraphicsPath().MoveTo(topLeft).LineTo(topLeft.X + size.Width, topLeft.Y).LineTo(topLeft.X + size.Width, topLeft.Y + size.Height).LineTo(topLeft.X, topLeft.Y + size.Height).Close(), null, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, tag, true));
         }
 
         /// <summary>
@@ -854,7 +857,15 @@ namespace VectSharp
         public void DrawGraphics(Point origin, Graphics graphics, string tag)
         {
             this.Save();
-            this.Translate(origin);
+
+            if (!string.IsNullOrEmpty(tag))
+            {
+                this.Translate(origin, tag + "@t");
+            }
+            else
+            {
+                this.Translate(origin, tag);
+            }
 
             graphics.FixGraphicsStateStack();
 
@@ -897,10 +908,19 @@ namespace VectSharp
         /// <param name="origin">The point at which to place the origin of <paramref name="graphics"/>.</param>
         /// <param name="graphics">The <see cref="Graphics"/> object to draw on the current <see cref="Graphics"/> object.</param>
         /// <param name="filter">An <see cref="IFilter"/> object, representing the filter to apply to the <paramref name="graphics"/> object.</param>
+        /// <param name="tag">A tag to identify the filter.</param>
         public void DrawGraphics(Point origin, Graphics graphics, IFilter filter, string tag = null)
         {
             this.Save();
-            this.Translate(origin);
+
+            if (!string.IsNullOrEmpty(tag))
+            {
+                this.Translate(origin, tag + "@t");
+            }
+            else
+            {
+                this.Translate(origin, tag);
+            }
 
             Graphics clone = new Graphics();
             clone.Actions.AddRange(graphics.Actions);
@@ -918,6 +938,7 @@ namespace VectSharp
         /// <param name="originY">The vertical coordinate at which to place the origin of <paramref name="graphics"/>.</param>
         /// <param name="graphics">The <see cref="Graphics"/> object to draw on the current <see cref="Graphics"/> object.</param>
         /// <param name="filter">An <see cref="IFilter"/> object, representing the filter to apply to the <paramref name="graphics"/> object.</param>
+        /// <param name="tag">A tag to identify the filter.</param>
         public void DrawGraphics(double originX, double originY, Graphics graphics, IFilter filter, string tag = null)
         {
             this.DrawGraphics(new Point(originX, originY), graphics, filter, tag);
