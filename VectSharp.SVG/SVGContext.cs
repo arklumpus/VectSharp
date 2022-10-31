@@ -15,12 +15,16 @@
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
+using ExCSS;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
+using System.Transactions;
 using System.Xml;
 using VectSharp.Filters;
 
@@ -167,6 +171,9 @@ namespace VectSharp.SVG
         private XmlElement currentElement;
 
         public string Tag { get; set; }
+        public string TagPrefix { get; }
+
+        private bool ReuseGradients { get; }
 
         private double[,] _transform;
         private Stack<double[,]> states;
@@ -181,6 +188,7 @@ namespace VectSharp.SVG
 
         XmlElement definitions;
         Dictionary<Brush, string> gradients;
+        int gradientCount = 0;
 
         private SVGContextInterpreter.FilterOption FilterOption;
 
@@ -224,9 +232,11 @@ namespace VectSharp.SVG
             return tbr;
         }
 
-        public SVGContext(double width, double height, bool textToPaths, SVGContextInterpreter.TextOptions textOption, Dictionary<string, string> linkDestinations, SVGContextInterpreter.FilterOption filterOption, bool useStyles)
+        public SVGContext(double width, double height, bool textToPaths, SVGContextInterpreter.TextOptions textOption, Dictionary<string, string> linkDestinations, SVGContextInterpreter.FilterOption filterOption, bool useStyles, string tagPrefix, bool reuseGradients)
         {
             this.linkDestinations = linkDestinations;
+
+            this.TagPrefix = tagPrefix;
 
             this.Width = width;
             this.Height = height;
@@ -284,6 +294,7 @@ namespace VectSharp.SVG
             this.TextToPaths = textToPaths;
             this.TextOption = textOption;
             this.FilterOption = filterOption;
+            this.ReuseGradients = reuseGradients;
         }
 
 
@@ -360,26 +371,50 @@ namespace VectSharp.SVG
             {
                 if (FillStyle is LinearGradientBrush linearGradient)
                 {
-                    if (!gradients.TryGetValue(linearGradient, out gradientName))
+                    if (!ReuseGradients || !gradients.TryGetValue(linearGradient, out gradientName))
                     {
-                        gradientName = "gradient" + (gradients.Count + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
+                        if (!string.IsNullOrEmpty(Tag))
+                        {
+                            gradientName = this.TagPrefix + "gradient" + (gradientCount + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + "_" + Tag;
+                        }
+                        else
+                        {
+                            gradientName = this.TagPrefix + "gradient" + (gradientCount + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + "_" + Guid.NewGuid().ToString("N");
+                        }
 
                         XmlElement gradientElement = linearGradient.ToLinearGradient(Document, gradientName);
                         this.definitions.AppendChild(gradientElement);
 
-                        gradients.Add(linearGradient, gradientName);
+                        if (ReuseGradients)
+                        {
+                            gradients.Add(linearGradient, gradientName);
+                        }
+
+                        gradientCount++;
                     }
                 }
                 else if (FillStyle is RadialGradientBrush radialGradient)
                 {
-                    if (!gradients.TryGetValue(radialGradient, out gradientName))
+                    if (!ReuseGradients || !gradients.TryGetValue(radialGradient, out gradientName))
                     {
-                        gradientName = "gradient" + (gradients.Count + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
+                        if (!string.IsNullOrEmpty(Tag))
+                        {
+                            gradientName = this.TagPrefix + "gradient" + (gradientCount + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + "_" + Tag;
+                        }
+                        else
+                        {
+                            gradientName = this.TagPrefix + "gradient" + (gradientCount + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + "_" + Guid.NewGuid().ToString("N");
+                        }
 
                         XmlElement gradientElement = radialGradient.ToRadialGradient(Document, gradientName);
                         this.definitions.AppendChild(gradientElement);
 
-                        gradients.Add(radialGradient, gradientName);
+                        if (ReuseGradients)
+                        {
+                            gradients.Add(radialGradient, gradientName);
+                        }
+
+                        gradientCount++;
                     }
                 }
             }
@@ -437,7 +472,7 @@ namespace VectSharp.SVG
 
             if (!string.IsNullOrEmpty(Tag))
             {
-                path.SetAttribute("id", Tag);
+                path.SetAttribute("id", this.TagPrefix + Tag);
             }
 
             if (!string.IsNullOrEmpty(this.Tag) && this.linkDestinations.TryGetValue(this.Tag, out string destination) && !string.IsNullOrEmpty(destination))
@@ -514,7 +549,14 @@ namespace VectSharp.SVG
                 {
                     if (FillStyle is LinearGradientBrush linearGradient)
                     {
-                        gradientName = "g" + Guid.NewGuid().ToString("N");
+                        if (!string.IsNullOrEmpty(Tag))
+                        {
+                            gradientName = this.TagPrefix + "textGradient" + (gradientCount + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + "_" + Tag;
+                        }
+                        else
+                        {
+                            gradientName = this.TagPrefix + "textGradient" + (gradientCount + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + "_" + Guid.NewGuid().ToString("N");
+                        }
 
                         XmlElement gradientElement = linearGradient.ToLinearGradient(Document, gradientName);
 
@@ -525,10 +567,19 @@ namespace VectSharp.SVG
                         "," + deltaTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
 
                         this.definitions.AppendChild(gradientElement);
+
+                        gradientCount++;
                     }
                     else if (FillStyle is RadialGradientBrush radialGradient)
                     {
-                        gradientName = "g" + Guid.NewGuid().ToString("N");
+                        if (!string.IsNullOrEmpty(Tag))
+                        {
+                            gradientName = this.TagPrefix + "textGradient" + (gradientCount + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + "_" + Tag;
+                        }
+                        else
+                        {
+                            gradientName = this.TagPrefix + "textGradient" + (gradientCount + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + "_" + Guid.NewGuid().ToString("N");
+                        }
 
                         XmlElement gradientElement = radialGradient.ToRadialGradient(Document, gradientName);
 
@@ -539,6 +590,8 @@ namespace VectSharp.SVG
                         "," + deltaTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
 
                         this.definitions.AppendChild(gradientElement);
+
+                        gradientCount++;
                     }
                 }
 
@@ -648,7 +701,7 @@ namespace VectSharp.SVG
 
                 if (!string.IsNullOrEmpty(Tag))
                 {
-                    textElement.SetAttribute("id", Tag);
+                    textElement.SetAttribute("id", this.TagPrefix + Tag);
                 }
 
                 if (!string.IsNullOrEmpty(this.Tag) && this.linkDestinations.TryGetValue(this.Tag, out string destination) && !string.IsNullOrEmpty(destination))
@@ -782,26 +835,50 @@ namespace VectSharp.SVG
             {
                 if (StrokeStyle is LinearGradientBrush linearGradient)
                 {
-                    if (!gradients.TryGetValue(linearGradient, out gradientName))
+                    if (!ReuseGradients || !gradients.TryGetValue(linearGradient, out gradientName))
                     {
-                        gradientName = "gradient" + (gradients.Count + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
+                        if (!string.IsNullOrEmpty(Tag))
+                        {
+                            gradientName = this.TagPrefix + "gradient" + (gradientCount + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + "_" + Tag;
+                        }
+                        else
+                        {
+                            gradientName = this.TagPrefix + "gradient" + (gradientCount + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + "_" + Guid.NewGuid().ToString("N");
+                        }
 
                         XmlElement gradientElement = linearGradient.ToLinearGradient(Document, gradientName);
                         this.definitions.AppendChild(gradientElement);
 
-                        gradients.Add(linearGradient, gradientName);
+                        if (ReuseGradients)
+                        {
+                            gradients.Add(linearGradient, gradientName);
+                        }
+
+                        gradientCount++;
                     }
                 }
                 else if (StrokeStyle is RadialGradientBrush radialGradient)
                 {
-                    if (!gradients.TryGetValue(radialGradient, out gradientName))
+                    if (!ReuseGradients || !gradients.TryGetValue(radialGradient, out gradientName))
                     {
-                        gradientName = "gradient" + (gradients.Count + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
+                        if (!string.IsNullOrEmpty(Tag))
+                        {
+                            gradientName = this.TagPrefix + "gradient" + (gradientCount + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + "_" + Tag;
+                        }
+                        else
+                        {
+                            gradientName = this.TagPrefix + "gradient" + (gradientCount + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + "_" + Guid.NewGuid().ToString("N");
+                        }
 
                         XmlElement gradientElement = radialGradient.ToRadialGradient(Document, gradientName);
                         this.definitions.AppendChild(gradientElement);
 
-                        gradients.Add(radialGradient, gradientName);
+                        if (ReuseGradients)
+                        {
+                            gradients.Add(radialGradient, gradientName);
+                        }
+
+                        gradientCount++;
                     }
                 }
             }
@@ -927,7 +1004,7 @@ namespace VectSharp.SVG
 
             if (!string.IsNullOrEmpty(Tag))
             {
-                path.SetAttribute("id", Tag);
+                path.SetAttribute("id", this.TagPrefix + Tag);
             }
 
             if (!string.IsNullOrEmpty(this.Tag) && this.linkDestinations.TryGetValue(this.Tag, out string destination) && !string.IsNullOrEmpty(destination))
@@ -1003,7 +1080,14 @@ namespace VectSharp.SVG
                 {
                     if (StrokeStyle is LinearGradientBrush linearGradient)
                     {
-                        gradientName = "g" + Guid.NewGuid().ToString("N");
+                        if (!string.IsNullOrEmpty(Tag))
+                        {
+                            gradientName = this.TagPrefix + "textGradient" + (gradientCount + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + "_" + Tag;
+                        }
+                        else
+                        {
+                            gradientName = this.TagPrefix + "textGradient" + (gradientCount + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + "_" + Guid.NewGuid().ToString("N");
+                        }
 
                         XmlElement gradientElement = linearGradient.ToLinearGradient(Document, gradientName);
 
@@ -1014,10 +1098,19 @@ namespace VectSharp.SVG
                         "," + deltaTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
 
                         this.definitions.AppendChild(gradientElement);
+
+                        gradientCount++;
                     }
                     else if (StrokeStyle is RadialGradientBrush radialGradient)
                     {
-                        gradientName = "g" + Guid.NewGuid().ToString("N");
+                        if (!string.IsNullOrEmpty(Tag))
+                        {
+                            gradientName = this.TagPrefix + "textGradient" + (gradientCount + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + "_" + Tag;
+                        }
+                        else
+                        {
+                            gradientName = this.TagPrefix + "textGradient" + (gradientCount + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + "_" + Guid.NewGuid().ToString("N");
+                        }
 
                         XmlElement gradientElement = radialGradient.ToRadialGradient(Document, gradientName);
 
@@ -1028,6 +1121,8 @@ namespace VectSharp.SVG
                         "," + deltaTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
 
                         this.definitions.AppendChild(gradientElement);
+
+                        gradientCount++;
                     }
                 }
 
@@ -1203,7 +1298,7 @@ namespace VectSharp.SVG
 
                 if (!string.IsNullOrEmpty(Tag))
                 {
-                    textElement.SetAttribute("id", Tag);
+                    textElement.SetAttribute("id", this.TagPrefix + Tag);
                 }
 
                 if (!string.IsNullOrEmpty(this.Tag) && this.linkDestinations.TryGetValue(this.Tag, out string destination) && !string.IsNullOrEmpty(destination))
@@ -1250,7 +1345,7 @@ namespace VectSharp.SVG
             }
 
             XmlElement clipPath = Document.CreateElement("clipPath", SVGNamespace);
-            string id = Guid.NewGuid().ToString("N");
+            string id = !string.IsNullOrEmpty(Tag) ? (this.TagPrefix + Tag) : Guid.NewGuid().ToString("N");
             clipPath.SetAttribute("id", id);
 
             if (!string.IsNullOrEmpty(_currClipPath))
@@ -1259,6 +1354,7 @@ namespace VectSharp.SVG
             }
 
             XmlElement path = Document.CreateElement("path", SVGNamespace);
+            path.SetAttribute("id", id + "_clipPath");
             path.SetAttribute("d", currentPath.Figures.Aggregate("", (a, b) => a + b.Data));
 
             if (StrokeStyle is SolidColourBrush solid)
@@ -1270,14 +1366,26 @@ namespace VectSharp.SVG
             {
                 string gradientName;
 
-                if (!gradients.TryGetValue(linearGradient, out gradientName))
+                if (!ReuseGradients || !gradients.TryGetValue(linearGradient, out gradientName))
                 {
-                    gradientName = "gradient" + (gradients.Count + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
+                    if (!string.IsNullOrEmpty(Tag))
+                    {
+                        gradientName = this.TagPrefix + "gradient" + (gradientCount + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + "_" + Tag;
+                    }
+                    else
+                    {
+                        gradientName = this.TagPrefix + "gradient" + (gradientCount + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + "_" + Guid.NewGuid().ToString("N");
+                    }
 
                     XmlElement gradientElement = linearGradient.ToLinearGradient(Document, gradientName);
                     this.definitions.AppendChild(gradientElement);
 
-                    gradients.Add(linearGradient, gradientName);
+                    if (ReuseGradients)
+                    {
+                        gradients.Add(linearGradient, gradientName);
+                    }
+
+                    gradientCount++;
                 }
 
                 path.SetAttribute("stroke", "url(#" + gradientName + ")");
@@ -1286,14 +1394,26 @@ namespace VectSharp.SVG
             {
                 string gradientName;
 
-                if (!gradients.TryGetValue(radialGradient, out gradientName))
+                if (!ReuseGradients || !gradients.TryGetValue(radialGradient, out gradientName))
                 {
-                    gradientName = "gradient" + (gradients.Count + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
+                    if (!string.IsNullOrEmpty(Tag))
+                    {
+                        gradientName = this.TagPrefix + "gradient" + (gradientCount + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + "_" + Tag;
+                    }
+                    else
+                    {
+                        gradientName = this.TagPrefix + "gradient" + (gradientCount + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + "_" + Guid.NewGuid().ToString("N");
+                    }
 
                     XmlElement gradientElement = radialGradient.ToRadialGradient(Document, gradientName);
                     this.definitions.AppendChild(gradientElement);
 
-                    gradients.Add(radialGradient, gradientName);
+                    if (ReuseGradients)
+                    {
+                        gradients.Add(radialGradient, gradientName);
+                    }
+
+                    gradientCount++;
                 }
 
                 path.SetAttribute("stroke", "url(#" + gradientName + ")");
@@ -1406,7 +1526,7 @@ namespace VectSharp.SVG
 
             if (!string.IsNullOrEmpty(Tag))
             {
-                img.SetAttribute("id", Tag);
+                img.SetAttribute("id", this.TagPrefix + Tag);
             }
 
             img.SetAttribute("href", "http://www.w3.org/1999/xlink", "data:image/png;base64," + Convert.ToBase64String(image.PNGStream.ToArray()));
@@ -1570,7 +1690,7 @@ namespace VectSharp.SVG
 
                         XmlElement currentElement2 = currentElement;
 
-                        string filterGuid = Guid.NewGuid().ToString("N");
+                        string filterGuid = !string.IsNullOrEmpty(Tag) ? (this.TagPrefix + Tag + "@filter") : Guid.NewGuid().ToString("N");
 
                         Rectangle bounds = graphics.GetBounds();
 
@@ -1593,6 +1713,7 @@ namespace VectSharp.SVG
                         maskElement.SetAttribute("y", bounds.Location.Y.ToString(System.Globalization.CultureInfo.InvariantCulture));
                         maskElement.SetAttribute("width", bounds.Size.Width.ToString(System.Globalization.CultureInfo.InvariantCulture));
                         maskElement.SetAttribute("height", bounds.Size.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
                         this.definitions.AppendChild(maskElement);
 
                         currentElement = maskElement;
@@ -1605,6 +1726,12 @@ namespace VectSharp.SVG
                         _transform = currTransform;
 
                         currentElement = Document.CreateElement("g", SVGNamespace);
+
+                        if (!string.IsNullOrEmpty(this.Tag))
+                        {
+                            currentElement.SetAttribute("id", this.TagPrefix + Tag);
+                        }
+
                         currentElement.SetAttribute("mask", "url(#" + filterGuid + ")");
                         currentElement2.AppendChild(currentElement);
 
@@ -1647,7 +1774,7 @@ namespace VectSharp.SVG
 
                         bounds = Point.Bounds(p1, p2, p3, p4);
 
-                        string filterGuid = Guid.NewGuid().ToString("N");
+                        string filterGuid = !string.IsNullOrEmpty(Tag) ? (this.TagPrefix + Tag + "@filter") : Guid.NewGuid().ToString("N");
 
                         XmlElement filterElement = Document.CreateElement("filter", SVGNamespace);
                         filterElement.SetAttribute("id", filterGuid);
@@ -1657,15 +1784,28 @@ namespace VectSharp.SVG
                         filterElement.SetAttribute("y", bounds.Location.Y.ToString(System.Globalization.CultureInfo.InvariantCulture));
                         filterElement.SetAttribute("width", bounds.Size.Width.ToString(System.Globalization.CultureInfo.InvariantCulture));
                         filterElement.SetAttribute("height", bounds.Size.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
                         this.definitions.AppendChild(filterElement);
 
                         XmlElement feElement = Document.CreateElement("feGaussianBlur", SVGNamespace);
                         feElement.SetAttribute("stdDeviation", gauss.StandardDeviation.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+                        if (!string.IsNullOrEmpty(Tag))
+                        {
+                            feElement.SetAttribute("id", this.TagPrefix + Tag + "@feGaussianBlur");
+                        }
+
                         filterElement.AppendChild(feElement);
 
                         XmlElement currentElement2 = currentElement;
 
                         currentElement = Document.CreateElement("g", SVGNamespace);
+
+                        if (!string.IsNullOrEmpty(this.Tag))
+                        {
+                            currentElement.SetAttribute("id", this.TagPrefix + Tag);
+                        }
+
                         currentElement.SetAttribute("filter", "url(#" + filterGuid + ")");
                         currentElement2.AppendChild(currentElement);
 
@@ -1706,7 +1846,7 @@ namespace VectSharp.SVG
 
                         bounds = Point.Bounds(p1, p2, p3, p4);
 
-                        string filterGuid = Guid.NewGuid().ToString("N");
+                        string filterGuid = !string.IsNullOrEmpty(Tag) ? (this.TagPrefix + Tag + "@filter") : Guid.NewGuid().ToString("N");
 
                         XmlElement filterElement = Document.CreateElement("filter", SVGNamespace);
                         filterElement.SetAttribute("id", filterGuid);
@@ -1716,10 +1856,16 @@ namespace VectSharp.SVG
                         filterElement.SetAttribute("y", bounds.Location.Y.ToString(System.Globalization.CultureInfo.InvariantCulture));
                         filterElement.SetAttribute("width", bounds.Size.Width.ToString(System.Globalization.CultureInfo.InvariantCulture));
                         filterElement.SetAttribute("height", bounds.Size.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
                         this.definitions.AppendChild(filterElement);
 
                         XmlElement feElement = Document.CreateElement("feColorMatrix", SVGNamespace);
                         feElement.SetAttribute("type", "matrix");
+
+                        if (!string.IsNullOrEmpty(Tag))
+                        {
+                            feElement.SetAttribute("id", this.TagPrefix + Tag + "@feColorMatrix");
+                        }
 
                         StringBuilder matrix = new StringBuilder();
 
@@ -1741,6 +1887,12 @@ namespace VectSharp.SVG
                         XmlElement currentElement2 = currentElement;
 
                         currentElement = Document.CreateElement("g", SVGNamespace);
+
+                        if (!string.IsNullOrEmpty(this.Tag))
+                        {
+                            currentElement.SetAttribute("id", this.TagPrefix + Tag);
+                        }
+
                         currentElement.SetAttribute("filter", "url(#" + filterGuid + ")");
                         currentElement2.AppendChild(currentElement);
 
@@ -1795,7 +1947,7 @@ namespace VectSharp.SVG
 
                             bounds = Point.Bounds(p1, p2, p3, p4);
 
-                            string filterGuid = Guid.NewGuid().ToString("N");
+                            string filterGuid = !string.IsNullOrEmpty(Tag) ? (this.TagPrefix + Tag + "@filter") : Guid.NewGuid().ToString("N");
 
                             XmlElement filterElement = Document.CreateElement("filter", SVGNamespace);
                             filterElement.SetAttribute("id", filterGuid);
@@ -1805,7 +1957,10 @@ namespace VectSharp.SVG
                             filterElement.SetAttribute("y", bounds.Location.Y.ToString(System.Globalization.CultureInfo.InvariantCulture));
                             filterElement.SetAttribute("width", bounds.Size.Width.ToString(System.Globalization.CultureInfo.InvariantCulture));
                             filterElement.SetAttribute("height", bounds.Size.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
                             this.definitions.AppendChild(filterElement);
+
+                            int index = 0;
 
                             foreach (IFilter filter2 in comp.Filters)
                             {
@@ -1813,12 +1968,22 @@ namespace VectSharp.SVG
                                 {
                                     XmlElement feElement = Document.CreateElement("feGaussianBlur", SVGNamespace);
                                     feElement.SetAttribute("stdDeviation", gauss2.StandardDeviation.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+                                    if (!string.IsNullOrEmpty(Tag))
+                                    {
+                                        filterElement.SetAttribute("id", this.TagPrefix + Tag + "@feGaussianBlur" + index.ToString());
+                                    }
+
                                     filterElement.AppendChild(feElement);
                                 }
                                 else if (filter2 is ColourMatrixFilter cmf2)
                                 {
                                     XmlElement feElement = Document.CreateElement("feColorMatrix", SVGNamespace);
                                     feElement.SetAttribute("type", "matrix");
+                                    if (!string.IsNullOrEmpty(Tag))
+                                    {
+                                        filterElement.SetAttribute("id", this.TagPrefix + Tag + "@feColorMatrix" + index.ToString());
+                                    }
 
                                     StringBuilder matrix = new StringBuilder();
 
@@ -1837,11 +2002,19 @@ namespace VectSharp.SVG
                                     feElement.SetAttribute("values", matrix.ToString());
                                     filterElement.AppendChild(feElement);
                                 }
+
+                                index++;
                             }
 
                             XmlElement currentElement2 = currentElement;
 
                             currentElement = Document.CreateElement("g", SVGNamespace);
+
+                            if (!string.IsNullOrEmpty(this.Tag))
+                            {
+                                currentElement.SetAttribute("id", this.TagPrefix + Tag);
+                            }
+
                             currentElement.SetAttribute("filter", "url(#" + filterGuid + ")");
                             currentElement2.AppendChild(currentElement);
 
@@ -2049,6 +2222,26 @@ namespace VectSharp.SVG
         /// <param name="useStyles">If this is <see langword="false"/>, presentation attributes are set as attributes on SVG elements. If this is <see langword="true"/>, CSS classes are used to set presentation attributes.</param>
         public static void SaveAsSVG(this Page page, Stream stream, TextOptions textOption = TextOptions.SubsetFonts, Dictionary<string, string> linkDestinations = null, FilterOption filterOption = default, bool useStyles = false)
         {
+            XmlDocument doc = page.SaveAsSVG(textOption, linkDestinations, filterOption, useStyles);
+            WriteXMLToStream(doc.DocumentElement, stream);
+        }
+
+        /// <summary>
+        /// Render the page to an SVG document.
+        /// </summary>
+        /// <param name="page">The <see cref="Page"/> to render.</param>
+        /// <param name="textOption">Defines whether the used fonts should be included in the file.</param>
+        /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
+        /// <param name="useStyles">If this is <see langword="false"/>, presentation attributes are set as attributes on SVG elements. If this is <see langword="true"/>, CSS classes are used to set presentation attributes.</param>
+        /// <returns>An <see cref="XmlDocument"/> containing the rendered SVG image.</returns>
+        public static XmlDocument SaveAsSVG(this Page page, TextOptions textOption = TextOptions.SubsetFonts, Dictionary<string, string> linkDestinations = null, FilterOption filterOption = default, bool useStyles = false)
+        {
+            return CreateSVGDocument(page, "", textOption, linkDestinations, filterOption, useStyles, true);
+        }
+
+        private static XmlDocument CreateSVGDocument(this Page page, string tagPrefix, TextOptions textOption, Dictionary<string, string> linkDestinations, FilterOption filterOption, bool useStyles, bool reuseGradients)
+        {
             if (linkDestinations == null)
             {
                 linkDestinations = new Dictionary<string, string>();
@@ -2061,7 +2254,7 @@ namespace VectSharp.SVG
 
             bool textToPaths = textOption == TextOptions.ConvertIntoPaths;
 
-            SVGContext ctx = new SVGContext(page.Width, page.Height, textToPaths, textOption, linkDestinations, filterOption, useStyles);
+            SVGContext ctx = new SVGContext(page.Width, page.Height, textToPaths, textOption, linkDestinations, filterOption, useStyles, tagPrefix, reuseGradients);
 
             ctx.Rectangle(0, 0, page.Width, page.Height);
             ctx.SetFillStyle(page.Background);
@@ -2318,9 +2511,719 @@ namespace VectSharp.SVG
 
             ctx.Document.DocumentElement.SetAttribute("style", "font-synthesis: none;");
 
-            WriteXMLToStream(ctx.Document.DocumentElement, stream);
+            return ctx.Document;
+        }
 
-            //ctx.Document.Save(stream);
+        /// <summary>
+        /// Render the animation to an SVG document, using SVG animations.
+        /// </summary>
+        /// <param name="animation">The <see cref="Animation"/> to render.</param>
+        /// <param name="includeControls">If this is <see langword="true"/>, the generated SVG file will contain playback controls that use Javascript to play/pause the animation and change the current time.</param>
+        /// <param name="durationScaling">A scaling factor that will be applied to all durations in the animation. Values greater than 1 slow down the animation, values smaller than 1 accelerate it. Note that this does not affect the frame rate of the animation.</param>
+        /// <param name="textOption">Defines whether the used fonts should be included in the file.</param>
+        /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
+        /// <returns>An <see cref="XmlDocument"/> containing the animated SVG image.</returns>
+        public static XmlDocument SaveAsAnimatedSVG(this Animation animation, bool includeControls = false, double durationScaling = 1, TextOptions textOption = TextOptions.SubsetFonts, Dictionary<string, string> linkDestinations = null, FilterOption filterOption = default)
+        {
+            (XmlDocument, double)[] frames = new (XmlDocument, double)[animation.Frames.Count];
+            double[] durations = new double[animation.Frames.Count];
+
+            (XmlDocument, XmlDocument, Transition)[] transitions = new (XmlDocument, XmlDocument, Transition)[animation.Frames.Count - 1];
+
+
+            string repeatCount = animation.RepeatCount <= 0 ? "indefinite" : animation.RepeatCount.ToString();
+
+            double currentTime = 0;
+
+            for (int i = 0; i < frames.Length; i++)
+            {
+                Page pag = new Page(animation.Width, animation.Height) { Background = animation.Background };
+                pag.Graphics.DrawGraphics(0, 0, animation.Frames[i].Graphics);
+
+                if (i > 0)
+                {
+                    frames[i] = (pag.CreateSVGDocument("frame" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, false), animation.Frames[i].Duration);
+                    durations[i] = animation.Frames[i].Duration * durationScaling;
+
+                    if (animation.Transitions[i - 1].Duration > 0)
+                    {
+                        double epsilon = 1e-5 * animation.Transitions[i - 1].Duration;
+
+                        Page startPage = animation.GetFrameAtAbsolute(currentTime + epsilon);
+                        Page endPage = animation.GetFrameAtAbsolute(currentTime + animation.Transitions[i - 1].Duration - epsilon);
+
+                        transitions[i - 1] = (startPage.CreateSVGDocument("transition" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, false), endPage.CreateSVGDocument("transition" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, false), animation.Transitions[i - 1]);
+                    }
+                    else
+                    {
+                        transitions[i - 1] = (null, null, animation.Transitions[i - 1]);
+                    }
+
+                    currentTime += animation.Frames[i].Duration + animation.Transitions[i - 1].Duration;
+                }
+                else
+                {
+                    frames[i] = (pag.CreateSVGDocument("frame" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, false), animation.Frames[i].Duration);
+                    durations[i] = animation.Frames[i].Duration * durationScaling;
+                    currentTime += animation.Frames[i].Duration;
+                }
+            }
+
+            double totalDuration = animation.Duration * durationScaling;
+
+            XmlDocument Document = new XmlDocument();
+
+            Document.InsertBefore(Document.CreateXmlDeclaration("1.0", "UTF-8", null), Document.DocumentElement);
+
+            XmlElement currentElement = Document.CreateElement(null, "svg", SVGContext.SVGNamespace);
+            currentElement.SetAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+            currentElement.SetAttribute("viewBox", "0 0 " + animation.Width.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + animation.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            currentElement.SetAttribute("version", "1.1");
+            Document.AppendChild(currentElement);
+
+            currentTime = 0;
+
+            for (int i = 0; i < frames.Length; i++)
+            {
+                if (i > 0 && transitions[i - 1].Item3.Duration > 0)
+                {
+                    XmlNode clonedSVG = Document.ImportNode(transitions[i - 1].Item1.GetElementsByTagName("svg")[0], true);
+
+                    {
+                        XmlElement animate = Document.CreateElement("animate", SVGContext.SVGNamespace);
+                        animate.SetAttribute("attributeName", "display");
+                        animate.SetAttribute("values", "none;none;block;block;none;none");
+                        animate.SetAttribute("dur", totalDuration.ToString() + "ms");
+                        animate.SetAttribute("repeatCount", repeatCount);
+                        animate.SetAttribute("fill", "freeze");
+                        animate.SetAttribute("keyTimes", "0;" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
+                        clonedSVG.InsertBefore(animate, clonedSVG.FirstChild);
+                    }
+
+                    currentElement.AppendChild(clonedSVG);
+
+                    Dictionary<string, XmlElement> taggedStart = GetTaggedElements(clonedSVG);
+                    Dictionary<string, XmlElement> taggedEnd = GetTaggedElements(transitions[i - 1].Item2.GetElementsByTagName("svg")[0]);
+
+                    string overallEasing = null;
+
+                    if (transitions[i - 1].Item3.OverallEasing is SplineEasing spline)
+                    {
+                        overallEasing = "0.5 0.5 0.5 0.5; " + spline.ControlPoint1.X.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + spline.ControlPoint1.Y.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " +
+                            spline.ControlPoint2.X.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + spline.ControlPoint2.Y.ToString(System.Globalization.CultureInfo.InvariantCulture) + "; 0.5 0.5 0.5 0.5";
+                    }
+
+                    foreach (KeyValuePair<string, XmlElement> kvp in taggedStart)
+                    {
+                        if (taggedEnd.TryGetValue(kvp.Key, out XmlElement endElement))
+                        {
+                            List<(string, string, string)> attributesToChange = new List<(string, string, string)>();
+
+                            foreach (XmlAttribute attr in kvp.Value.Attributes)
+                            {
+                                if (endElement.HasAttribute(attr.Name))
+                                {
+                                    string oldValue = attr.Value;
+                                    string newValue = endElement.GetAttribute(attr.Name);
+
+                                    if (oldValue != newValue)
+                                    {
+                                        attributesToChange.Add((attr.Name, oldValue, newValue));
+                                    }
+                                }
+                            }
+
+                            string easing = overallEasing;
+
+                            string itemId = kvp.Key.Substring(kvp.Key.IndexOf("://") + 3);
+
+                            if (kvp.Value.Name == "linearGradient" || kvp.Value.Name == "radialGradient")
+                            {
+                                itemId = itemId.Substring(itemId.IndexOf("_") + 1);
+                            }
+                            else if (kvp.Value.Name == "stop")
+                            {
+                                itemId = itemId.Substring(itemId.IndexOf("_") + 1);
+                                itemId = itemId.Substring(0, itemId.IndexOf("/"));
+                            }
+
+                            if (transitions[i - 1].Item3.Easings != null && transitions[i - 1].Item3.Easings.TryGetValue(itemId, out IEasing currEasing) && currEasing is SplineEasing currSpline)
+                            {
+                                easing = "0.5 0.5 0.5 0.5; " + currSpline.ControlPoint1.X.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + currSpline.ControlPoint1.Y.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " +
+                            currSpline.ControlPoint2.X.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + currSpline.ControlPoint2.Y.ToString(System.Globalization.CultureInfo.InvariantCulture) + "; 0.5 0.5 0.5 0.5";
+                            }
+
+                            for (int j = 0; j < attributesToChange.Count; j++)
+                            {
+                                kvp.Value.RemoveAttribute(attributesToChange[j].Item1);
+
+                                if (attributesToChange[j].Item1 != "transform")
+                                {
+                                    XmlElement animate = Document.CreateElement("animate", SVGContext.SVGNamespace);
+                                    animate.SetAttribute("attributeName", attributesToChange[j].Item1);
+                                    animate.SetAttribute("values", attributesToChange[j].Item2 + ";" + attributesToChange[j].Item2 + ";" + attributesToChange[j].Item3 + ";" + attributesToChange[j].Item3);
+                                    animate.SetAttribute("dur", totalDuration.ToString() + "ms");
+                                    animate.SetAttribute("repeatCount", repeatCount);
+                                    animate.SetAttribute("fill", "freeze");
+                                    animate.SetAttribute("keyTimes", "0;" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
+
+                                    if (!string.IsNullOrEmpty(easing))
+                                    {
+                                        animate.SetAttribute("calcMode", "spline");
+                                        animate.SetAttribute("keySplines", easing);
+                                    }
+
+                                    if (kvp.Value.HasChildNodes)
+                                    {
+                                        kvp.Value.InsertBefore(animate, kvp.Value.FirstChild);
+                                    }
+                                    else
+                                    {
+                                        kvp.Value.AppendChild(animate);
+                                    }
+                                }
+                                else
+                                {
+                                    if (attributesToChange[j].Item2.StartsWith("matrix") && attributesToChange[j].Item3.StartsWith("matrix"))
+                                    {
+                                        (Point, double, Size, Size) transformStart = DecomposeMatrix(attributesToChange[j].Item2);
+                                        (Point, double, Size, Size) transformEnd = DecomposeMatrix(attributesToChange[j].Item3);
+
+                                        if (transformStart.Item4.Height != 0 || transformEnd.Item4.Height != 0)
+                                        {
+                                            string skewStart = transformStart.Item4.Height.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                                            string skewEnd = transformEnd.Item4.Height.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+                                            XmlElement animate = Document.CreateElement("animateTransform", SVGContext.SVGNamespace);
+                                            animate.SetAttribute("attributeName", attributesToChange[j].Item1);
+                                            animate.SetAttribute("type", "skewY");
+                                            animate.SetAttribute("values", skewStart + ";" + skewStart + ";" + skewEnd + ";" + skewEnd);
+                                            animate.SetAttribute("dur", totalDuration.ToString() + "ms");
+                                            animate.SetAttribute("repeatCount", repeatCount);
+                                            animate.SetAttribute("fill", "freeze");
+                                            animate.SetAttribute("additive", "sum");
+                                            animate.SetAttribute("keyTimes", "0;" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
+                                            if (!string.IsNullOrEmpty(easing))
+                                            {
+                                                animate.SetAttribute("calcMode", "spline");
+                                                animate.SetAttribute("keySplines", easing);
+                                            }
+
+                                            if (kvp.Value.HasChildNodes)
+                                            {
+                                                kvp.Value.InsertBefore(animate, kvp.Value.FirstChild);
+                                            }
+                                            else
+                                            {
+                                                kvp.Value.AppendChild(animate);
+                                            }
+                                        }
+
+                                        if (transformStart.Item4.Width != 0 || transformEnd.Item4.Width != 0)
+                                        {
+                                            string skewStart = transformStart.Item4.Width.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                                            string skewEnd = transformEnd.Item4.Width.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+                                            XmlElement animate = Document.CreateElement("animateTransform", SVGContext.SVGNamespace);
+                                            animate.SetAttribute("attributeName", attributesToChange[j].Item1);
+                                            animate.SetAttribute("type", "skewX");
+                                            animate.SetAttribute("values", skewStart + ";" + skewStart + ";" + skewEnd + ";" + skewEnd);
+                                            animate.SetAttribute("dur", totalDuration.ToString() + "ms");
+                                            animate.SetAttribute("repeatCount", repeatCount);
+                                            animate.SetAttribute("fill", "freeze");
+                                            animate.SetAttribute("additive", "sum");
+                                            animate.SetAttribute("keyTimes", "0;" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
+                                            if (!string.IsNullOrEmpty(easing))
+                                            {
+                                                animate.SetAttribute("calcMode", "spline");
+                                                animate.SetAttribute("keySplines", easing);
+                                            }
+
+                                            if (kvp.Value.HasChildNodes)
+                                            {
+                                                kvp.Value.InsertBefore(animate, kvp.Value.FirstChild);
+                                            }
+                                            else
+                                            {
+                                                kvp.Value.AppendChild(animate);
+                                            }
+                                        }
+
+                                        if (transformStart.Item3.Width != 0 || transformStart.Item3.Height != 0 || transformEnd.Item3.Width != 0 || transformEnd.Item3.Height != 0)
+                                        {
+                                            string scaleStart = transformStart.Item3.Width.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + transformStart.Item3.Height.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                                            string scaleEnd = transformEnd.Item3.Width.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + transformEnd.Item3.Height.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+                                            XmlElement animate = Document.CreateElement("animateTransform", SVGContext.SVGNamespace);
+                                            animate.SetAttribute("attributeName", attributesToChange[j].Item1);
+                                            animate.SetAttribute("type", "scale");
+                                            animate.SetAttribute("values", scaleStart + ";" + scaleStart + ";" + scaleEnd + ";" + scaleEnd);
+                                            animate.SetAttribute("dur", totalDuration.ToString() + "ms");
+                                            animate.SetAttribute("repeatCount", repeatCount);
+                                            animate.SetAttribute("fill", "freeze");
+                                            animate.SetAttribute("additive", "sum");
+                                            animate.SetAttribute("keyTimes", "0;" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
+                                            if (!string.IsNullOrEmpty(easing))
+                                            {
+                                                animate.SetAttribute("calcMode", "spline");
+                                                animate.SetAttribute("keySplines", easing);
+                                            }
+
+                                            if (kvp.Value.HasChildNodes)
+                                            {
+                                                kvp.Value.InsertBefore(animate, kvp.Value.FirstChild);
+                                            }
+                                            else
+                                            {
+                                                kvp.Value.AppendChild(animate);
+                                            }
+                                        }
+
+                                        if (transformStart.Item2 != 0 || transformEnd.Item2 != 0)
+                                        {
+                                            string rotateStart = (transformStart.Item2 * 180 / Math.PI).ToString(System.Globalization.CultureInfo.InvariantCulture);
+                                            string rotateEnd = (transformEnd.Item2 * 180 / Math.PI).ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+                                            XmlElement animate = Document.CreateElement("animateTransform", SVGContext.SVGNamespace);
+                                            animate.SetAttribute("attributeName", attributesToChange[j].Item1);
+                                            animate.SetAttribute("type", "rotate");
+                                            animate.SetAttribute("values", rotateStart + ";" + rotateStart + ";" + rotateEnd + ";" + rotateEnd);
+                                            animate.SetAttribute("dur", totalDuration.ToString() + "ms");
+                                            animate.SetAttribute("repeatCount", repeatCount);
+                                            animate.SetAttribute("fill", "freeze");
+                                            animate.SetAttribute("additive", "sum");
+                                            animate.SetAttribute("keyTimes", "0;" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
+                                            if (!string.IsNullOrEmpty(easing))
+                                            {
+                                                animate.SetAttribute("calcMode", "spline");
+                                                animate.SetAttribute("keySplines", easing);
+                                            }
+
+                                            if (kvp.Value.HasChildNodes)
+                                            {
+                                                kvp.Value.InsertBefore(animate, kvp.Value.FirstChild);
+                                            }
+                                            else
+                                            {
+                                                kvp.Value.AppendChild(animate);
+                                            }
+                                        }
+
+                                        if (transformStart.Item1.X != 0 || transformStart.Item1.Y != 0 || transformEnd.Item1.X != 0 || transformEnd.Item1.Y != 0)
+                                        {
+                                            string translateStart = transformStart.Item1.X.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + transformStart.Item1.Y.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                                            string translateEnd = transformEnd.Item1.X.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + transformEnd.Item1.Y.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+                                            XmlElement animate = Document.CreateElement("animateTransform", SVGContext.SVGNamespace);
+                                            animate.SetAttribute("attributeName", attributesToChange[j].Item1);
+                                            animate.SetAttribute("type", "translate");
+                                            animate.SetAttribute("values", translateStart + ";" + translateStart + ";" + translateEnd + ";" + translateEnd);
+                                            animate.SetAttribute("dur", totalDuration.ToString() + "ms");
+                                            animate.SetAttribute("repeatCount", repeatCount);
+                                            animate.SetAttribute("fill", "freeze");
+                                            animate.SetAttribute("additive", "sum");
+                                            animate.SetAttribute("keyTimes", "0;" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
+                                            if (!string.IsNullOrEmpty(easing))
+                                            {
+                                                animate.SetAttribute("calcMode", "spline");
+                                                animate.SetAttribute("keySplines", easing);
+                                            }
+
+                                            if (kvp.Value.HasChildNodes)
+                                            {
+                                                kvp.Value.InsertBefore(animate, kvp.Value.FirstChild);
+                                            }
+                                            else
+                                            {
+                                                kvp.Value.AppendChild(animate);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        throw new NotImplementedException("Invalid transform!");
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    currentTime += transitions[i - 1].Item3.Duration * durationScaling;
+                }
+
+                {
+                    XmlNode clonedSVG = Document.ImportNode(frames[i].Item1.GetElementsByTagName("svg")[0], true);
+
+                    XmlElement animate = Document.CreateElement("animate", SVGContext.SVGNamespace);
+                    animate.SetAttribute("attributeName", "display");
+                    animate.SetAttribute("values", "none;none;block;block;none;none");
+                    animate.SetAttribute("dur", totalDuration.ToString() + "ms");
+                    animate.SetAttribute("repeatCount", repeatCount);
+
+                    if (i < frames.Length - 1)
+                    {
+                        animate.SetAttribute("fill", "freeze");
+                    }                    
+                    
+                    animate.SetAttribute("keyTimes", "0;" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + durations[i]) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + durations[i]) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
+                    clonedSVG.InsertBefore(animate, clonedSVG.FirstChild);
+
+                    currentElement.AppendChild(clonedSVG);
+                }
+
+                currentTime += durations[i];
+            }
+
+            if (includeControls)
+            {
+                double controlsHeight = animation.Height * 0.08;
+
+                double controlsWidth = animation.Width * 0.8;
+
+                if (controlsWidth < controlsHeight * 5)
+                {
+                    controlsHeight = controlsWidth / 5;
+                }
+
+                currentElement.AppendChild(Document.ImportNode(GetAnimationControls(animation.Width, animation.Height, controlsWidth, controlsHeight, animation.Duration * durationScaling, animation.RepeatCount).GetElementsByTagName("svg")[0], true));
+            }
+
+            return Document;
+        }
+
+        private static XmlDocument GetAnimationControls(double width, double height, double controlsWidth, double controlsHeight, double totalDuration, int repeatCount)
+        {
+            double controlsMargin = controlsHeight / 12;
+            double controlRadius = controlsHeight / 6;
+
+            Page pag = new Page(width, height);
+
+            Graphics gpr = pag.Graphics;
+
+            GraphicsPath background = new GraphicsPath().MoveTo(width * 0.5 - controlsWidth * 0.5 + controlRadius, height - controlsMargin - controlsHeight).LineTo(width * 0.5 + controlsWidth * 0.5 - controlRadius, height - controlsMargin - controlsHeight);
+            background.Arc(width * 0.5 + controlsWidth * 0.5 - controlRadius, height - controlsMargin - controlsHeight + controlRadius, controlRadius, -Math.PI / 2, 0).LineTo(width * 0.5 + controlsWidth * 0.5, height - controlsMargin - controlRadius);
+            background.Arc(width * 0.5 + controlsWidth * 0.5 - controlRadius, height - controlsMargin - controlRadius, controlRadius, 0, Math.PI / 2).LineTo(width * 0.5 - controlsWidth * 0.5 + controlRadius, height - controlsMargin);
+            background.Arc(width * 0.5 - controlsWidth * 0.5 + controlRadius, height - controlsMargin - controlRadius, controlRadius, Math.PI / 2, Math.PI).LineTo(width * 0.5 - controlsWidth * 0.5, height - controlsMargin - controlsHeight + controlRadius);
+            background.Arc(width * 0.5 - controlsWidth * 0.5 + controlRadius, height - controlsMargin - controlsHeight + controlRadius, controlRadius, Math.PI, 3 * Math.PI / 2).Close();
+
+            gpr.FillPath(background, Colour.FromRgba(0, 0, 0, 0.5), tag: "timeLineBackground");
+
+            double roundedCornerSize = 0.25;
+
+            LinearGradientBrush buttonBrush = new LinearGradientBrush(new Point(0, controlsHeight), new Point(0, 0), new GradientStop(Colours.White, 1), new GradientStop(Colour.FromRgb(220, 220, 220), 0));
+
+            gpr.Save();
+            gpr.Translate(width * 0.5 - controlsWidth * 0.5 + controlsHeight * 0.5, height - controlsHeight - controlsMargin);
+            GraphicsPath playButton = new GraphicsPath().MoveTo(0, controlsHeight * 0.2 + controlsHeight * 0.6 * roundedCornerSize).LineTo(0, controlsHeight * 0.2 + controlsHeight * 0.6 * (1 - roundedCornerSize)).CubicBezierTo(0, controlsHeight * 0.8, 0, controlsHeight * 0.8, controlsHeight * 0.5 * roundedCornerSize, controlsHeight * 0.5 + controlsHeight * 0.3 * (1 - roundedCornerSize)).LineTo(controlsHeight * 0.5 * (1 - roundedCornerSize), controlsHeight * 0.5 + controlsHeight * 0.3 * roundedCornerSize);
+            playButton.CubicBezierTo(controlsHeight * 0.5, controlsHeight * 0.5, controlsHeight * 0.5, controlsHeight * 0.5, controlsHeight * 0.5 * (1 - roundedCornerSize), controlsHeight * 0.5 - controlsHeight * 0.3 * roundedCornerSize).LineTo(controlsHeight * 0.5 * roundedCornerSize, controlsHeight * 0.5 - controlsHeight * 0.3 * (1 - roundedCornerSize));
+            playButton.CubicBezierTo(0, controlsHeight * 0.2, 0, controlsHeight * 0.2, 0, controlsHeight * 0.2 + controlsHeight * 0.6 * roundedCornerSize).Close();
+            gpr.FillPath(playButton, buttonBrush, "playButton");
+
+            GraphicsPath pauseButton = new GraphicsPath().MoveTo(controlsHeight * 0.2 * roundedCornerSize, controlsHeight * 0.25).LineTo(controlsHeight * 0.2 * (1 - roundedCornerSize), controlsHeight * 0.25).CubicBezierTo(controlsHeight * 0.2, controlsHeight * 0.25, controlsHeight * 0.2, controlsHeight * 0.25, controlsHeight * 0.2, controlsHeight * 0.25 + controlsHeight * 0.5 * roundedCornerSize);
+            pauseButton.LineTo(controlsHeight * 0.2, controlsHeight * 0.25 + controlsHeight * 0.5 * (1 - roundedCornerSize)).CubicBezierTo(controlsHeight * 0.2, controlsHeight * 0.75, controlsHeight * 0.2, controlsHeight * 0.75, controlsHeight * 0.2 * (1 - roundedCornerSize), controlsHeight * 0.75).LineTo(controlsHeight * 0.2 * roundedCornerSize, controlsHeight * 0.75);
+            pauseButton.CubicBezierTo(0, controlsHeight * 0.75, 0, controlsHeight * 0.75, 0, controlsHeight * 0.25 + controlsHeight * 0.5 * (1 - roundedCornerSize)).LineTo(0, controlsHeight * 0.25 + controlsHeight * 0.5 * roundedCornerSize).CubicBezierTo(0, controlsHeight * 0.25, 0, controlsHeight * 0.25, controlsHeight * 0.2 * roundedCornerSize, controlsHeight * 0.25).Close();
+            pauseButton.MoveTo(controlsHeight * 0.3 + controlsHeight * 0.2 * roundedCornerSize, controlsHeight * 0.25).LineTo(controlsHeight * 0.3 + controlsHeight * 0.2 * (1 - roundedCornerSize), controlsHeight * 0.25).CubicBezierTo(controlsHeight * 0.3 + controlsHeight * 0.2, controlsHeight * 0.25, controlsHeight * 0.3 + controlsHeight * 0.2, controlsHeight * 0.25, controlsHeight * 0.3 + controlsHeight * 0.2, controlsHeight * 0.25 + controlsHeight * 0.5 * roundedCornerSize);
+            pauseButton.LineTo(controlsHeight * 0.3 + controlsHeight * 0.2, controlsHeight * 0.25 + controlsHeight * 0.5 * (1 - roundedCornerSize)).CubicBezierTo(controlsHeight * 0.3 + controlsHeight * 0.2, controlsHeight * 0.75, controlsHeight * 0.3 + controlsHeight * 0.2, controlsHeight * 0.75, controlsHeight * 0.3 + controlsHeight * 0.2 * (1 - roundedCornerSize), controlsHeight * 0.75).LineTo(controlsHeight * 0.3 + controlsHeight * 0.2 * roundedCornerSize, controlsHeight * 0.75);
+            pauseButton.CubicBezierTo(controlsHeight * 0.3, controlsHeight * 0.75, controlsHeight * 0.3, controlsHeight * 0.75, controlsHeight * 0.3, controlsHeight * 0.25 + controlsHeight * 0.5 * (1 - roundedCornerSize)).LineTo(controlsHeight * 0.3, controlsHeight * 0.25 + controlsHeight * 0.5 * roundedCornerSize).CubicBezierTo(controlsHeight * 0.3, controlsHeight * 0.25, controlsHeight * 0.3, controlsHeight * 0.25, controlsHeight * 0.3 + controlsHeight * 0.2 * roundedCornerSize, controlsHeight * 0.25).Close();
+            gpr.FillPath(pauseButton, buttonBrush, "pauseButton");
+
+            gpr.FillRectangle(0, controlsHeight * 0.2, controlsHeight * 0.5, controlsHeight * 0.6, Colour.FromRgba(0, 0, 0, 0), tag: "playButtonHitbox");
+            gpr.FillRectangle(0, controlsHeight * 0.2, controlsHeight * 0.5, controlsHeight * 0.6, Colour.FromRgba(0, 0, 0, 0), tag: "pauseButtonHitbox");
+
+            double timeLineStartX = controlsHeight * 0.5 + controlsHeight * 0.5 + controlsHeight / 3;
+
+            gpr.Translate(timeLineStartX, 0);
+
+            GraphicsPath timeLine = new GraphicsPath().MoveTo(controlsHeight * 0.1, controlsHeight * 0.4).LineTo(controlsWidth - timeLineStartX - controlsHeight - controlsHeight * 0.1 - controlsHeight / 3, controlsHeight * 0.4);
+            timeLine.Arc(controlsWidth - timeLineStartX - controlsHeight - controlsHeight * 0.1 - controlsHeight / 3, controlsHeight * 0.5, controlsHeight * 0.1, -Math.PI / 2, Math.PI / 2).LineTo(controlsHeight * 0.1, controlsHeight * 0.6);
+            timeLine.Arc(controlsHeight * 0.1, controlsHeight * 0.5, controlsHeight * 0.1, Math.PI / 2, 3 * Math.PI / 2).Close();
+
+            gpr.FillPath(timeLine, new LinearGradientBrush(new Point(0, controlsHeight * 0.6), new Point(0, controlsHeight * 0.4), new GradientStop(Colour.FromRgba(255, 255, 255, 80), 0), new GradientStop(Colour.FromRgba(255, 255, 255, 40), 1)), tag: "timeLine");
+            gpr.StrokePath(timeLine, Colour.FromRgba(255, 255, 255, 180));
+
+            gpr.Restore();
+
+            GraphicsPath thumbPath = new GraphicsPath().MoveTo(-controlsHeight * 0.2, controlsHeight * 0.3).LineTo(controlsHeight * 0.2, controlsHeight * 0.3);
+            thumbPath.Arc(controlsHeight * 0.2, controlsHeight * 0.5, controlsHeight * 0.2, -Math.PI / 2, Math.PI / 2).LineTo(-controlsHeight * 0.2, controlsHeight * 0.7);
+            thumbPath.Arc(-controlsHeight * 0.2, controlsHeight * 0.5, controlsHeight * 0.2, Math.PI / 2, 3 * Math.PI / 2).Close();
+
+            Graphics thumbStart = new Graphics();
+            thumbStart.Translate(width * 0.5 - controlsWidth * 0.5 + controlsHeight * 0.5 + timeLineStartX, height - controlsHeight - controlsMargin);
+            thumbStart.FillPath(thumbPath, buttonBrush, tag: "thumb");
+
+            Graphics thumbEnd = new Graphics();
+            thumbEnd.Translate(width * 0.5 + controlsWidth * 0.5 - controlsHeight * 0.5 - controlsHeight * 0.4, height - controlsHeight - controlsMargin);
+            thumbEnd.FillPath(thumbPath, buttonBrush, tag: "thumb");
+
+            Animation thumbAnimation = new Animation(width, height, 1) { RepeatCount = repeatCount };
+            thumbAnimation.AddFrame(new Frame(thumbStart, 0));
+            thumbAnimation.AddFrame(new Frame(thumbEnd, 0), new Transition(totalDuration));
+
+            XmlDocument animationDoc = thumbAnimation.SaveAsAnimatedSVG();
+
+            XmlNodeList svgNodes = animationDoc.GetElementsByTagName("svg");
+
+            for (int i = 1; i < svgNodes.Count; i++)
+            {
+                ((XmlElement)svgNodes[i]).RemoveChild(((XmlElement)svgNodes[i]).GetElementsByTagName("path")[0]);
+            }
+
+            ((XmlElement)animationDoc.GetElementsByTagName("svg")[0]).SetAttribute("style", "pointer-events: none");
+
+            XmlDocument doc = pag.SaveAsSVG();
+
+            XmlNodeList paths = doc.GetElementsByTagName("path");
+
+            for (int i = 0; i < paths.Count; i++)
+            {
+                if (((XmlElement)paths[i]).GetAttribute("id") == "timeLine")
+                {
+                    ((XmlElement)paths[i]).SetAttribute("style", "cursor: pointer;");
+                }
+
+                if (((XmlElement)paths[i]).GetAttribute("id") == "playButtonHitbox" || ((XmlElement)paths[i]).GetAttribute("id") == "pauseButtonHitbox")
+                {
+                    ((XmlElement)paths[i]).SetAttribute("style", "cursor: pointer");
+                }
+            }
+
+            XmlNode animationNode = doc.ImportNode(animationDoc.GetElementsByTagName("svg")[0], true);
+            doc.GetElementsByTagName("svg")[0].AppendChild(animationNode);
+            ((XmlElement)doc.GetElementsByTagName("svg")[0]).SetAttribute("id", "animationControls");
+
+            ((XmlElement)doc.GetElementsByTagName("svg")[0]).SetAttribute("style", "font-synthesis: none; transition: opacity 500ms;");
+
+            using (Stream sr = Assembly.GetExecutingAssembly().GetManifestResourceStream("VectSharp.SVG.AnimationControls.js"))
+            using (StreamReader reader = new StreamReader(sr))
+            {
+                string javascript = reader.ReadToEnd();
+                javascript = javascript.Replace("@@totalLength@@", (totalDuration / 1000).ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+                XmlElement script = doc.CreateElement("script", SVGContext.SVGNamespace);
+                script.SetAttribute("type", "text/javascript");
+                script.InnerText = javascript;
+
+                doc.GetElementsByTagName("svg")[0].AppendChild(script);
+            }
+
+            return doc;
+        }
+
+        /// <summary>
+        /// Render the animation to an SVG stream, using SVG animations.
+        /// </summary>
+        /// <param name="animation">The <see cref="Animation"/> to render.</param>
+        /// <param name="stream">The <see cref="Stream"/> on which the SVG document will be written.</param>
+        /// <param name="includeControls">If this is <see langword="true"/>, the generated SVG file will contain playback controls that use Javascript to play/pause the animation and change the current time.</param>
+        /// <param name="durationScaling">A scaling factor that will be applied to all durations in the animation. Values greater than 1 slow down the animation, values smaller than 1 accelerate it. Note that this does not affect the frame rate of the animation.</param>
+        /// <param name="textOption">Defines whether the used fonts should be included in the file.</param>
+        /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
+        public static void SaveAsAnimatedSVG(this Animation animation, Stream stream, bool includeControls = false, double durationScaling = 1, TextOptions textOption = TextOptions.SubsetFonts, Dictionary<string, string> linkDestinations = null, FilterOption filterOption = default)
+        {
+            XmlDocument document = SaveAsAnimatedSVG(animation, includeControls, durationScaling, textOption, linkDestinations, filterOption);
+            WriteXMLToStream(document.DocumentElement, stream);
+        }
+
+        /// <summary>
+        /// Render the animation to an SVG file, using SVG animations.
+        /// </summary>
+        /// <param name="animation">The <see cref="Animation"/> to render.</param>
+        /// <param name="fileName">The output file that will be created.</param>
+        /// <param name="includeControls">If this is <see langword="true"/>, the generated SVG file will contain playback controls that use Javascript to play/pause the animation and change the current time.</param>
+        /// <param name="durationScaling">A scaling factor that will be applied to all durations in the animation. Values greater than 1 slow down the animation, values smaller than 1 accelerate it. Note that this does not affect the frame rate of the animation.</param>
+        /// <param name="textOption">Defines whether the used fonts should be included in the file.</param>
+        /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
+        public static void SaveAsAnimatedSVG(this Animation animation, string fileName, bool includeControls = false, double durationScaling = 1, TextOptions textOption = TextOptions.SubsetFonts, Dictionary<string, string> linkDestinations = null, FilterOption filterOption = default)
+        {
+            using (FileStream fs = File.Create(fileName))
+            {
+                SaveAsAnimatedSVG(animation, fs, includeControls, durationScaling, textOption, linkDestinations, filterOption);
+            }
+        }
+
+        /// <summary>
+        /// Render the animation to an SVG document, encoding discrete frames.
+        /// </summary>
+        /// <param name="animation">The <see cref="Animation"/> to render.</param>
+        /// <param name="includeControls">If this is <see langword="true"/>, the generated SVG file will contain playback controls that use Javascript to play/pause the animation and change the current time.</param>
+        /// <param name="frameRate">The target frame rate of the animation, in frames-per-second (fps).</param>
+        /// <param name="durationScaling">A scaling factor that will be applied to all durations in the animation. Values greater than 1 slow down the animation, values smaller than 1 accelerate it. Note that this does not affect the frame rate of the animation.</param>
+        /// <param name="textOption">Defines whether the used fonts should be included in the file.</param>
+        /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
+        /// <returns>An <see cref="XmlDocument"/> containing the animated SVG image.</returns>
+        public static XmlDocument SaveAsAnimatedSVGWithFrames(this Animation animation, bool includeControls = false, double frameRate = 60, double durationScaling = 1, TextOptions textOption = TextOptions.SubsetFonts, Dictionary<string, string> linkDestinations = null, FilterOption filterOption = default)
+        {
+            int frameCount = (int)Math.Ceiling(animation.Duration * frameRate * durationScaling / 1000);
+
+            (XmlDocument, double)[] frames = new (XmlDocument, double)[frameCount];
+
+            Parallel.For(0, frameCount, i =>
+            {
+                double frameTime = i / frameRate / durationScaling * 1000;
+
+                double frameDuration = Math.Min((animation.Duration - frameTime) * durationScaling, 1000 / frameRate);
+
+                Page pag = animation.GetFrameAtAbsolute(frameTime);
+
+                frames[i] = (pag.CreateSVGDocument("frame" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, true), frameDuration);
+            });
+
+            string repeatCount = animation.RepeatCount <= 0 ? "indefinite" : animation.RepeatCount.ToString();
+
+            double totalDuration = animation.Duration * durationScaling;
+
+            XmlDocument Document = new XmlDocument();
+
+            Document.InsertBefore(Document.CreateXmlDeclaration("1.0", "UTF-8", null), Document.DocumentElement);
+
+            XmlElement currentElement = Document.CreateElement(null, "svg", SVGContext.SVGNamespace);
+            currentElement.SetAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+            currentElement.SetAttribute("viewBox", "0 0 " + animation.Width.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + animation.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            currentElement.SetAttribute("version", "1.1");
+            Document.AppendChild(currentElement);
+
+            double currentTime = 0;
+
+            for (int i = 0; i < frames.Length; i++)
+            {
+                XmlNode clonedSVG = Document.ImportNode(frames[i].Item1.GetElementsByTagName("svg")[0], true);
+
+                XmlElement animate = Document.CreateElement("animate", SVGContext.SVGNamespace);
+                animate.SetAttribute("attributeName", "display");
+                animate.SetAttribute("values", "none;none;block;block;none;none");
+                animate.SetAttribute("dur", totalDuration.ToString() + "ms");
+                animate.SetAttribute("repeatCount", repeatCount);
+                animate.SetAttribute("keyTimes", "0;" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + frames[i].Item2) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + frames[i].Item2) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
+                clonedSVG.InsertBefore(animate, clonedSVG.FirstChild);
+
+                currentElement.AppendChild(clonedSVG);
+
+                currentTime += frames[i].Item2;
+            }
+
+            if (includeControls)
+            {
+                double controlsHeight = animation.Height * 0.08;
+
+                double controlsWidth = animation.Width * 0.8;
+
+                if (controlsWidth < controlsHeight * 5)
+                {
+                    controlsHeight = controlsWidth / 5;
+                }
+
+                currentElement.AppendChild(Document.ImportNode(GetAnimationControls(animation.Width, animation.Height, controlsWidth, controlsHeight, animation.Duration * durationScaling, animation.RepeatCount).GetElementsByTagName("svg")[0], true));
+            }
+
+            return Document;
+        }
+
+        /// <summary>
+        /// Render the animation to an SVG stream, encoding discrete frames.
+        /// </summary>
+        /// <param name="animation">The <see cref="Animation"/> to render.</param>
+        /// <param name="includeControls">If this is <see langword="true"/>, the generated SVG file will contain playback controls that use Javascript to play/pause the animation and change the current time.</param>
+        /// <param name="stream">The <see cref="Stream"/> on which the SVG document will be written.</param>
+        /// <param name="frameRate">The target frame rate of the animation, in frames-per-second (fps).</param>
+        /// <param name="durationScaling">A scaling factor that will be applied to all durations in the animation. Values greater than 1 slow down the animation, values smaller than 1 accelerate it. Note that this does not affect the frame rate of the animation.</param>
+        /// <param name="textOption">Defines whether the used fonts should be included in the file.</param>
+        /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
+        public static void SaveAsAnimatedSVGWithFrames(this Animation animation, Stream stream, bool includeControls = false, double frameRate = 60, double durationScaling = 1, TextOptions textOption = TextOptions.SubsetFonts, Dictionary<string, string> linkDestinations = null, FilterOption filterOption = default)
+        {
+            XmlDocument document = SaveAsAnimatedSVGWithFrames(animation, includeControls, frameRate, durationScaling, textOption, linkDestinations, filterOption);
+            WriteXMLToStream(document.DocumentElement, stream);
+        }
+
+        /// <summary>
+        /// Render the animation to an SVG file, encoding discrete frames.
+        /// </summary>
+        /// <param name="animation">The <see cref="Animation"/> to render.</param>
+        /// <param name="includeControls">If this is <see langword="true"/>, the generated SVG file will contain playback controls that use Javascript to play/pause the animation and change the current time.</param>
+        /// <param name="fileName">The output file that will be created.</param>
+        /// <param name="frameRate">The target frame rate of the animation, in frames-per-second (fps).</param>
+        /// <param name="durationScaling">A scaling factor that will be applied to all durations in the animation. Values greater than 1 slow down the animation, values smaller than 1 accelerate it. Note that this does not affect the frame rate of the animation.</param>
+        /// <param name="textOption">Defines whether the used fonts should be included in the file.</param>
+        /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
+        public static void SaveAsAnimatedSVGWithFrames(this Animation animation, string fileName, bool includeControls = false, double frameRate = 60, double durationScaling = 1, TextOptions textOption = TextOptions.SubsetFonts, Dictionary<string, string> linkDestinations = null, FilterOption filterOption = default)
+        {
+            using (FileStream fs = File.Create(fileName))
+            {
+                SaveAsAnimatedSVGWithFrames(animation, fs, includeControls, frameRate, durationScaling, textOption, linkDestinations, filterOption);
+            }
+        }
+
+        // Adapted from https://math.stackexchange.com/a/2888105
+        private static (Point, double, Size, Size) DecomposeMatrix(string transformMatrix)
+        {
+            transformMatrix = transformMatrix.Trim().Substring(7);
+            transformMatrix = transformMatrix.Substring(0, transformMatrix.Length - 1);
+
+            double[] matrixElements = (from el in transformMatrix.Split(',') select double.Parse(el, System.Globalization.CultureInfo.InvariantCulture)).ToArray();
+
+            double a = matrixElements[0];
+            double b = matrixElements[1];
+            double c = matrixElements[2];
+            double d = matrixElements[3];
+            double e = matrixElements[4];
+            double f = matrixElements[5];
+
+            double delta = a * d - b * c;
+
+            Point translation = new Point(e, f);
+            double rotation = 0;
+            Size scale = new Size(0, 0);
+            Size skew = new Size(0, 0);
+
+            if (a != 0 || b != 0)
+            {
+                double r = Math.Sqrt(a * a + b * b);
+                rotation = b > 0 ? Math.Acos(a / r) : -Math.Acos(a / r);
+                scale = new Size(r, delta / r);
+                new Size(Math.Atan((a * c + b * d) / (r * r)), 0);
+            }
+            else if (c != 0 || d != 0)
+            {
+                double s = Math.Sqrt(c * c + d * d);
+                rotation = Math.PI / 2 - (d > 0 ? Math.Acos(-c / s) : -Math.Acos(c / s));
+                scale = new Size(delta / s, s);
+                skew = new Size(0, Math.Atan((a * c + b * d) / (s * s)));
+            }
+            else
+            {
+                // a = b = c = d = 0
+            }
+
+            return (translation, rotation, scale, skew);
+        }
+
+        private static Dictionary<string, XmlElement> GetTaggedElements(XmlNode node)
+        {
+            Dictionary<string, XmlElement> tbr = new Dictionary<string, XmlElement>();
+
+            foreach (XmlNode childNode in node)
+            {
+                if (childNode is XmlElement child)
+                {
+                    string id = child.GetAttribute("id");
+                    if (!string.IsNullOrEmpty(id))
+                    {
+                        tbr[id] = child;
+                    }
+
+                    foreach (KeyValuePair<string, XmlElement> kvp in GetTaggedElements(child))
+                    {
+                        tbr[kvp.Key] = kvp.Value;
+                    }
+                }
+            }
+
+            return tbr;
         }
 
         internal static XmlElement ToLinearGradient(this LinearGradientBrush brush, XmlDocument document, string gradientId)
@@ -2336,6 +3239,7 @@ namespace VectSharp.SVG
             gradient.SetAttribute("x2", brush.EndPoint.X.ToString(System.Globalization.CultureInfo.InvariantCulture));
             gradient.SetAttribute("y2", brush.EndPoint.Y.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
+            int index = 0;
             foreach (GradientStop stop in brush.GradientStops)
             {
                 XmlElement gradientStop = document.CreateElement("stop", SVGContext.SVGNamespace);
@@ -2343,8 +3247,10 @@ namespace VectSharp.SVG
                 gradientStop.SetAttribute("offset", stop.Offset.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 gradientStop.SetAttribute("stop-color", stop.Colour.ToCSSString(false));
                 gradientStop.SetAttribute("stop-opacity", stop.Colour.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                gradientStop.SetAttribute("id", gradientId + "/stop" + index.ToString());
 
                 gradient.AppendChild(gradientStop);
+                index++;
             }
 
             return gradient;
@@ -2364,6 +3270,7 @@ namespace VectSharp.SVG
             gradient.SetAttribute("fx", brush.FocalPoint.X.ToString(System.Globalization.CultureInfo.InvariantCulture));
             gradient.SetAttribute("fy", brush.FocalPoint.Y.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
+            int index = 0;
             foreach (GradientStop stop in brush.GradientStops)
             {
                 XmlElement gradientStop = document.CreateElement("stop", SVGContext.SVGNamespace);
@@ -2371,8 +3278,10 @@ namespace VectSharp.SVG
                 gradientStop.SetAttribute("offset", stop.Offset.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 gradientStop.SetAttribute("stop-color", stop.Colour.ToCSSString(false));
                 gradientStop.SetAttribute("stop-opacity", stop.Colour.A.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                gradientStop.SetAttribute("id", gradientId + "/stop" + index.ToString());
 
                 gradient.AppendChild(gradientStop);
+                index++;
             }
 
             return gradient;

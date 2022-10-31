@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   inkscape:export-ydpi="650.23999"
+   inkscape:export-xdpi="650.23999"
+   inkscape:export-filename="O:\VectSharp_GitHub\icon.png"
+   sodipodi:docname="icon_hash.svg"
+   id="svg1449"
+   version="1.1"
+   viewBox="0 0 10 10"
+   height="37.795277"
+   width="37.795277"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs1443">
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="Arrow1Send"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Send">
+      <path
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path2035" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker2565"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="TriangleOutS">
+      <path
+         transform="scale(0.2)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path2563" />
+    </marker>
+    <marker
+       inkscape:stockid="TriangleOutS"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker2360"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path2358"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="scale(0.2)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     inkscape:snap-global="false"
+     inkscape:window-maximized="1"
+     inkscape:window-y="-8"
+     inkscape:window-x="-8"
+     inkscape:window-height="1369"
+     inkscape:window-width="3440"
+     showgrid="false"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="g2764"
+     inkscape:document-units="mm"
+     inkscape:cy="33.587571"
+     inkscape:cx="6.0546015"
+     inkscape:zoom="11.313709"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     inkscape:showpageshadow="2"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1" />
+  <metadata
+     id="metadata1446">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-1.0252603)"
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Livello 1">
+    <g
+       transform="matrix(0.94392348,0,0,0.94392348,0.99618053,1.1106415)"
+       id="g2756">
+      <g
+         transform="translate(0.02978301,-0.0272334)"
+         id="g2764">
+        <path
+           style="fill:#05930c;fill-opacity:1;stroke-width:0.288392"
+           class="cls-3"
+           d="M 8.4928081,4.089156 8.3774549,4.6255597 H 7.0508553 L 6.7336262,6.1482694 H 8.1582806 L 8.02273,6.684684 H 6.6269166 L 6.1799135,8.7034247 H 5.5425663 L 5.9780373,6.684684 H 4.7091089 L 4.2822924,8.7034247 H 3.6593657 L 4.0861822,6.684684 H 2.7480397 L 2.8489724,6.1482694 H 4.1928809 L 4.5014558,4.6284482 H 3.0969877 L 3.2036972,4.0920445 h 1.404479 L 5.0349928,2.0531067 H 5.678106 L 5.2512895,4.0920445 h 1.277572 L 6.9643323,2.0531067 H 7.587259 L 7.1604425,4.0920445 Z M 6.4250404,4.6255597 H 5.1445799 L 4.81293,6.1482694 h 1.2862265 z"
+           id="path866" />
+      </g>
+    </g>
+  </g>
+</svg>

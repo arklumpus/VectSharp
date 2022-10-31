@@ -12,8 +12,8 @@
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.10.18" />
     <PackageReference Include="Avalonia.Desktop" Version="0.10.18" />
-    <PackageReference Include="VectSharp" Version="2.3.2" />
-    <PackageReference Include="VectSharp.Canvas" Version="2.5.3" />
-    <PackageReference Include="VectSharp.ThreeD" Version="1.1.0" />
+    <PackageReference Include="VectSharp" Version="2.4.0-a6" />
+    <PackageReference Include="VectSharp.Canvas" Version="2.6.0-a6" />
+    <PackageReference Include="VectSharp.ThreeD" Version="1.1.1-a2" />
   </ItemGroup>
 </Project>

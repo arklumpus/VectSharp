@@ -2605,6 +2605,25 @@ namespace VectSharp.Canvas
             return ctx.ControlItem;
         }
 
+        /// <summary>
+        /// Render an <see cref="Animation"/> to an <see cref="Avalonia.Controls.Canvas"/>.
+        /// </summary>
+        /// <param name="animation">The <see cref="Animation"/> to render.</param>
+        /// <param name="frameRate">The target frame rate of the animation, in frames-per-second (fps).</param>
+        /// <param name="durationScaling">A scaling factor that will be applied to all durations in the animation. Values greater than 1 slow down the animation, values smaller than 1 accelerate it. Note that this does not affect the frame rate of the animation.</param>
+        /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
+        /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
+        /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered animation.</returns>
+        public static AnimatedCanvas PaintToAnimatedCanvas(this Animation animation, double frameRate = 60, double durationScaling = 1, TextOptions textOption = TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
+        {
+            if (filterOption == null)
+            {
+                filterOption = FilterOption.Default;
+            }
+
+            return new AnimatedCanvas(animation, durationScaling, frameRate, textOption, filterOption) { Background = new SolidColorBrush(Color.FromArgb((byte)(animation.Background.A * 255), (byte)(animation.Background.R * 255), (byte)(animation.Background.G * 255), (byte)(animation.Background.B * 255))) };
+        }
+
         internal static Avalonia.Media.LinearGradientBrush ToLinearGradientBrush(this LinearGradientBrush brush, double[,] transformMatrix = null)
         {
             Point start = brush.StartPoint;

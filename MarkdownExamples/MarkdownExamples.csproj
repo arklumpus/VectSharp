@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="VectSharp.Markdown" Version="1.4.0" />
+    <PackageReference Include="VectSharp.Markdown" Version="1.4.1-a2" />
   </ItemGroup>
 
 </Project>

@@ -24,6 +24,8 @@ using System.Collections.Generic;
 using SixLabors.ImageSharp.Advanced;
 using System.IO;
 using VectSharp.Filters;
+using SixLabors.ImageSharp.Formats.Gif;
+using System.Threading.Tasks;
 
 namespace VectSharp.Raster.ImageSharp
 {
@@ -861,7 +863,7 @@ namespace VectSharp.Raster.ImageSharp
             }
             else
             {
-                return new float[] {  };
+                return new float[] { };
             }
         }
 
@@ -1177,7 +1179,7 @@ namespace VectSharp.Raster.ImageSharp
         }
 
         /// <summary>
-        /// Return the page to raw pixel data, in 32bpp RGBA format.
+        /// Render the page to raw pixel data, in 32bpp RGBA format.
         /// </summary>
         /// <param name="pag">The <see cref="Page"/> to render.</param>
         /// <param name="scale">The scale to be used when rasterising the page. This will determine the width and height of the image.</param>
@@ -1302,6 +1304,203 @@ namespace VectSharp.Raster.ImageSharp
             DisposableIntPtr disp = new DisposableIntPtr(tbr);
 
             return new RasterImage(ref disp, width, height, true, interpolate);
+        }
+
+        /// <summary>
+        /// Saves the animation to an animated GIF.
+        /// </summary>
+        /// <param name="animation">The animation to export.</param>
+        /// <param name="scale">The scale at which the animation will be rendered.</param>
+        /// <param name="frameRate">The target frame rate of the animation, in frames-per-second (fps). This is capped by the animated GIF specification at 50 fps.</param>
+        /// <param name="durationScaling">A scaling factor that will be applied to all durations in the animation. Values greater than 1 slow down the animation, values smaller than 1 accelerate it. Note that this does not affect the frame rate of the animation.</param>
+        /// <param name="colorTableMode">Determines whether a single colour table should be used for the whole image, or if a different colour table should be used for each frame.</param>
+        /// <returns>An <see cref="Image"/> containing the animated GIF.</returns>
+        public static Image SaveAsAnimatedGIF(this Animation animation, double scale = 1, double frameRate = 50, double durationScaling = 1, GifColorTableMode colorTableMode = GifColorTableMode.Local)
+        {
+            frameRate = Math.Min(frameRate, 50);
+
+            Image gifAnimation = new Image<SixLabors.ImageSharp.PixelFormats.Rgba32>((int)(animation.Width * scale), (int)(animation.Height * scale));
+
+            int frames = (int)Math.Ceiling(animation.Duration * frameRate * durationScaling / 1000);
+
+            double accumulatedDelay = 0;
+
+            for (int i = 0; i < frames; i++)
+            {
+                double frameTime = i / frameRate / durationScaling * 1000;
+                double frameDuration = Math.Min(animation.Duration - i / durationScaling / frameRate * 1000, 1000 / frameRate / durationScaling);
+
+                int gifFrameDuration = (int)Math.Round(frameDuration * durationScaling * 0.1 + accumulatedDelay);
+
+                if (gifFrameDuration < 2)
+                {
+                    accumulatedDelay += frameDuration * durationScaling * 0.1;
+                }
+                else
+                {
+                    accumulatedDelay += frameDuration * durationScaling * 0.1 - gifFrameDuration;
+
+                    Page pag = animation.GetFrameAtAbsolute(frameTime);
+
+                    Image frame = pag.SaveAsImage(scale);
+
+                    GifFrameMetadata frameMetadata = frame.Frames[0].Metadata.GetFormatMetadata(GifFormat.Instance);
+                    frameMetadata.FrameDelay = gifFrameDuration;
+                    frameMetadata.DisposalMethod = GifDisposalMethod.RestoreToPrevious;
+                    gifAnimation.Frames.AddFrame(frame.Frames[0]);
+                }
+            }
+
+            if ((int)accumulatedDelay > 0)
+            {
+                gifAnimation.Frames[gifAnimation.Frames.Count - 1].Metadata.GetFormatMetadata(GifFormat.Instance).FrameDelay += (int)accumulatedDelay;
+            }
+
+            gifAnimation.Frames.RemoveFrame(0);
+
+            GifMetadata metadata = gifAnimation.Metadata.GetFormatMetadata(GifFormat.Instance);
+            metadata.ColorTableMode = colorTableMode;
+            metadata.RepeatCount = (ushort)animation.RepeatCount;
+
+            return gifAnimation;
+        }
+
+        /// <summary>
+        /// Saves the animation to an animated GIF stream.
+        /// </summary>
+        /// <param name="animation">The animation to export.</param>
+        /// <param name="imageStream">The stream on which the animated GIF will be written.</param>
+        /// <param name="scale">The scale at which the animation will be rendered.</param>
+        /// <param name="frameRate">The target frame rate of the animation, in frames-per-second (fps). This is capped by the animated GIF specification at 50 fps.</param>
+        /// <param name="durationScaling">A scaling factor that will be applied to all durations in the animation. Values greater than 1 slow down the animation, values smaller than 1 accelerate it. Note that this does not affect the frame rate of the animation.</param>
+        /// <param name="colorTableMode">Determines whether a single colour table should be used for the whole image, or if a different colour table should be used for each frame.</param>
+        public static void SaveAsAnimatedGIF(this Animation animation, Stream imageStream, double scale = 1, double frameRate = 50, double durationScaling = 1, GifColorTableMode colorTableMode = GifColorTableMode.Local)
+        {
+            Image gifAnimation = SaveAsAnimatedGIF(animation, scale, frameRate, durationScaling, colorTableMode);
+
+            gifAnimation.SaveAsGif(imageStream);
+        }
+
+        /// <summary>
+        /// Saves the animation to an animated GIF file.
+        /// </summary>
+        /// <param name="animation">The animation to export.</param>
+        /// <param name="fileName">The output file to create.</param>
+        /// <param name="scale">The scale at which the animation will be rendered.</param>
+        /// <param name="frameRate">The target frame rate of the animation, in frames-per-second (fps). This is capped by the animated GIF specification at 50 fps.</param>
+        /// <param name="durationScaling">A scaling factor that will be applied to all durations in the animation. Values greater than 1 slow down the animation, values smaller than 1 accelerate it. Note that this does not affect the frame rate of the animation.</param>
+        /// <param name="colorTableMode">Determines whether a single colour table should be used for the whole image, or if a different colour table should be used for each frame.</param>
+        public static void SaveAsAnimatedGIF(this Animation animation, string fileName, double scale = 1, double frameRate = 50, double durationScaling = 1, GifColorTableMode colorTableMode = GifColorTableMode.Local)
+        {
+            using (FileStream fs = File.Create(fileName))
+            {
+                SaveAsAnimatedGIF(animation, fs, scale, frameRate, durationScaling, colorTableMode);
+            }
+        }
+
+        /// <summary>
+        /// Saves the animation to a stream in animated PNG format.
+        /// </summary>
+        /// <param name="animation">The animation to export.</param>
+        /// <param name="imageStream">The stream on which the animated PNG will be written.</param>
+        /// <param name="scale">The scale at which the animation will be rendered.</param>
+        /// <param name="frameRate">The target frame rate of the animation, in frames-per-second (fps). This is capped by the animated PNG specification at 90 fps.</param>
+        /// <param name="durationScaling">A scaling factor that will be applied to all durations in the animation. Values greater than 1 slow down the animation, values smaller than 1 accelerate it. Note that this does not affect the frame rate of the animation.</param>
+        /// <param name="interframeCompression">The kind of compression that will be used to reduce file size. Note that if the animation has a transparent background, no compression can be performed, and the value of this parameter is ignored.</param>
+        public static void SaveAsAnimatedPNG(this Animation animation, Stream imageStream, double scale = 1, double frameRate = 60, double durationScaling = 1, AnimatedPNG.InterframeCompression interframeCompression = AnimatedPNG.InterframeCompression.First)
+        {
+            frameRate = Math.Min(frameRate, 90);
+
+            int frames = (int)Math.Ceiling(animation.Duration * frameRate * durationScaling / 1000);
+
+            Stream fs = imageStream;
+
+            AnimatedPNG.CompressedFrame[] compressedFrames = new AnimatedPNG.CompressedFrame[frames];
+
+            int width = (int)(animation.Width * scale);
+            int height = (int)(animation.Height * scale);
+
+            if (animation.Background.A < 1 || interframeCompression == AnimatedPNG.InterframeCompression.None)
+            {
+                Parallel.For(0, frames, i =>
+                {
+                    double frameTime = i / frameRate / durationScaling * 1000;
+
+                    double frameDuration = Math.Min((animation.Duration - frameTime) * durationScaling, 1000 / frameRate);
+
+                    Page pag = animation.GetFrameAtAbsolute(frameTime);
+
+                    using (DisposableIntPtr rawFrame = pag.SaveAsRawBytes(out _, out _, out _, scale))
+                    {
+                        compressedFrames[i] = new AnimatedPNG.CompressedFrame(rawFrame, width, height, true, frameDuration);
+                    }
+                });
+            }
+            else if (interframeCompression == AnimatedPNG.InterframeCompression.First)
+            {
+                DisposableIntPtr firstFrame = animation.GetFrameAtAbsolute(0).SaveAsRawBytes(out _, out _, out _, scale);
+                compressedFrames[0] = new AnimatedPNG.CompressedFrame(firstFrame, width, height, true, Math.Min(animation.Duration * durationScaling, 1000 / frameRate));
+
+                Parallel.For(1, frames, i =>
+                {
+                    double frameTime = i / frameRate / durationScaling * 1000;
+
+                    double frameDuration = Math.Min((animation.Duration - frameTime) * durationScaling, 1000 / frameRate);
+
+                    Page pag = animation.GetFrameAtAbsolute(frameTime);
+
+                    using (DisposableIntPtr rawFrame = pag.SaveAsRawBytes(out _, out _, out _, scale))
+                    {
+                        compressedFrames[i] = new AnimatedPNG.CompressedFrame(rawFrame, firstFrame, true, width, height, true, frameDuration);
+                    }
+                });
+
+                firstFrame.Dispose();
+            }
+            else if (interframeCompression == AnimatedPNG.InterframeCompression.Previous)
+            {
+                DisposableIntPtr[] rawFrames = new DisposableIntPtr[frames];
+
+                Parallel.For(0, frames, i =>
+                {
+                    double frameTime = i / frameRate / durationScaling * 1000;
+                    Page pag = animation.GetFrameAtAbsolute(frameTime);
+                    rawFrames[i] = pag.SaveAsRawBytes(out _, out _, out _, scale);
+                });
+
+                compressedFrames[0] = new AnimatedPNG.CompressedFrame(rawFrames[0], width, height, true, Math.Min(animation.Duration * durationScaling, 1000 / frameRate));
+
+                Parallel.For(1, frames, i =>
+                {
+                    double frameTime = i / frameRate / durationScaling * 1000;
+                    double frameDuration = Math.Min((animation.Duration - frameTime) * durationScaling, 1000 / frameRate);
+                    compressedFrames[i] = new AnimatedPNG.CompressedFrame(rawFrames[i], rawFrames[i - 1], false, width, height, true, frameDuration);
+                });
+            }
+
+            AnimatedPNG.Create(fs, (int)(animation.Width * scale), (int)(animation.Height * scale), true, compressedFrames, animation.RepeatCount);
+
+            for (int i = 0; i < compressedFrames.Length; i++)
+            {
+                compressedFrames[i].Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Saves the animation to an animated PNG file.
+        /// </summary>
+        /// <param name="animation">The animation to export.</param>
+        /// <param name="fileName">The output file to create.</param>
+        /// <param name="scale">The scale at which the animation will be rendered.</param>
+        /// <param name="frameRate">The target frame rate of the animation, in frames-per-second (fps). This is capped by the animated PNG specification at 90 fps.</param>
+        /// <param name="durationScaling">A scaling factor that will be applied to all durations in the animation. Values greater than 1 slow down the animation, values smaller than 1 accelerate it. Note that this does not affect the frame rate of the animation.</param>
+        /// <param name="interframeCompression">The kind of compression that will be used to reduce file size. Note that if the animation has a transparent background, no compression can be performed, and the value of this parameter is ignored.</param>
+        public static void SaveAsAnimatedPNG(this Animation animation, string fileName, double scale = 1, double frameRate = 60, double durationScaling = 1, AnimatedPNG.InterframeCompression interframeCompression = AnimatedPNG.InterframeCompression.First)
+        {
+            using (FileStream fs = File.Create(fileName))
+            {
+                SaveAsAnimatedPNG(animation, fs, scale, frameRate, durationScaling, interframeCompression);
+            }
         }
     }
 }

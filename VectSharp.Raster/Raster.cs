@@ -42,7 +42,7 @@ namespace VectSharp.Raster
             doc.Pages.Add(page);
 
             MemoryStream ms = new MemoryStream();
-            doc.SaveAsPDF(ms, filterOption: new PDFContextInterpreter.FilterOption(PDFContextInterpreter.FilterOption.FilterOperations.RasteriseAll, scale, true));
+            doc.SaveAsPDF(ms, textOption: PDFContextInterpreter.TextOptions.ConvertIntoPaths, filterOption: new PDFContextInterpreter.FilterOption(PDFContextInterpreter.FilterOption.FilterOperations.RasteriseAll, scale, true));
 
             using (MuPDFContext context = new MuPDFContext())
             {
@@ -67,7 +67,7 @@ namespace VectSharp.Raster
             doc.Pages.Add(page);
 
             MemoryStream ms = new MemoryStream();
-            doc.SaveAsPDF(ms, filterOption: new PDFContextInterpreter.FilterOption(PDFContextInterpreter.FilterOption.FilterOperations.RasteriseAll, scale, true));
+            doc.SaveAsPDF(ms, textOption: PDFContextInterpreter.TextOptions.ConvertIntoPaths, filterOption: new PDFContextInterpreter.FilterOption(PDFContextInterpreter.FilterOption.FilterOperations.RasteriseAll, scale, true));
 
             using (MuPDFContext context = new MuPDFContext())
             {
@@ -98,7 +98,7 @@ namespace VectSharp.Raster
             doc.Pages.Add(pag);
 
             MemoryStream ms = new MemoryStream();
-            doc.SaveAsPDF(ms, filterOption: new PDFContextInterpreter.FilterOption(PDFContextInterpreter.FilterOption.FilterOperations.RasteriseAll, scale, true));
+            doc.SaveAsPDF(ms, textOption: PDFContextInterpreter.TextOptions.ConvertIntoPaths, filterOption: new PDFContextInterpreter.FilterOption(PDFContextInterpreter.FilterOption.FilterOperations.RasteriseAll, scale, true));
 
             IntPtr imageDataAddress;
 
@@ -146,7 +146,7 @@ namespace VectSharp.Raster
             doc.Pages.Add(pag);
 
             MemoryStream ms = new MemoryStream();
-            doc.SaveAsPDF(ms, filterOption: new PDFContextInterpreter.FilterOption(PDFContextInterpreter.FilterOption.FilterOperations.RasteriseAll, scale, true));
+            doc.SaveAsPDF(ms, textOption: PDFContextInterpreter.TextOptions.ConvertIntoPaths, filterOption: new PDFContextInterpreter.FilterOption(PDFContextInterpreter.FilterOption.FilterOperations.RasteriseAll, scale, true));
 
             IntPtr renderedPage;
 
@@ -170,6 +170,106 @@ namespace VectSharp.Raster
             ms.Dispose();
 
             return new DisposableIntPtr(renderedPage);
+        }
+
+        /// <summary>
+        /// Saves the animation to a stream in animated PNG format.
+        /// </summary>
+        /// <param name="animation">The animation to export.</param>
+        /// <param name="imageStream">The stream on which the animated PNG will be written.</param>
+        /// <param name="scale">The scale at which the animation will be rendered.</param>
+        /// <param name="frameRate">The target frame rate of the animation, in frames-per-second (fps). This is capped by the animated PNG specification at 90 fps.</param>
+        /// <param name="durationScaling">A scaling factor that will be applied to all durations in the animation. Values greater than 1 slow down the animation, values smaller than 1 accelerate it. Note that this does not affect the frame rate of the animation.</param>
+        /// <param name="interframeCompression">The kind of compression that will be used to reduce file size. Note that if the animation has a transparent background, no compression can be performed, and the value of this parameter is ignored.</param>
+        public static void SaveAsAnimatedPNG(this Animation animation, Stream imageStream, double scale = 1, double frameRate = 60, double durationScaling = 1, AnimatedPNG.InterframeCompression interframeCompression = AnimatedPNG.InterframeCompression.First)
+        {
+            frameRate = Math.Min(frameRate, 90);
+
+            int frames = (int)Math.Ceiling(animation.Duration * frameRate * durationScaling / 1000);
+
+            Stream fs = imageStream;
+
+            AnimatedPNG.CompressedFrame[] compressedFrames = new AnimatedPNG.CompressedFrame[frames];
+
+            int width = (int)(animation.Width * scale);
+            int height = (int)(animation.Height * scale);
+
+            if (animation.Background.A < 1 || interframeCompression == AnimatedPNG.InterframeCompression.None)
+            {
+                Parallel.For(0, frames, i =>
+                {
+                    double frameTime = i / frameRate / durationScaling * 1000;
+
+                    double frameDuration = Math.Min((animation.Duration - frameTime) * durationScaling, 1000 / frameRate);
+
+                    Page pag = animation.GetFrameAtAbsolute(frameTime);
+
+                    using (DisposableIntPtr rawFrame = pag.SaveAsRawBytes(out _, out _, out _, scale))
+                    {
+                        compressedFrames[i] = new AnimatedPNG.CompressedFrame(rawFrame, width, height, true, frameDuration);
+                    }
+                });
+            }
+            else if (interframeCompression == AnimatedPNG.InterframeCompression.First)
+            {
+                DisposableIntPtr firstFrame = animation.GetFrameAtAbsolute(0).SaveAsRawBytes(out _, out _, out _, scale);
+                compressedFrames[0] = new AnimatedPNG.CompressedFrame(firstFrame, width, height, true, Math.Min(animation.Duration * durationScaling, 1000 / frameRate));
+
+                Parallel.For(1, frames, i =>
+                {
+                    double frameTime = i / frameRate / durationScaling * 1000;
+
+                    double frameDuration = Math.Min((animation.Duration - frameTime) * durationScaling, 1000 / frameRate);
+
+                    Page pag = animation.GetFrameAtAbsolute(frameTime);
+
+                    using (DisposableIntPtr rawFrame = pag.SaveAsRawBytes(out _, out _, out _, scale))
+                    {
+                        compressedFrames[i] = new AnimatedPNG.CompressedFrame(rawFrame, firstFrame, true, width, height, true, frameDuration);
+                    }
+                });
+
+                firstFrame.Dispose();
+            }
+            else if (interframeCompression == AnimatedPNG.InterframeCompression.Previous)
+            {
+                DisposableIntPtr[] rawFrames = new DisposableIntPtr[frames];
+
+                Parallel.For(0, frames, i =>
+                {
+                    double frameTime = i / frameRate / durationScaling * 1000;
+                    Page pag = animation.GetFrameAtAbsolute(frameTime);
+                    rawFrames[i] = pag.SaveAsRawBytes(out _, out _, out _, scale);
+                });
+
+                compressedFrames[0] = new AnimatedPNG.CompressedFrame(rawFrames[0], width, height, true, Math.Min(animation.Duration * durationScaling, 1000 / frameRate));
+
+                Parallel.For(1, frames, i =>
+                {
+                    double frameTime = i / frameRate / durationScaling * 1000;
+                    double frameDuration = Math.Min((animation.Duration - frameTime) * durationScaling, 1000 / frameRate);
+                    compressedFrames[i] = new AnimatedPNG.CompressedFrame(rawFrames[i], rawFrames[i - 1], false, width, height, true, frameDuration);
+                });
+            }
+
+            AnimatedPNG.Create(fs, (int)(animation.Width * scale), (int)(animation.Height * scale), true, compressedFrames, animation.RepeatCount);
+        }
+
+        /// <summary>
+        /// Saves the animation to an animated PNG file.
+        /// </summary>
+        /// <param name="animation">The animation to export.</param>
+        /// <param name="fileName">The output file to create.</param>
+        /// <param name="scale">The scale at which the animation will be rendered.</param>
+        /// <param name="frameRate">The target frame rate of the animation, in frames-per-second (fps). This is capped by the animated PNG specification at 90 fps.</param>
+        /// <param name="durationScaling">A scaling factor that will be applied to all durations in the animation. Values greater than 1 slow down the animation, values smaller than 1 accelerate it. Note that this does not affect the frame rate of the animation.</param>
+        /// <param name="interframeCompression">The kind of compression that will be used to reduce file size. Note that if the animation has a transparent background, no compression can be performed, and the value of this parameter is ignored.</param>
+        public static void SaveAsAnimatedPNG(this Animation animation, string fileName, double scale = 1, double frameRate = 60, double durationScaling = 1, AnimatedPNG.InterframeCompression interframeCompression = AnimatedPNG.InterframeCompression.First)
+        {
+            using (FileStream fs = File.Create(fileName))
+            {
+                SaveAsAnimatedPNG(animation, fs, scale, frameRate, durationScaling, interframeCompression);
+            }
         }
     }
 }
