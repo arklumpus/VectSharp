@@ -1907,16 +1907,41 @@ namespace VectSharp
 
             GraphicsPath tbr = new GraphicsPath();
 
-            Point? previousPoint = null;
+            Point?[] previousPoints = new Point?[this.Segments.Count];
 
-            foreach (Segment seg in this.Segments)
+            previousPoints[0] = null;
+
+            for (int i = 0; i < this.Segments.Count - 1; i++)
             {
-                tbr.Segments.AddRange(seg.Linearise(previousPoint, resolution));
-
-                if (seg.Type != SegmentType.Close)
+                if (this.Segments[i].Type != SegmentType.Close)
                 {
-                    previousPoint = seg.Point;
+                    previousPoints[i + 1] = this.Segments[i].Point;
                 }
+                else
+                {
+                    previousPoints[i + 1] = previousPoints[i];
+                }
+            }
+
+            Segment[][] linearisedSegments = new Segment[this.Segments.Count][];
+
+            System.Threading.Tasks.Parallel.For(0, this.Segments.Count, i =>
+            {
+                linearisedSegments[i] = this.Segments[i].Linearise(previousPoints[i], resolution).ToArray();
+            });
+
+            int total = 0;
+
+            for (int i = 0; i < linearisedSegments.Length; i++)
+            {
+                total += linearisedSegments[i].Length;
+            }
+
+            tbr.Segments.Capacity = total;
+
+            for (int i = 0; i < linearisedSegments.Length; i++)
+            {
+                tbr.Segments.AddRange(linearisedSegments[i]);
             }
 
             return tbr;
