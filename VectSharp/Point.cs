@@ -196,6 +196,11 @@ namespace VectSharp
         public Size Size;
 
         /// <summary>
+        /// The centre of the rectangle.
+        /// </summary>
+        public Point Centre { get { return new Point(this.Location.X + this.Size.Width * 0.5, this.Location.Y + this.Size.Height * 0.5); } }
+
+        /// <summary>
         /// Create a new <see cref="Rectangle"/> given its top-left corner and its size.
         /// </summary>
         /// <param name="location">The top-left corner of the rectangle.</param>
