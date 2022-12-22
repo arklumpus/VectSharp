@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="VectSharp" Version="2.4.0-a6" />
+    <PackageReference Include="VectSharp" Version="2.4.0-a7" />
   </ItemGroup>
 
 

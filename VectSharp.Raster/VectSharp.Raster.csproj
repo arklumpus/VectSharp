@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <PackageReference Include="MuPDFCore" Version="1.6.0" />
-	<PackageReference Include="VectSharp" Version="2.4.0-a6" />
+	<PackageReference Include="VectSharp" Version="2.4.0-a7" />
 	<PackageReference Include="VectSharp.PDF" Version="2.6.0-a2" />
   </ItemGroup>
   
