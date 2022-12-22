@@ -40,7 +40,7 @@ namespace VectSharp
 
             if (font.Underline != null)
             {
-                FillTextUnderline(origin, text, font, fillColour, textBaseline, tag);
+                FillTextUnderline(origin, text, font, fillColour, textBaseline, tag + "@underline");
             }
         }
 
@@ -60,7 +60,7 @@ namespace VectSharp
 
             if (font.Underline != null)
             {
-                FillTextUnderline(originX, originY, text, font, fillColour, textBaseline, tag);
+                FillTextUnderline(originX, originY, text, font, fillColour, textBaseline, tag + "@underline");
             }
         }
 
@@ -83,7 +83,7 @@ namespace VectSharp
 
             if (font.Underline != null)
             {
-                StrokeTextUnderline(origin, text, font, strokeColour, textBaseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                StrokeTextUnderline(origin, text, font, strokeColour, textBaseline, lineWidth, lineCap, lineJoin, lineDash, tag + "@underline");
             }
         }
 
@@ -107,7 +107,7 @@ namespace VectSharp
 
             if (font.Underline != null)
             {
-                StrokeTextUnderline(originX, originY, text, font, strokeColour, textBaseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                StrokeTextUnderline(originX, originY, text, font, strokeColour, textBaseline, lineWidth, lineCap, lineJoin, lineDash, tag + "@underline");
             }
         }
 
@@ -192,41 +192,41 @@ namespace VectSharp
                     case TextBaselines.Top:
                         if (i > 0)
                         {
-                            this.FillText(new Point(metrics.LeftSideBearing, fullMetrics.Top), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag);
+                            this.FillText(new Point(metrics.LeftSideBearing, fullMetrics.Top), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag + "@" + i.ToString());
                         }
                         else
                         {
-                            this.FillText(new Point(0, fullMetrics.Top), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag);
+                            this.FillText(new Point(0, fullMetrics.Top), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag + "@" + i.ToString());
                         }
                         break;
                     case TextBaselines.Baseline:
                         if (i > 0)
                         {
-                            this.FillText(new Point(metrics.LeftSideBearing, 0), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag);
+                            this.FillText(new Point(metrics.LeftSideBearing, 0), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag + "@" + i.ToString());
                         }
                         else
                         {
-                            this.FillText(new Point(0, 0), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag);
+                            this.FillText(new Point(0, 0), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag + "@" + i.ToString());
                         }
                         break;
                     case TextBaselines.Bottom:
                         if (i > 0)
                         {
-                            this.FillText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag);
+                            this.FillText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag + "@" + i.ToString());
                         }
                         else
                         {
-                            this.FillText(new Point(0, fullMetrics.Bottom), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag);
+                            this.FillText(new Point(0, fullMetrics.Bottom), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag + "@" + i.ToString());
                         }
                         break;
                     case TextBaselines.Middle:
                         if (i > 0)
                         {
-                            this.FillText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag);
+                            this.FillText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag + "@" + i.ToString());
                         }
                         else
                         {
-                            this.FillText(new Point(0, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag);
+                            this.FillText(new Point(0, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, fillColour, textBaseline: TextBaselines.Baseline, tag + "@" + i.ToString());
                         }
                         break;
                 }
@@ -329,41 +329,41 @@ namespace VectSharp
                     case TextBaselines.Top:
                         if (i > 0)
                         {
-                            this.StrokeText(new Point(metrics.LeftSideBearing, fullMetrics.Top), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                            this.StrokeText(new Point(metrics.LeftSideBearing, fullMetrics.Top), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag + "@" + i.ToString());
                         }
                         else
                         {
-                            this.StrokeText(new Point(0, fullMetrics.Top), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                            this.StrokeText(new Point(0, fullMetrics.Top), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag + "@" + i.ToString());
                         }
                         break;
                     case TextBaselines.Baseline:
                         if (i > 0)
                         {
-                            this.StrokeText(new Point(metrics.LeftSideBearing, 0), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                            this.StrokeText(new Point(metrics.LeftSideBearing, 0), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag + "@" + i.ToString());
                         }
                         else
                         {
-                            this.StrokeText(new Point(0, 0), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                            this.StrokeText(new Point(0, 0), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag + "@" + i.ToString());
                         }
                         break;
                     case TextBaselines.Bottom:
                         if (i > 0)
                         {
-                            this.StrokeText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                            this.StrokeText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag + "@" + i.ToString());
                         }
                         else
                         {
-                            this.StrokeText(new Point(0, fullMetrics.Bottom), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                            this.StrokeText(new Point(0, fullMetrics.Bottom), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag + "@" + i.ToString());
                         }
                         break;
                     case TextBaselines.Middle:
                         if (i > 0)
                         {
-                            this.StrokeText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                            this.StrokeText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag + "@" + i.ToString());
                         }
                         else
                         {
-                            this.StrokeText(new Point(0, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                            this.StrokeText(new Point(0, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag + "@" + i.ToString());
                         }
                         break;
                 }
@@ -424,11 +424,11 @@ namespace VectSharp
 
                     if (i > 0)
                     {
-                        FillText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? fillColour, TextBaselines.Baseline, tag);
+                        FillText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? fillColour, TextBaselines.Baseline, tag + "@" + i.ToString());
                     }
                     else
                     {
-                        FillText(baselineOrigin, txt.Text, txt.Font, txt.Brush ?? fillColour, TextBaselines.Baseline, tag);
+                        FillText(baselineOrigin, txt.Text, txt.Font, txt.Brush ?? fillColour, TextBaselines.Baseline, tag + "@" + i.ToString());
                     }
 
                     if (i > 0)
@@ -453,11 +453,11 @@ namespace VectSharp
 
                     if (txt.Script == Script.Subscript)
                     {
-                        FillText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + txt.Font.FontSize * 0.14, txt.Text, newFont, txt.Brush ?? fillColour, TextBaselines.Baseline, tag);
+                        FillText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + txt.Font.FontSize * 0.14, txt.Text, newFont, txt.Brush ?? fillColour, TextBaselines.Baseline, tag + "@" + i.ToString());
                     }
                     else if (txt.Script == Script.Superscript)
                     {
-                        FillText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y - txt.Font.FontSize * 0.33, txt.Text, newFont, txt.Brush ?? fillColour, TextBaselines.Baseline, tag);
+                        FillText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y - txt.Font.FontSize * 0.33, txt.Text, newFont, txt.Brush ?? fillColour, TextBaselines.Baseline, tag + "@" + i.ToString());
                     }
 
 
@@ -534,11 +534,11 @@ namespace VectSharp
 
                     if (i > 0)
                     {
-                        StrokeText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                        StrokeText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag + "@" + i.ToString());
                     }
                     else
                     {
-                        StrokeText(baselineOrigin, txt.Text, txt.Font, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                        StrokeText(baselineOrigin, txt.Text, txt.Font, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag + "@" + i.ToString());
                     }
 
                     if (i > 0)
@@ -563,11 +563,11 @@ namespace VectSharp
 
                     if (txt.Script == Script.Subscript)
                     {
-                        StrokeText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + txt.Font.FontSize * 0.14, txt.Text, newFont, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                        StrokeText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + txt.Font.FontSize * 0.14, txt.Text, newFont, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag + "@" + i.ToString());
                     }
                     else if (txt.Script == Script.Superscript)
                     {
-                        StrokeText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y - txt.Font.FontSize * 0.33, txt.Text, newFont, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                        StrokeText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y - txt.Font.FontSize * 0.33, txt.Text, newFont, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag + "@" + i.ToString());
                     }
 
 
@@ -752,11 +752,11 @@ namespace VectSharp
 
                     if (i > 0)
                     {
-                        FillTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? fillColour, TextBaselines.Baseline, tag);
+                        FillTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? fillColour, TextBaselines.Baseline, tag + "@" + i.ToString());
                     }
                     else
                     {
-                        FillTextUnderline(baselineOrigin, txt.Text, txt.Font, txt.Brush ?? fillColour, TextBaselines.Baseline, tag);
+                        FillTextUnderline(baselineOrigin, txt.Text, txt.Font, txt.Brush ?? fillColour, TextBaselines.Baseline, tag + "@" + i.ToString());
                     }
 
                     if (i > 0)
@@ -781,11 +781,11 @@ namespace VectSharp
 
                     if (txt.Script == Script.Subscript)
                     {
-                        FillTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + txt.Font.FontSize * 0.14, txt.Text, newFont, txt.Brush ?? fillColour, TextBaselines.Baseline, tag);
+                        FillTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + txt.Font.FontSize * 0.14, txt.Text, newFont, txt.Brush ?? fillColour, TextBaselines.Baseline, tag + "@" + i.ToString());
                     }
                     else if (txt.Script == Script.Superscript)
                     {
-                        FillTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y - txt.Font.FontSize * 0.33, txt.Text, newFont, txt.Brush ?? fillColour, TextBaselines.Baseline, tag);
+                        FillTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y - txt.Font.FontSize * 0.33, txt.Text, newFont, txt.Brush ?? fillColour, TextBaselines.Baseline, tag + "@" + i.ToString());
                     }
 
 
@@ -866,11 +866,11 @@ namespace VectSharp
 
                     if (i > 0)
                     {
-                        StrokeTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                        StrokeTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag + "@" + i.ToString());
                     }
                     else
                     {
-                        StrokeTextUnderline(baselineOrigin, txt.Text, txt.Font, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                        StrokeTextUnderline(baselineOrigin, txt.Text, txt.Font, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag + "@" + i.ToString());
                     }
 
                     if (i > 0)
@@ -895,11 +895,11 @@ namespace VectSharp
 
                     if (txt.Script == Script.Subscript)
                     {
-                        StrokeTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + txt.Font.FontSize * 0.14, txt.Text, newFont, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                        StrokeTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + txt.Font.FontSize * 0.14, txt.Text, newFont, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag + "@" + i.ToString());
                     }
                     else if (txt.Script == Script.Superscript)
                     {
-                        StrokeTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y - txt.Font.FontSize * 0.33, txt.Text, newFont, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+                        StrokeTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y - txt.Font.FontSize * 0.33, txt.Text, newFont, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag + "@" + i.ToString());
                     }
 
 
