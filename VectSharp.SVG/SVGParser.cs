@@ -1174,6 +1174,7 @@ namespace VectSharp.SVG
                                     i += 2;
 
                                     path.CubicBezierTo(ctrlPoint1, ctrlPoint2, lastPoint);
+                                    lastCtrlPoint = ctrlPoint2;
                                 }
                             }
                             break;
