@@ -55,7 +55,7 @@ for (int i = 0; i < triangles.Count; i++)
 page.SaveAsSVG("Triangulation.svg");
 {% endhighlight %}
 
-The following example uses triangulation together with some basic physics to create an "explosion" effect. VectSharp.Raster.ImageSharp and the [ImageSharp library](https://github.com/SixLabors/ImageSharp) are used to create an animated gif with the explosion.
+The following example uses triangulation together with some basic physics to create an "explosion" effect. The VectSharp animation features are used to draw create the explosion animation, which is then saved as an animated GIF using VectSharp.Raster.ImageSharp (you could also create an animated SVG or PNG).
 
 You could obtain a more sofisticated animation by improving the physics engine (e.g. by allowing each triangle to rotate), but this is overkill for this example.
 
@@ -147,15 +147,14 @@ Colour[] colours = new Colour[]
     Colour.FromRgb(204, 121, 167)
 };
 
-// Create the image that will hold the animated GIF's frames.
-SixLabors.ImageSharp.Image gifAnimation = new SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>(1320, 310);
+// Create the animation that will contain all the frames.
+Animation animation = new Animation(132, 31, 1) { Background = Colours.White };
 
 // Loop over time
 for (double t = 0; t <= 6.5; t += 0.075)
 {
-    // Create a new page to render the frame.
-    Page page = new Page(132, 31) { Background = Colours.White };
-    Graphics graphics = page.Graphics;
+    // Create a new graphics for the frame.
+    Graphics graphics = new Graphics();
     graphics.Translate(16, 3);
 
     // Loop over the triangles.
@@ -191,30 +190,28 @@ for (double t = 0; t <= 6.5; t += 0.075)
         graphics.FillPath(triangle, colours[i % colours.Length]);
     }
 
-    // Rasterise the frame as a SixLabors.ImageSharp.Image.
-    SixLabors.ImageSharp.Image frame = page.SaveAsImage(10);
+    // Create the frame and set the duration. We use a larger duration for the first frame.
+    Frame frame;
 
-    // Set the delay for the frame. We use a larger delay for the first frame.
     if (t == 0)
     {
-        frame.Frames[0].Metadata.GetFormatMetadata(SixLabors.ImageSharp.Formats.Gif.GifFormat.Instance).FrameDelay = 30;
+        frame = new Frame(graphics, 250);
     }
     else
     {
-        frame.Frames[0].Metadata.GetFormatMetadata(SixLabors.ImageSharp.Formats.Gif.GifFormat.Instance).FrameDelay = 2;
+        frame = new Frame(graphics, 16);
     }
 
-    // Add the frame to the animated GIF.
-    gifAnimation.Frames.AddFrame(frame.Frames[0]);
+    // Add the frame to the animation.
+    animation.AddFrame(frame);
 }
 
 
 // Add the reverse animation.
 for (double t = 6.5; t >= 0; t -= 0.075)
 {
-    // Create a new page to render the frame.
-    Page page = new Page(132, 31) { Background = Colours.White };
-    Graphics graphics = page.Graphics;
+    // Create a new graphics for the frame.
+    Graphics graphics = new Graphics();
     graphics.Translate(16, 3);
 
     // Loop over the triangles.
@@ -250,30 +247,14 @@ for (double t = 6.5; t >= 0; t -= 0.075)
         graphics.FillPath(triangle, colours[i % colours.Length]);
     }
 
-    // Rasterise the frame as a SixLabors.ImageSharp.Image.
-    SixLabors.ImageSharp.Image frame = page.SaveAsImage(10);
+    // Create the frame.
+    Frame frame = new Frame(graphics, 16);
 
-    // Set the delay for the frame.
-    frame.Frames[0].Metadata.GetFormatMetadata(SixLabors.ImageSharp.Formats.Gif.GifFormat.Instance).FrameDelay = 2;
-
-    // Add the frame to the animated GIF.
-    gifAnimation.Frames.AddFrame(frame.Frames[0]);
+    // Add the frame to the animation.
+    animation.AddFrame(frame);
 }
 
-// Remove the initial black frame that was added when we created the image.
-gifAnimation.Frames.RemoveFrame(0);
-
-// Get the metadata for the GIF.
-SixLabors.ImageSharp.Formats.Gif.GifMetadata metadata = gifAnimation.Metadata.GetFormatMetadata(SixLabors.ImageSharp.Formats.Gif.GifFormat.Instance);
-
-// Use a local colour table (i.e., a different colour table for each frame).
-metadata.ColorTableMode = SixLabors.ImageSharp.Formats.Gif.GifColorTableMode.Local;
-
-// Make the GIF loop infinitely.
-metadata.RepeatCount = 0;
-
-// Save the image as an animated GIF.
-SixLabors.ImageSharp.ImageExtensions.SaveAsGif(gifAnimation, "TriangulationAnimation.gif");
-
+// Save the animation as an animated GIF, with a scale factor of 10.
+animation.SaveAsAnimatedGIF("TriangulationAnimation.gif", 10);
 {% endhighlight %}
 </details>
