@@ -31,6 +31,13 @@ Furthermore:
 
 * **VectSharp.Fonts.Nimbus** is a package released under a GPLv3 license, which contains the standard fonts that were used in VectSharp before version 2.0.0. Since these fonts are released under a GPL license, they had to be replaced when the VectSharp license changed to LGPL. See the [Font libraries](section) below for information on how to re-enable these fonts.
 
+* The **Animation** class (provided in the base VectSharp package) can be used to create animations that can be saved as animated GIFs (using VectSharp.Raster.ImageSharp), SVGs (using VectSharp.SVG) and PNGs (using VectSharp.Raster or VectSharp.Raster.ImageSharp).
+
+<p style="text-align: center">
+<img src="https://user-images.githubusercontent.com/32712606/209444145-e4833187-37a7-4682-9f64-a16d1d03d84c.gif" style="width: 90%">
+</img>
+</p>
+
 ## Installing VectSharp
 To include VectSharp in your project, you will need one of the output layer NuGet packages: [VectSharp.PDF](https://www.nuget.org/packages/VectSharp.PDF/), [VectSharp.Canvas](https://www.nuget.org/packages/VectSharp.Canvas/), [VectSharp.Raster](https://www.nuget.org/packages/VectSharp.Raster/), [VectSharp.Raster.ImageSharp](https://www.nuget.org/packages/VectSharp.Raster.ImageSharp/), or [VectSharp.SVG](https://www.nuget.org/packages/VectSharp.SVG/). You will need [VectSharp.ThreeD](https://www.nuget.org/packages/VectSharp.ThreeD/) to work with 3D graphics. You may want the [VectSharp.MuPDFUtils](https://www.nuget.org/packages/VectSharp.MuPDFUtils/) package if you wish to manipulate raster images, and the [VectSharp.Fonts.Nimbus](https://www.nuget.org/packages/VectSharp.Fonts.Nimbus/) if you want to restore the GPL-licensed fonts used in previous versions of the library.
 
@@ -115,7 +122,7 @@ document.SaveAsPDF(@"Links.pdf", linkDestinations: links);
 ``` 
 This code produces a document with three rectangles: the grey one at the top links to the GitHub home page, while the red one in the middle is a hyperlink to the blue one at the bottom. Links in PDF documents can refer to objects that are in a different page than the one containing the link.
 
-The public classes and methods are [fully documented](https://arklumpus.github.io/VectSharp) (with interactive examples created using Blazor), and you can find a (much) more detailed code example in [MainWindow.xaml.cs](https://github.com/arklumpus/VectSharp/blob/master/VectSharp.Demo/MainWindow.xaml.cs). A detailed guide about 3D graphics in VectSharp.ThreeD is available in the [`VectSharp.ThreeD`](https://github.com/arklumpus/VectSharp/tree/master/VectSharp.ThreeD) folder.
+The public classes and methods are [fully documented](https://arklumpus.github.io/VectSharp) (with interactive examples created using Blazor), and you can find a (much) more detailed code example in [MainWindow.xaml.cs](https://github.com/arklumpus/VectSharp/blob/master/VectSharp.Demo/MainWindow.xaml.cs). A detailed guide about 3D graphics in VectSharp.ThreeD is available in the [`VectSharp.ThreeD`](https://github.com/arklumpus/VectSharp/tree/master/VectSharp.ThreeD) folder. Further example code for animations is available in the [DemoAnimation project](https://github.com/arklumpus/VectSharp/blob/master/VectSharp.DemoAnimation/MainWindow.axaml.cs).
 
 ## Font libraries
 
