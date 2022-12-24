@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>netcoreapp6.0</TargetFrameworks>
+    <TargetFrameworks>net7.0</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp3.1|AnyCPU'">
     <PlatformTarget>x64</PlatformTarget>
@@ -20,13 +20,13 @@
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.10.18" />
     <PackageReference Include="Avalonia.Desktop" Version="0.10.18" />
-    <PackageReference Include="VectSharp" Version="2.4.0-a6" />
-    <PackageReference Include="VectSharp.Canvas" Version="2.6.0-a6" />
-    <PackageReference Include="VectSharp.MuPDFUtils" Version="1.1.9-a2" />
-    <PackageReference Include="VectSharp.PDF" Version="2.6.0-a2" />
-    <PackageReference Include="VectSharp.Raster" Version="2.2.0-a2" />
-    <PackageReference Include="VectSharp.SVG" Version="1.8.0-a8" />
-	<PackageReference Include="VectSharp.ImageSharpUtils" Version="1.0.2-beta15-a2" />
-	<PackageReference Include="VectSharp.Raster.ImageSharp" Version="1.2.0-beta15-a2" />
+    <PackageReference Include="VectSharp" Version="2.4.0" />
+    <PackageReference Include="VectSharp.Canvas" Version="2.6.0" />
+    <PackageReference Include="VectSharp.MuPDFUtils" Version="1.1.9" />
+    <PackageReference Include="VectSharp.PDF" Version="2.6.0" />
+    <PackageReference Include="VectSharp.Raster" Version="2.2.0" />
+    <PackageReference Include="VectSharp.SVG" Version="1.8.0" />
+	<PackageReference Include="VectSharp.ImageSharpUtils" Version="1.0.2-beta15" />
+	<PackageReference Include="VectSharp.Raster.ImageSharp" Version="1.2.0-beta15" />
   </ItemGroup>
 </Project>

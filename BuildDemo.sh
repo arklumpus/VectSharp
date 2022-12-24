@@ -24,14 +24,14 @@ printf "\n"
 printf "[104;97mBuilding VectSharp.Demo...[0m\n"
 
 cd VectSharp.Demo
-dotnet publish -c Release -f netcoreapp3.1 /p:PublishProfile=Properties/PublishProfiles/$platform.pubxml
+dotnet publish -c Release -f net7.0 /p:PublishProfile=Properties/PublishProfiles/$platform.pubxml
 cd ..
 
 printf "\n"
 printf "[104;97mBuilding VectSharp.Demo3D...[0m\n"
 
 cd VectSharp.Demo3D
-dotnet publish -c Release -f netcoreapp3.1 /p:PublishProfile=Properties/PublishProfiles/$platform.pubxml
+dotnet publish -c Release -f net7.0 /p:PublishProfile=Properties/PublishProfiles/$platform.pubxml
 cd ..
 
 printf "\n"

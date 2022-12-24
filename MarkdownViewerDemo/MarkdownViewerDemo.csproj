@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -14,7 +14,7 @@
     <PackageReference Include="Avalonia" Version="0.10.18" />
     <PackageReference Include="Avalonia.Desktop" Version="0.10.18" />
     <PackageReference Include="Avalonia.Diagnostics" Version="0.10.18" />
-    <PackageReference Include="VectSharp.MuPDFUtils" Version="1.1.9-a2" />
+    <PackageReference Include="VectSharp.MuPDFUtils" Version="1.1.9" />
    </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VectSharp.MarkdownCanvas\VectSharp.MarkdownCanvas.csproj" />
