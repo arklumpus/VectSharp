@@ -1647,5 +1647,20 @@ namespace VectSharp
             Rectangle region = new Rectangle(topLeft, size);
             this.Crop(region);
         }
+
+        /// <summary>
+        /// Gets all the tags that have been defined in the <see cref="Graphics"/>.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="string"/>s that, when enumerated, returns all the tags that have been defined in the <see cref="Graphics"/>.</returns>
+        public IEnumerable<string> GetTags()
+        {
+            foreach (IGraphicsAction action in this.Actions)
+            {
+                if (!string.IsNullOrEmpty(action.Tag))
+                {
+                    yield return action.Tag;
+                }    
+            }
+        }
     }
 }
