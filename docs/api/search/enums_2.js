@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['linecaps_0',['LineCaps',['../namespace_vect_sharp.html#a6bde58d6aab37ea51e32240503678209',1,'VectSharp']]],
-  ['linejoins_1',['LineJoins',['../namespace_vect_sharp.html#a58a4a36ea254b3d255755654fd9e61f6',1,'VectSharp']]]
+  ['interframecompression_0',['InterframeCompression',['../class_vect_sharp_1_1_animated_p_n_g.html#ac87e8fb45a427615d2645ba751e5d09a',1,'VectSharp::AnimatedPNG']]]
 ];

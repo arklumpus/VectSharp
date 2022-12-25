@@ -1,5 +1,6 @@
 var namespace_vect_sharp_1_1_canvas =
 [
+    [ "AnimatedCanvas", "class_vect_sharp_1_1_canvas_1_1_animated_canvas.html", "class_vect_sharp_1_1_canvas_1_1_animated_canvas" ],
     [ "AvaloniaContextInterpreter", "class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html", "class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter" ],
     [ "FilterOption", "class_vect_sharp_1_1_canvas_1_1_filter_option.html", "class_vect_sharp_1_1_canvas_1_1_filter_option" ],
     [ "RenderAction", "class_vect_sharp_1_1_canvas_1_1_render_action.html", "class_vect_sharp_1_1_canvas_1_1_render_action" ],

@@ -8,5 +8,6 @@ var searchData=
   ['inversion_5',['Inversion',['../class_vect_sharp_1_1_filters_1_1_colour_matrix.html#aa3e7c5cb07d2ef9600d0b5daa4166953',1,'VectSharp::Filters::ColourMatrix']]],
   ['invertedalphashift_6',['InvertedAlphaShift',['../class_vect_sharp_1_1_filters_1_1_colour_matrix.html#a90f35f354ecd2bb0c2dda501580301a4',1,'VectSharp::Filters::ColourMatrix']]],
   ['isoncurve_7',['IsOnCurve',['../struct_vect_sharp_1_1_true_type_file_1_1_true_type_point.html#aff912de8c802798b6e4d3d586cf7d6df',1,'VectSharp::TrueTypeFile::TrueTypePoint']]],
-  ['ivory_8',['Ivory',['../class_vect_sharp_1_1_colours.html#af31a8c4c63c28e6428a86e8f68bbb41d',1,'VectSharp::Colours']]]
+  ['isplayingproperty_8',['IsPlayingProperty',['../class_vect_sharp_1_1_canvas_1_1_animated_canvas.html#a191ed4831104f6a5c9f4c6edf9c97b3b',1,'VectSharp::Canvas::AnimatedCanvas']]],
+  ['ivory_9',['Ivory',['../class_vect_sharp_1_1_colours.html#af31a8c4c63c28e6428a86e8f68bbb41d',1,'VectSharp::Colours']]]
 ];

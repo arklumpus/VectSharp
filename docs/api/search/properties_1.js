@@ -6,7 +6,7 @@ var searchData=
   ['b3_3',['B3',['../class_vect_sharp_1_1_filters_1_1_colour_matrix.html#aafd7c3f325a16bd7ac51ff14214824d0',1,'VectSharp::Filters::ColourMatrix']]],
   ['b4_4',['B4',['../class_vect_sharp_1_1_filters_1_1_colour_matrix.html#a5097e89292474002ee0976d466812982',1,'VectSharp::Filters::ColourMatrix']]],
   ['b5_5',['B5',['../class_vect_sharp_1_1_filters_1_1_colour_matrix.html#ab7bbf96a1951e578cdd472e68e86e3b8',1,'VectSharp::Filters::ColourMatrix']]],
-  ['background_6',['Background',['../class_vect_sharp_1_1_page.html#ad4758fd1d5dac8e8f3b3402b92afe368',1,'VectSharp::Page']]],
+  ['background_6',['Background',['../class_vect_sharp_1_1_animation.html#ac0dd2a21b50e569e6440a9c939ae9776',1,'VectSharp.Animation.Background()'],['../class_vect_sharp_1_1_page.html#ad4758fd1d5dac8e8f3b3402b92afe368',1,'VectSharp.Page.Background()']]],
   ['backgroundcolour_7',['BackgroundColour',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a705b87a48e9440a1cdbfd0aa0ad68d17',1,'VectSharp::Markdown::MarkdownRenderer']]],
   ['basefontsize_8',['BaseFontSize',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a526e8cc443eacebd5945764a8dee28df',1,'VectSharp::Markdown::MarkdownRenderer']]],
   ['baseimageuri_9',['BaseImageUri',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#abc128a21d2706ed5eb2f9b75d91f576d',1,'VectSharp::Markdown::MarkdownRenderer']]],

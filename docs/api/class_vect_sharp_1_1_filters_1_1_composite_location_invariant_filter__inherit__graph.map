@@ -1,5 +1,5 @@
 <map id="VectSharp.Filters.CompositeLocationInvariantFilter" name="VectSharp.Filters.CompositeLocationInvariantFilter">
-<area shape="rect" id="node1" title="Represents a filter that corresponds to applying multiple ILocationInvariantFilters one after the oth..." alt="" coords="5,155,195,196"/>
-<area shape="rect" id="node2" href="$interface_vect_sharp_1_1_filters_1_1_i_location_invariant_filter.html" title="Represents a filter that can be applied to an image regardless of its location on the graphics surfac..." alt="" coords="25,80,175,107"/>
-<area shape="rect" id="node3" href="$interface_vect_sharp_1_1_filters_1_1_i_filter.html" title="Represents a filter. Do not implement this interface directly; instead, implement ILocationInvariantF..." alt="" coords="73,5,127,32"/>
+<area shape="rect" id="node1" title="Represents a filter that corresponds to applying multiple ILocationInvariantFilters one after the oth..." alt="" coords="5,152,196,192"/>
+<area shape="rect" id="node2" href="$interface_vect_sharp_1_1_filters_1_1_i_location_invariant_filter.html" title="Represents a filter that can be applied to an image regardless of its location on the graphics surfac..." alt="" coords="23,79,178,104"/>
+<area shape="rect" id="node3" href="$interface_vect_sharp_1_1_filters_1_1_i_filter.html" title="Represents a filter. Do not implement this interface directly; instead, implement ILocationInvariantF..." alt="" coords="73,5,128,31"/>
 </map>

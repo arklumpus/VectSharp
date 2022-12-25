@@ -1,5 +1,7 @@
 var hierarchy =
 [
+    [ "VectSharp.AnimatedPNG", "class_vect_sharp_1_1_animated_p_n_g.html", null ],
+    [ "VectSharp.Animation", "class_vect_sharp_1_1_animation.html", null ],
     [ "VectSharp.Canvas.AvaloniaContextInterpreter", "class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html", null ],
     [ "VectSharp.TrueTypeFile.Bearings", "struct_vect_sharp_1_1_true_type_file_1_1_bearings.html", null ],
     [ "VectSharp.Brush", "class_vect_sharp_1_1_brush.html", [
@@ -10,6 +12,7 @@ var hierarchy =
       [ "VectSharp.SolidColourBrush", "class_vect_sharp_1_1_solid_colour_brush.html", null ]
     ] ],
     [ "Avalonia.Controls.Canvas", null, [
+      [ "VectSharp.Canvas.AnimatedCanvas", "class_vect_sharp_1_1_canvas_1_1_animated_canvas.html", null ],
       [ "VectSharp.Canvas.SKMultiLayerRenderCanvas", "class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html", null ]
     ] ],
     [ "VectSharp.TrueTypeFile.ClassDefinitionTable.ClassRangeRecord", "struct_vect_sharp_1_1_true_type_file_1_1_class_definition_table_1_1_class_range_record.html", null ],
@@ -33,11 +36,13 @@ var hierarchy =
     [ "VectSharp.Markdown.FormattedString", "struct_vect_sharp_1_1_markdown_1_1_formatted_string.html", null ],
     [ "VectSharp.FormattedText", "class_vect_sharp_1_1_formatted_text.html", null ],
     [ "VectSharp.FormattedTextExtensions", "class_vect_sharp_1_1_formatted_text_extensions.html", null ],
+    [ "VectSharp.Frame", "class_vect_sharp_1_1_frame.html", null ],
     [ "VectSharp.GradientStop", "struct_vect_sharp_1_1_gradient_stop.html", null ],
     [ "VectSharp.Graphics", "class_vect_sharp_1_1_graphics.html", null ],
     [ "VectSharp.GraphicsPath", "class_vect_sharp_1_1_graphics_path.html", null ],
     [ "VectSharp.Markdown.HTTPUtils", "class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html", null ],
     [ "IDisposable", null, [
+      [ "VectSharp.AnimatedPNG.CompressedFrame", "class_vect_sharp_1_1_animated_p_n_g_1_1_compressed_frame.html", null ],
       [ "VectSharp.Canvas.SKMultiLayerRenderCanvas", "class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html", null ],
       [ "VectSharp.Canvas.SKRenderAction", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html", null ],
       [ "VectSharp.DisposableIntPtr", "class_vect_sharp_1_1_disposable_int_ptr.html", null ],
@@ -50,6 +55,10 @@ var hierarchy =
         [ "VectSharp.MuPDFUtils.RasterImageFile", "class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_file.html", null ],
         [ "VectSharp.MuPDFUtils.RasterImageStream", "class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_stream.html", null ]
       ] ]
+    ] ],
+    [ "VectSharp.IEasing", "interface_vect_sharp_1_1_i_easing.html", [
+      [ "VectSharp.LinearEasing", "class_vect_sharp_1_1_linear_easing.html", null ],
+      [ "VectSharp.SplineEasing", "class_vect_sharp_1_1_spline_easing.html", null ]
     ] ],
     [ "IEquatable", null, [
       [ "VectSharp.Colour", "struct_vect_sharp_1_1_colour.html", null ]
@@ -118,6 +127,7 @@ var hierarchy =
     [ "VectSharp.Canvas.SKRenderContextInterpreter", "class_vect_sharp_1_1_canvas_1_1_s_k_render_context_interpreter.html", null ],
     [ "VectSharp.SVG.SVGContextInterpreter", "class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html", null ],
     [ "VectSharp.Markdown.SyntaxHighlighter", "class_vect_sharp_1_1_markdown_1_1_syntax_highlighter.html", null ],
+    [ "VectSharp.Transition", "class_vect_sharp_1_1_transition.html", null ],
     [ "VectSharp.TrueTypeFile", "class_vect_sharp_1_1_true_type_file.html", null ],
     [ "VectSharp.TrueTypeFile.TrueTypePoint", "struct_vect_sharp_1_1_true_type_file_1_1_true_type_point.html", null ],
     [ "UserControl", null, [

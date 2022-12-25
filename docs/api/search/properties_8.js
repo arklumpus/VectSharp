@@ -18,6 +18,7 @@ var searchData=
   ['isbold_15',['IsBold',['../class_vect_sharp_1_1_font_family.html#a06ee9496dcf1a1006c40878122cfe941',1,'VectSharp.FontFamily.IsBold()'],['../struct_vect_sharp_1_1_markdown_1_1_formatted_string.html#a932032dc1ed3fe1977e57f7c793e5da2',1,'VectSharp.Markdown.FormattedString.IsBold()']]],
   ['isitalic_16',['IsItalic',['../class_vect_sharp_1_1_font_family.html#a026fe1fc04fec844ce4f307407459d8d',1,'VectSharp.FontFamily.IsItalic()'],['../struct_vect_sharp_1_1_markdown_1_1_formatted_string.html#a611bff3d46b30ce678958b2414909c1b',1,'VectSharp.Markdown.FormattedString.IsItalic()']]],
   ['isoblique_17',['IsOblique',['../class_vect_sharp_1_1_font_family.html#acb12becce36d51d5429e8e478c6e685a',1,'VectSharp::FontFamily']]],
-  ['isstandardfamily_18',['IsStandardFamily',['../class_vect_sharp_1_1_font_family.html#a3762a5a52204c4874e81d52a80b4ba7b',1,'VectSharp::FontFamily']]],
-  ['italicfontfamily_19',['ItalicFontFamily',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ae18d2cdf27ddc6b4ea3892a76087eb00',1,'VectSharp::Markdown::MarkdownRenderer']]]
+  ['isplaying_18',['IsPlaying',['../class_vect_sharp_1_1_canvas_1_1_animated_canvas.html#ace236a4cefd0bf0dcaf98c69031225c6',1,'VectSharp::Canvas::AnimatedCanvas']]],
+  ['isstandardfamily_19',['IsStandardFamily',['../class_vect_sharp_1_1_font_family.html#a3762a5a52204c4874e81d52a80b4ba7b',1,'VectSharp::FontFamily']]],
+  ['italicfontfamily_20',['ItalicFontFamily',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ae18d2cdf27ddc6b4ea3892a76087eb00',1,'VectSharp::Markdown::MarkdownRenderer']]]
 ];

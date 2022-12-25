@@ -7,5 +7,6 @@ var searchData=
   ['cornflowerblue_4',['CornflowerBlue',['../class_vect_sharp_1_1_colours.html#a0b2a4a1682e0ed14449ed9018f754403',1,'VectSharp::Colours']]],
   ['cornsilk_5',['Cornsilk',['../class_vect_sharp_1_1_colours.html#a4081135aa0132a001bc31abb9519d662',1,'VectSharp::Colours']]],
   ['crimson_6',['Crimson',['../class_vect_sharp_1_1_colours.html#aaaaf5d174ccafc1ba7f1ddfeb5c151cc',1,'VectSharp::Colours']]],
-  ['cyan_7',['Cyan',['../class_vect_sharp_1_1_colours.html#a1d557b8ca7654761c5612437129902ef',1,'VectSharp::Colours']]]
+  ['currentframeproperty_7',['CurrentFrameProperty',['../class_vect_sharp_1_1_canvas_1_1_animated_canvas.html#ae0fa13adb662cd2c06e17d739d3394b0',1,'VectSharp::Canvas::AnimatedCanvas']]],
+  ['cyan_8',['Cyan',['../class_vect_sharp_1_1_colours.html#a1d557b8ca7654761c5612437129902ef',1,'VectSharp::Colours']]]
 ];

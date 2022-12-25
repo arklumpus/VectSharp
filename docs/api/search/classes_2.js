@@ -7,5 +7,6 @@ var searchData=
   ['colourmatrixfilter_4',['ColourMatrixFilter',['../class_vect_sharp_1_1_filters_1_1_colour_matrix_filter.html',1,'VectSharp::Filters']]],
   ['colours_5',['Colours',['../class_vect_sharp_1_1_colours.html',1,'VectSharp']]],
   ['compositelocationinvariantfilter_6',['CompositeLocationInvariantFilter',['../class_vect_sharp_1_1_filters_1_1_composite_location_invariant_filter.html',1,'VectSharp::Filters']]],
-  ['convolutionfilter_7',['ConvolutionFilter',['../class_vect_sharp_1_1_filters_1_1_convolution_filter.html',1,'VectSharp::Filters']]]
+  ['compressedframe_7',['CompressedFrame',['../class_vect_sharp_1_1_animated_p_n_g_1_1_compressed_frame.html',1,'VectSharp::AnimatedPNG']]],
+  ['convolutionfilter_8',['ConvolutionFilter',['../class_vect_sharp_1_1_filters_1_1_convolution_filter.html',1,'VectSharp::Filters']]]
 ];

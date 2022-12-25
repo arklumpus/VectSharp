@@ -12,7 +12,8 @@ var searchData=
   ['rasterisationresolutionrelative_9',['RasterisationResolutionRelative',['../class_vect_sharp_1_1_canvas_1_1_filter_option.html#a9495f71bc7113f0be2719813b14c1e31',1,'VectSharp.Canvas.FilterOption.RasterisationResolutionRelative()'],['../class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter_1_1_filter_option.html#a7eff364f77b27399d771172452261933',1,'VectSharp.PDF.PDFContextInterpreter.FilterOption.RasterisationResolutionRelative()'],['../class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter_1_1_filter_option.html#a50b185ab2f3fdd9806dd6f0959163a0f',1,'VectSharp.SVG.SVGContextInterpreter.FilterOption.RasterisationResolutionRelative()']]],
   ['regularfontfamily_10',['RegularFontFamily',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a708b8264454c11050b95d43fa1523d5f',1,'VectSharp::Markdown::MarkdownRenderer']]],
   ['renderer_11',['Renderer',['../class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html#ac3d22cb649c35362950340822ec683bd',1,'VectSharp::MarkdownCanvas::MarkdownCanvasControl']]],
-  ['reversedirection_12',['ReverseDirection',['../class_vect_sharp_1_1_three_d_1_1_parallel_light_source.html#a929b54d55a24eb4b09c2b3617748a778',1,'VectSharp::ThreeD::ParallelLightSource']]],
-  ['right_13',['Right',['../class_vect_sharp_1_1_markdown_1_1_margins.html#afca3380ba0d9a38f6e92eb35ec73df1b',1,'VectSharp::Markdown::Margins']]],
-  ['rightsidebearing_14',['RightSideBearing',['../class_vect_sharp_1_1_font_1_1_detailed_font_metrics.html#a9e96615d06c0ed23e1f0dca35342cddb',1,'VectSharp::Font::DetailedFontMetrics']]]
+  ['repeatcount_12',['RepeatCount',['../class_vect_sharp_1_1_animation.html#ad3a98ff3f67f152572f043dec42ba4d0',1,'VectSharp::Animation']]],
+  ['reversedirection_13',['ReverseDirection',['../class_vect_sharp_1_1_three_d_1_1_parallel_light_source.html#a929b54d55a24eb4b09c2b3617748a778',1,'VectSharp::ThreeD::ParallelLightSource']]],
+  ['right_14',['Right',['../class_vect_sharp_1_1_markdown_1_1_margins.html#afca3380ba0d9a38f6e92eb35ec73df1b',1,'VectSharp::Markdown::Margins']]],
+  ['rightsidebearing_15',['RightSideBearing',['../class_vect_sharp_1_1_font_1_1_detailed_font_metrics.html#a9e96615d06c0ed23e1f0dca35342cddb',1,'VectSharp::Font::DetailedFontMetrics']]]
 ];

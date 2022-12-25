@@ -1,9 +1,9 @@
 <map id="VectSharp.Filters.ILocationInvariantFilter" name="VectSharp.Filters.ILocationInvariantFilter">
-<area shape="rect" id="node1" title="Represents a filter that can be applied to an image regardless of its location on the graphics surfac..." alt="" coords="108,136,287,177"/>
-<area shape="rect" id="node3" href="$class_vect_sharp_1_1_filters_1_1_box_blur_filter.html" title="Represents a filter applying a box blur." alt="" coords="345,5,518,47"/>
-<area shape="rect" id="node4" href="$class_vect_sharp_1_1_filters_1_1_colour_matrix_filter.html" title="Represents a filter that applies a Filters.ColourMatrix to the colours of the image." alt="" coords="349,71,513,112"/>
-<area shape="rect" id="node5" href="$class_vect_sharp_1_1_filters_1_1_composite_location_invariant_filter.html" title="Represents a filter that corresponds to applying multiple ILocationInvariantFilters one after the oth..." alt="" coords="337,136,526,177"/>
-<area shape="rect" id="node6" href="$class_vect_sharp_1_1_filters_1_1_convolution_filter.html" title="Represents a filter that applies a matrix convolution to the image." alt="" coords="335,201,528,243"/>
-<area shape="rect" id="node7" href="$class_vect_sharp_1_1_filters_1_1_gaussian_blur_filter.html" title="Represents a filter that applies a Gaussian blur effect." alt="" coords="340,267,523,308"/>
-<area shape="rect" id="node2" href="$interface_vect_sharp_1_1_filters_1_1_i_filter.html" title="Represents a filter. Do not implement this interface directly; instead, implement ILocationInvariantF..." alt="" coords="5,143,60,170"/>
+<area shape="rect" id="node1" title="Represents a filter that can be applied to an image regardless of its location on the graphics surfac..." alt="" coords="108,133,288,173"/>
+<area shape="rect" id="node3" href="$class_vect_sharp_1_1_filters_1_1_box_blur_filter.html" title="Represents a filter applying a box blur." alt="" coords="347,5,521,45"/>
+<area shape="rect" id="node4" href="$class_vect_sharp_1_1_filters_1_1_colour_matrix_filter.html" title="Represents a filter that applies a Filters.ColourMatrix to the colours of the image." alt="" coords="351,69,517,109"/>
+<area shape="rect" id="node5" href="$class_vect_sharp_1_1_filters_1_1_composite_location_invariant_filter.html" title="Represents a filter that corresponds to applying multiple ILocationInvariantFilters one after the oth..." alt="" coords="339,133,529,173"/>
+<area shape="rect" id="node6" href="$class_vect_sharp_1_1_filters_1_1_convolution_filter.html" title="Represents a filter that applies a matrix convolution to the image." alt="" coords="336,197,532,237"/>
+<area shape="rect" id="node7" href="$class_vect_sharp_1_1_filters_1_1_gaussian_blur_filter.html" title="Represents a filter that applies a Gaussian blur effect." alt="" coords="343,261,525,301"/>
+<area shape="rect" id="node2" href="$interface_vect_sharp_1_1_filters_1_1_i_filter.html" title="Represents a filter. Do not implement this interface directly; instead, implement ILocationInvariantF..." alt="" coords="5,141,60,166"/>
 </map>

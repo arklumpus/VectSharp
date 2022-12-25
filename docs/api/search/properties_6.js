@@ -12,5 +12,5 @@ var searchData=
   ['glyph2advance_9',['Glyph2Advance',['../class_vect_sharp_1_1_true_type_file_1_1_pair_kerning.html#a96486d3e494a6d4cc0d2adc19e01d7c5',1,'VectSharp::TrueTypeFile::PairKerning']]],
   ['glyph2placement_10',['Glyph2Placement',['../class_vect_sharp_1_1_true_type_file_1_1_pair_kerning.html#acbe0d3d97ed6bbeeeb698f1e90875c54',1,'VectSharp::TrueTypeFile::PairKerning']]],
   ['gradientstops_11',['GradientStops',['../class_vect_sharp_1_1_gradient_brush.html#a5f3143bd480110d80f80a2b6fef2adb5',1,'VectSharp::GradientBrush']]],
-  ['graphics_12',['Graphics',['../class_vect_sharp_1_1_page.html#a6a3757a9f2e8efc2dceca8d99fff9ace',1,'VectSharp.Page.Graphics()'],['../class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a4fa7f375f631e3044f735bde2d2b2846',1,'VectSharp.Canvas.SKRenderAction.Graphics()']]]
+  ['graphics_12',['Graphics',['../class_vect_sharp_1_1_frame.html#aa954f08f86b0c13c28ee677cdcd57219',1,'VectSharp.Frame.Graphics()'],['../class_vect_sharp_1_1_page.html#a6a3757a9f2e8efc2dceca8d99fff9ace',1,'VectSharp.Page.Graphics()'],['../class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a4fa7f375f631e3044f735bde2d2b2846',1,'VectSharp.Canvas.SKRenderAction.Graphics()']]]
 ];

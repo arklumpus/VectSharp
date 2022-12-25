@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['verticalalignment_0',['VerticalAlignment',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a0e91c7ffd72d8f036d5c592e0e86c4dd',1,'VectSharp::Markdown::MarkdownRenderer']]]
+  ['unbalancedstackactions_0',['UnbalancedStackActions',['../namespace_vect_sharp.html#a88d2dd0aea021af9a8af889bf292006f',1,'VectSharp']]]
 ];

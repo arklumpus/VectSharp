@@ -1,3 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$struct_vect_sharp_1_1_markdown_1_1_formatted_string.html" title="Represents a string with associated formatting information." alt="" coords="5,5,215,47"/>
+<area shape="rect" id="node1" href="$interface_vect_sharp_1_1_i_font_library.html" title="Represents a font library with methods to create FontFamily objects from a string or from FontFamily...." alt="" coords="5,31,161,56"/>
+<area shape="rect" id="node2" href="$class_vect_sharp_1_1_font_library.html" title="Abstract class with a default implementation of font family fallbacks." alt="" coords="209,31,361,56"/>
+<area shape="rect" id="node3" href="$class_vect_sharp_1_1_default_font_library.html" title="A default font library that resolves standard families using the embedded fonts." alt="" coords="409,5,604,31"/>
+<area shape="rect" id="node4" href="$class_vect_sharp_1_1_simple_font_library.html" title="A font library that can be used to cache and resolve font family names." alt="" coords="411,55,603,80"/>
 </map>

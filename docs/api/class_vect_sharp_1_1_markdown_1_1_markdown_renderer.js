@@ -1,10 +1,6 @@
 var class_vect_sharp_1_1_markdown_1_1_markdown_renderer =
 [
-    [ "VerticalAlignment", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a0e91c7ffd72d8f036d5c592e0e86c4dd", [
-      [ "Top", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a0e91c7ffd72d8f036d5c592e0e86c4ddaa4ffdcf0dc1f31b9acaf295d75b51d00", null ],
-      [ "Middle", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a0e91c7ffd72d8f036d5c592e0e86c4ddab1ca34f82e83c52b010f86955f264e05", null ],
-      [ "Bottom", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a0e91c7ffd72d8f036d5c592e0e86c4dda2ad9d63b69c4a10a5cc9cad923133bc4", null ]
-    ] ],
+    [ "VerticalAlignment", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a0e91c7ffd72d8f036d5c592e0e86c4dd", null ],
     [ "Render", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a784f71badceebcb00156a82c3dff2e8c", null ],
     [ "Render", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#aab26ee0f943a9285283c1d7249bf9244", null ],
     [ "RenderSinglePage", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ae1729756a1e9108f43d850e7b7d87504", null ],
@@ -41,6 +37,7 @@ var class_vect_sharp_1_1_markdown_1_1_markdown_renderer =
     [ "LinkUriResolver", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a4b729ac905d1cbde014ac519cc0709da", null ],
     [ "Margins", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a79e09c80bacaf0b1bf9eef9423218684", null ],
     [ "MarkedColour", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ab8934b60d1c1a6d6e4321fffc970a0b7", null ],
+    [ "MathFontScalingFactor", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a49806f8afaebc91bc2900b58d185fe3a", null ],
     [ "PageSize", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a587e062de7f7549f3a75bbeaed30c9fe", null ],
     [ "QuoteBlockBackgroundColour", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a3bdbb1c56eb65eaa64cf6bbb49be5e8b", null ],
     [ "QuoteBlockBarColour", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a6b38a6792d05c99b03c8c034c049657a", null ],

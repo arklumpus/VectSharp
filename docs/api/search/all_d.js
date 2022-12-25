@@ -1,13 +1,20 @@
 var searchData=
 [
-  ['nan_0',['NaN',['../struct_vect_sharp_1_1_rectangle.html#a368e9fb1b22d16faa602320a10fdaf8e',1,'VectSharp::Rectangle']]],
-  ['navajowhite_1',['NavajoWhite',['../class_vect_sharp_1_1_colours.html#a2ba7e397da092fd03f0da32be12029dd',1,'VectSharp::Colours']]],
-  ['navy_2',['Navy',['../class_vect_sharp_1_1_colours.html#aedb53b2c6c23c0324ededf4cbfbe9a16',1,'VectSharp::Colours']]],
-  ['neverconvert_3',['NeverConvert',['../class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html#ab1be8c4c6246dad9c92fcc3f2b3cdd77ab11ded174ba879c08340adc36752024a',1,'VectSharp::Canvas::AvaloniaContextInterpreter']]],
-  ['neverrasteriseandignore_4',['NeverRasteriseAndIgnore',['../class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter_1_1_filter_option.html#aca0a81273256ce790da3790303e05c47ae2ed8a3b83545291b7cfa343c5df88a8',1,'VectSharp::SVG::SVGContextInterpreter::FilterOption']]],
-  ['neverrasteriseandskip_5',['NeverRasteriseAndSkip',['../class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter_1_1_filter_option.html#aca0a81273256ce790da3790303e05c47aa9a36f75d8851dad939e093ec54b08d0',1,'VectSharp::SVG::SVGContextInterpreter::FilterOption']]],
-  ['nimbus_6',['Nimbus',['../class_vect_sharp_1_1_fonts_1_1_nimbus.html',1,'VectSharp::Fonts']]],
-  ['normal_7',['Normal',['../namespace_vect_sharp.html#ad89d060535c63df4196d494335867778a960b44c579bc2f6818d2daaf9e4c16f0',1,'VectSharp']]],
-  ['normalisation_8',['Normalisation',['../class_vect_sharp_1_1_filters_1_1_convolution_filter.html#a4f2be240a6de3ec430e6b47cb22c3a31',1,'VectSharp::Filters::ConvolutionFilter']]],
-  ['normalize_9',['Normalize',['../struct_vect_sharp_1_1_point.html#a200cd7ee20d72a0aee2fdcebb7ac4f88',1,'VectSharp::Point']]]
+  ['objectfactory_0',['ObjectFactory',['../class_vect_sharp_1_1_three_d_1_1_object_factory.html',1,'VectSharp::ThreeD']]],
+  ['offset_1',['Offset',['../struct_vect_sharp_1_1_gradient_stop.html#a0c23e3cd0cee007cd0b2be4e21b80862',1,'VectSharp::GradientStop']]],
+  ['oldlace_2',['OldLace',['../class_vect_sharp_1_1_colours.html#a3c1379fcda411c194b79742a92210e0a',1,'VectSharp::Colours']]],
+  ['olive_3',['Olive',['../class_vect_sharp_1_1_colours.html#af8714f3101265389fdae54fc2b23616d',1,'VectSharp::Colours']]],
+  ['olivedrab_4',['OliveDrab',['../class_vect_sharp_1_1_colours.html#a867becef32c76b1461172902f44908de',1,'VectSharp::Colours']]],
+  ['operation_5',['Operation',['../class_vect_sharp_1_1_canvas_1_1_filter_option.html#aca21f4770d6ea866ba780d6e8311799d',1,'VectSharp.Canvas.FilterOption.Operation()'],['../class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter_1_1_filter_option.html#aa631e199db25bde4700963303b1d1c93',1,'VectSharp.PDF.PDFContextInterpreter.FilterOption.Operation()'],['../class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter_1_1_filter_option.html#a063b17eab16a85c19b03c79b2066cb7c',1,'VectSharp.SVG.SVGContextInterpreter.FilterOption.Operation()']]],
+  ['operator_20brush_6',['operator Brush',['../class_vect_sharp_1_1_brush.html#acd043d04b1521feb9271491f9283a346',1,'VectSharp::Brush']]],
+  ['operator_20solidcolourbrush_7',['operator SolidColourBrush',['../class_vect_sharp_1_1_solid_colour_brush.html#aab6d534a681dce976d035eec91227a0c',1,'VectSharp::SolidColourBrush']]],
+  ['operator_21_3d_8',['operator!=',['../struct_vect_sharp_1_1_colour.html#a0e7aca2b6d5ca6a18ec9090b2ea54e63',1,'VectSharp::Colour']]],
+  ['operator_2a_9',['operator*',['../class_vect_sharp_1_1_filters_1_1_colour_matrix.html#a82bf6c8daa003f10669a1d44ba3b56e3',1,'VectSharp::Filters::ColourMatrix']]],
+  ['operator_3d_3d_10',['operator==',['../struct_vect_sharp_1_1_colour.html#ab7f6945a159dbb984e9fb1148c6db532',1,'VectSharp::Colour']]],
+  ['orange_11',['Orange',['../class_vect_sharp_1_1_colours.html#a30fd55455c296add6c2b1ae670401985',1,'VectSharp::Colours']]],
+  ['orangered_12',['OrangeRed',['../class_vect_sharp_1_1_colours.html#a9b9c1a41d727385556560ee73c473a0c',1,'VectSharp::Colours']]],
+  ['orchid_13',['Orchid',['../class_vect_sharp_1_1_colours.html#ae7bc3f2324fbefade252034d3d16a54e',1,'VectSharp::Colours']]],
+  ['origin_14',['Origin',['../class_vect_sharp_1_1_three_d_1_1_masked_light_source.html#a7d691ed7328aeec4de160a180582760f',1,'VectSharp::ThreeD::MaskedLightSource']]],
+  ['outputformats_15',['OutputFormats',['../namespace_vect_sharp_1_1_raster_1_1_image_sharp.html#a3a997f2103fbfd334ff7cf6c9e06d2b6',1,'VectSharp::Raster::ImageSharp']]],
+  ['overalleasing_16',['OverallEasing',['../class_vect_sharp_1_1_transition.html#a3deb358b8d82abb8ed910f0e42113bb8',1,'VectSharp::Transition']]]
 ];

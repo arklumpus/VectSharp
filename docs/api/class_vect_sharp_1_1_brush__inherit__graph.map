@@ -1,7 +1,7 @@
 <map id="VectSharp.Brush" name="VectSharp.Brush">
-<area shape="rect" id="node1" title="Represents a brush used to fill or stroke graphics elements. This could be a solid colour,..." alt="" coords="229,5,350,32"/>
-<area shape="rect" id="node2" href="$class_vect_sharp_1_1_gradient_brush.html" title="Represents a brush painting with a gradient." alt="" coords="103,80,273,107"/>
-<area shape="rect" id="node5" href="$class_vect_sharp_1_1_solid_colour_brush.html" title="Represents a brush painting with a single solid colour." alt="" coords="297,80,484,107"/>
-<area shape="rect" id="node3" href="$class_vect_sharp_1_1_linear_gradient_brush.html" title="Represents a brush painting with a linear gradient." alt="" coords="5,155,176,196"/>
-<area shape="rect" id="node4" href="$class_vect_sharp_1_1_radial_gradient_brush.html" title="Represents a brush painting with a radial gradient." alt="" coords="201,155,373,196"/>
+<area shape="rect" id="node1" title="Represents a brush used to fill or stroke graphics elements. This could be a solid colour,..." alt="" coords="229,5,350,31"/>
+<area shape="rect" id="node2" href="$class_vect_sharp_1_1_gradient_brush.html" title="Represents a brush painting with a gradient." alt="" coords="103,79,273,104"/>
+<area shape="rect" id="node5" href="$class_vect_sharp_1_1_solid_colour_brush.html" title="Represents a brush painting with a single solid colour." alt="" coords="298,79,486,104"/>
+<area shape="rect" id="node3" href="$class_vect_sharp_1_1_linear_gradient_brush.html" title="Represents a brush painting with a linear gradient." alt="" coords="5,152,176,192"/>
+<area shape="rect" id="node4" href="$class_vect_sharp_1_1_radial_gradient_brush.html" title="Represents a brush painting with a radial gradient." alt="" coords="200,152,373,192"/>
 </map>

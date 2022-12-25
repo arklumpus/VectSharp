@@ -9,5 +9,6 @@ var searchData=
   ['fontunderline_6',['FontUnderline',['../class_vect_sharp_1_1_font_1_1_font_underline.html',1,'VectSharp::Font']]],
   ['formattedstring_7',['FormattedString',['../struct_vect_sharp_1_1_markdown_1_1_formatted_string.html',1,'VectSharp::Markdown']]],
   ['formattedtext_8',['FormattedText',['../class_vect_sharp_1_1_formatted_text.html',1,'VectSharp']]],
-  ['formattedtextextensions_9',['FormattedTextExtensions',['../class_vect_sharp_1_1_formatted_text_extensions.html',1,'VectSharp']]]
+  ['formattedtextextensions_9',['FormattedTextExtensions',['../class_vect_sharp_1_1_formatted_text_extensions.html',1,'VectSharp']]],
+  ['frame_10',['Frame',['../class_vect_sharp_1_1_frame.html',1,'VectSharp']]]
 ];

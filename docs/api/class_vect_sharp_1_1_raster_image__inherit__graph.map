@@ -1,8 +1,8 @@
 <map id="VectSharp.RasterImage" name="VectSharp.RasterImage">
-<area shape="rect" id="node1" title="Represents a raster image, created from raw pixel data. Consider using the derived classes included i..." alt="" coords="143,111,303,138"/>
-<area shape="rect" id="node3" href="$class_vect_sharp_1_1_image_sharp_utils_1_1_raster_image_file.html" title="A RasterImage created from a file." alt="" coords="357,5,543,47"/>
-<area shape="rect" id="node4" href="$class_vect_sharp_1_1_image_sharp_utils_1_1_raster_image_stream.html" title="A RasterImage created from a stream." alt="" coords="357,71,543,112"/>
-<area shape="rect" id="node5" href="$class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_file.html" title="A RasterImage created from a file." alt="" coords="351,136,549,177"/>
-<area shape="rect" id="node6" href="$class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_stream.html" title="A RasterImage created from a stream." alt="" coords="351,201,549,243"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,111,95,138"/>
+<area shape="rect" id="node1" title="Represents a raster image, created from raw pixel data. Consider using the derived classes included i..." alt="" coords="144,109,307,134"/>
+<area shape="rect" id="node3" href="$class_vect_sharp_1_1_image_sharp_utils_1_1_raster_image_file.html" title="A RasterImage created from a file." alt="" coords="362,5,550,45"/>
+<area shape="rect" id="node4" href="$class_vect_sharp_1_1_image_sharp_utils_1_1_raster_image_stream.html" title="A RasterImage created from a stream." alt="" coords="362,69,550,109"/>
+<area shape="rect" id="node5" href="$class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_file.html" title="A RasterImage created from a file." alt="" coords="355,133,557,173"/>
+<area shape="rect" id="node6" href="$class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_stream.html" title="A RasterImage created from a stream." alt="" coords="355,197,557,237"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,109,96,134"/>
 </map>

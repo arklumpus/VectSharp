@@ -9,7 +9,8 @@ var searchData=
   ['skrendercontext_6',['SKRenderContext',['../class_vect_sharp_1_1_canvas_1_1_s_k_render_context.html',1,'VectSharp::Canvas']]],
   ['skrendercontextinterpreter_7',['SKRenderContextInterpreter',['../class_vect_sharp_1_1_canvas_1_1_s_k_render_context_interpreter.html',1,'VectSharp::Canvas']]],
   ['solidcolourbrush_8',['SolidColourBrush',['../class_vect_sharp_1_1_solid_colour_brush.html',1,'VectSharp']]],
-  ['spotlightlightsource_9',['SpotlightLightSource',['../class_vect_sharp_1_1_three_d_1_1_spotlight_light_source.html',1,'VectSharp::ThreeD']]],
-  ['svgcontextinterpreter_10',['SVGContextInterpreter',['../class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html',1,'VectSharp::SVG']]],
-  ['syntaxhighlighter_11',['SyntaxHighlighter',['../class_vect_sharp_1_1_markdown_1_1_syntax_highlighter.html',1,'VectSharp::Markdown']]]
+  ['splineeasing_9',['SplineEasing',['../class_vect_sharp_1_1_spline_easing.html',1,'VectSharp']]],
+  ['spotlightlightsource_10',['SpotlightLightSource',['../class_vect_sharp_1_1_three_d_1_1_spotlight_light_source.html',1,'VectSharp::ThreeD']]],
+  ['svgcontextinterpreter_11',['SVGContextInterpreter',['../class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html',1,'VectSharp::SVG']]],
+  ['syntaxhighlighter_12',['SyntaxHighlighter',['../class_vect_sharp_1_1_markdown_1_1_syntax_highlighter.html',1,'VectSharp::Markdown']]]
 ];

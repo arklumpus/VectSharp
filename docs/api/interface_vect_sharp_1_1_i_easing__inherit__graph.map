@@ -1,0 +1,5 @@
+<map id="VectSharp.IEasing" name="VectSharp.IEasing">
+<area shape="rect" id="node1" title="Describes a function used to transform the transition speed." alt="" coords="115,5,245,31"/>
+<area shape="rect" id="node2" href="$class_vect_sharp_1_1_linear_easing.html" title="Describes a linear easing (i.e., no easing)." alt="" coords="5,79,168,104"/>
+<area shape="rect" id="node3" href="$class_vect_sharp_1_1_spline_easing.html" title="Describes an easing defined by a Cubic Bezier curve." alt="" coords="192,79,355,104"/>
+</map>

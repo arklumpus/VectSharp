@@ -1,10 +1,6 @@
 var class_vect_sharp_1_1_canvas_1_1_render_action =
 [
-    [ "ActionTypes", "class_vect_sharp_1_1_canvas_1_1_render_action.html#a540142d9a35323a4d5301256c2c804c2", [
-      [ "Path", "class_vect_sharp_1_1_canvas_1_1_render_action.html#a540142d9a35323a4d5301256c2c804c2aac70412e939d72a9234cdebb1af5867b", null ],
-      [ "Text", "class_vect_sharp_1_1_canvas_1_1_render_action.html#a540142d9a35323a4d5301256c2c804c2a9dffbf69ffba8bc38bc4e01abf4b1675", null ],
-      [ "RasterImage", "class_vect_sharp_1_1_canvas_1_1_render_action.html#a540142d9a35323a4d5301256c2c804c2a87ee62f0c2390b73f784732a13cce8cb", null ]
-    ] ],
+    [ "ActionTypes", "class_vect_sharp_1_1_canvas_1_1_render_action.html#a540142d9a35323a4d5301256c2c804c2", null ],
     [ "BringToFront", "class_vect_sharp_1_1_canvas_1_1_render_action.html#ac85d376a974c9efce429ef95985ec918", null ],
     [ "ImageAction", "class_vect_sharp_1_1_canvas_1_1_render_action.html#adc6fda560a09d8426dca05131ea5e68d", null ],
     [ "PathAction", "class_vect_sharp_1_1_canvas_1_1_render_action.html#ab823aaf02a758a0643d2c745be71a200", null ],

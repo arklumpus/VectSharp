@@ -1,5 +1,5 @@
 <map id="VectSharp.Filters.IFilterWithLocation" name="VectSharp.Filters.IFilterWithLocation">
-<area shape="rect" id="node1" title="Represents a filter whose results depend on the position of the subject image on the graphics surface..." alt="" coords="20,80,179,121"/>
-<area shape="rect" id="node3" href="$class_vect_sharp_1_1_filters_1_1_mask_filter.html" title="Represents a filter that uses the luminance of an image to mask another image." alt="" coords="5,169,193,196"/>
-<area shape="rect" id="node2" href="$interface_vect_sharp_1_1_filters_1_1_i_filter.html" title="Represents a filter. Do not implement this interface directly; instead, implement ILocationInvariantF..." alt="" coords="72,5,127,32"/>
+<area shape="rect" id="node1" title="Represents a filter whose results depend on the position of the subject image on the graphics surface..." alt="" coords="19,79,179,119"/>
+<area shape="rect" id="node3" href="$class_vect_sharp_1_1_filters_1_1_mask_filter.html" title="Represents a filter that uses the luminance of an image to mask another image." alt="" coords="5,167,193,192"/>
+<area shape="rect" id="node2" href="$interface_vect_sharp_1_1_filters_1_1_i_filter.html" title="Represents a filter. Do not implement this interface directly; instead, implement ILocationInvariantF..." alt="" coords="72,5,127,31"/>
 </map>

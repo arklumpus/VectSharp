@@ -13,5 +13,8 @@ var searchData=
   ['fontsize_10',['FontSize',['../class_vect_sharp_1_1_font.html#a6c93e01c0a71a6ff0f084c8936ff27ab',1,'VectSharp::Font']]],
   ['fontstream_11',['FontStream',['../class_vect_sharp_1_1_true_type_file.html#a8df9028202564d2a8ca841102e558a1f',1,'VectSharp::TrueTypeFile']]],
   ['foregroundcolour_12',['ForegroundColour',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a6c4a5d7b75c3261f1af5b28e16caaedb',1,'VectSharp::Markdown::MarkdownRenderer']]],
-  ['format_13',['Format',['../class_vect_sharp_1_1_raster_1_1_image_sharp_1_1_image_sharp_context_interpreter_1_1_unknown_format_exception.html#a60c1a8d931896ae9ac6de59264d92917',1,'VectSharp::Raster::ImageSharp::ImageSharpContextInterpreter::UnknownFormatException']]]
+  ['format_13',['Format',['../class_vect_sharp_1_1_raster_1_1_image_sharp_1_1_image_sharp_context_interpreter_1_1_unknown_format_exception.html#a60c1a8d931896ae9ac6de59264d92917',1,'VectSharp::Raster::ImageSharp::ImageSharpContextInterpreter::UnknownFormatException']]],
+  ['framecount_14',['FrameCount',['../class_vect_sharp_1_1_canvas_1_1_animated_canvas.html#a3c216cfb0376d68376608019ed6be25b',1,'VectSharp::Canvas::AnimatedCanvas']]],
+  ['framerate_15',['FrameRate',['../class_vect_sharp_1_1_canvas_1_1_animated_canvas.html#ae725bde12b7d32f824c854b938cf0e0a',1,'VectSharp::Canvas::AnimatedCanvas']]],
+  ['frames_16',['Frames',['../class_vect_sharp_1_1_animation.html#a446b529cac58531d413870fc659b57aa',1,'VectSharp::Animation']]]
 ];

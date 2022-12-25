@@ -1,6 +1,7 @@
 var dir_6606a654b81dd4b591284b66e8a5eb76 =
 [
     [ "Filters", "dir_3759f2ff0bf63faeaeb89e84c686f557.html", "dir_3759f2ff0bf63faeaeb89e84c686f557" ],
+    [ "Animation.cs", "_animation_8cs_source.html", null ],
     [ "Brush.cs", "_brush_8cs_source.html", null ],
     [ "Colour.cs", "_colour_8cs_source.html", null ],
     [ "Document.cs", "_document_8cs_source.html", null ],

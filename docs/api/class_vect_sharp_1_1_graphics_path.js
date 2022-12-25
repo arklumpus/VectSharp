@@ -14,6 +14,7 @@ var class_vect_sharp_1_1_graphics_path =
     [ "Discretise", "class_vect_sharp_1_1_graphics_path.html#a56c6b00c9974bf78c35395c4d458e101", null ],
     [ "EllipticalArc", "class_vect_sharp_1_1_graphics_path.html#a02f9585dd8e00b27c840cbcd604b6cd3", null ],
     [ "GetBounds", "class_vect_sharp_1_1_graphics_path.html#aaa1c750dec2cccec037b2dcdc97cb249", null ],
+    [ "GetFigures", "class_vect_sharp_1_1_graphics_path.html#a759b430bf54412f9eb349b69a9dc0d05", null ],
     [ "GetLinearisationPointsNormals", "class_vect_sharp_1_1_graphics_path.html#a1ffd5cd6b7bf50b562148159a45a6ec6", null ],
     [ "GetNormalAtAbsolute", "class_vect_sharp_1_1_graphics_path.html#a0e28048a9f5a2d678b1ba360c006b078", null ],
     [ "GetNormalAtRelative", "class_vect_sharp_1_1_graphics_path.html#a375abcfb69b00fe3f57c9e117e2ccc09", null ],
@@ -28,6 +29,8 @@ var class_vect_sharp_1_1_graphics_path =
     [ "MeasureLength", "class_vect_sharp_1_1_graphics_path.html#a573d501758fb92ec250785a68fd48474", null ],
     [ "MoveTo", "class_vect_sharp_1_1_graphics_path.html#a749970086b591276a0739ca92d1948b7", null ],
     [ "MoveTo", "class_vect_sharp_1_1_graphics_path.html#a6de53d6feda0965d3951507915607b80", null ],
+    [ "QuadraticBezierTo", "class_vect_sharp_1_1_graphics_path.html#af0b99d7e2cde60cd094f72d14d45ee8b", null ],
+    [ "QuadraticBezierTo", "class_vect_sharp_1_1_graphics_path.html#a06c56c6a16a76613f1921a413c00f62c", null ],
     [ "Transform", "class_vect_sharp_1_1_graphics_path.html#af4d2af10a6114152ef417091a5a2cfe7", null ],
     [ "Triangulate", "class_vect_sharp_1_1_graphics_path.html#a7c7b34d888318669f458c72027b06559", null ],
     [ "Segments", "class_vect_sharp_1_1_graphics_path.html#aabd97b02c49fc2de576d76710af8fedc", null ]

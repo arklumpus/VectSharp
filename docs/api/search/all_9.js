@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['jpeg_0',['JPEG',['../namespace_vect_sharp_1_1_raster_1_1_image_sharp.html#a3a997f2103fbfd334ff7cf6c9e06d2b6a907e06a16862d82ca6907a28a68d0ad6',1,'VectSharp::Raster::ImageSharp']]]
+  ['kernel_0',['Kernel',['../class_vect_sharp_1_1_filters_1_1_convolution_filter.html#a84aa7dae990d0e74ec7403304fbbb298',1,'VectSharp::Filters::ConvolutionFilter']]],
+  ['khaki_1',['Khaki',['../class_vect_sharp_1_1_colours.html#a57991a39bda2bec6036bd0532af42e5d',1,'VectSharp::Colours']]]
 ];

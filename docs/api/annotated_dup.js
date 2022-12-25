@@ -2,6 +2,7 @@ var annotated_dup =
 [
     [ "VectSharp", "namespace_vect_sharp.html", [
       [ "Canvas", "namespace_vect_sharp_1_1_canvas.html", [
+        [ "AnimatedCanvas", "class_vect_sharp_1_1_canvas_1_1_animated_canvas.html", "class_vect_sharp_1_1_canvas_1_1_animated_canvas" ],
         [ "AvaloniaContextInterpreter", "class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html", "class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter" ],
         [ "FilterOption", "class_vect_sharp_1_1_canvas_1_1_filter_option.html", "class_vect_sharp_1_1_canvas_1_1_filter_option" ],
         [ "RenderAction", "class_vect_sharp_1_1_canvas_1_1_render_action.html", "class_vect_sharp_1_1_canvas_1_1_render_action" ],
@@ -76,6 +77,8 @@ var annotated_dup =
         [ "Scene", "class_vect_sharp_1_1_three_d_1_1_scene.html", "class_vect_sharp_1_1_three_d_1_1_scene" ],
         [ "SpotlightLightSource", "class_vect_sharp_1_1_three_d_1_1_spotlight_light_source.html", "class_vect_sharp_1_1_three_d_1_1_spotlight_light_source" ]
       ] ],
+      [ "AnimatedPNG", "class_vect_sharp_1_1_animated_p_n_g.html", "class_vect_sharp_1_1_animated_p_n_g" ],
+      [ "Animation", "class_vect_sharp_1_1_animation.html", "class_vect_sharp_1_1_animation" ],
       [ "Brush", "class_vect_sharp_1_1_brush.html", "class_vect_sharp_1_1_brush" ],
       [ "Colour", "struct_vect_sharp_1_1_colour.html", "struct_vect_sharp_1_1_colour" ],
       [ "Colours", "class_vect_sharp_1_1_colours.html", "class_vect_sharp_1_1_colours" ],
@@ -88,13 +91,16 @@ var annotated_dup =
       [ "FontLibrary", "class_vect_sharp_1_1_font_library.html", "class_vect_sharp_1_1_font_library" ],
       [ "FormattedText", "class_vect_sharp_1_1_formatted_text.html", "class_vect_sharp_1_1_formatted_text" ],
       [ "FormattedTextExtensions", "class_vect_sharp_1_1_formatted_text_extensions.html", "class_vect_sharp_1_1_formatted_text_extensions" ],
+      [ "Frame", "class_vect_sharp_1_1_frame.html", "class_vect_sharp_1_1_frame" ],
       [ "GradientBrush", "class_vect_sharp_1_1_gradient_brush.html", "class_vect_sharp_1_1_gradient_brush" ],
       [ "GradientStop", "struct_vect_sharp_1_1_gradient_stop.html", "struct_vect_sharp_1_1_gradient_stop" ],
       [ "GradientStops", "class_vect_sharp_1_1_gradient_stops.html", "class_vect_sharp_1_1_gradient_stops" ],
       [ "Graphics", "class_vect_sharp_1_1_graphics.html", "class_vect_sharp_1_1_graphics" ],
       [ "GraphicsPath", "class_vect_sharp_1_1_graphics_path.html", "class_vect_sharp_1_1_graphics_path" ],
+      [ "IEasing", "interface_vect_sharp_1_1_i_easing.html", "interface_vect_sharp_1_1_i_easing" ],
       [ "IFontLibrary", "interface_vect_sharp_1_1_i_font_library.html", "interface_vect_sharp_1_1_i_font_library" ],
       [ "IGraphicsContext", "interface_vect_sharp_1_1_i_graphics_context.html", "interface_vect_sharp_1_1_i_graphics_context" ],
+      [ "LinearEasing", "class_vect_sharp_1_1_linear_easing.html", "class_vect_sharp_1_1_linear_easing" ],
       [ "LinearGradientBrush", "class_vect_sharp_1_1_linear_gradient_brush.html", "class_vect_sharp_1_1_linear_gradient_brush" ],
       [ "LineDash", "struct_vect_sharp_1_1_line_dash.html", "struct_vect_sharp_1_1_line_dash" ],
       [ "Page", "class_vect_sharp_1_1_page.html", "class_vect_sharp_1_1_page" ],
@@ -107,6 +113,8 @@ var annotated_dup =
       [ "SimpleFontLibrary", "class_vect_sharp_1_1_simple_font_library.html", "class_vect_sharp_1_1_simple_font_library" ],
       [ "Size", "struct_vect_sharp_1_1_size.html", "struct_vect_sharp_1_1_size" ],
       [ "SolidColourBrush", "class_vect_sharp_1_1_solid_colour_brush.html", "class_vect_sharp_1_1_solid_colour_brush" ],
+      [ "SplineEasing", "class_vect_sharp_1_1_spline_easing.html", "class_vect_sharp_1_1_spline_easing" ],
+      [ "Transition", "class_vect_sharp_1_1_transition.html", "class_vect_sharp_1_1_transition" ],
       [ "TrueTypeFile", "class_vect_sharp_1_1_true_type_file.html", "class_vect_sharp_1_1_true_type_file" ],
       [ "UnbalancedStackException", "class_vect_sharp_1_1_unbalanced_stack_exception.html", null ]
     ] ]
