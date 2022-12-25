@@ -278,6 +278,10 @@ namespace VectSharp
             Actions.Add(new PathAction(path, fillColour, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, tag, false));
         }
 
+        /// <summary>
+        /// Determines whether unique tags should be used for graphics actions that create multiple objects (e.g. drawing text).
+        /// </summary>
+        public bool UseUniqueTags { get; set; } = true;
 
         /// <summary>
         /// Stroke a <see cref="GraphicsPath"/>.
@@ -352,9 +356,18 @@ namespace VectSharp
 
             if (!string.IsNullOrEmpty(tag))
             {
-                tag1 = tag + "_@1";
-                tag2 = tag + "_@2";
-                tag3 = tag + "_@3";
+                if (UseUniqueTags)
+                {
+                    tag1 = tag + "_@1";
+                    tag2 = tag + "_@2";
+                    tag3 = tag + "_@3";
+                }
+                else
+                {
+                    tag1 = tag;
+                    tag2 = tag;
+                    tag3 = tag;
+                }
             }
 
             Actions.Add(new TransformAction(pivot, tag1));
@@ -858,7 +871,7 @@ namespace VectSharp
         {
             this.Save();
 
-            if (!string.IsNullOrEmpty(tag))
+            if (!string.IsNullOrEmpty(tag) && UseUniqueTags)
             {
                 this.Translate(origin, tag + "@t");
             }
@@ -875,13 +888,16 @@ namespace VectSharp
 
                 if (clone is IPrintableAction print)
                 {
-                    if (string.IsNullOrEmpty(print.Tag))
+                    if (UseUniqueTags)
                     {
-                        print.Tag = tag;
-                    }
-                    else
-                    {
-                        print.Tag = tag + "/" + print.Tag;
+                        if (string.IsNullOrEmpty(print.Tag))
+                        {
+                            print.Tag = tag;
+                        }
+                        else
+                        {
+                            print.Tag = tag + "/" + print.Tag;
+                        }
                     }
                 }
 
@@ -913,7 +929,7 @@ namespace VectSharp
         {
             this.Save();
 
-            if (!string.IsNullOrEmpty(tag))
+            if (!string.IsNullOrEmpty(tag) && UseUniqueTags)
             {
                 this.Translate(origin, tag + "@t");
             }
