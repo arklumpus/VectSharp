@@ -627,6 +627,23 @@ namespace VectSharp
         {
             return text.Measure(null, null);
         }
+
+        /// <summary>
+        /// Extracts the text from a collection of <see cref="FormattedText"/> objects.
+        /// </summary>
+        /// <param name="text">The collection of <see cref="FormattedText"/> objects whose text should be extracted.</param>
+        /// <returns>A text rappresentation of the collection of <see cref="FormattedText"/> objects.</returns>
+        public static string GetText(this IEnumerable<FormattedText> text)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (FormattedText txt in text)
+            {
+                sb.Append(txt.ToString());
+            }
+
+            return sb.ToString();
+        }
     }
 
 }
