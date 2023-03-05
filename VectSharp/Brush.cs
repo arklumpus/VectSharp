@@ -256,6 +256,12 @@ namespace VectSharp
                 return Colour.FromRgba(0, 0, 0, 0);
             }
         }
+
+        /// <summary>
+        /// Convert a <see cref="GradientStops"/> object to a function that assigns a colour to values between 0 and 1.
+        /// </summary>
+        /// <param name="stops">The <see cref="GradientStops"/> to convert.</param>
+        public static implicit operator Func<double, Colour>(GradientStops stops) => stops.GetColourAt;
     }
 
     /// <summary>
