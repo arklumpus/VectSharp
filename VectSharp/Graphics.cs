@@ -1675,7 +1675,7 @@ namespace VectSharp
                 if (!string.IsNullOrEmpty(action.Tag))
                 {
                     yield return action.Tag;
-                }    
+                }
             }
         }
     }
