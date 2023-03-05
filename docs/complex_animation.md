@@ -269,6 +269,7 @@ frameContents.FillPath(new GraphicsPath().Arc(0, 0, 10, 0, 2 * Math.PI), ballGra
 
 // ...
 {% endhighlight %}
+</details>
 
 ## Adding a shadow
 
@@ -280,6 +281,11 @@ We can further improve the impression of depth by adding a shadow to the ball. T
     </object>
 </p>
 </div>
+<details markdown="block">
+<summary>
+    Expand source code
+  </summary>
+  {: .text-delta }
 {% highlight CSharp %}
 // Create the animation object, specifying the width, height and linearisation resolution.
 Animation animation = new Animation(200, 100, 1);
