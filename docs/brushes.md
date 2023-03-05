@@ -25,6 +25,8 @@ In the previous examples, the elements that were drawn on the graphics surface (
 
 The colours used by a gradient brush are defined by a series of `GradientStop`s. A `GradientStop` associates a `Colour` with a `double` indicating its position (`offset`) in the gradient: an `offset` of `0` corresponds to the start of the gradient, an offset of `1` corresponds to the end of the gradient, and intermediate values correspond to intermediate points. Accordingly, the constructor for the `GradientStop` class accepts two parameters, corresponding to the `Colour` and the `offset`.
 
+A collection of `GradientStop` objects can be represented as a `GradientStops` object (note the plural), which implements `IReadOnlyList<GradientStop>`. This provides a method `GetColourAt(double position)`, which returns the colour at a specific offset (for offsets &le; 0 or &ge; 1, the first and last colour are returned, respectively). There is also an implicit conversion operator defined allowing the conversion of a `GradientStops` object into a `Func<double, Colour>`.
+
 ## Linear gradients
 
 A linear gradient is defined by two `Point`s, determining the start and end of the gradient, and a number of `GradientStops` indicating the colours used for the gradient. The following example shows how to use a linear gradient to fill a rectangle:
@@ -181,5 +183,106 @@ Now, if both solutions lie in the interval $\left [ 0, 1 \right ]$, choose the s
 
 With this value of $t$, you can determine the colour to associate to the point based on the `GradientStops`, using the algorithm described above when talking about linear gradients. 
 </details>
+
+## Standard gradients
+
+VectSharp includes a number of "standard" gradients, defined in the static `Gradients` class. These are implemented as static `GradientStop` objects, which you can use when initialising a `LinearGradientBrush` or a `RadialGradientBrush`. For example:
+
+{% highlight CSharp %}
+// Create a linear gradient brush.
+LinearGradientBrush brush = new LinearGradientBrush(startPoint, endPoint, Gradients.Viridis);
+
+// Create a radial gradient brush.
+RadialGradientBrush brush = new RadialGradientBrush(focalPoint, centre, radius, Gradients.Cividis);
+{% endhighlight %}
+
+For some of these gradients (nominally, those included in the "viridis" R package), the `Gradients` class also defines a static method (e.g., `Colour ViridisColouring(double x)` for the `Viridis` gradient, `Colour CividisColouring(double x)` for the `Cividis` gradient, and so on), which can be used directly to get the colour in the gradient at the specified position. This is both faster and more accurate than using the `GetColourAt` on the `GradientStops` objects themselves (because the gradients are defined using only 20 colour stops, while these methods use 256 samples).
+
+Here is a list of all the standard gradients included in VectSharp:
+
+* `TransparentToBlack` - Gradient from transparent black (0) to opaque black (1).
+  <p style="text-align: center">
+      <img src="assets/images/gradients/TransparentToBlack.svg" style="height: 3em" />
+  </p>
+
+* `WhiteToBlack` - Gradient from white (0) to black (1).
+  <p style="text-align: center">
+      <img src="assets/images/gradients/WhiteToBlack.svg" style="height: 3em" />
+  </p>
+
+* `RedToGreen` - Gradient from red (0) to green (1).
+  <p style="text-align: center">
+      <img src="assets/images/gradients/RedToGreen.svg" style="height: 3em" />
+  </p>
+
+* `Rainbow` - Rainbow gradient (red, orange, yellow, green, blue, indigo, violet).
+  <p style="text-align: center">
+      <img src="assets/images/gradients/Rainbow.svg" style="height: 3em" />
+  </p>
+
+* `RedYellowGreen` - Gradient from red (0) to yellow (0.5) to green (1).
+  <p style="text-align: center">
+      <img src="assets/images/gradients/RedYellowGreen.svg" style="height: 3em" />
+  </p>
+
+* `OkabeItoRainbow` - Rainbow gradient with Okabe-Ito colour-blind safe colours ([https://jfly.uni-koeln.de/color/](https://jfly.uni-koeln.de/color/)).
+  <p style="text-align: center">
+      <img src="assets/images/gradients/OkabeItoRainbow.svg" style="height: 3em" />
+  </p>
+
+* `OkabeItoRainbowDiscrete` - Rainbow gradient with Okabe-Ito colour-blind safe colours ([https://jfly.uni-koeln.de/color/](https://jfly.uni-koeln.de/color/)) in discrete steps.
+  <p style="text-align: center">
+      <img src="assets/images/gradients/OkabeItoRainbowDiscrete.svg" style="height: 3em" />
+  </p>
+
+* `MutedRainbow` - Rainbow gradient with Paul Tol's Muted palette ([https://personal.sron.nl/~pault/](https://personal.sron.nl/~pault/)).
+  <p style="text-align: center">
+      <img src="assets/images/gradients/MutedRainbow.svg" style="height: 3em" />
+  </p>
+
+* `MutedRainbowDiscrete` - Rainbow gradient with Paul Tol's Muted palette ([https://personal.sron.nl/~pault/](https://personal.sron.nl/~pault/)) in discrete steps.
+  <p style="text-align: center">
+      <img src="assets/images/gradients/MutedRainbowDiscrete.svg" style="height: 3em" />
+  </p>
+
+* `Magma` - Magma gradient, based on the homonymous colour scale included in the "viridis" R package ([https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)).
+  <p style="text-align: center">
+      <img src="assets/images/gradients/Magma.svg" style="height: 3em" />
+  </p>
+
+* `Inferno` - Inferno gradient, based on the homonymous colour scale included in the "viridis" R package ([https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)).
+  <p style="text-align: center">
+      <img src="assets/images/gradients/Inferno.svg" style="height: 3em" />
+  </p>
+
+* `Plasma` - Plasma gradient, based on the homonymous colour scale included in the "viridis" R package ([https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)).
+  <p style="text-align: center">
+      <img src="assets/images/gradients/Plasma.svg" style="height: 3em" />
+  </p>
+
+* `Viridis` - Viridis gradient, based on the homonymous colour scale included in the "viridis" R package ([https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)).
+  <p style="text-align: center">
+      <img src="assets/images/gradients/Viridis.svg" style="height: 3em" />
+  </p>
+
+* `Cividis` - Cividis gradient, based on the homonymous colour scale included in the "viridis" R package ([https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)).
+  <p style="text-align: center">
+      <img src="assets/images/gradients/Cividis.svg" style="height: 3em" />
+  </p>
+
+* `Rocket` - Rocket gradient, based on the homonymous colour scale included in the "viridis" R package ([https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)).
+  <p style="text-align: center">
+      <img src="assets/images/gradients/Rocket.svg" style="height: 3em" />
+  </p>
+
+* `Mako` - Mako gradient, based on the homonymous colour scale included in the "viridis" R package ([https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)).
+  <p style="text-align: center">
+      <img src="assets/images/gradients/Mako.svg" style="height: 3em" />
+  </p>
+
+* `Turbo` - Turbo gradient, based on the homonymous colour scale included in the "viridis" R package ([https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)).
+  <p style="text-align: center">
+      <img src="assets/images/gradients/Turbo.svg" style="height: 3em" />
+  </p>
 
 [Back to top](#){: .btn }

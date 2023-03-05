@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 256 32" version="1.1" style="font-synthesis: none;" xmlns="http://www.w3.org/2000/svg">
+  <style></style>
+  <defs>
+    <linearGradient id="gradient1_f730b2629e384707ad669f298febe4a2" gradientUnits="userSpaceOnUse" x1="0" y1="16" x2="256" y2="16">
+      <stop offset="0" stop-color="#000000" stop-opacity="0" id="gradient1_f730b2629e384707ad669f298febe4a2/stop0" />
+      <stop offset="1" stop-color="#000000" stop-opacity="1" id="gradient1_f730b2629e384707ad669f298febe4a2/stop1" />
+    </linearGradient>
+  </defs>
+  <style>	</style>
+  <path d="M 0 0 L 256 0 L 256 32 L 0 32 Z " stroke="none" fill="#FFFFFF" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 0 0 L 8 0 L 8 8 L 0 8 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 0 16 L 8 16 L 8 24 L 0 24 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 8 8 L 16 8 L 16 16 L 8 16 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 8 24 L 16 24 L 16 32 L 8 32 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 16 0 L 24 0 L 24 8 L 16 8 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 16 16 L 24 16 L 24 24 L 16 24 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 24 8 L 32 8 L 32 16 L 24 16 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 24 24 L 32 24 L 32 32 L 24 32 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 32 0 L 40 0 L 40 8 L 32 8 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 32 16 L 40 16 L 40 24 L 32 24 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 40 8 L 48 8 L 48 16 L 40 16 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 40 24 L 48 24 L 48 32 L 40 32 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 48 0 L 56 0 L 56 8 L 48 8 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 48 16 L 56 16 L 56 24 L 48 24 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 56 8 L 64 8 L 64 16 L 56 16 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 56 24 L 64 24 L 64 32 L 56 32 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 64 0 L 72 0 L 72 8 L 64 8 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 64 16 L 72 16 L 72 24 L 64 24 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 72 8 L 80 8 L 80 16 L 72 16 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 72 24 L 80 24 L 80 32 L 72 32 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 80 0 L 88 0 L 88 8 L 80 8 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 80 16 L 88 16 L 88 24 L 80 24 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 88 8 L 96 8 L 96 16 L 88 16 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 88 24 L 96 24 L 96 32 L 88 32 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 96 0 L 104 0 L 104 8 L 96 8 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 96 16 L 104 16 L 104 24 L 96 24 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 104 8 L 112 8 L 112 16 L 104 16 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 104 24 L 112 24 L 112 32 L 104 32 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 112 0 L 120 0 L 120 8 L 112 8 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 112 16 L 120 16 L 120 24 L 112 24 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 120 8 L 128 8 L 128 16 L 120 16 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 120 24 L 128 24 L 128 32 L 120 32 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 128 0 L 136 0 L 136 8 L 128 8 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 128 16 L 136 16 L 136 24 L 128 24 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 136 8 L 144 8 L 144 16 L 136 16 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 136 24 L 144 24 L 144 32 L 136 32 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 144 0 L 152 0 L 152 8 L 144 8 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 144 16 L 152 16 L 152 24 L 144 24 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 152 8 L 160 8 L 160 16 L 152 16 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 152 24 L 160 24 L 160 32 L 152 32 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 160 0 L 168 0 L 168 8 L 160 8 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 160 16 L 168 16 L 168 24 L 160 24 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 168 8 L 176 8 L 176 16 L 168 16 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 168 24 L 176 24 L 176 32 L 168 32 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 176 0 L 184 0 L 184 8 L 176 8 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 176 16 L 184 16 L 184 24 L 176 24 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 184 8 L 192 8 L 192 16 L 184 16 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 184 24 L 192 24 L 192 32 L 184 32 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 192 0 L 200 0 L 200 8 L 192 8 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 192 16 L 200 16 L 200 24 L 192 24 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 200 8 L 208 8 L 208 16 L 200 16 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 200 24 L 208 24 L 208 32 L 200 32 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 208 0 L 216 0 L 216 8 L 208 8 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 208 16 L 216 16 L 216 24 L 208 24 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 216 8 L 224 8 L 224 16 L 216 16 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 216 24 L 224 24 L 224 32 L 216 32 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 224 0 L 232 0 L 232 8 L 224 8 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 224 16 L 232 16 L 232 24 L 224 24 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 232 8 L 240 8 L 240 16 L 232 16 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 232 24 L 240 24 L 240 32 L 232 32 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 240 0 L 248 0 L 248 8 L 240 8 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 240 16 L 248 16 L 248 24 L 240 24 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 248 8 L 256 8 L 256 16 L 248 16 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 248 24 L 256 24 L 256 32 L 248 32 Z " stroke="none" fill="#DCDCDC" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 0 0 L 256 0 L 256 32 L 0 32 Z " stroke="none" fill="url(#gradient1_f730b2629e384707ad669f298febe4a2)" transform="matrix(1,0,0,1,0,0)" />
+</svg>
