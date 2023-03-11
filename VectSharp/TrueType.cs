@@ -2314,6 +2314,16 @@ namespace VectSharp
         }
 
         /// <summary>
+        /// Returns the number of units for each em in the font file. Multiplying any glyph measurement by this
+        /// size should generally lead to an integer value.
+        /// </summary>
+        /// <returns>The number of units for each em in the font file.</returns>
+        public int GetUnitsPerEm()
+        {
+            return ((TrueTypeHeadTable)Tables["head"]).UnitsPerEm;
+        }
+
+        /// <summary>
         /// Computes the italic angle for the current font, in thousandths of em unit. This is computed from the vertical and is negative for text that leans forwards.
         /// </summary>
         /// <returns></returns>
