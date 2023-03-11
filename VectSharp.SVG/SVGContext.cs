@@ -494,7 +494,7 @@ namespace VectSharp.SVG
 
         public void FillText(string text, double x, double y)
         {
-            if (!TextToPaths)
+            if ((!TextToPaths && TextOption != SVGContextInterpreter.TextOptions.ConvertIntoPathsUsingGlyphs) || (TextOption == SVGContextInterpreter.TextOptions.ConvertIntoPathsUsingGlyphs && FillStyle is SolidColourBrush))
             {
                 if (!UsedFontFamilies.ContainsKey(Font.FontFamily.FileName))
                 {
@@ -542,7 +542,17 @@ namespace VectSharp.SVG
                     currElement.AppendChild(currentElement);
                 }
 
-                XmlElement textElement = Document.CreateElement("text", SVGNamespace);
+                XmlElement textElement;
+
+                if (TextOption != SVGContextInterpreter.TextOptions.ConvertIntoPathsUsingGlyphs)
+                {
+                    textElement = Document.CreateElement("text", SVGNamespace);
+                }
+                else
+                {
+                    textElement = Document.CreateElement("g", SVGNamespace);
+                }
+
 
                 string gradientName = null;
 
@@ -595,8 +605,11 @@ namespace VectSharp.SVG
                     }
                 }
 
-                textElement.SetAttribute("x", "0");
-                textElement.SetAttribute("y", "0");
+                if (TextOption != SVGContextInterpreter.TextOptions.ConvertIntoPathsUsingGlyphs)
+                {
+                    textElement.SetAttribute("x", "0");
+                    textElement.SetAttribute("y", "0");
+                }
 
                 textElement.SetAttribute("transform", "matrix(" + currTransform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + currTransform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
                         "," + currTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + currTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
@@ -697,7 +710,14 @@ namespace VectSharp.SVG
                     textElement.SetAttribute("class", className);
                 }
 
-                ProcessText(text, textElement);
+                if (TextOption != SVGContextInterpreter.TextOptions.ConvertIntoPathsUsingGlyphs)
+                {
+                    ProcessText(text, textElement);
+                }
+                else
+                {
+                    ProcessGlyphs(text, textElement);
+                }
 
                 if (!string.IsNullOrEmpty(Tag))
                 {
@@ -1025,7 +1045,7 @@ namespace VectSharp.SVG
 
         public void StrokeText(string text, double x, double y)
         {
-            if (!TextToPaths)
+            if ((!TextToPaths && TextOption != SVGContextInterpreter.TextOptions.ConvertIntoPathsUsingGlyphs) || (TextOption == SVGContextInterpreter.TextOptions.ConvertIntoPathsUsingGlyphs && StrokeStyle is SolidColourBrush))
             {
                 if (!UsedFontFamilies.ContainsKey(Font.FontFamily.FileName))
                 {
@@ -1073,7 +1093,17 @@ namespace VectSharp.SVG
                     currElement.AppendChild(currentElement);
                 }
 
-                XmlElement textElement = Document.CreateElement("text", SVGNamespace);
+                XmlElement textElement;
+
+                if (TextOption != SVGContextInterpreter.TextOptions.ConvertIntoPathsUsingGlyphs)
+                {
+                    textElement = Document.CreateElement("text", SVGNamespace);
+                }
+                else
+                {
+                    textElement = Document.CreateElement("g", SVGNamespace);
+                }
+                
 
                 string gradientName = null;
 
@@ -1126,8 +1156,11 @@ namespace VectSharp.SVG
                     }
                 }
 
-                textElement.SetAttribute("x", "0");
-                textElement.SetAttribute("y", "0");
+                if (TextOption != SVGContextInterpreter.TextOptions.ConvertIntoPathsUsingGlyphs)
+                {
+                    textElement.SetAttribute("x", "0");
+                    textElement.SetAttribute("y", "0");
+                }
 
                 textElement.SetAttribute("transform", "matrix(" + currTransform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + currTransform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
                         "," + currTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + currTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
@@ -1149,7 +1182,15 @@ namespace VectSharp.SVG
                         textElement.SetAttribute("stroke", "url(#" + gradientName + ")");
                     }
 
-                    textElement.SetAttribute("stroke-width", LineWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    if (TextOption != SVGContextInterpreter.TextOptions.ConvertIntoPathsUsingGlyphs)
+                    {
+                        textElement.SetAttribute("stroke-width", LineWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    }
+                    else
+                    {
+                        textElement.SetAttribute("stroke-width", (LineWidth * Font.FontFamily.TrueTypeFile.GetUnitsPerEm() / Font.FontSize).ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    }
+                    
 
                     switch (LineCap)
                     {
@@ -1294,7 +1335,14 @@ namespace VectSharp.SVG
                     textElement.SetAttribute("class", className);
                 }
 
-                ProcessText(text, textElement);
+                if (TextOption != SVGContextInterpreter.TextOptions.ConvertIntoPathsUsingGlyphs)
+                {
+                    ProcessText(text, textElement);
+                }
+                else
+                {
+                    ProcessGlyphs(text, textElement);
+                }
 
                 if (!string.IsNullOrEmpty(Tag))
                 {
@@ -1633,6 +1681,62 @@ namespace VectSharp.SVG
             else
             {
                 parent.InnerText = text.Replace(" ", "\u00A0");
+            }
+        }
+
+        private void ProcessGlyphs(string text, XmlNode parent)
+        {
+            List<(string, Point)> tSpans = new List<(string, Point)>();
+
+            Point currentGlyphPlacementDelta = new Point();
+            Point currentGlyphAdvanceDelta = new Point();
+            Point nextGlyphPlacementDelta = new Point();
+            Point nextGlyphAdvanceDelta = new Point();
+
+            double currX = 0;
+            double currY = 0;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (i < text.Length - 1)
+                {
+                    currentGlyphPlacementDelta = nextGlyphPlacementDelta;
+                    currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
+                    nextGlyphAdvanceDelta = new Point();
+                    nextGlyphPlacementDelta = new Point();
+
+                    TrueTypeFile.PairKerning kerning = Font.FontFamily.TrueTypeFile.Get1000EmKerning(text[i], text[i + 1]);
+
+                    if (kerning != null)
+                    {
+                        currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
+                        currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+
+                        nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
+                        nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
+                    }
+                }
+
+                tSpans.Add((text[i].ToString(), new Point(currX, currY)));
+                
+                double advanceWidth = Font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(text[i]) * Font.FontSize / 1000;
+                currX += advanceWidth + currentGlyphPlacementDelta.X * Font.FontSize / 1000 + (currentGlyphAdvanceDelta.X - currentGlyphPlacementDelta.X) * Font.FontSize / 1000;
+                currY += currentGlyphPlacementDelta.Y * Font.FontSize / 1000 + (currentGlyphAdvanceDelta.Y - currentGlyphPlacementDelta.Y) * Font.FontSize / 1000;
+            }
+
+            double scale = Font.FontSize / Font.FontFamily.TrueTypeFile.GetUnitsPerEm();
+
+            string scaleText = scale.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+            ((XmlElement)parent).SetAttribute("transform", ((XmlElement)parent).GetAttribute("transform") + ", scale(" + scaleText + ")");
+
+            for (int i = 0; i < tSpans.Count; i++)
+            {
+                XmlElement useElement = Document.CreateElement("use", SVGNamespace);
+                useElement.SetAttribute("href", "#" + Font.FontFamily.FileName + "-" + tSpans[i].Item1);
+                
+                useElement.SetAttribute("transform", "translate(" + (tSpans[i].Item2.X / scale).ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + (tSpans[i].Item2.Y / scale).ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
+                parent.AppendChild(useElement);
             }
         }
 
@@ -2133,7 +2237,9 @@ namespace VectSharp.SVG
             /// <summary>
             /// Does not embed any font file, but still encodes text items as such.
             /// </summary>
-            DoNotEmbed
+            DoNotEmbed,
+
+            ConvertIntoPathsUsingGlyphs
         }
 
         /// <summary>
@@ -2263,7 +2369,7 @@ namespace VectSharp.SVG
 
             page.Graphics.CopyToIGraphicsContext(ctx);
 
-            if (!textToPaths && textOption != TextOptions.DoNotEmbed)
+            if (!textToPaths && textOption != TextOptions.DoNotEmbed && textOption != TextOptions.ConvertIntoPathsUsingGlyphs)
             {
                 bool subsetFonts = textOption == TextOptions.SubsetFonts;
 
@@ -2391,6 +2497,60 @@ namespace VectSharp.SVG
                             }
                         }
                     }
+                }
+            }
+            else if (textOption == TextOptions.ConvertIntoPathsUsingGlyphs)
+            {
+                foreach (KeyValuePair<string, FontFamily> kvp in ctx.UsedFontFamilies)
+                {
+                    string guid = Guid.NewGuid().ToString();
+
+                    XmlElement defs = ctx.Document.CreateElement("defs", SVGContext.SVGNamespace);
+                    defs.SetAttribute("id", kvp.Value.FamilyName + "-glyphs-" + guid);
+
+                    foreach (char c in ctx.UsedChars[kvp.Key])
+                    {
+                        XmlElement charPath = ctx.Document.CreateElement("path", SVGContext.SVGNamespace);
+                        charPath.SetAttribute("id", kvp.Key + "-" + c);
+
+                        TrueTypeFile.TrueTypePoint[][] glyphPaths = kvp.Value.TrueTypeFile.GetGlyphPath(c, kvp.Value.TrueTypeFile.GetUnitsPerEm());
+
+                        StringBuilder data = new StringBuilder();
+
+                        for (int j = 0; j < glyphPaths.Length; j++)
+                        {
+                            for (int k = 0; k < glyphPaths[j].Length; k++)
+                            {
+                                if (k == 0)
+                                {
+                                    data.Append("M " + glyphPaths[j][k].X.ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + (-glyphPaths[j][k].Y).ToString(System.Globalization.CultureInfo.InvariantCulture) + " ");
+                                }
+                                else
+                                {
+                                    if (glyphPaths[j][k].IsOnCurve)
+                                    {
+                                        data.Append("L " + glyphPaths[j][k].X.ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + (-glyphPaths[j][k].Y).ToString(System.Globalization.CultureInfo.InvariantCulture) + " ");
+                                    }
+                                    else
+                                    {
+                                        data.Append("Q " + glyphPaths[j][k].X.ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + (-glyphPaths[j][k].Y).ToString(System.Globalization.CultureInfo.InvariantCulture) + " ");
+                                        data.Append(glyphPaths[j][k + 1].X.ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + (-glyphPaths[j][k + 1].Y).ToString(System.Globalization.CultureInfo.InvariantCulture) + " ");
+
+                                        k++;
+                                    }
+                                }
+                            }
+
+                            data.Append("Z");
+                        }
+
+                        charPath.SetAttribute("d", data.ToString());
+
+                        defs.AppendChild(charPath);
+                    }
+
+                    XmlNode svgElement = ctx.Document.GetElementsByTagName("svg")[0];
+                    svgElement.InsertBefore(defs, svgElement.FirstChild);
                 }
             }
             else if (!textToPaths && textOption == TextOptions.DoNotEmbed)
@@ -2864,8 +3024,8 @@ namespace VectSharp.SVG
                     if (i < frames.Length - 1)
                     {
                         animate.SetAttribute("fill", "freeze");
-                    }                    
-                    
+                    }
+
                     animate.SetAttribute("keyTimes", "0;" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + durations[i]) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + durations[i]) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
                     clonedSVG.InsertBefore(animate, clonedSVG.FirstChild);
 
