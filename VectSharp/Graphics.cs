@@ -1675,11 +1675,7 @@ namespace VectSharp
                 if (!string.IsNullOrEmpty(action.Tag))
                 {
                     yield return action.Tag;
-<<<<<<< HEAD
                 }
-=======
-                }    
->>>>>>> d19bf9a90223b5e1e7035a1984abdcc504bd1bba
             }
         }
     }
