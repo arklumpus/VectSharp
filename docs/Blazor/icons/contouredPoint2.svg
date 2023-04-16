@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="12.5mm"
+   height="12.5mm"
+   viewBox="0 0 12.5 12.5"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   sodipodi:docname="contouredPoint2.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="2.587745"
+     inkscape:cx="254.27544"
+     inkscape:cy="97.382085"
+     inkscape:window-width="2560"
+     inkscape:window-height="1369"
+     inkscape:window-x="3432"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Livello 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(1.25,1.25)">
+    <circle
+       style="fill:#ffe9da;fill-opacity:1;stroke:#d55e00;stroke-width:2.5;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       id="path234"
+       inkscape:transform-center-x="0.26496584"
+       inkscape:transform-center-y="-0.81671432"
+       cx="5"
+       cy="5"
+       r="5" />
+  </g>
+</svg>

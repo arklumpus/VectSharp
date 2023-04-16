@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['unbalancedstackexception_0',['UnbalancedStackException',['../class_vect_sharp_1_1_unbalanced_stack_exception.html',1,'VectSharp']]],
-  ['unknownformatexception_1',['UnknownFormatException',['../class_vect_sharp_1_1_raster_1_1_image_sharp_1_1_image_sharp_context_interpreter_1_1_unknown_format_exception.html',1,'VectSharp::Raster::ImageSharp::ImageSharpContextInterpreter']]]
+  ['textlabel_0',['TextLabel',['../class_vect_sharp_1_1_plots_1_1_text_label.html',1,'VectSharp::Plots']]],
+  ['transition_1',['Transition',['../class_vect_sharp_1_1_transition.html',1,'VectSharp']]],
+  ['truetypefile_2',['TrueTypeFile',['../class_vect_sharp_1_1_true_type_file.html',1,'VectSharp']]],
+  ['truetypepoint_3',['TrueTypePoint',['../struct_vect_sharp_1_1_true_type_file_1_1_true_type_point.html',1,'VectSharp::TrueTypeFile']]]
 ];

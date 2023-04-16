@@ -1,4 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,13,97,38"/>
-<area shape="rect" id="node2" href="$class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html" title="A control to display a Markdown document in an Avalonia application." alt="" coords="145,5,341,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,31,108,56"/>
+<area shape="rect" id="node2" href="$class_vect_sharp_1_1_gradient_stops.html" title="Represents a read&#45;only list of GradientStops." alt="" coords="156,5,327,31"/>
+<area shape="rect" id="node3" href="$struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top&#45;left corner." alt="" coords="183,55,300,80"/>
 </map>

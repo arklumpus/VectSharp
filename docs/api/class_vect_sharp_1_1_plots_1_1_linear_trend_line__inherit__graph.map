@@ -1,0 +1,4 @@
+<map id="VectSharp.Plots.LinearTrendLine" name="VectSharp.Plots.LinearTrendLine">
+<area shape="rect" id="node1" title="A plot element that draws a linear trendline with equation y = a * x + b." alt="" coords="5,79,217,104"/>
+<area shape="rect" id="node2" href="$interface_vect_sharp_1_1_plots_1_1_i_plot_element.html" title="Represents a plot element." alt="" coords="63,5,159,31"/>
+</map>

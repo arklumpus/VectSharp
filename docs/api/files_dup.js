@@ -8,6 +8,7 @@ var files_dup =
     [ "VectSharp.MarkdownCanvas", "dir_447e7251831f7a754b854db7376cd107.html", "dir_447e7251831f7a754b854db7376cd107" ],
     [ "VectSharp.MuPDFUtils", "dir_452a51251142bc7d9d54a0dbe0aed850.html", "dir_452a51251142bc7d9d54a0dbe0aed850" ],
     [ "VectSharp.PDF", "dir_c0a49aad9c77eb50f1b38df9d9b26fde.html", "dir_c0a49aad9c77eb50f1b38df9d9b26fde" ],
+    [ "VectSharp.Plots", "dir_1e8c20e7ac1df0207c5dde8744903fdd.html", "dir_1e8c20e7ac1df0207c5dde8744903fdd" ],
     [ "VectSharp.Raster", "dir_664d029dbe81cf7a6e60c51e20570786.html", "dir_664d029dbe81cf7a6e60c51e20570786" ],
     [ "VectSharp.Raster.ImageSharp", "dir_af6010fc7dbdae73bc46c345931cfdda.html", "dir_af6010fc7dbdae73bc46c345931cfdda" ],
     [ "VectSharp.SVG", "dir_885bba5288a8b333208632535de9ccc7.html", "dir_885bba5288a8b333208632535de9ccc7" ],

@@ -1,0 +1,4 @@
+<map id="VectSharp.Plots.PowerLawTrendLine" name="VectSharp.Plots.PowerLawTrendLine">
+<area shape="rect" id="node1" title="A plot element that draws a power law trendline with equation y = b * x^a." alt="" coords="5,79,185,119"/>
+<area shape="rect" id="node2" href="$interface_vect_sharp_1_1_plots_1_1_i_plot_element.html" title="Represents a plot element." alt="" coords="47,5,143,31"/>
+</map>

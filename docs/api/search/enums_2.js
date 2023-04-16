@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['interframecompression_0',['InterframeCompression',['../class_vect_sharp_1_1_animated_p_n_g.html#ac87e8fb45a427615d2645ba751e5d09a',1,'VectSharp::AnimatedPNG']]]
+  ['gridtype_0',['GridType',['../class_vect_sharp_1_1_plots_1_1_function2_d_grid.html#a2f6dd50ee86ddb7a1bc038c5ea915cb2',1,'VectSharp::Plots::Function2DGrid']]]
 ];

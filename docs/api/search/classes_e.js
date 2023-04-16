@@ -1,16 +1,12 @@
 var searchData=
 [
-  ['scene_0',['Scene',['../class_vect_sharp_1_1_three_d_1_1_scene.html',1,'VectSharp::ThreeD']]],
-  ['segment_1',['Segment',['../class_vect_sharp_1_1_segment.html',1,'VectSharp']]],
-  ['simplefontlibrary_2',['SimpleFontLibrary',['../class_vect_sharp_1_1_simple_font_library.html',1,'VectSharp']]],
-  ['size_3',['Size',['../struct_vect_sharp_1_1_size.html',1,'VectSharp']]],
-  ['skmultilayerrendercanvas_4',['SKMultiLayerRenderCanvas',['../class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html',1,'VectSharp::Canvas']]],
-  ['skrenderaction_5',['SKRenderAction',['../class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html',1,'VectSharp::Canvas']]],
-  ['skrendercontext_6',['SKRenderContext',['../class_vect_sharp_1_1_canvas_1_1_s_k_render_context.html',1,'VectSharp::Canvas']]],
-  ['skrendercontextinterpreter_7',['SKRenderContextInterpreter',['../class_vect_sharp_1_1_canvas_1_1_s_k_render_context_interpreter.html',1,'VectSharp::Canvas']]],
-  ['solidcolourbrush_8',['SolidColourBrush',['../class_vect_sharp_1_1_solid_colour_brush.html',1,'VectSharp']]],
-  ['splineeasing_9',['SplineEasing',['../class_vect_sharp_1_1_spline_easing.html',1,'VectSharp']]],
-  ['spotlightlightsource_10',['SpotlightLightSource',['../class_vect_sharp_1_1_three_d_1_1_spotlight_light_source.html',1,'VectSharp::ThreeD']]],
-  ['svgcontextinterpreter_11',['SVGContextInterpreter',['../class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html',1,'VectSharp::SVG']]],
-  ['syntaxhighlighter_12',['SyntaxHighlighter',['../class_vect_sharp_1_1_markdown_1_1_syntax_highlighter.html',1,'VectSharp::Markdown']]]
+  ['radialgradientbrush_0',['RadialGradientBrush',['../class_vect_sharp_1_1_radial_gradient_brush.html',1,'VectSharp']]],
+  ['rangerecord_1',['RangeRecord',['../struct_vect_sharp_1_1_true_type_file_1_1_coverage_table_1_1_range_record.html',1,'VectSharp::TrueTypeFile::CoverageTable']]],
+  ['raster_2',['Raster',['../class_vect_sharp_1_1_raster_1_1_raster.html',1,'VectSharp::Raster']]],
+  ['rasterimage_3',['RasterImage',['../class_vect_sharp_1_1_raster_image.html',1,'VectSharp']]],
+  ['rasterimagefile_4',['RasterImageFile',['../class_vect_sharp_1_1_image_sharp_utils_1_1_raster_image_file.html',1,'VectSharp.ImageSharpUtils.RasterImageFile'],['../class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_file.html',1,'VectSharp.MuPDFUtils.RasterImageFile']]],
+  ['rasterimagestream_5',['RasterImageStream',['../class_vect_sharp_1_1_image_sharp_utils_1_1_raster_image_stream.html',1,'VectSharp.ImageSharpUtils.RasterImageStream'],['../class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_stream.html',1,'VectSharp.MuPDFUtils.RasterImageStream']]],
+  ['rectangle_6',['Rectangle',['../struct_vect_sharp_1_1_rectangle.html',1,'VectSharp']]],
+  ['renderaction_7',['RenderAction',['../class_vect_sharp_1_1_canvas_1_1_render_action.html',1,'VectSharp::Canvas']]],
+  ['resourcefontfamily_8',['ResourceFontFamily',['../class_vect_sharp_1_1_resource_font_family.html',1,'VectSharp']]]
 ];

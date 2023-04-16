@@ -1,3 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter_1_1_filter_option.html" title="Determines how and whether image filters are rasterised." alt="" coords="5,5,199,45"/>
+<area shape="rect" id="node1" href="$interface_vect_sharp_1_1_plots_1_1_i_data_point_element.html" title="Represents a symbol that can be added to the plot at a specified position." alt="" coords="5,69,187,109"/>
+<area shape="rect" id="node2" href="$class_vect_sharp_1_1_plots_1_1_action_data_point_element.html" title="A symbol drawn by a custom Action." alt="" coords="235,5,420,45"/>
+<area shape="rect" id="node3" href="$class_vect_sharp_1_1_plots_1_1_graphics_data_point_element.html" title="A symbol defined by a VectSharp.Graphics object." alt="" coords="241,69,414,109"/>
+<area shape="rect" id="node4" href="$class_vect_sharp_1_1_plots_1_1_path_data_point_element.html" title="A symbol defined by a GraphicsPath." alt="" coords="240,133,415,173"/>
 </map>

@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">VectSharp<span id="projectnumber">&#160;2.4.0</span>
+   <div id="projectname">VectSharp<span id="projectnumber">&#160;2.4.2</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -208,6 +208,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5b5bb2fb701f97516051c590d799e969"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_true_type_file.html#a5b5bb2fb701f97516051c590d799e969">Get1000EmUnderlineThickness</a> ()</td></tr>
 <tr class="memdesc:a5b5bb2fb701f97516051c590d799e969"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the thickness of the underline, in thousandths of em unit.   <a href="class_vect_sharp_1_1_true_type_file.html#a5b5bb2fb701f97516051c590d799e969">More...</a><br /></td></tr>
 <tr class="separator:a5b5bb2fb701f97516051c590d799e969"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8f3fba114b2632dcaeee0fb94da60a3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_true_type_file.html#aa8f3fba114b2632dcaeee0fb94da60a3">GetUnitsPerEm</a> ()</td></tr>
+<tr class="memdesc:aa8f3fba114b2632dcaeee0fb94da60a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of units for each em in the font file. Multiplying any glyph measurement by this size should generally lead to an integer value.   <a href="class_vect_sharp_1_1_true_type_file.html#aa8f3fba114b2632dcaeee0fb94da60a3">More...</a><br /></td></tr>
+<tr class="separator:aa8f3fba114b2632dcaeee0fb94da60a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7bfa118192a7224fce438753c6667994"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_true_type_file.html#a7bfa118192a7224fce438753c6667994">GetItalicAngle</a> ()</td></tr>
 <tr class="memdesc:a7bfa118192a7224fce438753c6667994"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the italic angle for the current font, in thousandths of em unit. This is computed from the vertical and is negative for text that leans forwards.   <a href="class_vect_sharp_1_1_true_type_file.html#a7bfa118192a7224fce438753c6667994">More...</a><br /></td></tr>
 <tr class="separator:a7bfa118192a7224fce438753c6667994"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -449,7 +452,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="class_vect_sharp_1_1_true_type_file_1_1_pair_kerning.html" title="Contains information describing how the position of two glyphs in a kerning pair should be altered.">PairKerning</a> object containing information about how the position of each glyphs should be altered.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02490">2490</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02500">2500</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -489,7 +492,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="class_vect_sharp_1_1_true_type_file_1_1_pair_kerning.html" title="Contains information describing how the position of two glyphs in a kerning pair should be altered.">PairKerning</a> object containing information about how the position of each glyphs should be altered.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02504">2504</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02514">2514</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -536,7 +539,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>If the underline does not intersect the glyph, this method returns <code>null</code>. Otherwise, it returns an array containing two elements, representing the horizontal coordinates of the leftmost and rightmost intersection points.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02340">2340</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02350">2350</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -909,7 +912,7 @@ Properties</h2></td></tr>
 <p>Computes the italic angle for the current font, in thousandths of em unit. This is computed from the vertical and is negative for text that leans forwards.  </p>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02320">2320</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02330">2330</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -932,6 +935,28 @@ Properties</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>The index of the last character glyph represented by the font.</dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l01931">1931</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+
+</div>
+</div>
+<a id="aa8f3fba114b2632dcaeee0fb94da60a3" name="aa8f3fba114b2632dcaeee0fb94da60a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8f3fba114b2632dcaeee0fb94da60a3">&#9670;&#160;</a></span>GetUnitsPerEm()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int VectSharp.TrueTypeFile.GetUnitsPerEm </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the number of units for each em in the font file. Multiplying any glyph measurement by this size should generally lead to an integer value.  </p>
+<dl class="section return"><dt>Returns</dt><dd>The number of units for each em in the font file.</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02321">2321</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>

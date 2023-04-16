@@ -10,5 +10,6 @@ var searchData=
   ['unitson_7',['UnitsOn',['../struct_vect_sharp_1_1_line_dash.html#a52d89296026bf3767252434083d5558a',1,'VectSharp::LineDash']]],
   ['unknownformatexception_8',['UnknownFormatException',['../class_vect_sharp_1_1_raster_1_1_image_sharp_1_1_image_sharp_context_interpreter_1_1_unknown_format_exception.html',1,'VectSharp::Raster::ImageSharp::ImageSharpContextInterpreter']]],
   ['updatelayer_9',['UpdateLayer',['../class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a2afc05715ff7c9e4cb273943d70939ed',1,'VectSharp::Canvas::SKMultiLayerRenderCanvas']]],
-  ['updatewith_10',['UpdateWith',['../class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a84c5f8dc4c4351723414e55fa01eafe7',1,'VectSharp::Canvas::SKMultiLayerRenderCanvas']]]
+  ['updatewith_10',['UpdateWith',['../class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a84c5f8dc4c4351723414e55fa01eafe7',1,'VectSharp::Canvas::SKMultiLayerRenderCanvas']]],
+  ['useuniquetags_11',['UseUniqueTags',['../class_vect_sharp_1_1_graphics.html#a52d3fc0919620829e052780f4f8cd8e7',1,'VectSharp::Graphics']]]
 ];

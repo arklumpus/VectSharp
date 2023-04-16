@@ -58,5 +58,6 @@ var class_vect_sharp_1_1_graphics =
     [ "Translate", "class_vect_sharp_1_1_graphics.html#adc3cc93ddf9bf9707fde1d22325f1f69", null ],
     [ "TryRasterise", "class_vect_sharp_1_1_graphics.html#a6d3ec4a011650e50171a888531e0c53c", null ],
     [ "RasterisationMethod", "class_vect_sharp_1_1_graphics.html#a5033bbb29d924589df774638c31f93ad", null ],
-    [ "UnbalancedStackAction", "class_vect_sharp_1_1_graphics.html#af32ad440108219e8600983cc6d0f6d49", null ]
+    [ "UnbalancedStackAction", "class_vect_sharp_1_1_graphics.html#af32ad440108219e8600983cc6d0f6d49", null ],
+    [ "UseUniqueTags", "class_vect_sharp_1_1_graphics.html#a52d3fc0919620829e052780f4f8cd8e7", null ]
 ];

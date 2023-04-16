@@ -13,7 +13,8 @@ var searchData=
   ['peru_10',['Peru',['../class_vect_sharp_1_1_colours.html#a20251ac530a757fbee6c7c8fbc6f91d0',1,'VectSharp::Colours']]],
   ['phase_11',['Phase',['../struct_vect_sharp_1_1_line_dash.html#a38598f6af7fe0dfd0444575346335a04',1,'VectSharp::LineDash']]],
   ['pink_12',['Pink',['../class_vect_sharp_1_1_colours.html#ad53d7734f383c67db909beff81fe2cc0',1,'VectSharp::Colours']]],
-  ['plum_13',['Plum',['../class_vect_sharp_1_1_colours.html#abe8687674cc9631b964c622ee13a7de4',1,'VectSharp::Colours']]],
-  ['powderblue_14',['PowderBlue',['../class_vect_sharp_1_1_colours.html#a1a2138864c5a02d980c568ee55410de9',1,'VectSharp::Colours']]],
-  ['purple_15',['Purple',['../class_vect_sharp_1_1_colours.html#a25783ce1733ac4d310f873145ea11bdd',1,'VectSharp::Colours']]]
+  ['plasma_13',['Plasma',['../class_vect_sharp_1_1_gradients.html#afd232f6b4b05b106212605a816420405',1,'VectSharp::Gradients']]],
+  ['plum_14',['Plum',['../class_vect_sharp_1_1_colours.html#abe8687674cc9631b964c622ee13a7de4',1,'VectSharp::Colours']]],
+  ['powderblue_15',['PowderBlue',['../class_vect_sharp_1_1_colours.html#a1a2138864c5a02d980c568ee55410de9',1,'VectSharp::Colours']]],
+  ['purple_16',['Purple',['../class_vect_sharp_1_1_colours.html#a25783ce1733ac4d310f873145ea11bdd',1,'VectSharp::Colours']]]
 ];

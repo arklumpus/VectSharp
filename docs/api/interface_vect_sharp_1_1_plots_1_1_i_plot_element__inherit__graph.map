@@ -1,0 +1,27 @@
+<map id="VectSharp.Plots.IPlotElement" name="VectSharp.Plots.IPlotElement">
+<area shape="rect" id="node1" title="Represents a plot element." alt="" coords="5,635,200,660"/>
+<area shape="rect" id="node2" href="$class_vect_sharp_1_1_plots_1_1_area.html" title="A plot element that fills an area between a line passing through some data points and a base line." alt="" coords="274,5,453,31"/>
+<area shape="rect" id="node3" href="$class_vect_sharp_1_1_plots_1_1_bars.html" title="A plot element that draws bars." alt="" coords="274,55,453,80"/>
+<area shape="rect" id="node4" href="$class_vect_sharp_1_1_plots_1_1_box_plot.html" title="A plot element that draws a box plot." alt="" coords="280,104,447,129"/>
+<area shape="rect" id="node5" href="$class_vect_sharp_1_1_plots_1_1_clustered_bars.html" title="A plot element that draws clusters of bars." alt="" coords="262,153,465,179"/>
+<area shape="rect" id="node6" href="$class_vect_sharp_1_1_plots_1_1_continuous_axis.html" title="A plot element that draws an axis line and an arrow." alt="" coords="257,203,469,228"/>
+<area shape="rect" id="node7" href="$class_vect_sharp_1_1_plots_1_1_continuous_axis_labels.html" title="A plot element that draws equally spaced labels on an axis." alt="" coords="270,253,457,293"/>
+<area shape="rect" id="node8" href="$class_vect_sharp_1_1_plots_1_1_continuous_axis_ticks.html" title="A plot element that draws equally spaced ticks on an axis." alt="" coords="270,317,457,357"/>
+<area shape="rect" id="node9" href="$class_vect_sharp_1_1_plots_1_1_continuous_axis_title.html" title="A plot element that draws a title for an axis." alt="" coords="270,381,457,421"/>
+<area shape="rect" id="node10" href="$class_vect_sharp_1_1_plots_1_1_data_labels.html" title="A plot element that draws a text label at each data point." alt="" coords="255,445,472,471"/>
+<area shape="rect" id="node11" href="$class_vect_sharp_1_1_plots_1_1_data_line.html" title="A plot element that draws a line passing through a set of points." alt="" coords="262,495,465,520"/>
+<area shape="rect" id="node12" href="$class_vect_sharp_1_1_plots_1_1_exponential_trend_line.html" title="A plot element that draws an exponential trendline with equation y = b * Exp(a * x)." alt="" coords="269,545,458,585"/>
+<area shape="rect" id="node13" href="$class_vect_sharp_1_1_plots_1_1_function2_d.html" title="A plot element that plots a function of two variables." alt="" coords="270,609,457,635"/>
+<area shape="rect" id="node14" href="$class_vect_sharp_1_1_plots_1_1_grid.html" title="A plot element that draws a grid." alt="" coords="291,659,436,684"/>
+<area shape="rect" id="node15" href="$class_vect_sharp_1_1_plots_1_1_linear_trend_line.html" title="A plot element that draws a linear trendline with equation y = a * x + b." alt="" coords="257,708,469,733"/>
+<area shape="rect" id="node16" href="$class_vect_sharp_1_1_plots_1_1_logarithmic_trend_line.html" title="A plot element that draws a logarithmic trendline with equation y = a * Ln(x) + b." alt="" coords="269,758,457,798"/>
+<area shape="rect" id="node17" href="$class_vect_sharp_1_1_plots_1_1_moving_average_trend_line.html" title="A plot element that draws a moving average trendline." alt="" coords="260,822,467,862"/>
+<area shape="rect" id="node18" href="$class_vect_sharp_1_1_plots_1_1_pie.html" title="A plot element that draws a pie or a doughnut." alt="" coords="293,887,433,912"/>
+<area shape="rect" id="node19" href="$class_vect_sharp_1_1_plots_1_1_plot_element.html" title="A plot element that uses an Action to draw its contents." alt="" coords="252,936,475,961"/>
+<area shape="rect" id="node20" href="$class_vect_sharp_1_1_plots_1_1_polynomial_trend_line.html" title="A plot element that draws a polynomial trendline with equation y = a0 + a1 * x + a2 * x^2 + ...." alt="" coords="271,986,456,1026"/>
+<area shape="rect" id="node21" href="$class_vect_sharp_1_1_plots_1_1_power_law_trend_line.html" title="A plot element that draws a power law trendline with equation y = b * x^a." alt="" coords="273,1050,453,1090"/>
+<area shape="rect" id="node22" href="$class_vect_sharp_1_1_plots_1_1_scatter_points.html" title="A plot element that draws a symbol at the location of multiple data points." alt="" coords="248,1115,479,1140"/>
+<area shape="rect" id="node23" href="$class_vect_sharp_1_1_plots_1_1_stacked_bars.html" title="A plot element that draws stacked bars." alt="" coords="265,1164,461,1189"/>
+<area shape="rect" id="node24" href="$class_vect_sharp_1_1_plots_1_1_text_label.html" title="A plot element that draws a single text label." alt="" coords="259,1213,467,1239"/>
+<area shape="rect" id="node25" href="$class_vect_sharp_1_1_plots_1_1_violin.html" title="A plot element that draws a violin plot." alt="" coords="287,1263,440,1288"/>
+</map>

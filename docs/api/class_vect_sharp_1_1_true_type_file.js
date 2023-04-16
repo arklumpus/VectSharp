@@ -30,6 +30,7 @@ var class_vect_sharp_1_1_true_type_file =
     [ "GetGlyphPath", "class_vect_sharp_1_1_true_type_file.html#a221adc71cec5fc5f0949a3e1488d5627", null ],
     [ "GetItalicAngle", "class_vect_sharp_1_1_true_type_file.html#a7bfa118192a7224fce438753c6667994", null ],
     [ "GetLastCharIndex", "class_vect_sharp_1_1_true_type_file.html#acc93935c524ad9ec77d8ca0b1d44055b", null ],
+    [ "GetUnitsPerEm", "class_vect_sharp_1_1_true_type_file.html#aa8f3fba114b2632dcaeee0fb94da60a3", null ],
     [ "IsBold", "class_vect_sharp_1_1_true_type_file.html#a7e8376d45118eef1099fe0ad33d0e21b", null ],
     [ "IsFixedPitch", "class_vect_sharp_1_1_true_type_file.html#a5cbc0138ead9fd519e09e8f1988c7117", null ],
     [ "IsItalic", "class_vect_sharp_1_1_true_type_file.html#a2e4824b77b5933d6acfcaccb35e611c2", null ],

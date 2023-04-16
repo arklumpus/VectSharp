@@ -38,7 +38,7 @@ PROJECT_NAME           = VectSharp
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER         = 2.4.0
+PROJECT_NUMBER         = 2.4.2
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer a
@@ -832,6 +832,7 @@ INPUT                  = Readme.md \
                          VectSharp.SVG \
                          VectSharp.MuPDFUtils \
 						 VectSharp.ImageSharpUtils \
+						 VectSharp.Plots \
 						 VectSharp.ThreeD \
 						 VectSharp.Markdown \
 						 VectSharp.MarkdownCanvas \
@@ -1612,7 +1613,7 @@ FORMULA_TRANSPARENT    = YES
 # to create new LaTeX commands to be used in formulas as building blocks. See
 # the section "Including formulas" for details.
 
-FORMULA_MACROFILE      =
+FORMULA_MACROFILE      = latex_macros.tex
 
 # Enable the USE_MATHJAX option to render LaTeX formulas using MathJax (see
 # https://www.mathjax.org) which uses client side JavaScript for the rendering

@@ -66,15 +66,19 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_animated_canvas_8cs_source.html",
-"class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a167e0f08833581485ad3306f02a13537",
-"class_vect_sharp_1_1_colours.html#a88cc93ec29cae9c34e770866ee7b8adf",
-"class_vect_sharp_1_1_filters_1_1_colour_matrix_filter.html",
-"class_vect_sharp_1_1_graphics.html#a19c9171863704c66293711beed338541",
-"class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a402022d345b480ea8a24c8ff5d976501",
-"class_vect_sharp_1_1_raster_1_1_raster.html#a542960c7ec48c41dd308bf2f67b262c5",
-"class_vect_sharp_1_1_three_d_1_1_object_factory.html#ad1ef41a38e9e7edf6800c1a37b1b8c27",
-"functions_prop_h.html",
-"struct_vect_sharp_1_1_colour.html#a781c5f8f24851eb327b75b0c17a2a959"
+"class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a84c5f8dc4c4351723414e55fa01eafe7",
+"class_vect_sharp_1_1_colours.html#a7005f8fe5131cd9fac4a61b804a7cc2c",
+"class_vect_sharp_1_1_filters_1_1_colour_matrix.html#aa3e7c5cb07d2ef9600d0b5daa4166953",
+"class_vect_sharp_1_1_gradient_stops.html#a15c023f5eab2ef5ec444f86de8f30138",
+"class_vect_sharp_1_1_graphics_path.html#aed7e7730ed904883e3a0fb2b901c2783",
+"class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter_1_1_filter_option.html",
+"class_vect_sharp_1_1_plots_1_1_continuous_axis_title.html#a1cbcbdb5d18474fbf40cd9fbb16a5b4d",
+"class_vect_sharp_1_1_plots_1_1_linear_coordinate_system2_d.html#a2d5f563b55cdcf4ae1db58d68b7b8e50",
+"class_vect_sharp_1_1_plots_1_1_plot_element.html#a281eea97e18fe4d743a570446af2237d",
+"class_vect_sharp_1_1_raster_image.html#a98a68ebef924ab546abb172f63852197",
+"class_vect_sharp_1_1_three_d_1_1_phong_material.html#a6ac50807dafd44e5400074c203456573",
+"functions_vars_d.html",
+"struct_vect_sharp_1_1_colour.html#a5ed47990a818398b78ad058114fb6ee3"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

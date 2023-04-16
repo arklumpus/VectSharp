@@ -1,0 +1,6 @@
+<map id="VectSharp.Plots.LinLogCoordinateSystem2D" name="VectSharp.Plots.LinLogCoordinateSystem2D">
+<area shape="rect" id="node1" title="Represents a semi&#45;logarithmic coordinate system with a logarithmic transformation on the X axis." alt="" coords="5,255,227,295"/>
+<area shape="rect" id="node2" href="$interface_vect_sharp_1_1_plots_1_1_i_continuous_invertible_coordinate_system.html" title="Represents a coordinate system performing continuous invertible transformations." alt="" coords="15,167,217,207"/>
+<area shape="rect" id="node3" href="$interface_vect_sharp_1_1_plots_1_1_i_continuous_coordinate_system.html" title="Represents a coordinate system performing continuous transformations." alt="" coords="17,93,215,119"/>
+<area shape="rect" id="node4" href="$interface_vect_sharp_1_1_plots_1_1_i_coordinate_system.html" title=" " alt="" coords="25,5,207,45"/>
+</map>

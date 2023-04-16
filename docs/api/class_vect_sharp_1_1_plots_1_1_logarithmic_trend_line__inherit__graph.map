@@ -1,0 +1,4 @@
+<map id="VectSharp.Plots.LogarithmicTrendLine" name="VectSharp.Plots.LogarithmicTrendLine">
+<area shape="rect" id="node1" title="A plot element that draws a logarithmic trendline with equation y = a * Ln(x) + b." alt="" coords="5,79,193,119"/>
+<area shape="rect" id="node2" href="$interface_vect_sharp_1_1_plots_1_1_i_plot_element.html" title="Represents a plot element." alt="" coords="51,5,147,31"/>
+</map>

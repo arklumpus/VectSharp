@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['outputformats_0',['OutputFormats',['../namespace_vect_sharp_1_1_raster_1_1_image_sharp.html#a3a997f2103fbfd334ff7cf6c9e06d2b6',1,'VectSharp::Raster::ImageSharp']]]
+  ['linecaps_0',['LineCaps',['../namespace_vect_sharp.html#a6bde58d6aab37ea51e32240503678209',1,'VectSharp']]],
+  ['linejoins_1',['LineJoins',['../namespace_vect_sharp.html#a58a4a36ea254b3d255755654fd9e61f6',1,'VectSharp']]]
 ];

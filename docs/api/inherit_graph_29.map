@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$interface_vect_sharp_1_1_i_graphics_context.html" title="This interface should be implemented by classes intended to provide graphics output capability to a G..." alt="" coords="5,5,195,31"/>
+<area shape="rect" id="node1" href="$interface_vect_sharp_1_1_i_easing.html" title="Describes a function used to transform the transition speed." alt="" coords="5,31,136,56"/>
+<area shape="rect" id="node2" href="$class_vect_sharp_1_1_linear_easing.html" title="Describes a linear easing (i.e., no easing)." alt="" coords="184,5,347,31"/>
+<area shape="rect" id="node3" href="$class_vect_sharp_1_1_spline_easing.html" title="Describes an easing defined by a Cubic Bezier curve." alt="" coords="184,55,347,80"/>
 </map>

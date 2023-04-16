@@ -1,12 +1,22 @@
 var searchData=
 [
-  ['classrangerecord_0',['ClassRangeRecord',['../struct_vect_sharp_1_1_true_type_file_1_1_class_definition_table_1_1_class_range_record.html',1,'VectSharp::TrueTypeFile::ClassDefinitionTable']]],
-  ['colour_1',['Colour',['../struct_vect_sharp_1_1_colour.html',1,'VectSharp']]],
-  ['colourmaterial_2',['ColourMaterial',['../class_vect_sharp_1_1_three_d_1_1_colour_material.html',1,'VectSharp::ThreeD']]],
-  ['colourmatrix_3',['ColourMatrix',['../class_vect_sharp_1_1_filters_1_1_colour_matrix.html',1,'VectSharp::Filters']]],
-  ['colourmatrixfilter_4',['ColourMatrixFilter',['../class_vect_sharp_1_1_filters_1_1_colour_matrix_filter.html',1,'VectSharp::Filters']]],
-  ['colours_5',['Colours',['../class_vect_sharp_1_1_colours.html',1,'VectSharp']]],
-  ['compositelocationinvariantfilter_6',['CompositeLocationInvariantFilter',['../class_vect_sharp_1_1_filters_1_1_composite_location_invariant_filter.html',1,'VectSharp::Filters']]],
-  ['compressedframe_7',['CompressedFrame',['../class_vect_sharp_1_1_animated_p_n_g_1_1_compressed_frame.html',1,'VectSharp::AnimatedPNG']]],
-  ['convolutionfilter_8',['ConvolutionFilter',['../class_vect_sharp_1_1_filters_1_1_convolution_filter.html',1,'VectSharp::Filters']]]
+  ['categoricalbars_0',['CategoricalBars',['../class_vect_sharp_1_1_plots_1_1_categorical_bars.html',1,'VectSharp::Plots']]],
+  ['categoricalcoordinatesystem1d_1',['CategoricalCoordinateSystem1D',['../class_vect_sharp_1_1_plots_1_1_categorical_coordinate_system1_d.html',1,'VectSharp::Plots']]],
+  ['classrangerecord_2',['ClassRangeRecord',['../struct_vect_sharp_1_1_true_type_file_1_1_class_definition_table_1_1_class_range_record.html',1,'VectSharp::TrueTypeFile::ClassDefinitionTable']]],
+  ['clusteredbars_3',['ClusteredBars',['../class_vect_sharp_1_1_plots_1_1_clustered_bars.html',1,'VectSharp::Plots']]],
+  ['colour_4',['Colour',['../struct_vect_sharp_1_1_colour.html',1,'VectSharp']]],
+  ['colourmaterial_5',['ColourMaterial',['../class_vect_sharp_1_1_three_d_1_1_colour_material.html',1,'VectSharp::ThreeD']]],
+  ['colourmatrix_6',['ColourMatrix',['../class_vect_sharp_1_1_filters_1_1_colour_matrix.html',1,'VectSharp::Filters']]],
+  ['colourmatrixfilter_7',['ColourMatrixFilter',['../class_vect_sharp_1_1_filters_1_1_colour_matrix_filter.html',1,'VectSharp::Filters']]],
+  ['colours_8',['Colours',['../class_vect_sharp_1_1_colours.html',1,'VectSharp']]],
+  ['compositecoordinatesystem2d_9',['CompositeCoordinateSystem2D',['../class_vect_sharp_1_1_plots_1_1_composite_coordinate_system2_d.html',1,'VectSharp::Plots']]],
+  ['compositelocationinvariantfilter_10',['CompositeLocationInvariantFilter',['../class_vect_sharp_1_1_filters_1_1_composite_location_invariant_filter.html',1,'VectSharp::Filters']]],
+  ['compressedframe_11',['CompressedFrame',['../class_vect_sharp_1_1_animated_p_n_g_1_1_compressed_frame.html',1,'VectSharp::AnimatedPNG']]],
+  ['continuousaxis_12',['ContinuousAxis',['../class_vect_sharp_1_1_plots_1_1_continuous_axis.html',1,'VectSharp::Plots']]],
+  ['continuousaxislabels_13',['ContinuousAxisLabels',['../class_vect_sharp_1_1_plots_1_1_continuous_axis_labels.html',1,'VectSharp::Plots']]],
+  ['continuousaxisticks_14',['ContinuousAxisTicks',['../class_vect_sharp_1_1_plots_1_1_continuous_axis_ticks.html',1,'VectSharp::Plots']]],
+  ['continuousaxistitle_15',['ContinuousAxisTitle',['../class_vect_sharp_1_1_plots_1_1_continuous_axis_title.html',1,'VectSharp::Plots']]],
+  ['convolutionfilter_16',['ConvolutionFilter',['../class_vect_sharp_1_1_filters_1_1_convolution_filter.html',1,'VectSharp::Filters']]],
+  ['coordinatesystem_17',['CoordinateSystem',['../class_vect_sharp_1_1_plots_1_1_coordinate_system.html',1,'VectSharp::Plots']]],
+  ['coordinatesystem1d_18',['CoordinateSystem1D',['../class_vect_sharp_1_1_plots_1_1_coordinate_system1_d.html',1,'VectSharp::Plots']]]
 ];

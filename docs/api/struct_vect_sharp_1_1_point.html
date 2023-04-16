@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">VectSharp<span id="projectnumber">&#160;2.4.0</span>
+   <div id="projectname">VectSharp<span id="projectnumber">&#160;2.4.2</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -96,6 +96,7 @@ $(document).ready(function(){initNavTree('struct_vect_sharp_1_1_point.html','');
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#properties">Properties</a> &#124;
 <a href="struct_vect_sharp_1_1_point-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">VectSharp.Point Struct Reference</div></div>
 </div><!--header-->
@@ -103,6 +104,15 @@ $(document).ready(function(){initNavTree('struct_vect_sharp_1_1_point.html','');
 
 <p>Represents a point relative to an origin in the top-left corner.   
  <a href="struct_vect_sharp_1_1_point.html#details">More...</a></p>
+<div class="dynheader">
+Inheritance diagram for VectSharp.Point:</div>
+<div class="dyncontent">
+<div class="center"><img src="struct_vect_sharp_1_1_point__inherit__graph.png" border="0" usemap="#a_vect_sharp_8_point_inherit__map" alt="Inheritance graph"/></div>
+<map name="a_vect_sharp_8_point_inherit__map" id="a_vect_sharp_8_point_inherit__map">
+<area shape="rect" title="Represents a point relative to an origin in the top&#45;left corner." alt="" coords="29,79,147,104"/>
+<area shape="rect" title=" " alt="" coords="5,5,171,31"/>
+</map>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -118,6 +128,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a94465cb13d875de961d27a250b4f8477"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_vect_sharp_1_1_point.html#a94465cb13d875de961d27a250b4f8477">IsEqual</a> (<a class="el" href="struct_vect_sharp_1_1_point.html">Point</a> p2, double tolerance)</td></tr>
 <tr class="memdesc:a94465cb13d875de961d27a250b4f8477"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether this <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a> is equal to another <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a>, up to a specified tolerance.   <a href="struct_vect_sharp_1_1_point.html#a94465cb13d875de961d27a250b4f8477">More...</a><br /></td></tr>
 <tr class="separator:a94465cb13d875de961d27a250b4f8477"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01a9ceca038b4a393aa70aec1aced600"><td class="memItemLeft" align="right" valign="top">IEnumerator&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_vect_sharp_1_1_point.html#a01a9ceca038b4a393aa70aec1aced600">GetEnumerator</a> ()</td></tr>
+<tr class="separator:a01a9ceca038b4a393aa70aec1aced600"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb1bc093db1282d79bc8f2641d34a3c0"><td class="memItemLeft" align="right" valign="top"><a id="afb1bc093db1282d79bc8f2641d34a3c0" name="afb1bc093db1282d79bc8f2641d34a3c0"></a>
+IEnumerator IEnumerable.&#160;</td><td class="memItemRight" valign="bottom"><b>GetEnumerator</b> ()</td></tr>
+<tr class="separator:afb1bc093db1282d79bc8f2641d34a3c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -133,6 +148,18 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a080bf63d320f46782189fe115f91901d"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="struct_vect_sharp_1_1_rectangle.html">Rectangle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_vect_sharp_1_1_point.html#a080bf63d320f46782189fe115f91901d">Bounds</a> (params <a class="el" href="struct_vect_sharp_1_1_point.html">Point</a>[] points)</td></tr>
 <tr class="memdesc:a080bf63d320f46782189fe115f91901d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the smallest <a class="el" href="struct_vect_sharp_1_1_rectangle.html" title="Represents a rectangle.">Rectangle</a> that contains all the specified points.   <a href="struct_vect_sharp_1_1_point.html#a080bf63d320f46782189fe115f91901d">More...</a><br /></td></tr>
 <tr class="separator:a080bf63d320f46782189fe115f91901d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2ae9fca0188e3202f53019f5510bc6c"><td class="memItemLeft" align="right" valign="top">static implicit&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_vect_sharp_1_1_point.html#ac2ae9fca0188e3202f53019f5510bc6c">operator</a> (double <a class="el" href="struct_vect_sharp_1_1_point.html#a5ec116350a6220c1b0c5e7115fa24115">X</a>, double <a class="el" href="struct_vect_sharp_1_1_point.html#ae56e39cc16440deee22e54e89024f044">Y</a>)(<a class="el" href="struct_vect_sharp_1_1_point.html">Point</a> point)</td></tr>
+<tr class="memdesc:ac2ae9fca0188e3202f53019f5510bc6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implicit conversion to a tuple.   <a href="struct_vect_sharp_1_1_point.html#ac2ae9fca0188e3202f53019f5510bc6c">More...</a><br /></td></tr>
+<tr class="separator:ac2ae9fca0188e3202f53019f5510bc6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08bbb6b7d3abd7f46d40db624391170b"><td class="memItemLeft" align="right" valign="top">static implicit&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_vect_sharp_1_1_point.html#a08bbb6b7d3abd7f46d40db624391170b">operator double[]</a> (<a class="el" href="struct_vect_sharp_1_1_point.html">Point</a> point)</td></tr>
+<tr class="memdesc:a08bbb6b7d3abd7f46d40db624391170b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implicit conversion to an array.   <a href="struct_vect_sharp_1_1_point.html#a08bbb6b7d3abd7f46d40db624391170b">More...</a><br /></td></tr>
+<tr class="separator:a08bbb6b7d3abd7f46d40db624391170b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13df8bb9af05dc05b33ed81d12aa4299"><td class="memItemLeft" align="right" valign="top">static implicit&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_vect_sharp_1_1_point.html#a13df8bb9af05dc05b33ed81d12aa4299">operator Point</a> ((double <a class="el" href="struct_vect_sharp_1_1_point.html#a5ec116350a6220c1b0c5e7115fa24115">X</a>, double <a class="el" href="struct_vect_sharp_1_1_point.html#ae56e39cc16440deee22e54e89024f044">Y</a>) tuple)</td></tr>
+<tr class="memdesc:a13df8bb9af05dc05b33ed81d12aa4299"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implicit conversion from a tuple.   <a href="struct_vect_sharp_1_1_point.html#a13df8bb9af05dc05b33ed81d12aa4299">More...</a><br /></td></tr>
+<tr class="separator:a13df8bb9af05dc05b33ed81d12aa4299"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b56b4cdd2fd7398471b74001f761df9"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_vect_sharp_1_1_point.html#a8b56b4cdd2fd7398471b74001f761df9">operator Point</a> (double[] array)</td></tr>
+<tr class="memdesc:a8b56b4cdd2fd7398471b74001f761df9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Explicit conversion from an array (will throw an exception if the array does not contain exactly two elements).   <a href="struct_vect_sharp_1_1_point.html#a8b56b4cdd2fd7398471b74001f761df9">More...</a><br /></td></tr>
+<tr class="separator:a8b56b4cdd2fd7398471b74001f761df9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -142,11 +169,18 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ae56e39cc16440deee22e54e89024f044"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_vect_sharp_1_1_point.html#ae56e39cc16440deee22e54e89024f044">Y</a></td></tr>
 <tr class="memdesc:ae56e39cc16440deee22e54e89024f044"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vertical (y) coordinate, measured to the bottom of the origin.   <a href="struct_vect_sharp_1_1_point.html#ae56e39cc16440deee22e54e89024f044">More...</a><br /></td></tr>
 <tr class="separator:ae56e39cc16440deee22e54e89024f044"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
+Properties</h2></td></tr>
+<tr class="memitem:a1b3f35a6dccd7f64a622fd997a956060"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_vect_sharp_1_1_point.html#a1b3f35a6dccd7f64a622fd997a956060">Count</a><code> [get]</code></td></tr>
+<tr class="separator:a1b3f35a6dccd7f64a622fd997a956060"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80f41501a80100239d2c557a842e3d67"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_vect_sharp_1_1_point.html#a80f41501a80100239d2c557a842e3d67">this[int index]</a><code> [get]</code></td></tr>
+<tr class="separator:a80f41501a80100239d2c557a842e3d67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Represents a point relative to an origin in the top-left corner.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00027">27</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00028">28</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ae7f3aca35b6003e9ecb9fca94044bc9b" name="ae7f3aca35b6003e9ecb9fca94044bc9b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae7f3aca35b6003e9ecb9fca94044bc9b">&#9670;&#160;</a></span>Point()</h2>
@@ -183,7 +217,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00044">44</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00068">68</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
 
 </div>
 </div>
@@ -221,7 +255,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The smallest <a class="el" href="struct_vect_sharp_1_1_rectangle.html" title="Represents a rectangle.">Rectangle</a> that contains all the specified points.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00107">107</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00131">131</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
 
 </div>
 </div>
@@ -258,7 +292,28 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The smallest <a class="el" href="struct_vect_sharp_1_1_rectangle.html" title="Represents a rectangle.">Rectangle</a> that contains all the specified points.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00136">136</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00160">160</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
+
+</div>
+</div>
+<a id="a01a9ceca038b4a393aa70aec1aced600" name="a01a9ceca038b4a393aa70aec1aced600"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01a9ceca038b4a393aa70aec1aced600">&#9670;&#160;</a></span>GetEnumerator()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">IEnumerator&lt; double &gt; VectSharp.Point.GetEnumerator </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p></p>
+
+<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00166">166</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
 
 </div>
 </div>
@@ -298,7 +353,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if both coordinates of the <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a>s are closer than <em>tolerance</em>  or if their relative difference (i.e. <code>(a - b) / (a + b) * 2</code>) is smaller than <em>tolerance</em> . <code>false</code> otherwise.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00075">75</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00099">99</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
 
 </div>
 </div>
@@ -346,7 +401,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a> whose <a class="el" href="struct_vect_sharp_1_1_point.html#a5ec116350a6220c1b0c5e7115fa24115" title="Horizontal (x) coordinate, measured to the right of the origin.">X</a> coordinate is the largest between the one of <em>p1</em>  and <em>p2</em> , and likewise for the <a class="el" href="struct_vect_sharp_1_1_point.html#ae56e39cc16440deee22e54e89024f044" title="Vertical (y) coordinate, measured to the bottom of the origin.">Y</a> coordinate.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00097">97</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00121">121</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
 
 </div>
 </div>
@@ -394,7 +449,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a> whose <a class="el" href="struct_vect_sharp_1_1_point.html#a5ec116350a6220c1b0c5e7115fa24115" title="Horizontal (x) coordinate, measured to the right of the origin.">X</a> coordinate is the smallest between the one of <em>p1</em>  and <em>p2</em> , and likewise for the <a class="el" href="struct_vect_sharp_1_1_point.html#ae56e39cc16440deee22e54e89024f044" title="Vertical (y) coordinate, measured to the bottom of the origin.">Y</a> coordinate.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00086">86</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00110">110</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
 
 </div>
 </div>
@@ -416,7 +471,7 @@ Public Attributes</h2></td></tr>
 <p>Computes the modulus of the vector represented by the <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a>.  </p>
 <dl class="section return"><dt>Returns</dt><dd>The modulus of the vector represented by the <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a>.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00054">54</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00078">78</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
 
 </div>
 </div>
@@ -438,7 +493,161 @@ Public Attributes</h2></td></tr>
 <p>Normalises a <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a>.  </p>
 <dl class="section return"><dt>Returns</dt><dd>The normalised <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a>.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00063">63</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00087">87</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
+
+</div>
+</div>
+<a id="ac2ae9fca0188e3202f53019f5510bc6c" name="ac2ae9fca0188e3202f53019f5510bc6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2ae9fca0188e3202f53019f5510bc6c">&#9670;&#160;</a></span>operator()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static implicit VectSharp.Point.operator </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>X</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>Y</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implicit conversion to a tuple.  </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">point</td><td>The point to convert.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00179">179</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
+
+</div>
+</div>
+<a id="a08bbb6b7d3abd7f46d40db624391170b" name="a08bbb6b7d3abd7f46d40db624391170b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a08bbb6b7d3abd7f46d40db624391170b">&#9670;&#160;</a></span>operator double[]()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static implicit <a class="el" href="struct_vect_sharp_1_1_point.html#ac2ae9fca0188e3202f53019f5510bc6c">VectSharp.Point.operator</a> double[] </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_vect_sharp_1_1_point.html">Point</a>&#160;</td>
+          <td class="paramname"><em>point</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implicit conversion to an array.  </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">point</td><td>The point to convert</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00188">188</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
+
+</div>
+</div>
+<a id="a13df8bb9af05dc05b33ed81d12aa4299" name="a13df8bb9af05dc05b33ed81d12aa4299"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13df8bb9af05dc05b33ed81d12aa4299">&#9670;&#160;</a></span>operator Point() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static implicit <a class="el" href="struct_vect_sharp_1_1_point.html#ac2ae9fca0188e3202f53019f5510bc6c">VectSharp.Point.operator</a> <a class="el" href="struct_vect_sharp_1_1_point.html">Point</a> </td>
+          <td>(</td>
+          <td class="paramtype">(double <a class="el" href="struct_vect_sharp_1_1_point.html#a5ec116350a6220c1b0c5e7115fa24115">X</a>, double <a class="el" href="struct_vect_sharp_1_1_point.html#ae56e39cc16440deee22e54e89024f044">Y</a>)&#160;</td>
+          <td class="paramname"><em>tuple</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implicit conversion from a tuple.  </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tuple</td><td>The tuple to convert.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00197">197</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
+
+</div>
+</div>
+<a id="a8b56b4cdd2fd7398471b74001f761df9" name="a8b56b4cdd2fd7398471b74001f761df9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b56b4cdd2fd7398471b74001f761df9">&#9670;&#160;</a></span>operator Point() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="struct_vect_sharp_1_1_point.html#ac2ae9fca0188e3202f53019f5510bc6c">VectSharp.Point.operator</a> <a class="el" href="struct_vect_sharp_1_1_point.html">Point</a> </td>
+          <td>(</td>
+          <td class="paramtype">double[]&#160;</td>
+          <td class="paramname"><em>array</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Explicit conversion from an array (will throw an exception if the array does not contain exactly two elements).  </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">array</td><td>The array to convert. It must contain exactly two elements.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00206">206</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
 
 </div>
 </div>
@@ -457,7 +666,7 @@ Public Attributes</h2></td></tr>
 
 <p>Horizontal (x) coordinate, measured to the right of the origin.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00032">32</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00033">33</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
 
 </div>
 </div>
@@ -475,7 +684,60 @@ Public Attributes</h2></td></tr>
 
 <p>Vertical (y) coordinate, measured to the bottom of the origin.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00037">37</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00038">38</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Property Documentation</h2>
+<a id="a1b3f35a6dccd7f64a622fd997a956060" name="a1b3f35a6dccd7f64a622fd997a956060"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b3f35a6dccd7f64a622fd997a956060">&#9670;&#160;</a></span>Count</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int VectSharp.Point.Count</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p></p>
+
+<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00041">41</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
+
+</div>
+</div>
+<a id="a80f41501a80100239d2c557a842e3d67" name="a80f41501a80100239d2c557a842e3d67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80f41501a80100239d2c557a842e3d67">&#9670;&#160;</a></span>this[int index]</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double VectSharp.Point.this[int index]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p></p>
+
+<p class="definition">Definition at line <a class="el" href="_point_8cs_source.html#l00044">44</a> of file <a class="el" href="_point_8cs_source.html">Point.cs</a>.</p>
 
 </div>
 </div>

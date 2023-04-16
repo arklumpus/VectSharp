@@ -1,0 +1,6 @@
+<map id="VectSharp.Plots.LinearCoordinateSystem2D" name="VectSharp.Plots.LinearCoordinateSystem2D">
+<area shape="rect" id="node1" title="Represents a linear coordinate system." alt="" coords="5,255,224,295"/>
+<area shape="rect" id="node2" href="$interface_vect_sharp_1_1_plots_1_1_i_continuous_invertible_coordinate_system.html" title="Represents a coordinate system performing continuous invertible transformations." alt="" coords="13,167,216,207"/>
+<area shape="rect" id="node3" href="$interface_vect_sharp_1_1_plots_1_1_i_continuous_coordinate_system.html" title="Represents a coordinate system performing continuous transformations." alt="" coords="16,93,213,119"/>
+<area shape="rect" id="node4" href="$interface_vect_sharp_1_1_plots_1_1_i_coordinate_system.html" title=" " alt="" coords="24,5,205,45"/>
+</map>

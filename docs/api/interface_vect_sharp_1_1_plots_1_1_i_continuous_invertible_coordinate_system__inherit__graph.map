@@ -1,0 +1,9 @@
+<map id="VectSharp.Plots.IContinuousInvertibleCoordinateSystem" name="VectSharp.Plots.IContinuousInvertibleCoordinateSystem">
+<area shape="rect" id="node1" title="Represents a coordinate system performing continuous invertible transformations." alt="" coords="480,101,669,141"/>
+<area shape="rect" id="node4" href="$class_vect_sharp_1_1_plots_1_1_lin_log_coordinate_system2_d.html" title="Represents a semi&#45;logarithmic coordinate system with a logarithmic transformation on the X axis." alt="" coords="717,5,939,45"/>
+<area shape="rect" id="node5" href="$class_vect_sharp_1_1_plots_1_1_linear_coordinate_system2_d.html" title="Represents a linear coordinate system." alt="" coords="719,69,937,109"/>
+<area shape="rect" id="node6" href="$class_vect_sharp_1_1_plots_1_1_log_lin_coordinate_system2_d.html" title="Represents a semi&#45;logarithmic coordinate system with a logarithmic transformation on the Y axis." alt="" coords="717,133,939,173"/>
+<area shape="rect" id="node7" href="$class_vect_sharp_1_1_plots_1_1_logarithmic_coordinate_system2_d.html" title="Represents a logarithmic coordinate system." alt="" coords="734,197,922,237"/>
+<area shape="rect" id="node2" href="$interface_vect_sharp_1_1_plots_1_1_i_continuous_coordinate_system.html" title="Represents a coordinate system performing continuous transformations." alt="" coords="235,109,432,134"/>
+<area shape="rect" id="node3" href="$interface_vect_sharp_1_1_plots_1_1_i_coordinate_system.html" title=" " alt="" coords="5,101,187,141"/>
+</map>

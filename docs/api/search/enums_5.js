@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['pixelformats_0',['PixelFormats',['../namespace_vect_sharp.html#a9ccfe4c0d79758b6c0e2fda8a319125c',1,'VectSharp']]]
+  ['normalisationmode_0',['NormalisationMode',['../class_vect_sharp_1_1_plots_1_1_plot.html#a98049e82afe64bb438cacf88e46ada36',1,'VectSharp::Plots::Plot']]]
 ];

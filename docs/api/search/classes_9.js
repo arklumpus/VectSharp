@@ -1,8 +1,15 @@
 var searchData=
 [
-  ['margins_0',['Margins',['../class_vect_sharp_1_1_markdown_1_1_margins.html',1,'VectSharp::Markdown']]],
-  ['markdowncanvascontrol_1',['MarkdownCanvasControl',['../class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html',1,'VectSharp::MarkdownCanvas']]],
-  ['markdownrenderer_2',['MarkdownRenderer',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html',1,'VectSharp::Markdown']]],
-  ['maskedlightsource_3',['MaskedLightSource',['../class_vect_sharp_1_1_three_d_1_1_masked_light_source.html',1,'VectSharp::ThreeD']]],
-  ['maskfilter_4',['MaskFilter',['../class_vect_sharp_1_1_filters_1_1_mask_filter.html',1,'VectSharp::Filters']]]
+  ['lightintensity_0',['LightIntensity',['../struct_vect_sharp_1_1_three_d_1_1_light_intensity.html',1,'VectSharp::ThreeD']]],
+  ['linearcoordinatesystem1d_1',['LinearCoordinateSystem1D',['../class_vect_sharp_1_1_plots_1_1_linear_coordinate_system1_d.html',1,'VectSharp::Plots']]],
+  ['linearcoordinatesystem2d_2',['LinearCoordinateSystem2D',['../class_vect_sharp_1_1_plots_1_1_linear_coordinate_system2_d.html',1,'VectSharp::Plots']]],
+  ['lineareasing_3',['LinearEasing',['../class_vect_sharp_1_1_linear_easing.html',1,'VectSharp']]],
+  ['lineargradientbrush_4',['LinearGradientBrush',['../class_vect_sharp_1_1_linear_gradient_brush.html',1,'VectSharp']]],
+  ['lineartrendline_5',['LinearTrendLine',['../class_vect_sharp_1_1_plots_1_1_linear_trend_line.html',1,'VectSharp::Plots']]],
+  ['linedash_6',['LineDash',['../struct_vect_sharp_1_1_line_dash.html',1,'VectSharp']]],
+  ['linlogcoordinatesystem2d_7',['LinLogCoordinateSystem2D',['../class_vect_sharp_1_1_plots_1_1_lin_log_coordinate_system2_d.html',1,'VectSharp::Plots']]],
+  ['logarithmiccoordinatesystem1d_8',['LogarithmicCoordinateSystem1D',['../class_vect_sharp_1_1_plots_1_1_logarithmic_coordinate_system1_d.html',1,'VectSharp::Plots']]],
+  ['logarithmiccoordinatesystem2d_9',['LogarithmicCoordinateSystem2D',['../class_vect_sharp_1_1_plots_1_1_logarithmic_coordinate_system2_d.html',1,'VectSharp::Plots']]],
+  ['logarithmictrendline_10',['LogarithmicTrendLine',['../class_vect_sharp_1_1_plots_1_1_logarithmic_trend_line.html',1,'VectSharp::Plots']]],
+  ['loglincoordinatesystem2d_11',['LogLinCoordinateSystem2D',['../class_vect_sharp_1_1_plots_1_1_log_lin_coordinate_system2_d.html',1,'VectSharp::Plots']]]
 ];

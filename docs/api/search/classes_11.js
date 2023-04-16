@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['verticalmetrics_0',['VerticalMetrics',['../struct_vect_sharp_1_1_true_type_file_1_1_vertical_metrics.html',1,'VectSharp::TrueTypeFile']]]
+  ['unbalancedstackexception_0',['UnbalancedStackException',['../class_vect_sharp_1_1_unbalanced_stack_exception.html',1,'VectSharp']]],
+  ['unknownformatexception_1',['UnknownFormatException',['../class_vect_sharp_1_1_raster_1_1_image_sharp_1_1_image_sharp_context_interpreter_1_1_unknown_format_exception.html',1,'VectSharp::Raster::ImageSharp::ImageSharpContextInterpreter']]]
 ];

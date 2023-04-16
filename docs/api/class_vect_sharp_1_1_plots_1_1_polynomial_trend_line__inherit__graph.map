@@ -1,0 +1,4 @@
+<map id="VectSharp.Plots.PolynomialTrendLine" name="VectSharp.Plots.PolynomialTrendLine">
+<area shape="rect" id="node1" title="A plot element that draws a polynomial trendline with equation y = a0 + a1 * x + a2 * x^2 + ...." alt="" coords="5,79,191,119"/>
+<area shape="rect" id="node2" href="$interface_vect_sharp_1_1_plots_1_1_i_plot_element.html" title="Represents a plot element." alt="" coords="50,5,146,31"/>
+</map>
