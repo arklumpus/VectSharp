@@ -16,6 +16,7 @@
 */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -24,7 +25,7 @@ namespace VectSharp
     /// <summary>
     /// Represents a point relative to an origin in the top-left corner.
     /// </summary>
-    public struct Point
+    public struct Point : IReadOnlyList<double>
     {
         /// <summary>
         /// Horizontal (x) coordinate, measured to the right of the origin.
@@ -35,6 +36,29 @@ namespace VectSharp
         /// Vertical (y) coordinate, measured to the bottom of the origin.
         /// </summary>
         public double Y;
+
+        /// <inheritdoc/>
+        public int Count => 2;
+
+        /// <inheritdoc/>
+        public double this[int index]
+        {
+            get
+            {
+                if (index == 0)
+                {
+                    return this.X;
+                }
+                else if (index == 1)
+                {
+                    return this.Y;
+                }
+                else
+                {
+                    throw new IndexOutOfRangeException();
+                }
+            }
+        }
 
         /// <summary>
         /// Create a new <see cref="Point"/>.
@@ -136,6 +160,61 @@ namespace VectSharp
         public static Rectangle Bounds(params Point[] points)
         {
             return Bounds((IEnumerable<Point>)points);
+        }
+
+        /// <inheritdoc/>
+        public IEnumerator<double> GetEnumerator()
+        {
+            yield return this.X;
+            yield return this.Y;
+        }
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        /// <summary>
+        /// Implicit conversion to a tuple.
+        /// </summary>
+        /// <param name="point">The point to convert.</param>
+        public static implicit operator (double X, double Y)(Point point)
+        {
+            return (point.X, point.Y);
+        }
+
+        /// <summary>
+        /// Implicit conversion to an array.
+        /// </summary>
+        /// <param name="point">The point to convert</param>
+        public static implicit operator double[](Point point)
+        {
+            return new double[] { point.X, point.Y };
+        }
+
+        /// <summary>
+        /// Implicit conversion from a tuple.
+        /// </summary>
+        /// <param name="tuple">The tuple to convert.</param>
+        public static implicit operator Point((double X, double Y) tuple)
+        {
+            return new Point(tuple.X, tuple.Y);
+        }
+
+        /// <summary>
+        /// Explicit conversion from an array (will throw an exception if the array does not contain exactly two elements). 
+        /// </summary>
+        /// <param name="array">The array to convert. It must contain exactly two elements.</param>
+        public static explicit operator Point(double[] array)
+        {
+            if (array == null)
+            {
+                throw new ArgumentNullException("array", "The array to convert into a Point must not be null!");
+            }
+            else if (array.Length != 2)
+            {
+                throw new ArgumentOutOfRangeException("array", array.Length.ToString(), "The length of the array to convert into a Point must be exactly 2!");
+            }    
+
+            return new Point(array[0], array[1]);
         }
     }
 
@@ -290,7 +369,7 @@ namespace VectSharp
             {
                 return Rectangle.NaN;
             }
-            
+
         }
 
         /// <summary>
