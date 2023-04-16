@@ -1,0 +1,492 @@
+﻿@page "/lines"
+@using VectSharp;
+@using VectSharp.SVG;
+@using VectSharp.Plots
+
+<style>
+    table {
+        table-layout: fixed;
+    }
+
+    td {
+        width: 200px;
+        padding: 10px;
+    }
+</style>
+
+<div style="width: 100vw; height: 100vh; position: relative;">
+    <div style="height: 100vh; position: absolute; top: 0; left: 50%; transform: translateX(-50%)">
+        <table>
+            <tr>
+                <td colspan="2" style="text-align: center">
+                    <img src="@imgSource" style="max-height: calc(100vh - 380px)" />
+                </td>
+            </tr>
+            <tr style="height: 380px; vertical-align: top">
+                <td>
+                    <table>
+                        <tr>
+                            <td colspan="2">
+                                <table>
+                                    <tr>
+                                        <td colspan="3">
+                                            Colour 1:
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <MatRadioGroup @bind-Value="@style1" TValue="int">
+                                            <td><MatRadioButton Value="@(0)" TValue="int"><img src="icons/fullPoint1.svg" style="height: 2em" /></MatRadioButton></td>
+                                            <td><MatRadioButton Value="@(1)" TValue="int"><img src="icons/emptyPoint1.svg" style="height: 2em" /></MatRadioButton></td>
+                                            <td><MatRadioButton Value="@(2)" TValue="int"><img src="icons/contouredPoint1.svg" style="height: 2em" /></MatRadioButton></td>
+                                        </MatRadioGroup>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <table>
+                                    <tr>
+                                        <td colspan="3">
+                                            Colour 2:
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <MatRadioGroup @bind-Value="@style2" TValue="int">
+                                            <td><MatRadioButton Value="@(0)" TValue="int"><img src="icons/fullPoint2.svg" style="height: 2em" /></MatRadioButton></td>
+                                            <td><MatRadioButton Value="@(1)" TValue="int"><img src="icons/emptyPoint2.svg" style="height: 2em" /></MatRadioButton></td>
+                                            <td><MatRadioButton Value="@(2)" TValue="int"><img src="icons/contouredPoint2.svg" style="height: 2em" /></MatRadioButton></td>
+                                        </MatRadioGroup>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Point size:</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <MatNumericUpDownField Label="Data set 1"
+                                                       @bind-Value=@size1
+                                                       Step="1">
+                                </MatNumericUpDownField>
+                            </td>
+                            <td>
+                                <MatNumericUpDownField Label="Data set 2"
+                                                       @bind-Value=@size2
+                                                       Step="1">
+                                </MatNumericUpDownField>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Line thickness:</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <MatNumericUpDownField Label="Data set 1"
+                                                       @bind-Value=@thickness1
+                                                       Step="1">
+                                </MatNumericUpDownField>
+                            </td>
+                            <td>
+                                <MatNumericUpDownField Label="Data set 2"
+                                                       @bind-Value=@thickness2
+                                                       Step="1">
+                                </MatNumericUpDownField>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                <table>
+                                    <tr>
+                                        <td colspan="3">
+                                            Shape 1:
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <MatRadioGroup @bind-Value="@shape1" TValue="int">
+                                            <td><MatRadioButton Value="@(0)" TValue="int"><img src="icons/point.svg" style="height: 2em" /></MatRadioButton></td>
+                                            <td><MatRadioButton Value="@(1)" TValue="int"><img src="icons/diamond.svg" style="height: 2em" /></MatRadioButton></td>
+                                            <td><MatRadioButton Value="@(2)" TValue="int"><img src="icons/star.svg" style="height: 2em" /></MatRadioButton></td>
+                                        </MatRadioGroup>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table>
+                                    <tr>
+                                        <td colspan="3">
+                                            Shape 2:
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <MatRadioGroup @bind-Value="@shape2" TValue="int">
+                                            <td><MatRadioButton Value="@(0)" TValue="int"><img src="icons/point.svg" style="height: 2em" /></MatRadioButton></td>
+                                            <td><MatRadioButton Value="@(1)" TValue="int"><img src="icons/diamond.svg" style="height: 2em" /></MatRadioButton></td>
+                                            <td><MatRadioButton Value="@(2)" TValue="int"><img src="icons/star.svg" style="height: 2em" /></MatRadioButton></td>
+                                        </MatRadioGroup>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <MatCheckbox @bind-Value="@smooth" TValue="bool">Smooth</MatCheckbox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <MatRadioGroup @bind-Value="@coordSystem" TValue="int">
+                                    <table>
+                                        <tr>
+                                            <td colspan="2">Coordinate system:</td>
+                                        </tr>
+                                        <tr>
+                                            <td><MatRadioButton Value="@(0)" TValue="int">Linear</MatRadioButton></td>
+                                            <td><MatRadioButton Value="@(1)" TValue="int">Logarithmic</MatRadioButton></td>
+                                        </tr>
+                                        <tr>
+                                            <td><MatRadioButton Value="@(2)" TValue="int">Log-Lin</MatRadioButton></td>
+                                            <td><MatRadioButton Value="@(3)" TValue="int">Lin-Log</MatRadioButton></td>
+                                        </tr>
+                                    </table>
+                                </MatRadioGroup>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+</div>
+
+@code {
+    private int _style1 = 0;
+    private int style1
+    {
+        get
+        {
+            return _style1;
+        }
+        set
+        {
+            _style1 = value;
+            Render();
+        }
+    }
+
+    private int _style2 = 1;
+    private int style2
+    {
+        get
+        {
+            return _style2;
+        }
+        set
+        {
+            _style2 = value;
+            Render();
+        }
+    }
+
+    private int _shape1 = 0;
+    private int shape1
+    {
+        get
+        {
+            return _shape1;
+        }
+        set
+        {
+            _shape1 = value;
+            Render();
+        }
+    }
+
+    private int _shape2 = 1;
+    private int shape2
+    {
+        get
+        {
+            return _shape2;
+        }
+        set
+        {
+            _shape2 = value;
+            Render();
+        }
+    }
+
+    private double _size1 = 2;
+    private double size1
+    {
+        get
+        {
+            return _size1;
+        }
+
+        set
+        {
+            _size1 = value;
+            Render();
+        }
+    }
+
+    private double _size2 = 2;
+    private double size2
+    {
+        get
+        {
+            return _size2;
+        }
+
+        set
+        {
+            _size2 = value;
+            Render();
+        }
+    }
+
+    private double _thickness1 = 1;
+    private double thickness1
+    {
+        get
+        {
+            return _thickness1;
+        }
+
+        set
+        {
+            _thickness1 = value;
+            Render();
+        }
+    }
+
+    private double _thickness2 = 1;
+    private double thickness2
+    {
+        get
+        {
+            return _thickness2;
+        }
+
+        set
+        {
+            _thickness2 = value;
+            Render();
+        }
+    }
+
+    private bool _smooth = false;
+    private bool smooth
+    {
+        get
+        {
+            return _smooth;
+        }
+        set
+        {
+            _smooth = value;
+            Render();
+        }
+    }
+
+    private int _coordSystem = 2;
+    private int coordSystem
+    {
+        get
+        {
+            return _coordSystem;
+        }
+        set
+        {
+            _coordSystem = value;
+            Render();
+        }
+    }
+
+    private string imgSource = "";
+
+    protected override Task OnInitializedAsync()
+    {
+        Render();
+        return Task.CompletedTask;
+    }
+
+    static Random rnd = new Random();
+    static (double, double)[] data1 = (from el in Enumerable.Range(1, 100) select (el + rnd.NextDouble(), 2 * el + 100 * rnd.NextDouble())).ToArray();
+    static (double, double)[] data2 = (from el in Enumerable.Range(1, 70) select (el + rnd.NextDouble(), Math.Exp(el * 0.1) * 0.25 * (1 + rnd.NextDouble()))).ToArray();
+
+    public void Render()
+    {
+        IDataPointElement dataPointElement1 = new PathDataPointElement();
+
+        switch (shape1)
+        {
+            case 0:
+                break;
+            case 1:
+                dataPointElement1 = new PathDataPointElement(new GraphicsPath().MoveTo(-1, 0).LineTo(0, 1).LineTo(1, 0).LineTo(0, -1).Close());
+                break;
+            case 2:
+                {
+                    GraphicsPath pth = new GraphicsPath();
+
+                    for (int i = 0; i < 10; i++)
+                    {
+                        if (i % 2 == 0)
+                        {
+                            pth.LineTo(Math.Cos(i * Math.PI * 0.2), Math.Sin(i * Math.PI * 0.2));
+                        }
+                        else
+                        {
+                            pth.LineTo(Math.Cos(i * Math.PI * 0.2) * 0.5, Math.Sin(i * Math.PI * 0.2) * 0.5);
+                        }
+                    }
+
+                    pth.Close();
+
+                    dataPointElement1 = new PathDataPointElement(pth);
+                }
+                break;
+        }
+
+        IDataPointElement dataPointElement2 = new PathDataPointElement();
+
+        switch (shape2)
+        {
+            case 0:
+                break;
+            case 1:
+                dataPointElement2 = new PathDataPointElement(new GraphicsPath().MoveTo(-1, 0).LineTo(0, 1).LineTo(1, 0).LineTo(0, -1).Close());
+                break;
+            case 2:
+                {
+                    GraphicsPath pth = new GraphicsPath();
+
+                    for (int i = 0; i < 10; i++)
+                    {
+                        if (i % 2 == 0)
+                        {
+                            pth.LineTo(Math.Cos(i * Math.PI * 0.2), Math.Sin(i * Math.PI * 0.2));
+                        }
+                        else
+                        {
+                            pth.LineTo(Math.Cos(i * Math.PI * 0.2) * 0.5, Math.Sin(i * Math.PI * 0.2) * 0.5);
+                        }
+                    }
+
+                    pth.Close();
+
+                    dataPointElement2 = new PathDataPointElement(pth);
+                }
+                break;
+        }
+
+        PlotElementPresentationAttributes presentationAttributes1 = new PlotElementPresentationAttributes() { LineWidth = thickness1 / size1 };
+
+        switch (style1)
+        {
+            case 0:
+                presentationAttributes1.Stroke = null;
+                presentationAttributes1.Fill = Colour.FromRgb(0, 114, 178);
+                break;
+            case 1:
+                presentationAttributes1.Fill = Colours.White;
+                presentationAttributes1.Stroke = Colour.FromRgb(0, 114, 178);
+                break;
+            case 2:
+                presentationAttributes1.Fill = Colour.FromRgb(197, 235, 255);
+                presentationAttributes1.Stroke = Colour.FromRgb(0, 114, 178);
+                break;
+        }
+
+        PlotElementPresentationAttributes presentationAttributes2 = new PlotElementPresentationAttributes() { LineWidth = thickness2 / size2 };
+
+        switch (style2)
+        {
+            case 0:
+                presentationAttributes2.Stroke = null;
+                presentationAttributes2.Fill = Colour.FromRgb(213, 94, 0);
+                break;
+            case 1:
+                presentationAttributes2.Fill = Colours.White;
+                presentationAttributes2.Stroke = Colour.FromRgb(213, 94, 0);
+                break;
+            case 2:
+                presentationAttributes2.Fill = Colour.FromRgb(255, 233, 218);
+                presentationAttributes2.Stroke = Colour.FromRgb(213, 94, 0);
+                break;
+        }
+
+        PlotElementPresentationAttributes linePresentationAttributes1 = new PlotElementPresentationAttributes() { LineWidth = thickness1, Stroke = Colour.FromRgb(0, 114, 178) };
+        PlotElementPresentationAttributes linePresentationAttributes2 = new PlotElementPresentationAttributes() { LineWidth = thickness2, Stroke = Colour.FromRgb(213, 94, 0) };
+
+
+        IContinuousInvertibleCoordinateSystem coordinates = null;
+
+        double minX = Math.Min((from el in data1 select el.Item1).Min(), (from el in data2 select el.Item1).Min());
+        double minY = Math.Min((from el in data1 select el.Item2).Min(), (from el in data2 select el.Item2).Min());
+
+        double maxX = Math.Max((from el in data1 select el.Item1).Max(), (from el in data2 select el.Item1).Max());
+        double maxY = Math.Max((from el in data1 select el.Item2).Max(), (from el in data2 select el.Item2).Max());
+
+        switch (coordSystem)
+        {
+            case 0:
+                coordinates = new LinearCoordinateSystem2D(minX, maxX, minY, maxY, 350, 250);
+                break;
+            case 1:
+                coordinates = new LogarithmicCoordinateSystem2D(minX, maxX, minY, maxY, 350, 250);
+                break;
+            case 2:
+                coordinates = new LogLinCoordinateSystem2D(minX, maxX, minY, maxY, 350, 250);
+                break;
+            case 3:
+                coordinates = new LinLogCoordinateSystem2D(minX, maxX, minY, maxY, 350, 250);
+                break;
+        }
+
+
+        // Create the line chart using the random data.
+        Plot plot = Plot.Create.LineCharts(new[] { data1, data2 },
+            smooth: smooth,
+            xAxisTitle: "Horizontal axis",
+            yAxisTitle: "Vertical axis",
+            title: "Line charts",
+            coordinateSystem: coordinates,
+            pointSizes: new double[] { size1, size2 },
+            linePresentationAttributes: new PlotElementPresentationAttributes[] { linePresentationAttributes1, linePresentationAttributes2 },
+            dataPointElements: new IDataPointElement[] { dataPointElement1, dataPointElement2 },
+            pointPresentationAttributes: new PlotElementPresentationAttributes[] { presentationAttributes1, presentationAttributes2 });
+
+        // Render the plot to a Page and save it as an SVG document.
+        Page pag = plot.Render();
+
+        /*Page page = new Page(100, 100);
+        double scale = Math.Min(100 / pag.Width, 100 / pag.Height);
+
+        page.Graphics.Scale(scale, scale);
+        page.Graphics.DrawGraphics(50 / scale - pag.Width * 0.5, 50 / scale - pag.Height * 0.5, pag.Graphics);*/
+
+        Page page = pag;
+
+        using (MemoryStream ms = new MemoryStream())
+        {
+            page.SaveAsSVG(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+
+            using (StreamReader sr = new StreamReader(ms))
+            {
+                this.imgSource = "data:image/svg+xml;base64," + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(sr.ReadToEnd()));
+            }
+        }
+    }
+}

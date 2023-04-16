@@ -1,0 +1,202 @@
+﻿@page "/function2d"
+@using VectSharp;
+@using VectSharp.SVG;
+@using VectSharp.Plots
+
+<style>
+    table {
+        table-layout: fixed;
+    }
+
+    td {
+        width: 200px;
+        padding: 10px;
+    }
+</style>
+
+
+
+<div style="width: 100vw; height: 100vh; position: relative;">
+    <div style="height: 100vh; position: absolute; top: 0; left: 50%; transform: translateX(-50%)">
+        <table style="width: 100vw">
+            <tr>
+                <td colspan="2" style="text-align: center">
+                    <img src="@imgSource" style="max-height: calc(100vh - 200px)" />
+                </td>
+            </tr>
+            <tr style="height: 200px">
+                <td>
+                    <table style="width: 100vw">
+                        <tr>
+                            <td>
+                                <MatSelect Label="Plot type" @bind-Value="@plotKind">
+                                    <MatOption TValue="int" Value="0">SampledPoints</MatOption>
+                                    <MatOption TValue="int" Value="1">Tessellation</MatOption>
+                                    <MatOption TValue="int" Value="2">Raster</MatOption>
+                                </MatSelect>
+                            </td>
+                            <td>
+                                <MatSelect Label="Grid type" @bind-Value="@grid">
+                                    <MatOption TValue="int" Value="-1">Default</MatOption>
+                                    <MatOption TValue="int" Value="0">Rectangular</MatOption>
+                                    <MatOption TValue="int" Value="1">HexagonHorizontal</MatOption>
+                                    <MatOption TValue="int" Value="2">HexagonVertical</MatOption>
+                                    <MatOption TValue="int" Value="3">Irregular</MatOption>
+                                </MatSelect>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <MatSelect Label="Gradient" @bind-Value="@gradient">
+                                    <MatOption TValue="int" Value="0">Viridis</MatOption>
+                                    <MatOption TValue="int" Value="1">Cividis</MatOption>
+                                    <MatOption TValue="int" Value="2">Turbo</MatOption>
+                                    <MatOption TValue="int" Value="3">Inferno</MatOption>
+                                    <MatOption TValue="int" Value="4">Magma</MatOption>
+                                    <MatOption TValue="int" Value="5">Rocket</MatOption>
+                                    <MatOption TValue="int" Value="6">Okabe-Ito rainbow</MatOption>
+                                </MatSelect>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+@code {
+    private int _grid = -1;
+    private int grid
+    {
+        get
+        {
+            return _grid;
+        }
+        set
+        {
+            _grid = value;
+            Render();
+        }
+    }
+
+    private int _plotKind = 1;
+    private int plotKind
+    {
+        get
+        {
+            return _plotKind;
+        }
+        set
+        {
+            _plotKind = value;
+            Render();
+        }
+    }
+
+    private int _gradient = 1;
+    private int gradient
+    {
+        get
+        {
+            return _gradient;
+        }
+        set
+        {
+            _gradient = value;
+            Render();
+        }
+    }
+
+    private string imgSource = "";
+
+    protected override Task OnInitializedAsync()
+    {
+        Render();
+        return Task.CompletedTask;
+    }
+
+    public void Render()
+    {
+        Func<double, double, double> function = (x, y) => Math.Sin(x) * Math.Cos(y);
+
+        Function2DGrid.GridType? gridType = null;
+
+        switch (grid)
+        {
+            case 0:
+                gridType = Function2DGrid.GridType.Rectangular;
+                break;
+            case 1:
+                gridType = Function2DGrid.GridType.HexagonHorizontal;
+                break;
+            case 2:
+                gridType = Function2DGrid.GridType.HexagonVertical;
+                break;
+            case 3:
+                gridType = Function2DGrid.GridType.Irregular;
+                break;
+        }
+
+        VectSharp.Plots.Function2D.PlotType plotType = VectSharp.Plots.Function2D.PlotType.Tessellation;
+
+        switch (plotKind)
+        {
+            case 0:
+                plotType = VectSharp.Plots.Function2D.PlotType.SampledPoints;
+                break;
+            case 1:
+                plotType = VectSharp.Plots.Function2D.PlotType.Tessellation;
+                break;
+            case 2:
+                plotType = VectSharp.Plots.Function2D.PlotType.Raster;
+                break;
+        }
+
+        Func<double, Colour> colouring = Gradients.ViridisColouring;
+
+        switch (gradient)
+        {
+            case 0:
+                colouring = Gradients.ViridisColouring;
+                break;
+            case 1:
+                colouring = Gradients.CividisColouring;
+                break;
+            case 2:
+                colouring = Gradients.TurboColouring;
+                break;
+            case 3:
+                colouring = Gradients.InfernoColouring;
+                break;
+            case 4:
+                colouring = Gradients.MagmaColouring;
+                break;
+            case 5:
+                colouring = Gradients.RocketColouring;
+                break;
+            case 6:
+                colouring = Gradients.OkabeItoRainbow;
+                break;
+        }
+
+
+        // Create a function plot.
+        Plot plot = Plot.Create.Function(function, -5, -5, 5, 5, resolutionX: 0.25, resolutionY: 0.25, gridType: gridType, plotType: plotType, colouring: colouring);
+
+        Page pag = plot.Render();
+
+        Page page = pag;
+
+        using (MemoryStream ms = new MemoryStream())
+        {
+            page.SaveAsSVG(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+
+            using (StreamReader sr = new StreamReader(ms))
+            {
+                this.imgSource = "data:image/svg+xml;base64," + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(sr.ReadToEnd()));
+            }
+        }
+    }
+}

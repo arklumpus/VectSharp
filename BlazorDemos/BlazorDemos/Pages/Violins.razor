@@ -1,0 +1,229 @@
+﻿@page "/violin"
+@using VectSharp;
+@using VectSharp.SVG;
+@using VectSharp.Plots
+@using MathNet.Numerics.Distributions;
+
+<style>
+    table {
+        table-layout: fixed;
+    }
+
+    td {
+        width: 200px;
+        padding: 10px;
+    }
+</style>
+
+
+
+<div style="width: 100vw; height: 100vh; position: relative;">
+    <div style="height: 100vh; position: absolute; top: 0; left: 50%; transform: translateX(-50%)">
+        <table style="width: 100vw">
+            <tr>
+                <td colspan="2" style="text-align: center">
+                    <img src="@imgSource" style="max-height: calc(100vh - 350px)" />
+                </td>
+            </tr>
+            <tr style="height: 350px">
+                <td>
+                    <table style="width: 100vw">
+                        <tr>
+                            <td>
+                                <MatSelect Label="Violin sides" @bind-Value="@sides">
+                                    <MatOption TValue="int" Value="0">Left</MatOption>
+                                    <MatOption TValue="int" Value="1">Right</MatOption>
+                                    <MatOption TValue="int" Value="2">Both</MatOption>
+                                </MatSelect>
+                            </td>
+                            <td>
+                                <MatCheckbox Label="Smooth distribution" @bind-Value="@smooth"></MatCheckbox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <MatCheckbox Label="Proportional width" @bind-Value="@propWidth"></MatCheckbox>
+                            </td>
+                            <td>
+                                <MatSelect Label="Orientation" @bind-Value="@orientation">
+                                    <MatOption TValue="int" Value="0">Vertical</MatOption>
+                                    <MatOption TValue="int" Value="1">Horizontal</MatOption>
+                                </MatSelect>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <MatCheckbox Label="Show box plots" @bind-Value="@boxPlots"></MatCheckbox>
+                            </td>
+                            <td>
+                                <MatNumericUpDownField Label="Spacing"
+                                                       @bind-Value=@spacing
+                                                       Step="0.1" Minimum="0" Maximum="1" DecimalPlaces="2">
+                                </MatNumericUpDownField>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="text-align: center">
+                                <MatNumericUpDownField Label="Box width"
+                                                       @bind-Value=@boxWidth
+                                                       Step="0.01" Minimum="0" Maximum="1" DecimalPlaces="2">
+                                </MatNumericUpDownField>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+@code {
+    private double _boxWidth = 0.05;
+    private double boxWidth
+    {
+        get
+        {
+            return _boxWidth;
+        }
+        set
+        {
+            _boxWidth = value;
+            Render();
+        }
+    }
+
+    private double _spacing = 0.1;
+    private double spacing
+    {
+        get
+        {
+            return _spacing;
+        }
+        set
+        {
+            _spacing = value;
+            Render();
+        }
+    }
+
+    private int _sides = 2;
+    private int sides
+    {
+        get
+        {
+            return _sides;
+        }
+        set
+        {
+            _sides = value;
+            Render();
+        }
+    }
+
+    private bool _boxPlots = false;
+    private bool boxPlots
+    {
+        get
+        {
+            return _boxPlots;
+        }
+        set
+        {
+            _boxPlots = value;
+            Render();
+        }
+    }
+
+    private bool _propWidth = true;
+    private bool propWidth
+    {
+        get
+        {
+            return _propWidth;
+        }
+        set
+        {
+            _propWidth = value;
+            Render();
+        }
+    }
+
+    private bool _smooth = true;
+    private bool smooth
+    {
+        get
+        {
+            return _smooth;
+        }
+        set
+        {
+            _smooth = value;
+            Render();
+        }
+    }
+
+    private int _orientation = 0;
+    private int orientation
+    {
+        get
+        {
+            return _orientation;
+        }
+        set
+        {
+            _orientation = value;
+            Render();
+        }
+    }
+
+    private string imgSource = "";
+
+    protected override Task OnInitializedAsync()
+    {
+        Render();
+        return Task.CompletedTask;
+    }
+
+    static (string, IReadOnlyList<double>)[] data = new (string, IReadOnlyList<double>)[]{
+    ( "N(0, 1)", Normal.Samples(0, 1).Take(500).ToArray() ),
+    ( "N(2, 1)", Normal.Samples(2, 1).Take(1000).ToArray() ),
+    ( "Γ(3, 3)", Gamma.Samples(3, 3).Take(100).ToArray() ),
+    ( "E(1)", Exponential.Samples(1).Take(200).ToArray() ),
+    ( "LogNorm(1, 0.2)", LogNormal.Samples(1, 0.2).Take(300).ToArray()) };
+
+    public void Render()
+    {
+        Violin.ViolinSide violinSide = Violin.ViolinSide.Both;
+
+        switch (sides)
+        {
+            case 0:
+                violinSide = Violin.ViolinSide.Left;
+                break;
+            case 1:
+                violinSide = Violin.ViolinSide.Right;
+                break;
+            case 2:
+                violinSide = Violin.ViolinSide.Both;
+                break;
+        }
+
+        Plot plot = Plot.Create.ViolinPlot(data, proportionalWidth: propWidth, smooth: smooth, sides: violinSide, showBoxPlots: boxPlots, boxWidth: boxWidth,
+        xAxisTitle: orientation == 0 ? "Distributions" : null, title: "Violin plot", yAxisTitle: orientation == 1 ? "Distributions" : null, vertical: orientation == 0, spacing: spacing);
+
+        Page pag = plot.Render();
+
+        Page page = pag;
+
+        using (MemoryStream ms = new MemoryStream())
+        {
+            page.SaveAsSVG(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+
+            using (StreamReader sr = new StreamReader(ms))
+            {
+                this.imgSource = "data:image/svg+xml;base64," + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(sr.ReadToEnd()));
+            }
+        }
+    }
+}
