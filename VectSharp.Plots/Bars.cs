@@ -126,6 +126,19 @@ namespace VectSharp.Plots
             this.GetBaseline = getBaseline;
         }
 
+        private static bool AnyNan(params Point[] points)
+        {
+            for (int i = 0; i < points.Length; i++)
+            {
+                if (double.IsNaN(points[i].X) || double.IsNaN(points[i].Y))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         /// <inheritdoc/>
         public void Plot(Graphics target)
         {
@@ -157,7 +170,10 @@ namespace VectSharp.Plots
                     double t2 = (bars[i].Item2.X - nextBaselineMid.X) * perpDir.X + (bars[i].Item2.Y - nextBaselineMid.Y) * perpDir.Y;
                     Point nextTop = new Point(bars[i].Item2.X - perpDir.X * t2, bars[i].Item2.Y - perpDir.Y * t2);
 
-                    pth.MoveTo(prevBaselineMid).LineTo(prevTop).LineTo(nextTop).LineTo(nextBaselineMid).Close();
+                    if (!AnyNan(prevBaselineMid, prevTop, nextTop, nextBaselineMid))
+                    {
+                        pth.MoveTo(prevBaselineMid).LineTo(prevTop).LineTo(nextTop).LineTo(nextBaselineMid).Close();
+                    }
                 }
                 else if (i == 0)
                 {
@@ -174,7 +190,10 @@ namespace VectSharp.Plots
                     double t = -t2;
                     Point prevTop = new Point(bars[i].Item2.X - perpDir.X * t, bars[i].Item2.Y - perpDir.Y * t);
 
-                    pth.MoveTo(prevBaselineMid).LineTo(prevTop).LineTo(nextTop).LineTo(nextBaselineMid).Close();
+                    if (!AnyNan(prevBaselineMid, prevTop, nextTop, nextBaselineMid))
+                    {
+                        pth.MoveTo(prevBaselineMid).LineTo(prevTop).LineTo(nextTop).LineTo(nextBaselineMid).Close();
+                    }
                 }
                 else if (i == bars.Count - 1)
                 {
@@ -191,7 +210,10 @@ namespace VectSharp.Plots
                     double t2 = -t;
                     Point nextTop = new Point(bars[i].Item2.X - perpDir.X * t2, bars[i].Item2.Y - perpDir.Y * t2);
 
-                    pth.MoveTo(prevBaselineMid).LineTo(prevTop).LineTo(nextTop).LineTo(nextBaselineMid).Close();
+                    if (!AnyNan(prevBaselineMid, prevTop, nextTop, nextBaselineMid))
+                    {
+                        pth.MoveTo(prevBaselineMid).LineTo(prevTop).LineTo(nextTop).LineTo(nextBaselineMid).Close();
+                    }
                 }
 
                 string tag = Tag;
