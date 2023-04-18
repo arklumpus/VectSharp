@@ -459,7 +459,7 @@ namespace VectSharp.SVG
                 if (!double.IsNaN(fontSize) && !string.IsNullOrEmpty(text))
                 {
                     text = text.Replace("\u00A0", " ");
-                    
+
                     FontFamily parsedFontFamily = ParseFontFamily(fontFamily, currAttributes.EmbeddedFonts);
                     string fontWeight = currObject.Attributes?["font-weight"]?.Value ?? currObject.ParentNode.Attributes?["font-weight"]?.Value;
                     string fontStyle = currObject.Attributes?["font-style"]?.Value ?? currObject.ParentNode.Attributes?["font-style"]?.Value;
@@ -886,6 +886,25 @@ namespace VectSharp.SVG
 
                     Graphics pathGraphics = new Graphics();
                     InterpretPathObject(element.ChildNodes[0], pathGraphics, width, height, diagonal, attributes, styleSheets, gradients);
+
+                    PathTransformerGraphicsContext ptgc = new PathTransformerGraphicsContext();
+                    pathGraphics.CopyToIGraphicsContext(ptgc);
+
+                    if (!hasParentClipPath)
+                    {
+                        gpr.Save();
+                    }
+
+                    gpr.SetClippingPath(ptgc.CurrentPath);
+
+                    return true;
+                }
+                else if (element != null && element.ChildNodes.Count == 1 && element.ChildNodes[0].Name.Equals("rect", StringComparison.OrdinalIgnoreCase))
+                {
+                    bool hasParentClipPath = ApplyClipPath(element, gpr, width, height, diagonal, attributes, styleSheets, gradients);
+
+                    Graphics pathGraphics = new Graphics();
+                    InterpretRectObject(element.ChildNodes[0], pathGraphics, width, height, diagonal, attributes, styleSheets, gradients);
 
                     PathTransformerGraphicsContext ptgc = new PathTransformerGraphicsContext();
                     pathGraphics.CopyToIGraphicsContext(ptgc);
