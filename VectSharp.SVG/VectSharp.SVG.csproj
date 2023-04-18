@@ -10,7 +10,7 @@
 		<PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/arklumpus/VectSharp</PackageProjectUrl>
 		<PackageIcon>icon.png</PackageIcon>
-		<Version>1.8.2-a1</Version>
+		<Version>1.8.2-a2</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
