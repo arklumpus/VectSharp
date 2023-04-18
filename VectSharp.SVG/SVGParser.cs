@@ -461,8 +461,8 @@ namespace VectSharp.SVG
                     text = text.Replace("\u00A0", " ");
                     
                     FontFamily parsedFontFamily = ParseFontFamily(fontFamily, currAttributes.EmbeddedFonts);
-                    string fontWeight = currObject.Attributes?["font-weight"]?.Value;
-                    string fontStyle = currObject.Attributes?["font-style"]?.Value;
+                    string fontWeight = currObject.Attributes?["font-weight"]?.Value ?? currObject.ParentNode.Attributes?["font-weight"]?.Value;
+                    string fontStyle = currObject.Attributes?["font-style"]?.Value ?? currObject.ParentNode.Attributes?["font-style"]?.Value;
 
                     bool isBold = false;
                     bool isItalic = false;
