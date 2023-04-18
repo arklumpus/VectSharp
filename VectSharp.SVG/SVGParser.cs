@@ -464,15 +464,32 @@ namespace VectSharp.SVG
                     string fontWeight = currObject.Attributes?["font-weight"]?.Value;
                     string fontStyle = currObject.Attributes?["font-style"]?.Value;
 
+                    bool isBold = false;
+                    bool isItalic = false;
+
                     if (fontWeight != null && (fontWeight.Equals("bold", StringComparison.OrdinalIgnoreCase) || fontWeight.Equals("bolder", StringComparison.OrdinalIgnoreCase) || (int.TryParse(fontWeight, out int weight) && weight >= 500)))
                     {
-                        parsedFontFamily = GetBoldFontFamily(parsedFontFamily);
+                        isBold = true;
                     }
 
                     if (fontStyle != null && (fontStyle.Equals("italic", StringComparison.OrdinalIgnoreCase) || fontStyle.Equals("oblique", StringComparison.OrdinalIgnoreCase)))
                     {
+                        isItalic = true;
+                    }
+
+                    if (isBold && !isItalic)
+                    {
+                        parsedFontFamily = GetBoldFontFamily(parsedFontFamily);
+                    }
+                    else if (isItalic && !isBold)
+                    {
                         parsedFontFamily = GetItalicFontFamily(parsedFontFamily);
                     }
+                    else if (isItalic && isBold)
+                    {
+                        parsedFontFamily = GetBoldItalicFontFamily(parsedFontFamily);
+                    }
+
 
                     Font fnt = new Font(parsedFontFamily, fontSize);
 
@@ -559,6 +576,10 @@ namespace VectSharp.SVG
             }
         }
 
+        private static string[] BoldPredicates = new string[] { "-Bold", "-bold", " Bold", " bold" };
+        private static string[] ItalicPredicates = new string[] { "-Italic", "-italic", " Italic", " italic", "-Oblique", "-oblique", " Oblique", " oblique" };
+        private static string[] BoldItalicPredicates = new string[] { "-BoldItalic", "-bolditalic", " BoldItalic", " bolditalic", " Bold Italic", " bold italic", "-BoldOblique", "-boldoblique", " BoldOblique", " boldoblique", " Bold Oblique", " bold oblique" };
+
         private static FontFamily GetBoldFontFamily(FontFamily fontFamily)
         {
             switch (fontFamily.FileName)
@@ -582,6 +603,19 @@ namespace VectSharp.SVG
                 case "Courier-BoldOblique":
                     return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique);
                 default:
+                    foreach (string sr in BoldPredicates)
+                    {
+                        FontFamily attempt = FontFamily.ResolveFontFamily(fontFamily.FamilyName + sr);
+                        if (attempt != null && attempt.TrueTypeFile != null)
+                        {
+                            return attempt;
+                        }
+                        attempt = FontFamily.ResolveFontFamily(fontFamily.FileName + sr);
+                        if (attempt != null && attempt.TrueTypeFile != null)
+                        {
+                            return attempt;
+                        }
+                    }
                     return fontFamily;
             }
         }
@@ -609,6 +643,59 @@ namespace VectSharp.SVG
                 case "Courier-BoldOblique":
                     return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique);
                 default:
+                    foreach (string sr in ItalicPredicates)
+                    {
+                        FontFamily attempt = FontFamily.ResolveFontFamily(fontFamily.FamilyName + sr);
+                        if (attempt != null && attempt.TrueTypeFile != null)
+                        {
+                            return attempt;
+                        }
+                        attempt = FontFamily.ResolveFontFamily(fontFamily.FileName + sr);
+                        if (attempt != null && attempt.TrueTypeFile != null)
+                        {
+                            return attempt;
+                        }
+                    }
+                    return fontFamily;
+            }
+        }
+
+        private static FontFamily GetBoldItalicFontFamily(FontFamily fontFamily)
+        {
+            switch (fontFamily.FileName)
+            {
+                case "Times-Roman":
+                case "Times-Italic":
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesItalic);
+                case "Times-Bold":
+                case "Times-BoldItalic":
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBoldItalic);
+                case "Helvetica":
+                case "Helvetica-Oblique":
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaOblique);
+                case "Helvetica-Bold":
+                case "Helvetica-BoldOblique":
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBoldOblique);
+                case "Courier":
+                case "Courier-Oblique":
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierOblique);
+                case "Courier-Bold":
+                case "Courier-BoldOblique":
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique);
+                default:
+                    foreach (string sr in BoldItalicPredicates)
+                    {
+                        FontFamily attempt = FontFamily.ResolveFontFamily(fontFamily.FamilyName + sr);
+                        if (attempt != null && attempt.TrueTypeFile != null)
+                        {
+                            return attempt;
+                        }
+                        attempt = FontFamily.ResolveFontFamily(fontFamily.FileName + sr);
+                        if (attempt != null && attempt.TrueTypeFile != null)
+                        {
+                            return attempt;
+                        }
+                    }
                     return fontFamily;
             }
         }
@@ -682,6 +769,13 @@ namespace VectSharp.SVG
                     {
                         return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.ZapfDingbats);
                     }
+                }
+
+                FontFamily parsedFamily = FontFamily.ResolveFontFamily(family);
+
+                if (parsedFamily != null && parsedFamily.TrueTypeFile != null)
+                {
+                    return parsedFamily;
                 }
             }
 
