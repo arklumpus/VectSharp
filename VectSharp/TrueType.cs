@@ -538,6 +538,141 @@ namespace VectSharp
             BuildGlyphCache();
         }
 
+        /// <summary>
+        /// Represets a  TrueType name.
+        /// </summary>
+        public struct TrueTypeName
+        {
+            /// <summary>
+            /// Describes a kind of TrueType name.
+            /// </summary>
+            public enum NameIdentifier
+            {
+                /// <summary>
+                /// A font family name.
+                /// </summary>
+                FontFamily = 1,
+
+                /// <summary>
+                /// A full name for a font.
+                /// </summary>
+                FullName = 4,
+
+                /// <summary>
+                /// A PostScript name for a font.
+                /// </summary>
+                PostScriptName = 6,
+
+                /// <summary>
+                /// The preferred font family name for the font.
+                /// </summary>
+                PreferredFamily = 16
+            }
+
+            /// <summary>
+            /// The kind of name represented by this struct.
+            /// </summary>
+            public NameIdentifier NameId;
+
+            /// <summary>
+            /// The name represented by this struct.
+            /// </summary>
+            public string Name;
+
+            internal TrueTypeName(NameIdentifier identifier, string name)
+            {
+                this.NameId = identifier;
+                this.Name = name;
+            }
+        }
+
+        /// <summary>
+        /// Determines whether the file is a valid TrueType file and retrieves the list of names defined in it.
+        /// </summary>
+        /// <param name="file">The TrueType file.</param>
+        /// <param name="names">The list of names that will be returned. These will only include names with TrueType identifiers 1, 4, 6, or 16.</param>
+        /// <returns>If an error occurred while opening the file, or the file does not contain a valid TrueType file, <see langword="false"/>. If the TrueType file appears valid but does not contain a name table,
+        /// <see langword="true"/>, but <paramref name="names"/> will be <see langword="null"/>. Otherwise, <see langword="true"/> and <paramref name="names"/> will not be null
+        /// (but it might still be empty).</returns>
+        public static bool GetNames(string file, out List<TrueTypeName> names)
+        {
+            try
+            {
+                using (FileStream fs = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    return GetNames(fs, out names);
+                }
+            }
+            catch
+            {
+                names = null;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Determines whether the stream contains a valid TrueType file and retrieves the list of names defined in it.
+        /// </summary>
+        /// <param name="fs">The stream containing the TrueType file.</param>
+        /// <param name="names">The list of names that will be returned. These will only include names with TrueType identifiers 1, 4, 6, or 16.</param>
+        /// <returns>If the stream does not contain a valid TrueType file, <see langword="false"/>. If the TrueType file appears valid but does not contain a name table,
+        /// <see langword="true"/>, but <paramref name="names"/> will be <see langword="null"/>. Otherwise, <see langword="true"/> and <paramref name="names"/> will not be null
+        /// (but it might still be empty).</returns>
+        public static bool GetNames(Stream fs, out List<TrueTypeName> names)
+        {
+            try
+            {
+                uint ScalarType = fs.ReadUInt();
+
+                if (ScalarType != 0x00010000 && ScalarType != 0x74727565)
+                {
+                    names = null;
+                    return false;
+                }
+
+                int NumTables = fs.ReadUShort();
+                fs.ReadUShort();
+                fs.ReadUShort();
+                fs.ReadUShort();
+
+                TrueTypeNameTable name = null;
+
+                for (int i = 0; i < NumTables; i++)
+                {
+                    string key = fs.ReadString(4);
+                    TrueTypeTableOffset offset = new TrueTypeTableOffset(fs.ReadUInt(), fs.ReadUInt(), fs.ReadUInt());
+
+                    if (key == "name")
+                    {
+                        fs.Seek(offset.Offset, SeekOrigin.Begin);
+                        name = new TrueTypeNameTable(offset.Offset, fs);
+                        break;
+                    }
+                }
+
+                names = null;
+
+                if (name != null)
+                {
+                    names = new List<TrueTypeName>();
+
+                    for (int i = 0; i < name.NameRecords.Length; i++)
+                    {
+                        if (name.NameRecords[i].NameID == 1 || name.NameRecords[i].NameID == 4 || name.NameRecords[i].NameID == 6 || name.NameRecords[i].NameID == 16)
+                        {
+                            names.Add(new TrueTypeName((TrueTypeName.NameIdentifier)name.NameRecords[i].NameID, name.Name[i]));
+                        }
+                    }
+                }
+
+                return true;
+            }
+            catch
+            {
+                names = null;
+                return false;
+            }
+        }
 
         private double[] GlyphWidthsCache = new double[256];
         private VerticalMetrics[] VerticalMetricsCache = new VerticalMetrics[256];
