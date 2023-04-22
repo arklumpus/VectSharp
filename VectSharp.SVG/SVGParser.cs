@@ -414,6 +414,27 @@ namespace VectSharp.SVG
             }
         }
 
+        private static string GetFirstAttributeValueIncludingAncestors(XmlNode currObject, string attribute)
+        {
+            string tbr = currObject.Attributes?[attribute]?.Value;
+
+            if (tbr != null)
+            {
+                return tbr;
+            }
+            else
+            {
+                if (currObject.ParentNode != null && !currObject.ParentNode.Name.Equals("svg", StringComparison.OrdinalIgnoreCase))
+                {
+                    return GetFirstAttributeValueIncludingAncestors(currObject.ParentNode, attribute);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
         private static void InterpretTextObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients, ref double x, ref double y, double fontSize = double.NaN, string fontFamily = null, string textAlign = null)
         {
             PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr, styleSheets, gradients);
@@ -427,9 +448,9 @@ namespace VectSharp.SVG
             x += dx;
             y += dy;
 
-            fontFamily = currObject.Attributes?["font-family"]?.Value ?? fontFamily;
-            fontSize = ParseLengthOrPercentage(currObject.Attributes?["font-size"]?.Value, width, fontSize);
-            textAlign = currObject.Attributes?["text-align"]?.Value ?? textAlign;
+            fontFamily = GetFirstAttributeValueIncludingAncestors(currObject, "font-family") ?? fontFamily;
+            fontSize = ParseLengthOrPercentage(GetFirstAttributeValueIncludingAncestors(currObject, "font-size"), width, fontSize);
+            textAlign = GetFirstAttributeValueIncludingAncestors(currObject, "text-align") ?? textAlign;
 
             bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes, styleSheets, gradients);
 
@@ -461,8 +482,8 @@ namespace VectSharp.SVG
                     text = text.Replace("\u00A0", " ");
 
                     FontFamily parsedFontFamily = ParseFontFamily(fontFamily, currAttributes.EmbeddedFonts);
-                    string fontWeight = currObject.Attributes?["font-weight"]?.Value ?? currObject.ParentNode.Attributes?["font-weight"]?.Value;
-                    string fontStyle = currObject.Attributes?["font-style"]?.Value ?? currObject.ParentNode.Attributes?["font-style"]?.Value;
+                    string fontWeight = GetFirstAttributeValueIncludingAncestors(currObject, "font-weight");
+                    string fontStyle = GetFirstAttributeValueIncludingAncestors(currObject, "font-style");
 
                     bool isBold = false;
                     bool isItalic = false;
@@ -514,7 +535,7 @@ namespace VectSharp.SVG
 
                     TextBaselines baseline = TextBaselines.Baseline;
 
-                    string textBaseline = currObject.Attributes?["alignment-baseline"]?.Value;
+                    string textBaseline = GetFirstAttributeValueIncludingAncestors(currObject, "alignment-baseline");
 
                     if (textBaseline != null)
                     {
