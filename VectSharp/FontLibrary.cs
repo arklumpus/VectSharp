@@ -72,7 +72,7 @@ namespace VectSharp
 
         /// <inheritdoc/>
         public abstract FontFamily ResolveFontFamily(FontFamily.StandardFontFamilies standardFontFamily);
-        
+
         /// <inheritdoc/>
         public virtual FontFamily ResolveFontFamily(string fontFamily, params string[] fallback)
         {
@@ -301,22 +301,22 @@ namespace VectSharp
             string symbol, string zapfdingbats)
         {
             Fallbacks[FontFamily.StandardFontFamilies.TimesRoman] = FontFamily.DefaultFontLibrary.ResolveFontFamily(timesRoman);
-            Fallbacks[FontFamily.StandardFontFamilies.TimesBold]= FontFamily.DefaultFontLibrary.ResolveFontFamily(timesBold);
-            Fallbacks[FontFamily.StandardFontFamilies.TimesItalic]= FontFamily.DefaultFontLibrary.ResolveFontFamily(timesItalic);
-            Fallbacks[FontFamily.StandardFontFamilies.TimesBoldItalic]= FontFamily.DefaultFontLibrary.ResolveFontFamily(timesBoldItalic);
+            Fallbacks[FontFamily.StandardFontFamilies.TimesBold] = FontFamily.DefaultFontLibrary.ResolveFontFamily(timesBold);
+            Fallbacks[FontFamily.StandardFontFamilies.TimesItalic] = FontFamily.DefaultFontLibrary.ResolveFontFamily(timesItalic);
+            Fallbacks[FontFamily.StandardFontFamilies.TimesBoldItalic] = FontFamily.DefaultFontLibrary.ResolveFontFamily(timesBoldItalic);
 
-            Fallbacks[FontFamily.StandardFontFamilies.Helvetica]= FontFamily.DefaultFontLibrary.ResolveFontFamily(helvetica);
-            Fallbacks[FontFamily.StandardFontFamilies.HelveticaBold]= FontFamily.DefaultFontLibrary.ResolveFontFamily(helveticaBold);
-            Fallbacks[FontFamily.StandardFontFamilies.HelveticaOblique]= FontFamily.DefaultFontLibrary.ResolveFontFamily(helveticaOblique);
-            Fallbacks[FontFamily.StandardFontFamilies.HelveticaBoldOblique]= FontFamily.DefaultFontLibrary.ResolveFontFamily(helveticaBoldOblique);
+            Fallbacks[FontFamily.StandardFontFamilies.Helvetica] = FontFamily.DefaultFontLibrary.ResolveFontFamily(helvetica);
+            Fallbacks[FontFamily.StandardFontFamilies.HelveticaBold] = FontFamily.DefaultFontLibrary.ResolveFontFamily(helveticaBold);
+            Fallbacks[FontFamily.StandardFontFamilies.HelveticaOblique] = FontFamily.DefaultFontLibrary.ResolveFontFamily(helveticaOblique);
+            Fallbacks[FontFamily.StandardFontFamilies.HelveticaBoldOblique] = FontFamily.DefaultFontLibrary.ResolveFontFamily(helveticaBoldOblique);
 
-            Fallbacks[FontFamily.StandardFontFamilies.Courier]= FontFamily.DefaultFontLibrary.ResolveFontFamily(courier);
-            Fallbacks[FontFamily.StandardFontFamilies.CourierBold]= FontFamily.DefaultFontLibrary.ResolveFontFamily(courierBold);
-            Fallbacks[FontFamily.StandardFontFamilies.CourierOblique]= FontFamily.DefaultFontLibrary.ResolveFontFamily(courierOblique);
-            Fallbacks[FontFamily.StandardFontFamilies.CourierBoldOblique]= FontFamily.DefaultFontLibrary.ResolveFontFamily(courierBoldOblique);
+            Fallbacks[FontFamily.StandardFontFamilies.Courier] = FontFamily.DefaultFontLibrary.ResolveFontFamily(courier);
+            Fallbacks[FontFamily.StandardFontFamilies.CourierBold] = FontFamily.DefaultFontLibrary.ResolveFontFamily(courierBold);
+            Fallbacks[FontFamily.StandardFontFamilies.CourierOblique] = FontFamily.DefaultFontLibrary.ResolveFontFamily(courierOblique);
+            Fallbacks[FontFamily.StandardFontFamilies.CourierBoldOblique] = FontFamily.DefaultFontLibrary.ResolveFontFamily(courierBoldOblique);
 
-            Fallbacks[FontFamily.StandardFontFamilies.Symbol]= FontFamily.DefaultFontLibrary.ResolveFontFamily(symbol);
-            Fallbacks[FontFamily.StandardFontFamilies.ZapfDingbats]= FontFamily.DefaultFontLibrary.ResolveFontFamily(zapfdingbats);
+            Fallbacks[FontFamily.StandardFontFamilies.Symbol] = FontFamily.DefaultFontLibrary.ResolveFontFamily(symbol);
+            Fallbacks[FontFamily.StandardFontFamilies.ZapfDingbats] = FontFamily.DefaultFontLibrary.ResolveFontFamily(zapfdingbats);
 
             for (int i = 0; i < 14; i++)
             {
@@ -396,7 +396,7 @@ namespace VectSharp
         {
             return Fallbacks[standardFontFamily];
         }
-        
+
         /// <inheritdoc/>
         public override FontFamily ResolveFontFamily(string fontFamily)
         {
@@ -549,4 +549,168 @@ namespace VectSharp
             }
         }
     }
+
+    /// <summary>
+    /// A font library that resolves fonts from a folder containing TrueType files.
+    /// </summary>
+    public class FolderFontLibrary : FontLibrary
+    {
+        private Dictionary<string, FontFamily> LoadedFonts = new Dictionary<string, FontFamily>();
+        private Dictionary<string, string> KnownFonts = new Dictionary<string, string>();
+        private IFontLibrary StandardFontLibrary;
+
+        /// <summary>
+        /// Creates a new <see cref="FolderFontLibrary"/> using fonts from the specified path, and using the <see cref="FontFamily.DefaultFontLibrary"/> to resolve the standard font families.
+        /// </summary>
+        /// <param name="folderPath">The path to the folder containing the TrueType files.</param>
+        public FolderFontLibrary(string folderPath) : this(folderPath, FontFamily.DefaultFontLibrary) { }
+
+        /// <summary>
+        /// Creates a new <see cref="FolderFontLibrary"/> using fonts from the specified path, and using the specified <see cref="IFontLibrary"/> to resolve the standard font families.
+        /// </summary>
+        /// <param name="folderPath">The path to the folder containing the TrueType files.</param>
+        /// <param name="standardFontLibrary">The <see cref="IFontLibrary"/> to use when resolving standard font families.</param>
+        public FolderFontLibrary(string folderPath, IFontLibrary standardFontLibrary)
+        {
+            foreach (string file in Directory.GetFiles(folderPath))
+            {
+                bool isValid = TrueTypeFile.GetNames(file, out List<TrueTypeFile.TrueTypeName> names);
+
+                if (isValid && names != null)
+                {
+                    foreach (TrueTypeFile.TrueTypeName name in names)
+                    {
+                        switch (name.NameId)
+                        {
+                            case TrueTypeFile.TrueTypeName.NameIdentifier.FullName:
+                            case TrueTypeFile.TrueTypeName.NameIdentifier.PostScriptName:
+                                KnownFonts[name.Name] = file;
+                                break;
+                            case TrueTypeFile.TrueTypeName.NameIdentifier.FontFamily:
+                            case TrueTypeFile.TrueTypeName.NameIdentifier.PreferredFamily:
+                                if (!KnownFonts.ContainsKey(name.Name))
+                                {
+                                    KnownFonts[name.Name] = file;
+                                }
+                                break;
+                        }
+                    }
+                }
+            }
+
+            StandardFontLibrary = standardFontLibrary;
+        }
+
+        /// <inheritdoc/>
+        public override FontFamily ResolveFontFamily(string fontFamily)
+        {
+            if (KnownFonts.TryGetValue(fontFamily, out string knownFontName))
+            {
+                if (LoadedFonts.TryGetValue(knownFontName, out FontFamily tbr))
+                {
+                    return tbr;
+                }
+                else
+                {
+                    tbr = new FontFamily(TrueTypeFile.CreateTrueTypeFile(knownFontName));
+                    tbr.FileName = knownFontName;
+                    tbr.FamilyName = tbr.TrueTypeFile?.GetFullFontFamilyName() ?? tbr.FileName;
+
+                    if (tbr.TrueTypeFile != null)
+                    {
+                        this.LoadedFonts[knownFontName] = tbr;
+                    }
+
+                    return tbr;
+                }
+            }
+            else
+            {
+                FontFamily tbr = new FontFamily();
+                tbr.FileName = fontFamily;
+                tbr.FamilyName = fontFamily;
+                return tbr;
+            }
+        }
+
+        /// <inheritdoc/>
+        public override FontFamily ResolveFontFamily(FontFamily.StandardFontFamilies standardFontFamily)
+        {
+            FontFamily attempt = ResolveFontFamily(FontFamily.StandardFamilies[(int)standardFontFamily]);
+
+            if (attempt != null && attempt.TrueTypeFile != null)
+            {
+                return attempt;
+            }
+            else
+            {
+                return StandardFontLibrary.ResolveFontFamily(standardFontFamily);
+            }
+        }
+    }
+
+    /// <summary>
+    /// A font library that tries to resolve fonts using other font libraries.
+    /// </summary>
+    public class MultiFontLibrary : FontLibrary
+    {
+        private FontLibrary[] Libraries;
+        private DefaultFontLibrary DefaultLibrary = new DefaultFontLibrary();
+
+        /// <summary>
+        /// Creates a new <see cref="MultiFontLibrary"/> resolving fonts using the specified <paramref name="libraries"/>.
+        /// </summary>
+        /// <param name="libraries">The font libraries that will be used, in order, to resolve the font families.</param>
+        /// <exception cref="ArgumentException">Thrown if the <paramref name="libraries"/> do not contain any element.</exception>
+        public MultiFontLibrary(params FontLibrary[] libraries) : this((IEnumerable<FontLibrary>)libraries) { }
+
+
+        /// <summary>
+        /// Creates a new <see cref="MultiFontLibrary"/> resolving fonts using the specified <paramref name="libraries"/>.
+        /// </summary>
+        /// <param name="libraries">The font libraries that will be used, in order, to resolve the font families.</param>
+        /// <exception cref="ArgumentException">Thrown if the <paramref name="libraries"/> do not contain any element.</exception>
+        public MultiFontLibrary(IEnumerable<FontLibrary> libraries)
+        {
+            this.Libraries = libraries.ToArray();
+
+            if (this.Libraries.Length == 0)
+            {
+                throw new ArgumentException("No font library has been provided!");
+            }
+        }
+
+        /// <inheritdoc/>
+        public override FontFamily ResolveFontFamily(string fontFamily)
+        {
+            for (int i = 0; i < Libraries.Length; i++)
+            {
+                FontFamily attempt = Libraries[i].ResolveFontFamily(fontFamily);
+
+                if (attempt != null && attempt.TrueTypeFile != null)
+                {
+                    return attempt;
+                }
+            }
+
+            return DefaultLibrary.ResolveFontFamily(fontFamily);
+        }
+
+        /// <inheritdoc/>
+        public override FontFamily ResolveFontFamily(FontFamily.StandardFontFamilies standardFontFamily)
+        {
+            for (int i = 0; i < Libraries.Length; i++)
+            {
+                FontFamily attempt = Libraries[i].ResolveFontFamily(standardFontFamily);
+
+                if (attempt != null && attempt.TrueTypeFile != null)
+                {
+                    return attempt;
+                }
+            }
+
+            return DefaultLibrary.ResolveFontFamily(standardFontFamily);
+        }
+    }
+
 }
