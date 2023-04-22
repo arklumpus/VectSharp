@@ -502,11 +502,11 @@ namespace VectSharp.SVG
 
                         if (!string.IsNullOrEmpty(textAlign) && (textAlign.Equals("right", StringComparison.OrdinalIgnoreCase) || textAlign.Equals("end", StringComparison.OrdinalIgnoreCase)))
                         {
-                            x -= metrics.Width + metrics.LeftSideBearing;
+                            x -= metrics.AdvanceWidth;
                         }
                         else if (!string.IsNullOrEmpty(textAlign) && textAlign.Equals("center", StringComparison.OrdinalIgnoreCase))
                         {
-                            x -= metrics.Width * 0.5;
+                            x -= metrics.AdvanceWidth * 0.5;
                         }
 
                         endX += metrics.AdvanceWidth;
