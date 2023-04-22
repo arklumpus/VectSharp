@@ -370,10 +370,11 @@ namespace VectSharp
 
                 for (int i = 0; i < text.Length; i++)
                 {
+                    currentGlyphPlacementDelta = nextGlyphPlacementDelta;
+                    currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
+
                     if (Font.EnableKerning && i < text.Length - 1)
                     {
-                        currentGlyphPlacementDelta = nextGlyphPlacementDelta;
-                        currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
                         nextGlyphAdvanceDelta = new Point();
                         nextGlyphPlacementDelta = new Point();
 
