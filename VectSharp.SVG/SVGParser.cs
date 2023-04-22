@@ -201,11 +201,11 @@ namespace VectSharp.SVG
 
             double width, height, x, y;
 
-            string widthAttribute = svgObject.Attributes?["width"]?.Value?.Replace("px", "");
+            string widthAttribute = svgObject.Attributes?["width"]?.Value?.Replace("px", "")?.Replace("pt", "")?.Replace("mm", "")?.Replace("in", "")?.Replace("cm", "");
 
             if (!double.TryParse(widthAttribute, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out width)) { width = double.NaN; }
 
-            string heightAttribute = svgObject.Attributes?["height"]?.Value?.Replace("px", "");
+            string heightAttribute = svgObject.Attributes?["height"]?.Value?.Replace("px", "")?.Replace("pt", "")?.Replace("mm", "")?.Replace("in", "")?.Replace("cm", "");
             if (!double.TryParse(heightAttribute, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out height)) { height = double.NaN; }
 
             string xAttribute = svgObject.Attributes?["x"]?.Value;
