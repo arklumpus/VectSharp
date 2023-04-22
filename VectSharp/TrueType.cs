@@ -3516,6 +3516,44 @@ namespace VectSharp
                         this.SubTables[i] = new PairPosSubtable(fs);
                     }
                 }
+                else if (this.LookupType == 9)
+                {
+                    for (int i = 0; i < subTableCount; i++)
+                    {
+                        fs.Seek(startPosition + subTableOffsets[i], SeekOrigin.Begin);
+
+                        long extensionSubtableStartPosition = fs.Position;
+
+                        ushort posFormat = fs.ReadUShort(); // 1
+                        ushort extensionLookupType = fs.ReadUShort();
+                        uint offset = fs.ReadUInt();
+
+                        if (i == 0)
+                        {
+                            this.LookupType = extensionLookupType;
+
+                            if (this.LookupType == 1 || this.LookupType == 2)
+                            {
+                                this.SubTables = new ITrueTypeTable[subTableCount];
+                            }
+                            else
+                            {
+                                this.SubTables = new ITrueTypeTable[0];
+                            }
+                        }
+
+                        if (this.LookupType == 1)
+                        {
+                            fs.Seek(extensionSubtableStartPosition + offset, SeekOrigin.Begin);
+                            this.SubTables[i] = new SinglePosSubtable(fs);
+                        }
+                        else if (this.LookupType == 2)
+                        {
+                            fs.Seek(extensionSubtableStartPosition + offset, SeekOrigin.Begin);
+                            this.SubTables[i] = new PairPosSubtable(fs);
+                        }
+                    }
+                }
                 else
                 {
                     this.SubTables = new ITrueTypeTable[0];
