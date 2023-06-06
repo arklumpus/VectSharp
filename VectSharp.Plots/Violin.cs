@@ -78,6 +78,11 @@ namespace VectSharp.Plots
         public IReadOnlyList<double> Data { get; set; }
 
         /// <summary>
+        /// Maximum number of bins.
+        /// </summary>
+        public int MaxBins { get; set; } = int.MaxValue;
+
+        /// <summary>
         /// Presentation attributes for the violin plot.
         /// </summary>
         public PlotElementPresentationAttributes PresentationAttributes { get; set; } = new PlotElementPresentationAttributes() { Fill = Colours.White };
@@ -124,6 +129,8 @@ namespace VectSharp.Plots
             (double _, double _, double iqr) = Plots.Plot.IQR(Data);
             double h2 = 2 * iqr / Math.Pow(Data.Count, 1.0 / 3.0);
             int binCount = Math.Max(1, (int)Math.Ceiling((max - min) / h2));
+
+            binCount = Math.Min(binCount, MaxBins);
 
             int[] bins = new int[binCount];
 
