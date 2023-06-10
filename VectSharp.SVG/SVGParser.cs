@@ -1587,9 +1587,24 @@ namespace VectSharp.SVG
             {
                 char c = d[i];
 
-                if (c >= '0' && c <= '9' || c == '.' || c == 'e' || c == 'E')
+                if (c >= '0' && c <= '9' || c == 'e' || c == 'E')
                 {
                     currToken += c;
+                }
+                else if (c == '.')
+                {
+                    if (!currToken.Contains('.'))
+                    {
+                        currToken += c;
+                    }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(currToken))
+                        {
+                            tbr.Add(currToken);
+                        }
+                        currToken = "" + c;
+                    }
                 }
                 else if (c == '-' || c == '+')
                 {
