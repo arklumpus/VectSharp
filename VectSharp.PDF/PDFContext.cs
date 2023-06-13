@@ -828,6 +828,28 @@ namespace VectSharp.PDF
     /// </summary>
     public static class PDFContextInterpreter
     {
+        /// <summary>
+        /// Fill rules determine the region of a path to fill.
+        /// </summary>
+        public enum FillRules
+        {
+            /// <summary>
+            /// Use the even-odd fill rule to fill paths.
+            /// </summary>
+            Evenodd,
+
+            /// <summary>
+            /// Use the nonzero fill rule to fill paths.
+            /// </summary>
+            Nonzero
+        }
+
+
+        /// <summary>
+        /// The fill rule that determines the region of a path to fill.
+        /// </summary>
+        public static FillRules FillRule { get; set; } = FillRules.Evenodd;
+
         private static string GetKernedString(string text, Font font)
         {
             List<(string, Point)> tSpans = new List<(string, Point)>();
@@ -2688,7 +2710,14 @@ namespace VectSharp.PDF
                 {
                     if (fig.Fill != null)
                     {
-                        sb.Append("f*\n");
+                        if (PDFContextInterpreter.FillRule == FillRules.Evenodd)
+                        {
+                            sb.Append("f*\n");
+                        }
+                        else
+                        {
+                            sb.Append("f\n");
+                        }
                     }
 
                     if (fig.Stroke != null)
