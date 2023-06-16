@@ -122,6 +122,13 @@ namespace VectSharp.SVG
 
             return tbr;
         }
+
+        public static Func<Point, Point> GetInverseTransformation(double[,] m)
+        {
+            double[,] inverted = Invert(m);
+
+            return x => Multiply(inverted, x);
+        }
     }
 
     internal class SVGFigure
