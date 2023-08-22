@@ -18,7 +18,6 @@
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using Avalonia.Skia;
 using SkiaSharp;
 using System;
@@ -37,7 +36,7 @@ namespace VectSharp.Canvas
     /// <summary>
     /// Represents a multi-threaded, triple-buffered canvas on which the image is drawn using SkiaSharp.
     /// </summary>
-    public class SKMultiLayerRenderCanvas : Avalonia.Controls.UserControl, IDisposable, ISKRenderCanvas
+    public class SKMultiLayerRenderCanvas : Avalonia.Controls.Control, IDisposable, ISKRenderCanvas
     {
         /// <summary>
         /// The width of the page that is rendered on this canvas.

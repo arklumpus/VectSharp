@@ -996,7 +996,7 @@ namespace VectSharp.Canvas
         }
     }
 
-    internal class RenderCanvas : Avalonia.Controls.UserControl
+    internal class RenderCanvas : Control
     {
         private List<RenderAction> RenderActions;
         private List<RenderAction> TaggedRenderActions;
@@ -1042,7 +1042,6 @@ namespace VectSharp.Canvas
         public RenderCanvas(Graphics content, Colour backgroundColour, double width, double height, Dictionary<string, Delegate> taggedActions, bool removeTaggedActionsAfterExecution, AvaloniaContextInterpreter.TextOptions textOption, FilterOption filterOption)
         {
             this.BackgroundBrush = new SolidColorBrush(Color.FromArgb((byte)(backgroundColour.A * 255), (byte)(backgroundColour.R * 255), (byte)(backgroundColour.G * 255), (byte)(backgroundColour.B * 255)));
-
             this.Width = width;
             this.Height = height;
             this.Images = new Dictionary<string, (IImage, bool)>();
@@ -1333,7 +1332,6 @@ namespace VectSharp.Canvas
                     }
                 }
             }
-
         }
     }
 
@@ -1464,7 +1462,7 @@ namespace VectSharp.Canvas
         /// <summary>
         /// The container of this <see cref="RenderAction"/>.
         /// </summary>
-        public Avalonia.Controls.UserControl Parent
+        public Control Parent
         {
             get
             {
@@ -1846,7 +1844,7 @@ namespace VectSharp.Canvas
                 }
 
                 Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
-                
+
                 if (text.StartsWith(" "))
                 {
                     var spaceMetrics = Font.MeasureTextAdvanced(" ");
@@ -2640,7 +2638,7 @@ namespace VectSharp.Canvas
             }
             else
             {
-                return new RenderCanvas(page.Graphics, page.Background, page.Width, page.Height, new Dictionary<string, Delegate>(), true, textOption, filterOption) { Background = new SolidColorBrush(Color.FromArgb((byte)(page.Background.A * 255), (byte)(page.Background.R * 255), (byte)(page.Background.G * 255), (byte)(page.Background.B * 255))) };
+                return new RenderCanvas(page.Graphics, page.Background, page.Width, page.Height, new Dictionary<string, Delegate>(), true, textOption, filterOption);
             }
         }
 
@@ -2667,7 +2665,7 @@ namespace VectSharp.Canvas
             }
             else
             {
-                return new RenderCanvas(page.Graphics, page.Background, page.Width, page.Height, taggedActions, removeTaggedActionsAfterExecution, textOption, filterOption) { Background = new SolidColorBrush(Color.FromArgb((byte)(page.Background.A * 255), (byte)(page.Background.R * 255), (byte)(page.Background.G * 255), (byte)(page.Background.B * 255))) }; ;
+                return new RenderCanvas(page.Graphics, page.Background, page.Width, page.Height, taggedActions, removeTaggedActionsAfterExecution, textOption, filterOption);
             }
         }
 
@@ -2707,7 +2705,7 @@ namespace VectSharp.Canvas
         {
             filterOption = filterOption ?? FilterOption.Default;
 
-            return new AnimatedCanvas(animation, durationScaling, frameRate, textOption, filterOption) { Background = new SolidColorBrush(Color.FromArgb((byte)(animation.Background.A * 255), (byte)(animation.Background.R * 255), (byte)(animation.Background.G * 255), (byte)(animation.Background.B * 255))) };
+            return new AnimatedCanvas(animation, durationScaling, frameRate, textOption, filterOption);
         }
 
         internal static Avalonia.Media.LinearGradientBrush ToLinearGradientBrush(this LinearGradientBrush brush, double[,] transformMatrix = null)

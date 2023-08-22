@@ -25,7 +25,7 @@ namespace VectSharp.Canvas
     /// <summary>
     /// An <see cref="Avalonia.Controls.Canvas"/> containing an animation.
     /// </summary>
-    public class AnimatedCanvas : Avalonia.Controls.UserControl
+    public class AnimatedCanvas : Avalonia.Controls.Control
     {
         /// <summary>
         /// Defines the <see cref="CurrentFrame"/> property.
