@@ -22,7 +22,7 @@
     <PackageReference Include="Avalonia.Desktop" Version="11.0.4" />
 	<PackageReference Include="Avalonia.Themes.Simple" Version="11.0.4" />
     <PackageReference Include="VectSharp" Version="2.4.1-a8" />
-    <PackageReference Include="VectSharp.Canvas" Version="2.7.0-a3" />
+    <PackageReference Include="VectSharp.Canvas" Version="2.7.0-a4" />
     <PackageReference Include="VectSharp.MuPDFUtils" Version="1.1.9" />
     <PackageReference Include="VectSharp.PDF" Version="2.6.0" />
     <PackageReference Include="VectSharp.Raster" Version="2.2.0" />
