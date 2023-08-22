@@ -1005,7 +1005,7 @@ namespace VectSharp.Canvas
                 double top;
                 double width;
                 double height;
-                
+
                 if (this.ClipToBounds && parent != null)
                 {
                     Avalonia.Point clipTopLeft = this.PointToClient(parent.PointToScreen(new Avalonia.Point(0, 0)));
@@ -1042,11 +1042,20 @@ namespace VectSharp.Canvas
 
                 double DPIscaling = (VisualRoot as Avalonia.Layout.ILayoutRoot)?.LayoutScaling ?? 1;
 
-                int pixelWidth = (int)(width / scale * DPIscaling);
-                int pixelHeight = (int)(height / scale * DPIscaling);
+                int pixelWidth = (int)Math.Round(width / scale * DPIscaling);
+                int pixelHeight = (int)Math.Round(height / scale * DPIscaling);
 
                 if (pixelWidth > 0 && pixelHeight > 0)
                 {
+                    PixelPoint topLeftScreen = this.PointToScreen(new Avalonia.Point(left, top));
+                    Avalonia.Point topLeft = this.PointToClient(topLeftScreen);
+                    Avalonia.Point bottomRight = this.PointToClient(new PixelPoint(topLeftScreen.X + pixelWidth, topLeftScreen.Y + pixelHeight));
+
+                    Rect targetRect = new Rect(topLeft, bottomRight);
+
+                    pixelWidth = this.PointToScreen(targetRect.BottomRight).X - this.PointToScreen(targetRect.TopLeft).X;
+                    pixelHeight = this.PointToScreen(targetRect.BottomRight).Y - this.PointToScreen(targetRect.TopLeft).Y;
+
                     RenderingParameters currentParameters = new RenderingParameters((float)left, (float)top, (float)width, (float)height, (float)(1 / scale * DPIscaling), pixelWidth, pixelHeight);
 
                     if (FrontBuffer != null && FrontBufferRenderingParams == currentParameters && !IsDirty)
@@ -1058,7 +1067,8 @@ namespace VectSharp.Canvas
                                 this.InvalidateVisual();
                             });
                         }
-                        context.DrawImage(FrontBuffer, new Rect(0, 0, pixelWidth, pixelHeight), new Rect(left, top, width, height));
+
+                        context.DrawImage(FrontBuffer, new Rect(0, 0, pixelWidth, pixelHeight), targetRect);
                     }
                     else if (FrontBuffer != null && FrontBufferRenderingParams.GoodEnough(currentParameters) && !IsDirty)
                     {
