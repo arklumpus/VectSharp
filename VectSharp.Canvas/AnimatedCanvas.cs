@@ -1,6 +1,6 @@
 ﻿/*
     VectSharp - A light library for C# vector graphics.
-    Copyright (C) 2022 Giorgio Bianchini, University of Bristol
+    Copyright (C) 2022-2023 Giorgio Bianchini, University of Bristol
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
@@ -25,7 +25,7 @@ namespace VectSharp.Canvas
     /// <summary>
     /// An <see cref="Avalonia.Controls.Canvas"/> containing an animation.
     /// </summary>
-    public class AnimatedCanvas : Avalonia.Controls.Canvas
+    public class AnimatedCanvas : Avalonia.Controls.UserControl
     {
         /// <summary>
         /// Defines the <see cref="CurrentFrame"/> property.
@@ -217,7 +217,7 @@ namespace VectSharp.Canvas
                         state = context.PushGeometryClip(act.ClippingPath);
                     }
 
-                    using (context.PushPreTransform(act.Transform))
+                    using (context.PushTransform(act.Transform))
                     {
                         context.DrawGeometry(act.Fill, act.Stroke, act.Geometry);
                     }
@@ -240,9 +240,9 @@ namespace VectSharp.Canvas
                         state = context.PushGeometryClip(act.ClippingPath);
                     }
 
-                    using (context.PushPreTransform(act.Transform))
+                    using (context.PushTransform(act.Transform))
                     {
-                        context.DrawText(act.Fill, Origin, act.Text);
+                        context.DrawText(act.Text, Origin);
                     }
 
                     if (state != null)
@@ -265,9 +265,10 @@ namespace VectSharp.Canvas
 
                     (IImage, bool) image = Images[act.ImageId];
 
-                    using (context.PushPreTransform(act.Transform))
+                    using (context.PushTransform(act.Transform))
                     {
-                        context.DrawImage(image.Item1, act.ImageSource.Value, act.ImageDestination.Value, image.Item2 ? Avalonia.Visuals.Media.Imaging.BitmapInterpolationMode.HighQuality : Avalonia.Visuals.Media.Imaging.BitmapInterpolationMode.Default);
+                        RenderOptions.SetBitmapInterpolationMode(this, image.Item2 ? Avalonia.Media.Imaging.BitmapInterpolationMode.HighQuality : Avalonia.Media.Imaging.BitmapInterpolationMode.None);
+                        context.DrawImage(image.Item1, act.ImageSource.Value, act.ImageDestination.Value);
                     }
 
                     if (state != null)

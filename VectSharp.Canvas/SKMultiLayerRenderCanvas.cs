@@ -1,6 +1,6 @@
 ﻿/*
     VectSharp - A light library for C# vector graphics.
-    Copyright (C) 2020-2022 Giorgio Bianchini
+    Copyright (C) 2020-2023 Giorgio Bianchini, University of Bristol
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
@@ -19,14 +19,11 @@ using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
-using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading;
 
 namespace VectSharp.Canvas
@@ -40,7 +37,7 @@ namespace VectSharp.Canvas
     /// <summary>
     /// Represents a multi-threaded, triple-buffered canvas on which the image is drawn using SkiaSharp.
     /// </summary>
-    public class SKMultiLayerRenderCanvas : Avalonia.Controls.Canvas, IDisposable, ISKRenderCanvas
+    public class SKMultiLayerRenderCanvas : Avalonia.Controls.UserControl, IDisposable, ISKRenderCanvas
     {
         /// <summary>
         /// The width of the page that is rendered on this canvas.
@@ -54,7 +51,16 @@ namespace VectSharp.Canvas
         private SKColor BackgroundColour;
 
         /// <summary>
-        /// The list of render actions, each element in this list is itself a list, containing the actions that correspond to a layer in the image.
+        /// Defines an overdraw margin for the clipping area. Set this to a larger value if quickly moving the
+        /// canvas around (e.g. in a ZoomBorder) causes the edge of the image to disappear for a few milliseconds
+        /// and that annoys you. If <see cref="RelativePoint.Unit"/> is set to <see cref="RelativeUnit.Absolute"/>,
+        /// the value corresponds to units on the <see cref="VectSharp.Page"/>; if it is set to <see cref="RelativeUnit.Relative"/>,
+        /// it corresponds to a proportion of the visible area.
+        /// </summary>
+        public RelativePoint ClipMargin { get; set; } = new RelativePoint(0, 0, RelativeUnit.Absolute);
+
+        /// <summary>
+        /// The list of render actions. Each element in this list is itself a list, containing the actions that correspond to a layer in the image.
         /// </summary>
         public List<List<SKRenderAction>> RenderActions;
 
@@ -62,27 +68,6 @@ namespace VectSharp.Canvas
         /// The list of transforms associated with each layer.
         /// </summary>
         public List<SKRenderAction> LayerTransforms;
-
-        /// <summary>
-        /// If the image to draw is not already cached, this method is called with an argument containing the number of milliseconds since the image was last rendered.
-        /// The method can return a Bitmap that will be drawn on the canvas in order to let users know that the image is being rendered in background.
-        /// </summary>
-        public Func<long, Bitmap> Spinner { get; set; } = null;
-
-        private readonly System.Diagnostics.Stopwatch LastFrameStopwatch = new System.Diagnostics.Stopwatch();
-        static readonly Func<IDrawingContextImpl, IVisualNode> GetNode;
-
-        static SKMultiLayerRenderCanvas()
-        {
-            Type DeferredDrawingContextImpl = Assembly.GetAssembly(typeof(Avalonia.Rendering.SceneGraph.Scene)).GetType("Avalonia.Rendering.SceneGraph.DeferredDrawingContextImpl");
-
-            FieldInfo NodeFieldInfo = DeferredDrawingContextImpl.GetField("_node", BindingFlags.NonPublic | BindingFlags.Instance);
-
-            ParameterExpression ownerParameter = Expression.Parameter(typeof(IDrawingContextImpl));
-
-            MemberExpression exp = Expression.Field(Expression.Convert(ownerParameter, DeferredDrawingContextImpl), NodeFieldInfo);
-            GetNode = Expression.Lambda<Func<IDrawingContextImpl, IVisualNode>>(exp, ownerParameter).Compile();
-        }
 
         private Dictionary<string, (SKBitmap, bool)> Images;
         private List<List<SKRenderAction>> TaggedRenderActions;
@@ -109,8 +94,8 @@ namespace VectSharp.Canvas
         {
             List<SKRenderContext> contents = (from el in layers select el.CopyToSKRenderContext()).ToList();
             List<SKRenderAction> contentTransforms;
-            
-            if (layerTransforms== null)
+
+            if (layerTransforms == null)
             {
                 contentTransforms = (from el in Enumerable.Range(0, contents.Count) select SKRenderAction.TransformAction(SKMatrix.Identity)).ToList();
             }
@@ -127,9 +112,7 @@ namespace VectSharp.Canvas
             this.PointerPressed += this.PointerPressedAction;
             this.PointerReleased += this.PointerReleasedAction;
             this.PointerMoved += this.PointerMoveAction;
-            this.PointerLeave += this.PointerLeaveAction;
-
-            LastFrameStopwatch.Start();
+            this.PointerExited += this.PointerLeaveAction;
         }
 
         /// <summary>
@@ -143,16 +126,14 @@ namespace VectSharp.Canvas
         public SKMultiLayerRenderCanvas(List<SKRenderContext> contents, List<SKRenderAction> contentTransforms, Colour backgroundColour, double width, double height)
         {
             UpdateWith(contents, contentTransforms, backgroundColour, width, height);
-            
+
             this.Width = width;
             this.Height = height;
 
             this.PointerPressed += this.PointerPressedAction;
             this.PointerReleased += this.PointerReleasedAction;
             this.PointerMoved += this.PointerMoveAction;
-            this.PointerLeave += this.PointerLeaveAction;
-
-            LastFrameStopwatch.Start();
+            this.PointerExited += this.PointerLeaveAction;
         }
 
         /// <summary>
@@ -524,10 +505,10 @@ namespace VectSharp.Canvas
                             {
                                 if (CurrentOverAction != null && !CurrentOverAction.Disposed)
                                 {
-                                    CurrentOverAction.FirePointerLeave(e);
+                                    CurrentOverAction.FirePointerExited(e);
                                 }
                                 CurrentOverAction = TaggedRenderActions[i][j];
-                                CurrentOverAction.FirePointerEnter(e);
+                                CurrentOverAction.FirePointerEntered(e);
                             }
 
                             break;
@@ -540,10 +521,10 @@ namespace VectSharp.Canvas
                             {
                                 if (CurrentOverAction != null && !CurrentOverAction.Disposed)
                                 {
-                                    CurrentOverAction.FirePointerLeave(e);
+                                    CurrentOverAction.FirePointerExited(e);
                                 }
                                 CurrentOverAction = TaggedRenderActions[i][j];
-                                CurrentOverAction.FirePointerEnter(e);
+                                CurrentOverAction.FirePointerEntered(e);
                             }
 
                             break;
@@ -556,10 +537,10 @@ namespace VectSharp.Canvas
                             {
                                 if (CurrentOverAction != null && !CurrentOverAction.Disposed)
                                 {
-                                    CurrentOverAction.FirePointerLeave(e);
+                                    CurrentOverAction.FirePointerExited(e);
                                 }
                                 CurrentOverAction = TaggedRenderActions[i][j];
-                                CurrentOverAction.FirePointerEnter(e);
+                                CurrentOverAction.FirePointerEntered(e);
                             }
 
                             break;
@@ -577,7 +558,7 @@ namespace VectSharp.Canvas
             {
                 if (CurrentOverAction != null && !CurrentOverAction.Disposed)
                 {
-                    CurrentOverAction.FirePointerLeave(e);
+                    CurrentOverAction.FirePointerExited(e);
                 }
                 CurrentOverAction = null;
             }
@@ -587,7 +568,7 @@ namespace VectSharp.Canvas
         {
             if (CurrentOverAction != null && !CurrentOverAction.Disposed)
             {
-                CurrentOverAction.FirePointerLeave(e);
+                CurrentOverAction.FirePointerExited(e);
             }
             CurrentOverAction = null;
         }
@@ -651,21 +632,15 @@ namespace VectSharp.Canvas
                         {
                             await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
                             {
-                                SKCanvas tempCanvasReference = BackBufferSkiaCanvas;
-                                ISkiaDrawingContextImpl tempContextReference = BackBufferSkiaContext;
-                                RenderTargetBitmap tempBufferReference = BackBuffer;
+                                SkiaBitmap tempBufferReference = BackBuffer;
 
                                 _ = Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
                                 {
-                                    tempCanvasReference?.Dispose();
-                                    tempContextReference?.Dispose();
                                     tempBufferReference?.Dispose();
-                                }, Avalonia.Threading.DispatcherPriority.MinValue);
+                                }, Avalonia.Threading.DispatcherPriority.Send);
 
-
-                                BackBuffer = new RenderTargetBitmap(new PixelSize(requestParams.RenderWidth, requestParams.RenderHeight), new Vector(96, 96));
-                                BackBufferSkiaContext = BackBuffer.CreateDrawingContext(null) as ISkiaDrawingContextImpl;
-                                BackBufferSkiaCanvas = BackBufferSkiaContext.SkCanvas;
+                                BackBuffer = new SkiaBitmap(requestParams.RenderWidth, requestParams.RenderHeight);
+                                BackBufferSkiaCanvas = BackBuffer.SKCanvas;
                             }, Avalonia.Threading.DispatcherPriority.MaxValue);
                         }
 
@@ -688,25 +663,21 @@ namespace VectSharp.Canvas
 
                         lock (FrontBufferLock)
                         {
-                            RenderTargetBitmap tempFrontReference = FrontBuffer;
+                            SkiaBitmap tempFrontReference = FrontBuffer;
                             RenderingParameters tempFrontRenderingParameters = FrontBufferRenderingParams;
                             SKCanvas tempFrontCanvas = FrontBufferSkiaCanvas;
-                            ISkiaDrawingContextImpl tempFrontContext = FrontBufferSkiaContext;
 
                             FrontBuffer = BackBuffer;
                             FrontBufferRenderingParams = BackBufferRenderingParams;
                             FrontBufferSkiaCanvas = BackBufferSkiaCanvas;
-                            FrontBufferSkiaContext = BackBufferSkiaContext;
 
                             BackBuffer = BackBuffer2;
                             BackBufferRenderingParams = BackBufferRenderingParams2;
                             BackBufferSkiaCanvas = BackBufferSkiaCanvas2;
-                            BackBufferSkiaContext = BackBufferSkiaContext2;
 
                             BackBuffer2 = tempFrontReference;
                             BackBufferRenderingParams2 = tempFrontRenderingParameters;
                             BackBufferSkiaCanvas2 = tempFrontCanvas;
-                            BackBufferSkiaContext2 = tempFrontContext;
                         }
 
                         await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
@@ -721,12 +692,12 @@ namespace VectSharp.Canvas
         }
 
         /// <summary>
-        /// An lock for the rendering loop. The public methods of this class already lock on this, but you may need it if you want to directly manipulate the contents of the canvas.
+        /// A lock for the rendering loop. The public methods of this class already lock on this, but you may need it if you want to directly manipulate the contents of the canvas.
         /// </summary>
         public object RenderLock = new object();
 
         /// <summary>
-        /// Render the image at to a bitmap at the specified resolution.
+        /// Render the image to a bitmap at the specified resolution.
         /// </summary>
         /// <param name="width">The width of the rendered image. Note that the actual width of the returned image might be lower than this, depending on the aspect ratio of the image.</param>
         /// <param name="height">The height of the rendered image. Note that the actual height of the returned image might be lower than this, depending on the aspect ratio of the image.</param>
@@ -741,9 +712,8 @@ namespace VectSharp.Canvas
             width = (int)Math.Round(this.PageWidth * scale);
             height = (int)Math.Round(this.PageHeight * scale);
 
-            RenderTargetBitmap tbr = new RenderTargetBitmap(new PixelSize(width, height), new Vector(96, 96));
-            ISkiaDrawingContextImpl context = tbr.CreateDrawingContext(null) as ISkiaDrawingContextImpl;
-            SKCanvas canvas = context.SkCanvas;
+            SkiaBitmap skBmp = new SkiaBitmap(width, height);
+            SKCanvas canvas = skBmp.SKCanvas;
 
             canvas.Clear(realBackground);
 
@@ -755,10 +725,9 @@ namespace VectSharp.Canvas
 
             canvas.RestoreToCount(-1);
 
-            canvas.Dispose();
-            context.Dispose();
+            skBmp.Indispose();
 
-            return tbr;
+            return skBmp.AvaloniaBitmap;
         }
 
         private void RenderImage(SKCanvas canvas)
@@ -1004,20 +973,18 @@ namespace VectSharp.Canvas
         }
 
 
-        private RenderTargetBitmap FrontBuffer = null;
+        private SkiaBitmap FrontBuffer = null;
         private RenderingParameters FrontBufferRenderingParams = null;
-        private readonly object FrontBufferLock = new object();
-        ISkiaDrawingContextImpl FrontBufferSkiaContext = null;
+        private readonly object EmptyFrontBufferLock = new object();
+        private object FrontBufferLock => FrontBuffer?.Lock ?? EmptyFrontBufferLock;
         SKCanvas FrontBufferSkiaCanvas = null;
 
-        private RenderTargetBitmap BackBuffer = null;
+        private SkiaBitmap BackBuffer = null;
         private RenderingParameters BackBufferRenderingParams = null;
-        ISkiaDrawingContextImpl BackBufferSkiaContext = null;
         SKCanvas BackBufferSkiaCanvas = null;
 
-        private RenderTargetBitmap BackBuffer2 = null;
+        private SkiaBitmap BackBuffer2 = null;
         private RenderingParameters BackBufferRenderingParams2 = null;
-        ISkiaDrawingContextImpl BackBufferSkiaContext2 = null;
         SKCanvas BackBufferSkiaCanvas2 = null;
 
         /// <inheritdoc/>
@@ -1025,25 +992,58 @@ namespace VectSharp.Canvas
         {
             lock (FrontBufferLock)
             {
-                IVisualNode node = GetNode(context.PlatformImpl);
+                double scale;
 
-                Rect layoutBounds = node.LayoutBounds;
-                Rect clipBounds = node.ClipBounds;
+                PixelPoint layoutTopLeft = this.PointToScreen(new Avalonia.Point(0, 0));
+                PixelPoint layoutBottomRight = this.PointToScreen(new Avalonia.Point(this.Bounds.Width, this.Bounds.Height));
 
+                scale = 0.5 * (this.PageWidth / (layoutBottomRight.X - layoutTopLeft.X) + this.PageHeight / (layoutBottomRight.Y - layoutTopLeft.Y));
+
+                Avalonia.Controls.Control parent = this.Parent as Avalonia.Controls.Control;
+
+                double left;
+                double top;
+                double width;
+                double height;
+                
+                if (this.ClipToBounds && parent != null)
+                {
+                    Avalonia.Point clipTopLeft = this.PointToClient(parent.PointToScreen(new Avalonia.Point(0, 0)));
+                    Avalonia.Point clipBottomRight = this.PointToClient(parent.PointToScreen(new Avalonia.Point(parent.Bounds.Width, parent.Bounds.Height)));
+
+                    Rect clipBounds;
+
+                    if (ClipMargin.Unit == RelativeUnit.Absolute)
+                    {
+                        clipBounds = new Rect(clipTopLeft.X - ClipMargin.Point.X, clipTopLeft.Y - ClipMargin.Point.Y, clipBottomRight.X - clipTopLeft.X + ClipMargin.Point.X * 2, clipBottomRight.Y - clipTopLeft.Y + ClipMargin.Point.Y * 2);
+                    }
+                    else
+                    {
+                        double clipW = clipBottomRight.X - clipTopLeft.X;
+                        double clipH = clipBottomRight.Y - clipTopLeft.Y;
+
+                        clipBounds = new Rect(clipTopLeft.X - clipW * ClipMargin.Point.X, clipTopLeft.Y - clipH * ClipMargin.Point.Y, clipW * (1 + 2 * ClipMargin.Point.X), clipH * (1 + 2 * ClipMargin.Point.Y));
+                    }
+
+                    left = Math.Max(0, clipBounds.Left);
+                    top = Math.Max(0, clipBounds.Top);
+
+                    width = Math.Min(clipBounds.Width, this.PageWidth);
+                    height = Math.Min(clipBounds.Height, this.PageHeight);
+                }
+                else
+                {
+                    left = 0;
+                    top = 0;
+
+                    width = this.PageWidth;
+                    height = this.PageHeight;
+                }
 
                 double DPIscaling = (VisualRoot as Avalonia.Layout.ILayoutRoot)?.LayoutScaling ?? 1;
 
-                double scale = 0.5 * (this.PageWidth / layoutBounds.Width + this.PageHeight / layoutBounds.Height);
-
-
-                double left = Math.Max(0, (clipBounds.Left - layoutBounds.Left) * scale);
-                double top = Math.Max(0, (clipBounds.Top - layoutBounds.Top) * scale);
-
-                double width = Math.Min((clipBounds.Right - layoutBounds.Left) * scale, this.PageWidth) - left;
-                double height = Math.Min((clipBounds.Bottom - layoutBounds.Top) * scale, this.PageHeight) - top;
-
-                int pixelWidth = (int)Math.Round(width / scale * DPIscaling);
-                int pixelHeight = (int)Math.Round(height / scale * DPIscaling);
+                int pixelWidth = (int)(width / scale * DPIscaling);
+                int pixelHeight = (int)(height / scale * DPIscaling);
 
                 if (pixelWidth > 0 && pixelHeight > 0)
                 {
@@ -1051,11 +1051,7 @@ namespace VectSharp.Canvas
 
                     if (FrontBuffer != null && FrontBufferRenderingParams == currentParameters && !IsDirty)
                     {
-                        if (!RenderRequestedHandle.WaitOne(0))
-                        {
-                            LastFrameStopwatch.Reset();
-                        }
-                        else
+                        if (RenderRequestedHandle.WaitOne(0))
                         {
                             Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
                             {
@@ -1066,11 +1062,7 @@ namespace VectSharp.Canvas
                     }
                     else if (FrontBuffer != null && FrontBufferRenderingParams.GoodEnough(currentParameters) && !IsDirty)
                     {
-                        if (!RenderRequestedHandle.WaitOne(0))
-                        {
-                            LastFrameStopwatch.Reset();
-                        }
-                        else
+                        if (RenderRequestedHandle.WaitOne(0))
                         {
                             Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
                             {
@@ -1086,30 +1078,11 @@ namespace VectSharp.Canvas
                             IsDirty = false;
                             RenderingRequest = currentParameters;
                             RenderRequestedHandle.Set();
-                            LastFrameStopwatch.Start();
                         }
 
                         if (FrontBuffer != null)
                         {
                             context.DrawImage(FrontBuffer, new Rect(0, 0, FrontBufferRenderingParams.RenderWidth, FrontBufferRenderingParams.RenderHeight), new Rect(FrontBufferRenderingParams.Left, FrontBufferRenderingParams.Top, FrontBufferRenderingParams.Width, FrontBufferRenderingParams.Height));
-                        }
-
-                        long milliseconds = LastFrameStopwatch.ElapsedMilliseconds;
-
-                        Bitmap spinner = Spinner?.Invoke(milliseconds);
-
-                        if (spinner != null)
-                        {
-                            double spinnerWidth = spinner.Size.Width * scale;
-                            double spinnerHeight = spinner.Size.Height * scale;
-
-                            double actualLeft = (clipBounds.Left - layoutBounds.Left) * scale;
-                            double actualTop = (clipBounds.Top - layoutBounds.Top) * scale;
-
-                            double actualRight = (clipBounds.Right - layoutBounds.Left) * scale;
-                            double actualBottom = (clipBounds.Bottom - layoutBounds.Top) * scale;
-
-                            context.DrawImage(spinner, new Rect(0, 0, spinner.Size.Width, spinner.Size.Height), new Rect((actualLeft + actualRight - spinnerWidth) * 0.5, (actualTop + actualBottom - spinnerHeight) * 0.5, spinnerWidth, spinnerHeight));
                         }
 
                         Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
@@ -1130,15 +1103,9 @@ namespace VectSharp.Canvas
             {
                 if (disposing)
                 {
-                    this.BackBufferSkiaCanvas?.Dispose();
-                    this.BackBufferSkiaCanvas2?.Dispose();
-                    this.BackBufferSkiaContext?.Dispose();
-                    this.BackBufferSkiaContext2?.Dispose();
                     this.BackBuffer?.Dispose();
                     this.BackBuffer2?.Dispose();
                     this.DisposedHandle?.Set();
-                    this.FrontBufferSkiaCanvas?.Dispose();
-                    this.FrontBufferSkiaContext?.Dispose();
                     this.FrontBuffer?.Dispose();
 
                     foreach (KeyValuePair<string, (SKBitmap, bool)> image in this.Images)

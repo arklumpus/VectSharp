@@ -1,6 +1,6 @@
 ﻿/*
     VectSharp - A light library for C# vector graphics.
-    Copyright (C) 2020-2022 Giorgio Bianchini
+    Copyright (C) 2020-2023 Giorgio Bianchini, University of Bristol
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
@@ -183,12 +183,12 @@ namespace VectSharp.Canvas
         /// <summary>
         /// Raised when the pointer enters the area covered by the <see cref="SKRenderAction"/>.
         /// </summary>
-        public event EventHandler<Avalonia.Input.PointerEventArgs> PointerEnter;
+        public event EventHandler<Avalonia.Input.PointerEventArgs> PointerEntered;
 
         /// <summary>
         /// Raised when the pointer leaves the area covered by the <see cref="SKRenderAction"/>.
         /// </summary>
-        public event EventHandler<Avalonia.Input.PointerEventArgs> PointerLeave;
+        public event EventHandler<Avalonia.Input.PointerEventArgs> PointerExited;
 
         /// <summary>
         /// Raised when the pointer is pressed while over the area covered by the <see cref="SKRenderAction"/>.
@@ -201,14 +201,14 @@ namespace VectSharp.Canvas
         public event EventHandler<Avalonia.Input.PointerReleasedEventArgs> PointerReleased;
 
 
-        internal void FirePointerEnter(Avalonia.Input.PointerEventArgs e)
+        internal void FirePointerEntered(Avalonia.Input.PointerEventArgs e)
         {
-            this.PointerEnter?.Invoke(this, e);
+            this.PointerEntered?.Invoke(this, e);
         }
 
-        internal void FirePointerLeave(Avalonia.Input.PointerEventArgs e)
+        internal void FirePointerExited(Avalonia.Input.PointerEventArgs e)
         {
-            this.PointerLeave?.Invoke(this, e);
+            this.PointerExited?.Invoke(this, e);
         }
 
         internal void FirePointerPressed(Avalonia.Input.PointerPressedEventArgs e)
@@ -222,11 +222,11 @@ namespace VectSharp.Canvas
         }
 
         /// <summary>
-        /// <para>Signals to this object that its shape has changed a new path needs to be computed for the purpose of hit-testing.
+        /// <para>Signals to this object that its shape has changed and a new path needs to be computed for the purpose of hit-testing.
         /// Also signals to the <see cref="Parent"/> that the visual properties of this object have changed and triggers a redraw.</para>
         /// <para>This method should be called whenever the "shape" of the object represented by the <see cref="SKRenderAction"/> changes.
         /// If only the visual properties of this object have changed (e.g. the colour), call the <see cref="InvalidateVisual"/> method instead.</para>
-        /// <para>If you make changes to more than one <see cref="SKRenderAction"/> contained in the same <see cref="Canvas"/>, you only need to invalidate the last one.</para>
+        /// <para>If you make changes to more than one <see cref="SKRenderAction"/> contained in the same <see cref="SKMultiLayerRenderCanvas"/>, you only need to invalidate the last one.</para>
         /// <para>This method should only be called after the output has been fully initialized.</para>
         /// </summary>
         public void InvalidateHitTestPath()
@@ -1560,6 +1560,8 @@ namespace VectSharp.Canvas
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
         public static SKMultiLayerRenderCanvas PaintToSKCanvas(this Document document, double? width = null, double? height = null, Colour? background = null, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
+            filterOption = filterOption ?? FilterOption.Default;
+
             return new SKMultiLayerRenderCanvas((from el in document.Pages select el.CopyToSKRenderContext(textOption, filterOption)).ToList(), (from el in document.Pages select SKRenderAction.TransformAction(SKMatrix.Identity)).ToList(), background ?? Colour.FromRgba(0, 0, 0, 0), width ?? (from el in document.Pages select el.Width).Max(), height ?? (from el in document.Pages select el.Height).Max());
         }
 
@@ -1578,6 +1580,8 @@ namespace VectSharp.Canvas
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
         public static SKMultiLayerRenderCanvas PaintToSKCanvas(this Document document, Dictionary<string, Func<SKRenderAction, IEnumerable<SKRenderAction>>> taggedActions, bool removeTaggedActionsAfterExecution = true, double? width = null, double? height = null, Colour? background = null, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
+            filterOption = filterOption ?? FilterOption.Default;
+
             return new SKMultiLayerRenderCanvas((from el in document.Pages select el.CopyToSKRenderContext(taggedActions, removeTaggedActionsAfterExecution, textOption, filterOption)).ToList(), (from el in document.Pages select SKRenderAction.TransformAction(SKMatrix.Identity)).ToList(), background ?? Colour.FromRgba(0, 0, 0, 0), width ?? (from el in document.Pages select el.Width).Max(), height ?? (from el in document.Pages select el.Height).Max());
         }
 
@@ -1598,6 +1602,8 @@ namespace VectSharp.Canvas
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
         public static SKMultiLayerRenderCanvas PaintToSKCanvas(this Document document, Dictionary<string, Func<SKRenderAction, IEnumerable<SKRenderAction>>> taggedActions, Dictionary<string, (SKBitmap, bool)> images, bool removeTaggedActionsAfterExecution = true, double? width = null, double? height = null, Colour? background = null, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
+            filterOption = filterOption ?? FilterOption.Default;
+
             return new SKMultiLayerRenderCanvas((from el in document.Pages select el.CopyToSKRenderContext(taggedActions, images, removeTaggedActionsAfterExecution, textOption, filterOption)).ToList(), (from el in document.Pages select SKRenderAction.TransformAction(SKMatrix.Identity)).ToList(), background ?? Colour.FromRgba(0, 0, 0, 0), width ?? (from el in document.Pages select el.Width).Max(), height ?? (from el in document.Pages select el.Height).Max());
         }
 
@@ -1610,6 +1616,8 @@ namespace VectSharp.Canvas
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
         public static SKMultiLayerRenderCanvas PaintToSKCanvas(this Page page, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
+            filterOption = filterOption ?? FilterOption.Default;
+
             return new SKMultiLayerRenderCanvas(new List<SKRenderContext>() { page.CopyToSKRenderContext(textOption, filterOption) }, new List<SKRenderAction>() { SKRenderAction.TransformAction(SKMatrix.Identity) }, page.Background, page.Width, page.Height);
         }
 
@@ -1625,6 +1633,8 @@ namespace VectSharp.Canvas
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
         public static SKMultiLayerRenderCanvas PaintToSKCanvas(this Page page, Dictionary<string, Func<SKRenderAction, IEnumerable<SKRenderAction>>> taggedActions, bool removeTaggedActionsAfterExecution = true, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
+            filterOption = filterOption ?? FilterOption.Default;
+
             return new SKMultiLayerRenderCanvas(new List<SKRenderContext>() { page.CopyToSKRenderContext(taggedActions, removeTaggedActionsAfterExecution, textOption, filterOption) }, new List<SKRenderAction>() { SKRenderAction.TransformAction(SKMatrix.Identity) }, page.Background, page.Width, page.Height);
         }
 
@@ -1642,6 +1652,8 @@ namespace VectSharp.Canvas
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
         public static SKMultiLayerRenderCanvas PaintToSKCanvas(this Page page, Dictionary<string, Func<SKRenderAction, IEnumerable<SKRenderAction>>> taggedActions, Dictionary<string, (SKBitmap, bool)> images, bool removeTaggedActionsAfterExecution = true, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
+            filterOption = filterOption ?? FilterOption.Default;
+
             return new SKMultiLayerRenderCanvas(new List<SKRenderContext>() { page.CopyToSKRenderContext(taggedActions, images, removeTaggedActionsAfterExecution, textOption, filterOption) }, new List<SKRenderAction>() { SKRenderAction.TransformAction(SKMatrix.Identity) }, page.Background, page.Width, page.Height);
         }
 
@@ -1654,6 +1666,8 @@ namespace VectSharp.Canvas
         /// <returns>A <see cref="SKRenderContext"/> containing the rendered graphics objects.</returns>
         public static SKRenderContext CopyToSKRenderContext(this Page page, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
+            filterOption = filterOption ?? FilterOption.Default;
+
             return CopyToSKRenderContext(page, new Dictionary<string, Func<SKRenderAction, IEnumerable<SKRenderAction>>>(), new Dictionary<string, (SKBitmap, bool)>(), textOption: textOption, filterOption: filterOption);
         }
 
@@ -1669,6 +1683,8 @@ namespace VectSharp.Canvas
         /// <returns>A <see cref="SKRenderContext"/> containing the rendered graphics objects.</returns>
         public static SKRenderContext CopyToSKRenderContext(this Page page, Dictionary<string, Func<SKRenderAction, IEnumerable<SKRenderAction>>> taggedActions, bool removeTaggedActionsAfterExecution = true, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
+            filterOption = filterOption ?? FilterOption.Default;
+
             return CopyToSKRenderContext(page, taggedActions, new Dictionary<string, (SKBitmap, bool)>(), removeTaggedActionsAfterExecution, textOption, filterOption);
         }
 
@@ -1686,10 +1702,7 @@ namespace VectSharp.Canvas
         /// <returns>A <see cref="SKRenderContext"/> containing the rendered graphics objects.</returns>
         public static SKRenderContext CopyToSKRenderContext(this Page page, Dictionary<string, Func<SKRenderAction, IEnumerable<SKRenderAction>>> taggedActions, Dictionary<string, (SKBitmap, bool)> images, bool removeTaggedActionsAfterExecution = true, AvaloniaContextInterpreter.TextOptions textOption = AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
-            if (filterOption == null)
-            {
-                filterOption = FilterOption.Default;
-            }
+            filterOption = filterOption ?? FilterOption.Default;
 
             SKRenderContextImpl tbr = new SKRenderContextImpl(page.Width, page.Height, removeTaggedActionsAfterExecution, textOption, images, filterOption)
             {

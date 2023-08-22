@@ -1,6 +1,6 @@
 ﻿/*
     VectSharp - A light library for C# vector graphics.
-    Copyright (C) 2020-2022 Giorgio Bianchini
+    Copyright (C) 2020-2023 Giorgio Bianchini, University of Bristol
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
@@ -19,6 +19,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.Media.TextFormatting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,36 @@ using VectSharp.Filters;
 
 namespace VectSharp.Canvas
 {
+    // Adapted from https://github.com/AvaloniaUI/Avalonia/blob/412438d334f970367834d52b92b9ed3e89f3d18c/src/Avalonia.Controls/TextBlock.cs#L821
+    internal readonly struct SimpleTextSource : ITextSource
+    {
+        private readonly string _text;
+        private readonly TextRunProperties _defaultProperties;
+
+        public SimpleTextSource(string text, TextRunProperties defaultProperties)
+        {
+            _text = text;
+            _defaultProperties = defaultProperties;
+        }
+
+        public TextRun GetTextRun(int textSourceIndex)
+        {
+            if (textSourceIndex > _text.Length)
+            {
+                return new TextEndOfParagraph();
+            }
+
+            var runText = _text.AsMemory(textSourceIndex);
+
+            if (runText.IsEmpty)
+            {
+                return new TextEndOfParagraph();
+            }
+
+            return new TextCharacters(runText, _defaultProperties);
+        }
+    }
+
     internal static class MatrixUtils
     {
         public static Avalonia.Matrix ToAvaloniaMatrix(this double[,] matrix)
@@ -292,7 +323,8 @@ namespace VectSharp.Canvas
 
             if (_textOption == AvaloniaContextInterpreter.TextOptions.NeverConvert || (_textOption == AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary && Font.FontFamily.IsStandardFamily && Font.FontFamily.FileName != "ZapfDingbats" && Font.FontFamily.FileName != "Symbol"))
             {
-                TextBlock blk = new TextBlock() { ClipToBounds = false, Text = text, FontFamily = Avalonia.Media.FontFamily.Parse(FontFamily), FontSize = Font.FontSize, FontStyle = (Font.FontFamily.IsOblique ? FontStyle.Oblique : Font.FontFamily.IsItalic ? FontStyle.Italic : FontStyle.Normal), FontWeight = (Font.FontFamily.IsBold ? FontWeight.Bold : FontWeight.Regular) };
+
+                TextBlock blk = new TextBlock() { ClipToBounds = false, Text = text, FontFamily = Avalonia.Media.FontFamily.Parse(FontFamily), FontSize = Font.FontSize, FontStyle = (Font.FontFamily.IsOblique ? FontStyle.Oblique : Font.FontFamily.IsItalic ? FontStyle.Italic : FontStyle.Normal), FontWeight = (Font.FontFamily.IsBold ? FontWeight.Bold : FontWeight.Regular), TextAlignment = TextAlignment.Left };
 
                 double top = y;
                 double left = x;
@@ -307,6 +339,23 @@ namespace VectSharp.Canvas
 
                 Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
 
+                if (text.StartsWith(" "))
+                {
+                    var spaceMetrics = Font.MeasureTextAdvanced(" ");
+
+                    for (int i = 0; i < text.Length; i++)
+                    {
+                        if (text[i] == ' ')
+                        {
+                            left -= spaceMetrics.AdvanceWidth;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+
                 if (TextBaseline == TextBaselines.Top)
                 {
                     blk.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top;
@@ -315,13 +364,13 @@ namespace VectSharp.Canvas
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.WinAscent);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top - Font.WinAscent);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top + metrics.Top - Font.WinAscent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top + metrics.Top - Font.WinAscent);
                         }
                         else
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.Ascent);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top - Font.Ascent);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top + metrics.Top - Font.Ascent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top + metrics.Top - Font.Ascent);
                         }
                     }
                 }
@@ -333,34 +382,32 @@ namespace VectSharp.Canvas
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.WinAscent);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.WinAscent);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.WinAscent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.WinAscent);
                         }
                         else
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
                         }
 
                     }
                 }
                 else if (TextBaseline == TextBaselines.Baseline)
                 {
-                    double lsb = Font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(text[0]).LeftSideBearing * Font.FontSize / 1000;
-
                     blk.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top;
 
                     if (Font.FontFamily.TrueTypeFile != null)
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.WinAscent);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - lsb, top - Font.YMax);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top - Font.WinAscent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top - Font.YMax);
                         }
                         else
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.Ascent);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - lsb, top - Font.YMax);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top - Font.Ascent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top - Font.YMax);
                         }
                     }
                 }
@@ -372,13 +419,13 @@ namespace VectSharp.Canvas
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.WinAscent + metrics.Bottom);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top - Font.WinAscent + metrics.Bottom);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top - Font.WinAscent + metrics.Bottom);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top - Font.WinAscent + metrics.Bottom);
                         }
                         else
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.Ascent + metrics.Bottom);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top - Font.Ascent + metrics.Bottom);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top - Font.Ascent + metrics.Bottom);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top - Font.Ascent + metrics.Bottom);
                         }
                     }
                 }
@@ -571,11 +618,17 @@ namespace VectSharp.Canvas
             }
         }
 
-        public (double Width, double Height) MeasureText(string text)
+        /*public (double Width, double Height) MeasureText(string text)
         {
+
+
+
             Avalonia.Media.FormattedText txt = new Avalonia.Media.FormattedText() { Text = text, Typeface = new Typeface(FontFamily), FontSize = Font.FontSize };
+            
+
+
             return (txt.Bounds.Width, txt.Bounds.Height);
-        }
+        }*/
 
         private PathGeometry currentPath;
         private PathFigure currentFigure;
@@ -814,11 +867,11 @@ namespace VectSharp.Canvas
 
             if (image.Interpolate)
             {
-                RenderOptions.SetBitmapInterpolationMode(img, Avalonia.Visuals.Media.Imaging.BitmapInterpolationMode.HighQuality);
+                RenderOptions.SetBitmapInterpolationMode(img, Avalonia.Media.Imaging.BitmapInterpolationMode.HighQuality);
             }
             else
             {
-                RenderOptions.SetBitmapInterpolationMode(img, Avalonia.Visuals.Media.Imaging.BitmapInterpolationMode.Default);
+                RenderOptions.SetBitmapInterpolationMode(img, Avalonia.Media.Imaging.BitmapInterpolationMode.None);
             }
 
             double[,] transf = MatrixUtils.Translate(_transform, destinationX, destinationY);
@@ -943,7 +996,7 @@ namespace VectSharp.Canvas
         }
     }
 
-    internal class RenderCanvas : Avalonia.Controls.Canvas
+    internal class RenderCanvas : Avalonia.Controls.UserControl
     {
         private List<RenderAction> RenderActions;
         private List<RenderAction> TaggedRenderActions;
@@ -1016,7 +1069,7 @@ namespace VectSharp.Canvas
             this.PointerPressed += PointerPressedAction;
             this.PointerReleased += PointerReleasedAction;
             this.PointerMoved += PointerMoveAction;
-            this.PointerLeave += PointerLeaveAction;
+            this.PointerExited += PointerLeaveAction;
         }
 
 
@@ -1042,7 +1095,7 @@ namespace VectSharp.Canvas
                     }
                     else if (TaggedRenderActions[i].ActionType == RenderAction.ActionTypes.Text)
                     {
-                        if (TaggedRenderActions[i].Fill != null && TaggedRenderActions[i].Text.HitTestPoint(localPosition).IsInside)
+                        if (TaggedRenderActions[i].Fill != null && TaggedRenderActions[i].Layout.HitTestPoint(localPosition).IsInside)
                         {
                             TaggedRenderActions[i].FirePointerPressed(e);
                             CurrentPressedAction = i;
@@ -1089,7 +1142,7 @@ namespace VectSharp.Canvas
                         }
                         else if (TaggedRenderActions[i].ActionType == RenderAction.ActionTypes.Text)
                         {
-                            if (TaggedRenderActions[i].Fill != null && TaggedRenderActions[i].Text.HitTestPoint(localPosition).IsInside)
+                            if (TaggedRenderActions[i].Fill != null && TaggedRenderActions[i].Layout.HitTestPoint(localPosition).IsInside)
                             {
                                 TaggedRenderActions[i].FirePointerReleased(e);
                                 break;
@@ -1131,10 +1184,10 @@ namespace VectSharp.Canvas
                             {
                                 if (CurrentOverAction >= 0)
                                 {
-                                    TaggedRenderActions[CurrentOverAction].FirePointerLeave(e);
+                                    TaggedRenderActions[CurrentOverAction].FirePointerExited(e);
                                 }
                                 CurrentOverAction = i;
-                                TaggedRenderActions[CurrentOverAction].FirePointerEnter(e);
+                                TaggedRenderActions[CurrentOverAction].FirePointerEntered(e);
                             }
 
                             break;
@@ -1142,7 +1195,7 @@ namespace VectSharp.Canvas
                     }
                     else if (TaggedRenderActions[i].ActionType == RenderAction.ActionTypes.Text)
                     {
-                        if (TaggedRenderActions[i].Fill != null && TaggedRenderActions[i].Text.HitTestPoint(localPosition).IsInside)
+                        if (TaggedRenderActions[i].Fill != null && TaggedRenderActions[i].Layout.HitTestPoint(localPosition).IsInside)
                         {
                             found = true;
 
@@ -1150,10 +1203,10 @@ namespace VectSharp.Canvas
                             {
                                 if (CurrentOverAction >= 0)
                                 {
-                                    TaggedRenderActions[CurrentOverAction].FirePointerLeave(e);
+                                    TaggedRenderActions[CurrentOverAction].FirePointerExited(e);
                                 }
                                 CurrentOverAction = i;
-                                TaggedRenderActions[CurrentOverAction].FirePointerEnter(e);
+                                TaggedRenderActions[CurrentOverAction].FirePointerEntered(e);
                             }
 
                             break;
@@ -1169,10 +1222,10 @@ namespace VectSharp.Canvas
                             {
                                 if (CurrentOverAction >= 0)
                                 {
-                                    TaggedRenderActions[CurrentOverAction].FirePointerLeave(e);
+                                    TaggedRenderActions[CurrentOverAction].FirePointerExited(e);
                                 }
                                 CurrentOverAction = i;
-                                TaggedRenderActions[CurrentOverAction].FirePointerEnter(e);
+                                TaggedRenderActions[CurrentOverAction].FirePointerEntered(e);
                             }
 
                             break;
@@ -1185,7 +1238,7 @@ namespace VectSharp.Canvas
             {
                 if (CurrentOverAction >= 0)
                 {
-                    TaggedRenderActions[CurrentOverAction].FirePointerLeave(e);
+                    TaggedRenderActions[CurrentOverAction].FirePointerExited(e);
                 }
                 CurrentOverAction = -1;
             }
@@ -1195,7 +1248,7 @@ namespace VectSharp.Canvas
         {
             if (CurrentOverAction >= 0)
             {
-                TaggedRenderActions[CurrentOverAction].FirePointerLeave(e);
+                TaggedRenderActions[CurrentOverAction].FirePointerExited(e);
             }
             CurrentOverAction = -1;
         }
@@ -1218,7 +1271,7 @@ namespace VectSharp.Canvas
                         state = context.PushGeometryClip(act.ClippingPath);
                     }
 
-                    using (context.PushPreTransform(act.Transform))
+                    using (context.PushTransform(act.Transform))
                     {
                         context.DrawGeometry(act.Fill, act.Stroke, act.Geometry);
                     }
@@ -1241,9 +1294,9 @@ namespace VectSharp.Canvas
                         state = context.PushGeometryClip(act.ClippingPath);
                     }
 
-                    using (context.PushPreTransform(act.Transform))
+                    using (context.PushTransform(act.Transform))
                     {
-                        context.DrawText(act.Fill, Origin, act.Text);
+                        context.DrawText(act.Text, Origin);
                     }
 
                     if (state != null)
@@ -1266,9 +1319,10 @@ namespace VectSharp.Canvas
 
                     (IImage, bool) image = Images[act.ImageId];
 
-                    using (context.PushPreTransform(act.Transform))
+                    using (context.PushTransform(act.Transform))
                     {
-                        context.DrawImage(image.Item1, act.ImageSource.Value, act.ImageDestination.Value, image.Item2 ? Avalonia.Visuals.Media.Imaging.BitmapInterpolationMode.HighQuality : Avalonia.Visuals.Media.Imaging.BitmapInterpolationMode.Default);
+                        RenderOptions.SetBitmapInterpolationMode(this, image.Item2 ? Avalonia.Media.Imaging.BitmapInterpolationMode.HighQuality : Avalonia.Media.Imaging.BitmapInterpolationMode.None);
+                        context.DrawImage(image.Item1, act.ImageSource.Value, act.ImageDestination.Value);
                     }
 
                     if (state != null)
@@ -1321,19 +1375,44 @@ namespace VectSharp.Canvas
         public Geometry Geometry { get; set; }
 
         /// <summary>
-        /// Text that needs to be rendered (null if the action type is <see cref="ActionTypes.Path"/>). If you change this, you need to invalidate the <see cref="Parent"/>'s visual.
+        /// Text that needs to be rendered (null if the action type is <see cref="ActionTypes.Path"/>). If you change this, you need to invalidate the <see cref="Parent"/>'s visual and
+        /// you should also change the <see cref="Layout"/> property.
         /// </summary>
         public Avalonia.Media.FormattedText Text { get; set; }
+
+        /// <summary>
+        /// Text layout, used for hit testing (null if the action type is <see cref="ActionTypes.Path"/>). If you change this, you need to invalidate the <see cref="Parent"/>'s visual and
+        /// you should also change the <see cref="Text"/> property.
+        /// </summary>
+        public Avalonia.Media.TextFormatting.TextLayout Layout { get; set; }
 
         /// <summary>
         /// Rendering stroke (null if the action type is <see cref="ActionTypes.Text"/> or if the rendered action only has a <see cref="Fill"/>). If you change this, you need to invalidate the <see cref="Parent"/>'s visual.
         /// </summary>
         public Pen Stroke { get; set; }
 
+
+        private IBrush fill;
+
         /// <summary>
         /// Rendering fill (null if the rendered action only has a <see cref="Stroke"/>). If you change this, you need to invalidate the <see cref="Parent"/>'s visual.
         /// </summary>
-        public IBrush Fill { get; set; }
+        public IBrush Fill
+        {
+            get
+            {
+                return fill;
+            }
+            set
+            {
+                fill = value;
+
+                if (Text != null)
+                {
+                    Text.SetForegroundBrush(fill);
+                }
+            }
+        }
 
         /// <summary>
         /// Univocal identifier of the image that needs to be drawn.
@@ -1385,7 +1464,7 @@ namespace VectSharp.Canvas
         /// <summary>
         /// The container of this <see cref="RenderAction"/>.
         /// </summary>
-        public Avalonia.Controls.Canvas Parent
+        public Avalonia.Controls.UserControl Parent
         {
             get
             {
@@ -1396,12 +1475,12 @@ namespace VectSharp.Canvas
         /// <summary>
         /// Raised when the pointer enters the area covered by the <see cref="RenderAction"/>.
         /// </summary>
-        public event EventHandler<Avalonia.Input.PointerEventArgs> PointerEnter;
+        public event EventHandler<Avalonia.Input.PointerEventArgs> PointerEntered;
 
         /// <summary>
         /// Raised when the pointer leaves the area covered by the <see cref="RenderAction"/>.
         /// </summary>
-        public event EventHandler<Avalonia.Input.PointerEventArgs> PointerLeave;
+        public event EventHandler<Avalonia.Input.PointerEventArgs> PointerExited;
 
         /// <summary>
         /// Raised when the pointer is pressed while over the area covered by the <see cref="RenderAction"/>.
@@ -1414,14 +1493,14 @@ namespace VectSharp.Canvas
         public event EventHandler<Avalonia.Input.PointerReleasedEventArgs> PointerReleased;
 
 
-        internal void FirePointerEnter(Avalonia.Input.PointerEventArgs e)
+        internal void FirePointerEntered(Avalonia.Input.PointerEventArgs e)
         {
-            this.PointerEnter?.Invoke(this, e);
+            this.PointerEntered?.Invoke(this, e);
         }
 
-        internal void FirePointerLeave(Avalonia.Input.PointerEventArgs e)
+        internal void FirePointerExited(Avalonia.Input.PointerEventArgs e)
         {
-            this.PointerLeave?.Invoke(this, e);
+            this.PointerExited?.Invoke(this, e);
         }
 
         internal void FirePointerPressed(Avalonia.Input.PointerPressedEventArgs e)
@@ -1467,12 +1546,13 @@ namespace VectSharp.Canvas
         /// Creates a new <see cref="RenderAction"/> representing text.
         /// </summary>
         /// <param name="text">The text to be rendered.</param>
+        /// <param name="layout">The text layout used for hit testing.</param>
         /// <param name="fill">The fill of the text (can be null).</param>
         /// <param name="transform">The transform that will be applied to the text.</param>
         /// <param name="clippingPath">The clipping path.</param>
         /// <param name="tag">A tag to access the <see cref="RenderAction"/>. If this is null this <see cref="RenderAction"/> is not visible in the hit test.</param>
         /// <returns>A new <see cref="RenderAction"/> representing text.</returns>
-        public static RenderAction TextAction(Avalonia.Media.FormattedText text, IBrush fill, Avalonia.Matrix transform, Geometry clippingPath, string tag = null)
+        public static RenderAction TextAction(Avalonia.Media.FormattedText text, Avalonia.Media.TextFormatting.TextLayout layout, IBrush fill, Avalonia.Matrix transform, Geometry clippingPath, string tag = null)
         {
             return new RenderAction()
             {
@@ -1482,7 +1562,8 @@ namespace VectSharp.Canvas
                 Fill = fill,
                 Transform = transform,
                 ClippingPath = clippingPath,
-                Tag = tag
+                Tag = tag,
+                Layout = layout
             };
         }
 
@@ -1749,14 +1830,9 @@ namespace VectSharp.Canvas
 
             if (_textOption == AvaloniaContextInterpreter.TextOptions.NeverConvert || (_textOption == AvaloniaContextInterpreter.TextOptions.ConvertIfNecessary && Font.FontFamily.IsStandardFamily && Font.FontFamily.FileName != "ZapfDingbats" && Font.FontFamily.FileName != "Symbol"))
             {
-                Avalonia.Media.FormattedText txt = new Avalonia.Media.FormattedText()
-                {
-                    Text = text,
-                    Typeface = new Typeface(Avalonia.Media.FontFamily.Parse(FontFamily), (Font.FontFamily.IsOblique ? FontStyle.Oblique : Font.FontFamily.IsItalic ? FontStyle.Italic : FontStyle.Normal), (Font.FontFamily.IsBold ? FontWeight.Bold : FontWeight.Regular)),
-                    FontSize = Font.FontSize
-                };
+                Typeface typeface = new Typeface(Avalonia.Media.FontFamily.Parse(FontFamily), (Font.FontFamily.IsOblique ? FontStyle.Oblique : Font.FontFamily.IsItalic ? FontStyle.Italic : FontStyle.Normal), (Font.FontFamily.IsBold ? FontWeight.Bold : FontWeight.Regular));
 
-
+                Avalonia.Media.FormattedText txt = new Avalonia.Media.FormattedText(text, System.Globalization.CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, Font.FontSize, null);
 
                 double top = y;
                 double left = x;
@@ -1770,6 +1846,24 @@ namespace VectSharp.Canvas
                 }
 
                 Font.DetailedFontMetrics metrics = Font.MeasureTextAdvanced(text);
+                
+                if (text.StartsWith(" "))
+                {
+                    var spaceMetrics = Font.MeasureTextAdvanced(" ");
+
+                    for (int i = 0; i < text.Length; i++)
+                    {
+                        if (text[i] == ' ')
+                        {
+                            left -= spaceMetrics.AdvanceWidth;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+
 
                 if (TextBaseline == TextBaselines.Top)
                 {
@@ -1777,13 +1871,13 @@ namespace VectSharp.Canvas
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.WinAscent);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top - Font.WinAscent);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top + metrics.Top - Font.WinAscent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top + metrics.Top - Font.WinAscent);
                         }
                         else
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.Ascent);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top - Font.Ascent);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top + metrics.Top - Font.Ascent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top + metrics.Top - Font.Ascent);
                         }
 
                     }
@@ -1794,31 +1888,29 @@ namespace VectSharp.Canvas
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.WinAscent);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.WinAscent);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.WinAscent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.WinAscent);
                         }
                         else
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
                         }
                     }
                 }
                 else if (TextBaseline == TextBaselines.Baseline)
                 {
-                    double lsb = Font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(text[0]).LeftSideBearing * Font.FontSize / 1000;
-
                     if (Font.FontFamily.TrueTypeFile != null)
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.WinAscent);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - lsb, top - Font.YMax);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top - Font.WinAscent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top - Font.YMax);
                         }
                         else
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - lsb, top - Font.Ascent);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - lsb, top - Font.YMax);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top - Font.Ascent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top - Font.YMax);
                         }
                     }
                 }
@@ -1828,13 +1920,13 @@ namespace VectSharp.Canvas
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.WinAscent + metrics.Bottom);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top - Font.WinAscent + metrics.Bottom);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top - Font.WinAscent + metrics.Bottom);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top - Font.WinAscent + metrics.Bottom);
                         }
                         else
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.Ascent + metrics.Bottom);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top - Font.Ascent + metrics.Bottom);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top - Font.Ascent + metrics.Bottom);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top - Font.Ascent + metrics.Bottom);
                         }
                     }
                 }
@@ -1854,7 +1946,13 @@ namespace VectSharp.Canvas
                     fill = radialGradient.ToRadialGradientBrush(metrics.Width + metrics.LeftSideBearing + metrics.RightSideBearing, deltaTransform);
                 }
 
-                RenderAction act = RenderAction.TextAction(txt, fill, currTransform.ToAvaloniaMatrix(), _clippingPath?.Clone(), Tag);
+                txt.SetForegroundBrush(fill);
+
+                TextRunProperties runProperties = new GenericTextRunProperties(typeface, Font.FontSize);
+
+                TextLayout lay = new TextLayout(new SimpleTextSource(text, runProperties), new GenericTextParagraphProperties(runProperties));
+
+                RenderAction act = RenderAction.TextAction(txt, lay, fill, currTransform.ToAvaloniaMatrix(), _clippingPath?.Clone(), Tag);
 
                 if (!string.IsNullOrEmpty(Tag))
                 {
@@ -2042,12 +2140,6 @@ namespace VectSharp.Canvas
                     FontFamily = "resm:VectSharp.StandardFonts.?assembly=VectSharp#" + Font.FontFamily.TrueTypeFile.GetFontFamilyName();
                 }
             }
-        }
-
-        public (double Width, double Height) MeasureText(string text)
-        {
-            Avalonia.Media.FormattedText txt = new Avalonia.Media.FormattedText() { Text = text, Typeface = new Typeface(FontFamily), FontSize = Font.FontSize };
-            return (txt.Bounds.Width, txt.Bounds.Height);
         }
 
         private PathGeometry currentPath;
@@ -2326,8 +2418,7 @@ namespace VectSharp.Canvas
             }
             else
             {
-                //Can't find a better way of transforming an IStreamGeometryImpl into a Geometry...
-                _clippingPath = (StreamGeometry)Activator.CreateInstance(typeof(StreamGeometry), System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, null, new object[] { _clippingPath.PlatformImpl.Intersect(currentPath.PlatformImpl) }, null);
+                _clippingPath = new CombinedGeometry(GeometryCombineMode.Intersect, _clippingPath, currentPath);
             }
 
             currentPath = new PathGeometry();
@@ -2521,10 +2612,7 @@ namespace VectSharp.Canvas
         /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
         public static Avalonia.Controls.Canvas PaintToCanvas(this Page page, TextOptions textOption = TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
-            if (filterOption == null)
-            {
-                filterOption = FilterOption.Default;
-            }
+            filterOption = filterOption ?? FilterOption.Default;
 
             AvaloniaContext ctx = new AvaloniaContext(page.Width, page.Height, true, textOption, filterOption);
             page.Graphics.CopyToIGraphicsContext(ctx);
@@ -2533,15 +2621,17 @@ namespace VectSharp.Canvas
         }
 
         /// <summary>
-        /// Render a <see cref="Page"/> to an <see cref="Avalonia.Controls.Canvas"/>.
+        /// Render a <see cref="Page"/> to an <see cref="Avalonia.Controls.Control"/>.
         /// </summary>
         /// <param name="page">The <see cref="Page"/> to render.</param>
         /// <param name="graphicsAsControls">If this is true, each graphics object (e.g. paths, text...) is rendered as a separate <see cref="Avalonia.Controls.Control"/>. Otherwise, they are directly rendered onto the drawing context (which is faster, but does not allow interactivity).</param>
         /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
         /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
-        /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
-        public static Avalonia.Controls.Canvas PaintToCanvas(this Page page, bool graphicsAsControls, TextOptions textOption = TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
+        /// <returns>An <see cref="Avalonia.Controls.Control"/> containing the rendered graphics objects.</returns>
+        public static Avalonia.Controls.Control PaintToCanvas(this Page page, bool graphicsAsControls, TextOptions textOption = TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
+            filterOption = filterOption ?? FilterOption.Default;
+
             if (graphicsAsControls)
             {
                 Avalonia.Controls.Canvas tbr = page.PaintToCanvas(textOption, filterOption);
@@ -2555,7 +2645,7 @@ namespace VectSharp.Canvas
         }
 
         /// <summary>
-        /// Render a <see cref="Page"/> to an <see cref="Avalonia.Controls.Canvas"/>.
+        /// Render a <see cref="Page"/> to an <see cref="Avalonia.Controls.Control"/>.
         /// </summary>
         /// <param name="page">The <see cref="Page"/> to render.</param>
         /// <param name="graphicsAsControls">If this is true, each graphics object (e.g. paths, text...) is rendered as a separate <see cref="Avalonia.Controls.Control"/>. Otherwise, they are directly rendered onto the drawing context (which is faster, but does not allow interactivity).</param>
@@ -2564,9 +2654,11 @@ namespace VectSharp.Canvas
         /// <param name="removeTaggedActionsAfterExecution">Whether the <see cref="Action"/>s should be removed from <paramref name="taggedActions"/> after their execution. Set to false if the same <see cref="Action"/> should be performed on multiple items with the same tag.</param>
         /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
         /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
-        /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
-        public static Avalonia.Controls.Canvas PaintToCanvas(this Page page, bool graphicsAsControls, Dictionary<string, Delegate> taggedActions, bool removeTaggedActionsAfterExecution = true, TextOptions textOption = TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
+        /// <returns>An <see cref="Avalonia.Controls.Control"/> containing the rendered graphics objects.</returns>
+        public static Avalonia.Controls.Control PaintToCanvas(this Page page, bool graphicsAsControls, Dictionary<string, Delegate> taggedActions, bool removeTaggedActionsAfterExecution = true, TextOptions textOption = TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
+            filterOption = filterOption ?? FilterOption.Default;
+
             if (graphicsAsControls)
             {
                 Avalonia.Controls.Canvas tbr = page.PaintToCanvas(taggedActions, removeTaggedActionsAfterExecution, textOption, filterOption);
@@ -2580,7 +2672,7 @@ namespace VectSharp.Canvas
         }
 
         /// <summary>
-        /// Render a <see cref="Page"/> to an <see cref="Avalonia.Controls.Canvas"/>.
+        /// Render a <see cref="Page"/> to an <see cref="Avalonia.Controls.Control"/>.
         /// </summary>
         /// <param name="page">The <see cref="Page"/> to render.</param>
         /// <param name="taggedActions">A <see cref="Dictionary{String, Delegate}"/> containing the <see cref="Action"/>s that will be performed on items with the corresponding tag.
@@ -2588,13 +2680,10 @@ namespace VectSharp.Canvas
         /// <param name="removeTaggedActionsAfterExecution">Whether the <see cref="Action"/>s should be removed from <paramref name="taggedActions"/> after their execution. Set to false if the same <see cref="Action"/> should be performed on multiple items with the same tag.</param>
         /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
         /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
-        /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered graphics objects.</returns>
+        /// <returns>An <see cref="Avalonia.Controls.Control"/> containing the rendered graphics objects.</returns>
         public static Avalonia.Controls.Canvas PaintToCanvas(this Page page, Dictionary<string, Delegate> taggedActions, bool removeTaggedActionsAfterExecution = true, TextOptions textOption = TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
-            if (filterOption == null)
-            {
-                filterOption = FilterOption.Default;
-            }
+            filterOption = filterOption ?? FilterOption.Default;
 
             AvaloniaContext ctx = new AvaloniaContext(page.Width, page.Height, removeTaggedActionsAfterExecution, textOption, filterOption)
             {
@@ -2606,20 +2695,17 @@ namespace VectSharp.Canvas
         }
 
         /// <summary>
-        /// Render an <see cref="Animation"/> to an <see cref="Avalonia.Controls.Canvas"/>.
+        /// Render an <see cref="Animation"/> to an <see cref="Avalonia.Controls.Control"/>.
         /// </summary>
         /// <param name="animation">The <see cref="Animation"/> to render.</param>
         /// <param name="frameRate">The target frame rate of the animation, in frames-per-second (fps).</param>
         /// <param name="durationScaling">A scaling factor that will be applied to all durations in the animation. Values greater than 1 slow down the animation, values smaller than 1 accelerate it. Note that this does not affect the frame rate of the animation.</param>
         /// <param name="textOption">Defines whether text items should be converted into paths when drawing.</param>
         /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
-        /// <returns>An <see cref="Avalonia.Controls.Canvas"/> containing the rendered animation.</returns>
+        /// <returns>An <see cref="Avalonia.Controls.Control"/> containing the rendered animation.</returns>
         public static AnimatedCanvas PaintToAnimatedCanvas(this Animation animation, double frameRate = 60, double durationScaling = 1, TextOptions textOption = TextOptions.ConvertIfNecessary, FilterOption filterOption = default)
         {
-            if (filterOption == null)
-            {
-                filterOption = FilterOption.Default;
-            }
+            filterOption = filterOption ?? FilterOption.Default;
 
             return new AnimatedCanvas(animation, durationScaling, frameRate, textOption, filterOption) { Background = new SolidColorBrush(Color.FromArgb((byte)(animation.Background.A * 255), (byte)(animation.Background.R * 255), (byte)(animation.Background.G * 255), (byte)(animation.Background.B * 255))) };
         }
