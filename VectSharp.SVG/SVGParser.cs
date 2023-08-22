@@ -145,6 +145,22 @@ namespace VectSharp.SVG
             Dictionary<string, IFilter> filters = new Dictionary<string, IFilter>();
             Dictionary<string, XmlNode> masks = new Dictionary<string, XmlNode>();
 
+
+            foreach (KeyValuePair<string, (bool, Brush)> fnt in GetGradients(svgDoc.GetElementsByTagName("svg")[0], styleSheets))
+            {
+                gradients.Add(fnt.Key, fnt.Value);
+            }
+
+            foreach (KeyValuePair<string, IFilter> filt in GetFilters(svgDoc.GetElementsByTagName("svg")[0], styleSheets))
+            {
+                filters.Add(filt.Key, filt.Value);
+            }
+
+            foreach (KeyValuePair<string, XmlNode> mask in GetMasks(svgDoc.GetElementsByTagName("svg")[0], styleSheets))
+            {
+                masks.Add(mask.Key, mask.Value);
+            }
+
             foreach (XmlNode definitionsNode in svgDoc.GetElementsByTagName("defs"))
             {
                 foreach (KeyValuePair<string, (bool, Brush)> fnt in GetGradients(definitionsNode, styleSheets))
@@ -162,6 +178,8 @@ namespace VectSharp.SVG
                     masks.Add(mask.Key, mask.Value);
                 }
             }
+
+
 
             Graphics gpr = new Graphics();
 
@@ -452,7 +470,19 @@ namespace VectSharp.SVG
 
             fontFamily = GetFirstAttributeValueIncludingAncestors(currObject, "font-family") ?? fontFamily;
             fontSize = ParseLengthOrPercentage(GetFirstAttributeValueIncludingAncestors(currObject, "font-size"), width, fontSize);
-            textAlign = GetFirstAttributeValueIncludingAncestors(currObject, "text-align") ?? textAlign;
+            textAlign = GetFirstAttributeValueIncludingAncestors(currObject, "text-align") ?? GetFirstAttributeValueIncludingAncestors(currObject, "text-anchor") ?? textAlign;
+            if (textAlign == "start")
+            {
+                textAlign = "left";
+            }
+            else if (textAlign == "middle")
+            {
+                textAlign = "center";
+            }
+            else if (textAlign == "end")
+            {
+                textAlign = "right";
+            }
 
             bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes, styleSheets, gradients);
 
