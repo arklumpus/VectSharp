@@ -408,12 +408,12 @@ namespace VectSharp.Demo
                  {"ClickMeRectangle", new Action<Path>(path =>
                  {
                      path.Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand);
-                     path.PointerEnter += (sender, e) =>
+                     path.PointerEntered += (sender, e) =>
                      {
                          path.Fill = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.FromRgb(180, 180, 180));
                      };
 
-                     path.PointerLeave += (sender, e) =>
+                     path.PointerExited += (sender, e) =>
                      {
                          path.Fill = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.FromRgb(220, 220, 220));
                      };
