@@ -1047,6 +1047,14 @@ namespace VectSharp.Canvas
 
                 if (pixelWidth > 0 && pixelHeight > 0)
                 {
+                    if (!this.ClipToBounds && (pixelWidth * pixelHeight >= int.MaxValue / 8 || pixelWidth * pixelHeight < 0))
+                    {
+                        double ratio = width / height;
+
+                        pixelHeight = (int)Math.Round(Math.Sqrt(int.MaxValue / (8 * ratio)));
+                        pixelWidth = (int)Math.Round(pixelHeight * ratio);
+                    }
+
                     PixelPoint topLeftScreen = this.PointToScreen(new Avalonia.Point(left, top));
                     Avalonia.Point topLeft = this.PointToClient(topLeftScreen);
                     Avalonia.Point bottomRight = this.PointToClient(new PixelPoint(topLeftScreen.X + pixelWidth, topLeftScreen.Y + pixelHeight));
