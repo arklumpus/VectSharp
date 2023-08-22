@@ -748,19 +748,6 @@ namespace VectSharp.Canvas
                     canvas.Restore();
                 }
             }
-
-            /*for (int i = 0; i < this.RenderActions.Count; i++)
-            {
-                SKPaint selectionPaint = new SKPaint() { Color = new SKColor(255, 0, 255, 128) };
-
-                for (int j = 0; j < this.TaggedRenderActions[i].Count; j++)
-                {
-                    if (this.TaggedRenderActions[i][j].LastRenderedGlobalHitTestPath != null)
-                    {
-                        canvas.DrawPath(this.TaggedRenderActions[i][j].LastRenderedGlobalHitTestPath, selectionPaint);
-                    }
-                }
-            }*/
         }
 
         private void RenderLayer(SKCanvas canvas, int layer)
@@ -1040,10 +1027,8 @@ namespace VectSharp.Canvas
                     height = this.PageHeight;
                 }
 
-                double DPIscaling = (VisualRoot as Avalonia.Layout.ILayoutRoot)?.LayoutScaling ?? 1;
-
-                int pixelWidth = (int)Math.Round(width / scale * DPIscaling);
-                int pixelHeight = (int)Math.Round(height / scale * DPIscaling);
+                int pixelWidth = (int)Math.Round(width / scale);
+                int pixelHeight = (int)Math.Round(height / scale);
 
                 if (pixelWidth > 0 && pixelHeight > 0)
                 {
@@ -1060,11 +1045,11 @@ namespace VectSharp.Canvas
                     Avalonia.Point bottomRight = this.PointToClient(new PixelPoint(topLeftScreen.X + pixelWidth, topLeftScreen.Y + pixelHeight));
 
                     Rect targetRect = new Rect(topLeft, bottomRight);
-
+                    
                     pixelWidth = this.PointToScreen(targetRect.BottomRight).X - this.PointToScreen(targetRect.TopLeft).X;
                     pixelHeight = this.PointToScreen(targetRect.BottomRight).Y - this.PointToScreen(targetRect.TopLeft).Y;
 
-                    RenderingParameters currentParameters = new RenderingParameters((float)left, (float)top, (float)width, (float)height, (float)(1 / scale * DPIscaling), pixelWidth, pixelHeight);
+                    RenderingParameters currentParameters = new RenderingParameters((float)left, (float)top, (float)width, (float)height, (float)(1 / scale), pixelWidth, pixelHeight);
 
                     if (FrontBuffer != null && FrontBufferRenderingParams == currentParameters && !IsDirty)
                     {
