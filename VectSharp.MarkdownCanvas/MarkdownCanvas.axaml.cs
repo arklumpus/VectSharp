@@ -19,6 +19,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using Avalonia.Threading;
 using Markdig;
 using Markdig.Syntax;
@@ -32,7 +33,7 @@ namespace VectSharp.MarkdownCanvas
     /// <summary>
     /// A control to display a Markdown document in an Avalonia application.
     /// </summary>
-    public class MarkdownCanvasControl : UserControl
+    public partial class MarkdownCanvasControl : UserControl
     {
         /// <summary>
         /// Defines the <see cref="MaxRenderWidth"/> property.
@@ -139,7 +140,7 @@ namespace VectSharp.MarkdownCanvas
         }
 
         /// <inheritdoc/>
-        protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
+        protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
         {
             base.OnPropertyChanged(change);
 
@@ -162,7 +163,7 @@ namespace VectSharp.MarkdownCanvas
                 }
                 else if (change.Property == MarkdownCanvasControl.DocumentSourceProperty)
                 {
-                    MarkdownDocument document = Markdig.Markdown.Parse(change.NewValue.GetValueOrDefault<string>(), new MarkdownPipelineBuilder().UseGridTables().UsePipeTables().UseEmphasisExtras().UseGenericAttributes().UseAutoIdentifiers().UseAutoLinks().UseTaskLists().UseListExtras().UseCitations().UseMathematics().UseSmartyPants().Build());
+                    MarkdownDocument document = Markdig.Markdown.Parse(change.GetNewValue<string>(), new MarkdownPipelineBuilder().UseGridTables().UsePipeTables().UseEmphasisExtras().UseGenericAttributes().UseAutoIdentifiers().UseAutoLinks().UseTaskLists().UseListExtras().UseCitations().UseMathematics().UseSmartyPants().Build());
                     this.Document = document;
                 }
                 else if (change.Property == MarkdownCanvasControl.VerticalContentAlignmentProperty)
@@ -208,12 +209,12 @@ namespace VectSharp.MarkdownCanvas
 
                         taggedActions.Add(linkDestination.Key, (Func<RenderAction, IEnumerable<RenderAction>>)(act =>
                         {
-                            act.PointerEnter += (s, e) =>
+                            act.PointerEntered += (s, e) =>
                             {
                                 act.Parent.Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand);
                             };
 
-                            act.PointerLeave += (s, e) =>
+                            act.PointerExited += (s, e) =>
                             {
                                 act.Parent.Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Arrow);
                             };
@@ -241,7 +242,7 @@ namespace VectSharp.MarkdownCanvas
                             }
                             else if (act.ActionType == RenderAction.ActionTypes.Text)
                             {
-                                linkDestinationPoints[linkDestination.Key] = act.Text.Bounds.TopLeft.Transform(act.Transform);
+                                linkDestinationPoints[linkDestination.Key] = new Avalonia.Point(0, 0).Transform(act.Transform);
                             }
                             else if (act.ActionType == RenderAction.ActionTypes.RasterImage)
                             {
@@ -263,7 +264,7 @@ namespace VectSharp.MarkdownCanvas
                                     }
                                     else if (act.ActionType == RenderAction.ActionTypes.Text)
                                     {
-                                        linkDestinationPoints[url.Substring(1)] = act.Text.Bounds.TopLeft.Transform(act.Transform);
+                                        linkDestinationPoints[url.Substring(1)] = new Avalonia.Point(0, 0).Transform(act.Transform);
                                     }
                                     else if (act.ActionType == RenderAction.ActionTypes.RasterImage)
                                     {
@@ -276,7 +277,7 @@ namespace VectSharp.MarkdownCanvas
                         }
                     }
 
-                    Avalonia.Controls.Canvas can = pag.PaintToCanvas(false, taggedActions, false, this.TextConversionOption);
+                    Control can = pag.PaintToCanvas(false, taggedActions, false, this.TextConversionOption);
 
                     this.FindControl<ScrollViewer>("ScrollViewer").Content = can;
                     this.FindControl<ScrollViewer>("ScrollViewer").Padding = new Thickness(0, 0, 0, 0);
