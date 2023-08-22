@@ -17,8 +17,8 @@
 
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Reactive;
 using System.Linq;
-using System.Reactive.Linq;
 using VectSharp.Canvas;
 using VectSharp.Filters;
 using VectSharp.Raster.ImageSharp;
@@ -452,12 +452,12 @@ namespace VectSharp.DemoAnimation
             this.progressSlider.Maximum = animatedCanvas.FrameCount - 1;
             // Create a two-way binding between the value of the slider and the current frame of the animation. This will automatically
             // update the slider as the animation plays, and change the position of the animation when the slider's position is manually changed.
-            this.progressSlider.Bind(ProgressBar.ValueProperty, animatedCanvas.GetObservable(AnimatedCanvas.CurrentFrameProperty).Select(x => (double)x));
-            animatedCanvas.Bind(AnimatedCanvas.CurrentFrameProperty, progressSlider.GetObservable(ProgressBar.ValueProperty).Select(x => (int)x));
+            animatedCanvas.GetObservable(AnimatedCanvas.CurrentFrameProperty).Subscribe(new AnonymousObserver<int>(x => this.progressSlider.Value = x ));
+            progressSlider.GetObservable(ProgressBar.ValueProperty).Subscribe(new AnonymousObserver<double>(x => animatedCanvas.CurrentFrame = (int)x));
 
             // Create a binding between the "IsPlaying" property of the AnimatedCanvas and the contents of the play/pause button.
             // When IsPlaying is true, the button will contain the text "Pause", while when IsPlaying is false, it will contain the text "Play".
-            this.playPauseButton.Bind(Button.ContentProperty, animatedCanvas.GetObservable(AnimatedCanvas.IsPlayingProperty).Select(x => x ? "Pause" : "Play"));
+            animatedCanvas.GetObservable(AnimatedCanvas.IsPlayingProperty).Subscribe(new AnonymousObserver<bool>(x => this.playPauseButton.Content = x ? "Pause" : "Play"));
             // Add an event handler for the play/pause button.
             this.playPauseButton.Click += (s, e) =>
             {
