@@ -1869,13 +1869,13 @@ namespace VectSharp.Canvas
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top + metrics.Top - Font.WinAscent);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top + metrics.Top - Font.WinAscent);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.WinAscent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top - Font.WinAscent);
                         }
                         else
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top + metrics.Top - Font.Ascent);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top + metrics.Top - Font.Ascent);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top - Font.Ascent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top - Font.Ascent);
                         }
 
                     }
@@ -1886,13 +1886,13 @@ namespace VectSharp.Canvas
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.WinAscent);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.WinAscent);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.WinAscent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.WinAscent);
                         }
                         else
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top + metrics.Top / 2 + metrics.Bottom / 2 - Font.Ascent);
                         }
                     }
                 }
@@ -1902,13 +1902,13 @@ namespace VectSharp.Canvas
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top - Font.WinAscent);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top - Font.YMax);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.WinAscent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top - Font.YMax);
                         }
                         else
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top - Font.Ascent);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top - Font.YMax);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.Ascent);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top - Font.YMax);
                         }
                     }
                 }
@@ -1918,13 +1918,13 @@ namespace VectSharp.Canvas
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top - Font.WinAscent + metrics.Bottom);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top - Font.WinAscent + metrics.Bottom);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.WinAscent + metrics.Bottom);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top - Font.WinAscent + metrics.Bottom);
                         }
                         else
                         {
-                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing * 2, top - Font.Ascent + metrics.Bottom);
-                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing * 2, top - Font.Ascent + metrics.Bottom);
+                            currTransform = MatrixUtils.Translate(_transform, left - metrics.LeftSideBearing, top - Font.Ascent + metrics.Bottom);
+                            deltaTransform = MatrixUtils.Translate(deltaTransform, left - metrics.LeftSideBearing, top - Font.Ascent + metrics.Bottom);
                         }
                     }
                 }
