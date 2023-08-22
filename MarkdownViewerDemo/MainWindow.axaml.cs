@@ -22,10 +22,11 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using System;
+using VectSharp.SVG;
 
 namespace MarkdownViewerDemo
 {
-    public class MainWindow : Window
+    public partial class MainWindow : Window
     {
         public MainWindow()
         {
@@ -34,6 +35,37 @@ namespace MarkdownViewerDemo
             InitializeComponent();
 
             this.FindControl<VectSharp.MarkdownCanvas.MarkdownCanvasControl>("MarkdownCanvas").Renderer.RasterImageLoader = image => new VectSharp.MuPDFUtils.RasterImageFile(image);
+            
+            this.FindControl<VectSharp.MarkdownCanvas.MarkdownCanvasControl>("MarkdownCanvas").DocumentSource = @"# Markdown viewer 
+
+This is an example of a Markdown viewer program that uses a `MarkdownCanvasControl` to display the contents of a Markdown file.
+
+Use the button at the top to open your own Markdown source file.
+
+Most Markdown features are supported; see the readme in the [VectSharp.Markdown GitHub repository](https://github.com/arklumpus/VectSharp/tree/master/VectSharp.Markdown) for a list of supported and unsupported features.
+
+When the container is resized, the document is automatically reflowed in order to fill all the available horizontal space. 
+
+External links are opened in the default web browser, while internal links cause the control to scroll to the location of the target.
+
+Images are downloaded from the internet the first time they are required; the results are cached and reused for subsequent requests. The cache is cleared when the application exits (if the application crashes, the cache is cleared the next time the application exits successfully).
+
+As a proof-of-concept, an interesting use case would be to display syntax-highlighted (read-only) source code:
+
+```CSharp
+using System; 
+  
+namespace Hello
+{  
+    class World
+    {
+        static void Main(string[] args)
+        {      
+            Console.WriteLine(""Hello World!""); 
+        } 
+    } 
+} 
+```";
         }
 
         private void InitializeComponent()
