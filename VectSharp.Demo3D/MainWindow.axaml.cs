@@ -24,7 +24,7 @@ using Avalonia.Input;
 
 namespace VectSharp.Demo3D
 {
-    public class MainWindow : Window
+    public partial class MainWindow : Window
     {
         public MainWindow()
         {
@@ -151,8 +151,8 @@ namespace VectSharp.Demo3D
                 // RasterRenderer
                 else if (this.FindControl<ComboBox>("RendererBox").SelectedIndex == 1)
                 {
-                    int width = (int)Math.Round(this.FindControl<NumericUpDown>("ResolutionWidthNUD").Value);
-                    int height = (int)Math.Round(this.FindControl<NumericUpDown>("ResolutionHeightNUD").Value);
+                    int width = (int)Math.Round(this.FindControl<NumericUpDown>("ResolutionWidthNUD").Value.Value);
+                    int height = (int)Math.Round(this.FindControl<NumericUpDown>("ResolutionHeightNUD").Value.Value);
 
                     renderer = new RasterRenderer(width, height);
 
@@ -168,8 +168,8 @@ namespace VectSharp.Demo3D
                 // RaycastingRenderer
                 else if (this.FindControl<ComboBox>("RendererBox").SelectedIndex == 2)
                 {
-                    int width = (int)Math.Round(this.FindControl<NumericUpDown>("ResolutionWidthNUD").Value);
-                    int height = (int)Math.Round(this.FindControl<NumericUpDown>("ResolutionHeightNUD").Value);
+                    int width = (int)Math.Round(this.FindControl<NumericUpDown>("ResolutionWidthNUD").Value.Value);
+                    int height = (int)Math.Round(this.FindControl<NumericUpDown>("ResolutionHeightNUD").Value.Value);
 
                     this.FindControl<TextBlock>("ResolutionBlock").IsVisible = true;
                     this.FindControl<TextBlock>("ResolutionHeightBlock").IsVisible = true;
@@ -212,7 +212,7 @@ namespace VectSharp.Demo3D
             // Code to handle mouse events moving the camera on the canvas
 
             bool isPressed = false;
-            PointerPoint pointerPress = null;
+            PointerPoint pointerPress = default;
             double lastTheta = 0;
             double lastPhi = 0;
             double lastX = 0;
