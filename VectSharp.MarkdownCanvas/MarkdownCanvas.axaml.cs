@@ -67,7 +67,7 @@ namespace VectSharp.MarkdownCanvas
         /// Defines the <see cref="MinVariation"/> property.
         /// </summary>
         public static readonly StyledProperty<double> MinVariationProperty = AvaloniaProperty.Register<MarkdownCanvasControl, double>(nameof(MinVariation), 10);
-        
+
         /// <summary>
         /// The minimum width variation that triggers a document reflow. If the control is resized, but the width changes by less than this amount, the document is not re-drawn.
         /// </summary>
@@ -81,7 +81,7 @@ namespace VectSharp.MarkdownCanvas
         /// Defines the <see cref="DocumentSource"/> property.
         /// </summary>
         public static readonly StyledProperty<string> DocumentSourceProperty = AvaloniaProperty.Register<MarkdownCanvasControl, string>(nameof(DocumentSource));
-        
+
         /// <summary>
         /// Sets the currently displayed document from Markdown source.
         /// </summary>
@@ -94,7 +94,7 @@ namespace VectSharp.MarkdownCanvas
         /// Defines the <see cref="Document"/> property.
         /// </summary>
         public static readonly StyledProperty<MarkdownDocument> DocumentProperty = AvaloniaProperty.Register<MarkdownCanvasControl, MarkdownDocument>(nameof(Document));
-        
+
         /// <summary>
         /// Gets or sets the currently displayed <see cref="MarkdownDocument"/>.
         /// </summary>
@@ -141,39 +141,48 @@ namespace VectSharp.MarkdownCanvas
 
         /// <inheritdoc/>
         protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
-        {
-            base.OnPropertyChanged(change);
-
-            if (this.initialized)
+        {            
+            if (change.Property != ContentProperty || !initialized)
             {
-                if (change.Property == MarkdownCanvasControl.BoundsProperty || change.Property == MarkdownCanvasControl.MinRenderWidthProperty || change.Property == MarkdownCanvasControl.MaxRenderWidthProperty || change.Property == MarkdownCanvasControl.MinVariationProperty)
+                base.OnPropertyChanged(change);
+
+                if (this.initialized)
                 {
-                    Render();
+                    if (change.Property == MarkdownCanvasControl.BoundsProperty || change.Property == MarkdownCanvasControl.MinRenderWidthProperty || change.Property == MarkdownCanvasControl.MaxRenderWidthProperty || change.Property == MarkdownCanvasControl.MinVariationProperty)
+                    {
+                        Render();
+                    }
+                    else if (change.Property == MarkdownCanvasControl.DocumentProperty)
+                    {
+                        forcedRerender = true;
+                        Render();
+                    }
+                    else if (change.Property == MarkdownCanvasControl.FontSizeProperty)
+                    {
+                        this.Renderer.BaseFontSize = this.FontSize;
+                        forcedRerender = true;
+                        Render();
+                    }
+                    else if (change.Property == MarkdownCanvasControl.DocumentSourceProperty)
+                    {
+                        MarkdownDocument document = Markdig.Markdown.Parse(change.GetNewValue<string>(), new MarkdownPipelineBuilder().UseGridTables().UsePipeTables().UseEmphasisExtras().UseGenericAttributes().UseAutoIdentifiers().UseAutoLinks().UseTaskLists().UseListExtras().UseCitations().UseMathematics().UseSmartyPants().Build());
+                        this.Document = document;
+                    }
+                    else if (change.Property == MarkdownCanvasControl.VerticalContentAlignmentProperty)
+                    {
+                        this.FindControl<ScrollViewer>("ScrollViewer").VerticalContentAlignment = this.VerticalContentAlignment;
+                    }
+                    else if (change.Property == MarkdownCanvasControl.HorizontalContentAlignmentProperty)
+                    {
+                        this.FindControl<ScrollViewer>("ScrollViewer").HorizontalContentAlignment = this.HorizontalContentAlignment;
+                    }
                 }
-                else if (change.Property == MarkdownCanvasControl.DocumentProperty)
-                {
-                    forcedRerender = true;
-                    Render();
-                }
-                else if (change.Property == MarkdownCanvasControl.FontSizeProperty)
-                {
-                    this.Renderer.BaseFontSize = this.FontSize;
-                    forcedRerender = true;
-                    Render();
-                }
-                else if (change.Property == MarkdownCanvasControl.DocumentSourceProperty)
-                {
-                    MarkdownDocument document = Markdig.Markdown.Parse(change.GetNewValue<string>(), new MarkdownPipelineBuilder().UseGridTables().UsePipeTables().UseEmphasisExtras().UseGenericAttributes().UseAutoIdentifiers().UseAutoLinks().UseTaskLists().UseListExtras().UseCitations().UseMathematics().UseSmartyPants().Build());
-                    this.Document = document;
-                }
-                else if (change.Property == MarkdownCanvasControl.VerticalContentAlignmentProperty)
-                {
-                    this.FindControl<ScrollViewer>("ScrollViewer").VerticalContentAlignment = this.VerticalContentAlignment;
-                }
-                else if (change.Property == MarkdownCanvasControl.HorizontalContentAlignmentProperty)
-                {
-                    this.FindControl<ScrollViewer>("ScrollViewer").HorizontalContentAlignment = this.HorizontalContentAlignment;
-                }
+            }
+            else
+            {
+                initialized = false;
+                this.Content = change.OldValue;
+                initialized = true;
             }
         }
 
@@ -268,7 +277,7 @@ namespace VectSharp.MarkdownCanvas
                                     }
                                     else if (act.ActionType == RenderAction.ActionTypes.RasterImage)
                                     {
-                                        linkDestinationPoints[url.Substring(1)] =  act.ImageDestination.Value.TopLeft.Transform(act.Transform);
+                                        linkDestinationPoints[url.Substring(1)] = act.ImageDestination.Value.TopLeft.Transform(act.Transform);
                                     }
 
                                     return new RenderAction[] { act };
