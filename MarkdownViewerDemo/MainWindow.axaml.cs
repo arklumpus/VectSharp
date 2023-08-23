@@ -45,16 +45,21 @@ namespace MarkdownViewerDemo
 
         private async void OpenClicked(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog dialog = new OpenFileDialog() { Title = "Open Markdown file..." };
-
-            string[] result = await dialog.ShowAsync(this);
-
-            if (result != null && result.Length > 0)
+            System.Collections.Generic.IReadOnlyList<Avalonia.Platform.Storage.IStorageFile> result = await this.StorageProvider.OpenFilePickerAsync(new Avalonia.Platform.Storage.FilePickerOpenOptions()
             {
-                string markdownSource = System.IO.File.ReadAllText(result[0]);
+                 AllowMultiple = false,
+                 Title = "Open Markdown file..."
+            });
 
-                this.FindControl<VectSharp.MarkdownCanvas.MarkdownCanvasControl>("MarkdownCanvas").Renderer.BaseImageUri = System.IO.Path.GetDirectoryName(result[0]) + "/";
-                this.FindControl<VectSharp.MarkdownCanvas.MarkdownCanvasControl>("MarkdownCanvas").Renderer.BaseLinkUri = new Uri(System.IO.Path.GetDirectoryName(result[0]) + "/");
+            if (result != null && result.Count == 1)
+            {
+                await using System.IO.Stream fileStream = await result[0].OpenReadAsync();
+                using System.IO.StreamReader sr = new System.IO.StreamReader(fileStream);
+
+                string markdownSource = sr.ReadToEnd();
+
+                this.FindControl<VectSharp.MarkdownCanvas.MarkdownCanvasControl>("MarkdownCanvas").Renderer.BaseImageUri = System.IO.Path.GetDirectoryName(result[0].Path.ToString()) + "/";
+                this.FindControl<VectSharp.MarkdownCanvas.MarkdownCanvasControl>("MarkdownCanvas").Renderer.BaseLinkUri = new Uri(System.IO.Path.GetDirectoryName(result[0].Path.ToString()) + "/");
 
                 this.FindControl<VectSharp.MarkdownCanvas.MarkdownCanvasControl>("MarkdownCanvas").DocumentSource = markdownSource;
             }
