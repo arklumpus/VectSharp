@@ -1320,8 +1320,10 @@ namespace VectSharp.Canvas
 
                     using (context.PushTransform(act.Transform))
                     {
-                        RenderOptions.SetBitmapInterpolationMode(this, image.Item2 ? Avalonia.Media.Imaging.BitmapInterpolationMode.HighQuality : Avalonia.Media.Imaging.BitmapInterpolationMode.None);
-                        context.DrawImage(image.Item1, act.ImageSource.Value, act.ImageDestination.Value);
+                        using (context.PushRenderOptions(new RenderOptions() { BitmapInterpolationMode = image.Item2 ? Avalonia.Media.Imaging.BitmapInterpolationMode.HighQuality : Avalonia.Media.Imaging.BitmapInterpolationMode.None }))
+                        {
+                            context.DrawImage(image.Item1, act.ImageSource.Value, act.ImageDestination.Value);
+                        }
                     }
 
                     if (state != null)
