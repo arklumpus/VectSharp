@@ -395,6 +395,11 @@ namespace VectSharp
             Point nextGlyphPlacementDelta = new Point();
             Point nextGlyphAdvanceDelta = new Point();
 
+            if (text == null)
+            {
+                return this;
+            }
+
             for (int i = 0; i < text.Length; i++)
             {
                 char c = text[i];
