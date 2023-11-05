@@ -327,10 +327,10 @@ namespace VectSharp.Raster.ImageSharp
             switch (fillRule)
             {
                 case FillRule.NonZeroWinding:
-                    shapeOptions.IntersectionRule = IntersectionRule.Nonzero;
+                    shapeOptions.IntersectionRule = IntersectionRule.NonZero;
                     break;
                 case FillRule.EvenOdd:
-                    shapeOptions.IntersectionRule = IntersectionRule.OddEven;
+                    shapeOptions.IntersectionRule = IntersectionRule.EvenOdd;
                     break;
 
             }
@@ -830,7 +830,7 @@ namespace VectSharp.Raster.ImageSharp
             return Color.FromRgba((byte)(colour.R * 255), (byte)(colour.G * 255), (byte)(colour.B * 255), (byte)(colour.A * 255));
         }
 
-        public static IBrush ToImageSharpBrush(this Brush brush, double[,] transform)
+        public static SixLabors.ImageSharp.Drawing.Processing.Brush ToImageSharpBrush(this Brush brush, double[,] transform)
         {
             if (brush is SolidColourBrush solid)
             {
