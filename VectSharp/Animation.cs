@@ -16,16 +16,9 @@
 */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics;
-using System.Diagnostics.SymbolStore;
-using System.IO;
 using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 using VectSharp.Filters;
 
 namespace VectSharp
@@ -206,18 +199,6 @@ namespace VectSharp
                 }
                 else if (start is LinearGradientBrush linearStart && end is LinearGradientBrush linearEnd)
                 {
-                    /*List<GradientStop> gradientStops = new List<GradientStop>(anchors.Count);
-
-                    foreach (double anchor in anchors)
-                    {
-                        Colour startColour = linearStart.GradientStops.GetColourAt(anchor);
-                        Colour endColour = linearEnd.GradientStops.GetColourAt(anchor);
-
-                        gradientStops.Add(new GradientStop(InterpolateColour(startColour, endColour, position), anchor));
-                    }
-
-                    return new LinearGradientBrush(InterpolatePoint(linearStart.StartPoint, linearEnd.StartPoint, position), InterpolatePoint(linearStart.EndPoint, linearEnd.EndPoint, position), gradientStops);*/
-
                     List<GradientStop> startStops = linearStart.GradientStops.ToList();
                     List<GradientStop> endStops = linearEnd.GradientStops.ToList();
 
@@ -270,18 +251,6 @@ namespace VectSharp
                 }
                 else if (start is RadialGradientBrush radialStart && end is RadialGradientBrush radialEnd)
                 {
-                    /*List<GradientStop> gradientStops = new List<GradientStop>(anchors.Count);
-
-                    foreach (double anchor in anchors)
-                    {
-                        Colour startColour = radialStart.GradientStops.GetColourAt(anchor);
-                        Colour endColour = radialEnd.GradientStops.GetColourAt(anchor);
-
-                        gradientStops.Add(new GradientStop(InterpolateColour(startColour, endColour, position), anchor));
-                    }
-
-                    return new RadialGradientBrush(InterpolatePoint(radialStart.FocalPoint, radialEnd.FocalPoint, position), InterpolatePoint(radialStart.Centre, radialEnd.Centre, position), InterpolateDouble(radialStart.Radius, radialEnd.Radius, position), gradientStops);*/
-
                     List<GradientStop> startStops = radialStart.GradientStops.ToList();
                     List<GradientStop> endStops = radialEnd.GradientStops.ToList();
 
@@ -1216,16 +1185,6 @@ namespace VectSharp
                 return gpr;
             }
         }
-
-        /*public static (GraphicsPath, GraphicsPath) GetAnimatedPath(GraphicsPath start, GraphicsPath end)
-        {
-            PathAction startAction = new PathAction(start, null, null, 1, LineCaps.Butt, LineJoins.Miter, new LineDash(), null, false);
-            PathAction endAction = new PathAction(end, null, null, 1, LineCaps.Butt, LineJoins.Miter, new LineDash(), null, false);
-
-            PathActionAnimation anim = new PathActionAnimation(startAction, endAction, 1);
-
-            return (anim.StartValue.Path, anim.EndValue.Path);
-        }*/
     }
 
     /// <summary>
