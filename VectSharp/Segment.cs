@@ -100,6 +100,23 @@ namespace VectSharp
         /// <param name="transformationFunction">An arbitrary transformation function.</param>
         /// <returns>A collection of <see cref="Segment"/>s that have been transformed according to the <paramref name="transformationFunction"/>.</returns>
         public abstract IEnumerable<Segment> Transform(Func<Point, Point> transformationFunction);
+
+        /// <summary>
+        /// Flattens the <see cref="Segment"/>, replacing curve segments with series of line segments that approximate them, ensuring the specified maximum deviation from the original path.
+        /// </summary>
+        /// <param name="previousPoint">The point from which the <see cref="Segment"/> starts (i.e. the endpoint of the previous <see cref="Segment"/>).</param>
+        /// <param name="flatness">The maximum deviation from the original path.</param>
+        /// <returns>A collection of <see cref="Segment"/>s composed only of linear segments that approximates the current <see cref="Segment"/>.</returns>
+        public abstract IEnumerable<Segment> Flatten(Point? previousPoint, double flatness);
+
+        /// <summary>
+        /// Flattens the <see cref="Segment"/>, replacing curve segments with series of line segments that approximate them, ensuring the specified maximum deviation from the original path, assuming that the <see cref="Segment"/> will be drawn with the specified <paramref name="offset"/>.
+        /// </summary>
+        /// <param name="previousPoint">The point from which the <see cref="Segment"/> starts (i.e. the endpoint of the previous <see cref="Segment"/>).</param>
+        /// <param name="offset">The offset that will be used to draw the <see cref="Segment"/> (e.g., the line width of the stroke).</param>
+        /// <param name="flatness">The maximum deviation from the original path.</param>
+        /// <returns>A collection of tuples where the first element is a <see cref="Point"/> representing the end-point of a linear segment, and the second element is a <see cref="Point"/> containing the value of the tangent to the original <see cref="Segment"/> at that point.</returns>
+        public abstract IEnumerable<(Point point, Point tangent)> FlattenForOffsetAndGetTangents(Point? previousPoint, double offset, double flatness);
     }
 
     internal class MoveSegment : Segment
@@ -149,6 +166,16 @@ namespace VectSharp
         public override IEnumerable<Segment> Transform(Func<Point, Point> transformationFunction)
         {
             yield return new MoveSegment(transformationFunction(this.Point));
+        }
+
+        public override IEnumerable<Segment> Flatten(Point? previousPoint, double flatness)
+        {
+            yield return new MoveSegment(this.Point);
+        }
+
+        public override IEnumerable<(Point point, Point tangent)> FlattenForOffsetAndGetTangents(Point? previousPoint, double offset, double flatness)
+        {
+            throw new InvalidOperationException();
         }
     }
 
@@ -207,6 +234,21 @@ namespace VectSharp
         {
             yield return new LineSegment(transformationFunction(this.Point));
         }
+
+        public override IEnumerable<Segment> Flatten(Point? previousPoint, double flatness)
+        {
+            yield return new LineSegment(this.Point);
+        }
+
+        public override IEnumerable<(Point point, Point tangent)> FlattenForOffsetAndGetTangents(Point? previousPoint, double offset, double flatness)
+        {
+            if (previousPoint != null)
+            {
+                yield return (previousPoint.Value, this.GetTangentAt(previousPoint.Value, 1));
+            }
+
+            yield return (this.Point, this.GetTangentAt(previousPoint.Value, 1));
+        }
     }
 
     internal class CloseSegment : Segment
@@ -248,6 +290,16 @@ namespace VectSharp
         public override IEnumerable<Segment> Transform(Func<Point, Point> transformationFunction)
         {
             yield return new CloseSegment();
+        }
+
+        public override IEnumerable<Segment> Flatten(Point? previousPoint, double flatness)
+        {
+            yield return new CloseSegment();
+        }
+
+        public override IEnumerable<(Point point, Point tangent)> FlattenForOffsetAndGetTangents(Point? previousPoint, double offset, double flatness)
+        {
+            throw new InvalidOperationException();
         }
     }
 
@@ -370,16 +422,27 @@ namespace VectSharp
         {
             if (position <= 1 && position >= 0)
             {
-                return new Point(
-                    3 * this.Points[2].X * position * position +
-                    3 * this.Points[1].X * position * (2 - 3 * position) +
-                    3 * this.Points[0].X * (3 * position * position - 4 * position + 1) +
-                    -3 * previousPoint.X * (1 - position) * (1 - position),
+                if (position == 0 && previousPoint.IsEqual(this.Points[0], GraphicsPath.Tolerance))
+                {
+                    return (this.Points[1] - previousPoint).Normalize();
+                }
+                else if (position == 1 && this.Points[2].IsEqual(this.Points[1], GraphicsPath.Tolerance))
+                {
+                    return (this.Points[2] - this.Points[0]).Normalize();
+                }
+                else
+                {
+                    return new Point(
+                        3 * this.Points[2].X * position * position +
+                        3 * this.Points[1].X * position * (2 - 3 * position) +
+                        3 * this.Points[0].X * (3 * position * position - 4 * position + 1) +
+                        -3 * previousPoint.X * (1 - position) * (1 - position),
 
-                    3 * this.Points[2].Y * position * position +
-                    3 * this.Points[1].Y * position * (2 - 3 * position) +
-                    3 * this.Points[0].Y * (3 * position * position - 4 * position + 1) +
-                    -3 * previousPoint.Y * (1 - position) * (1 - position)).Normalize();
+                        3 * this.Points[2].Y * position * position +
+                        3 * this.Points[1].Y * position * (2 - 3 * position) +
+                        3 * this.Points[0].Y * (3 * position * position - 4 * position + 1) +
+                        -3 * previousPoint.Y * (1 - position) * (1 - position)).Normalize();
+                }
             }
             else if (position > 1)
             {
@@ -462,6 +525,479 @@ namespace VectSharp
         public override IEnumerable<Segment> Transform(Func<Point, Point> transformationFunction)
         {
             yield return new CubicBezierSegment(transformationFunction(this.Points[0]), transformationFunction(this.Points[1]), transformationFunction(this.Points[2]));
+        }
+
+        private (CubicBezierSegment first, CubicBezierSegment second) Subdivide(Point previousPoint, double t)
+        {
+            Point p0 = previousPoint + t * (this.Points[0] - previousPoint);
+            Point p1 = this.Points[0] + t * (this.Points[1] - this.Points[0]);
+            Point p2 = this.Points[1] + t * (this.Points[2] - this.Points[1]);
+            Point p0_2 = p0 + t * (p1 - p0);
+            Point p1_2 = p1 + t * (p2 - p1);
+            Point p0_3 = p0_2 + t * (p1_2 - p0_2);
+
+            return (new CubicBezierSegment(p0, p0_2, p0_3), new CubicBezierSegment(p1_2, p2, this.Points[2]));
+        }
+
+        // Based on https://doi.org/10.1016/j.cag.2005.08.002
+        private IEnumerable<Segment> FlattenPrivate(Point? previousPoint, double flatness)
+        {
+            Point startingPoint;
+
+            startingPoint = previousPoint ?? this.Points[0];
+
+            double s2 = ((this.Points[1].X - startingPoint.X) * (this.Points[0].Y - startingPoint.Y) - (this.Points[1].Y - startingPoint.Y) * (this.Points[0].X - startingPoint.X)) / Math.Sqrt((this.Points[0].X - startingPoint.X) * (this.Points[0].X - startingPoint.X) + (this.Points[0].Y - startingPoint.Y) * (this.Points[0].Y - startingPoint.Y));
+
+            double t = 2 * Math.Sqrt(flatness / (3 * Math.Abs(s2)));
+
+            if (t < 1)
+            {
+                (CubicBezierSegment first, CubicBezierSegment second) = this.Subdivide(startingPoint, t);
+
+                yield return new LineSegment(first.Points[2]);
+
+                foreach (Segment seg in second.FlattenPrivate(first.Points[2], flatness))
+                {
+                    yield return seg;
+                }
+            }
+            else
+            {
+                yield return new LineSegment(this.Points[2]);
+            }
+        }
+
+        // Based on https://doi.org/10.1016/j.cag.2005.08.002
+        public override IEnumerable<(Point point, Point tangent)> FlattenForOffsetAndGetTangents(Point? previousPoint, double offset, double flatness)
+        {
+            return FlattenForOffsetAndGetTangents(previousPoint, offset, flatness, false);
+        }
+
+        // Based on https://doi.org/10.1016/j.cag.2005.08.002
+        private IEnumerable<(Point point, Point tangent)> FlattenForOffsetAndGetTangents(Point? previousPoint, double offset, double flatness, bool skipFirst)
+        {
+            Point startingPoint;
+
+            startingPoint = previousPoint ?? this.Points[0];
+
+            if (!skipFirst)
+            {
+                yield return (startingPoint, this.GetBezierTangentAt(startingPoint, 0));
+            }
+
+            double r1sq = (this.Points[0].X - startingPoint.X) * (this.Points[0].X - startingPoint.X) + (this.Points[0].Y - startingPoint.Y) * (this.Points[0].Y - startingPoint.Y);
+            double s2 = ((this.Points[1].X - startingPoint.X) * (this.Points[0].Y - startingPoint.Y) - (this.Points[1].Y - startingPoint.Y) * (this.Points[0].X - startingPoint.X)) / Math.Sqrt((this.Points[0].X - startingPoint.X) * (this.Points[0].X - startingPoint.X) + (this.Points[0].Y - startingPoint.Y) * (this.Points[0].Y - startingPoint.Y));
+
+            if (double.IsNaN(s2))
+            {
+                s2 = ((this.Points[2].X - startingPoint.X) * (this.Points[1].Y - startingPoint.Y) - (this.Points[2].Y - startingPoint.Y) * (this.Points[1].X - startingPoint.X)) / Math.Sqrt((this.Points[1].X - startingPoint.X) * (this.Points[1].X - startingPoint.X) + (this.Points[1].Y - startingPoint.Y) * (this.Points[1].Y - startingPoint.Y));
+            }
+
+            if (double.IsNaN(s2))
+            {
+                s2 = 1;
+            }
+
+            double t = 2 * Math.Sqrt(Math.Abs(flatness / (3 * Math.Abs(s2) * (1 - offset * s2 / (3 * r1sq)))));
+
+            if (r1sq < 1e-7)
+            {
+                t = 2 * Math.Sqrt(Math.Abs(flatness / (3 * Math.Abs(s2))));
+
+                if (this.Points[1].X == startingPoint.X && this.Points[1].Y == startingPoint.Y && this.Points[2].X == startingPoint.X && this.Points[2].Y == startingPoint.Y)
+                {
+                    yield return (this.Point, new Point(double.NaN, double.NaN));
+                    yield break;
+                }
+            }
+
+            if (t < 1)
+            {
+                (CubicBezierSegment first, CubicBezierSegment second) = this.Subdivide(startingPoint, t);
+
+                yield return (first.Points[2], this.GetBezierTangentAt(startingPoint, t));
+
+                foreach ((Point, Point) p in second.FlattenForOffsetAndGetTangents(first.Points[2], offset, flatness, true))
+                {
+                    yield return p;
+                }
+            }
+            else
+            {
+                yield return (this.Points[2], this.GetBezierTangentAt(startingPoint, 1));
+            }
+        }
+
+        internal IEnumerable<CubicBezierSegment> MonotoniseOnY(Point previousPoint)
+        {
+            double a = previousPoint.Y;
+            double b = this.Points[0].Y;
+            double c = this.Points[1].Y;
+            double d = this.Points[2].Y;
+
+            if ((a + 3 * c != 3 * b + d))
+            {
+                double t1 = ((-6 * a + 12 * b - 6 * c) + Math.Sqrt((6 * a - 12 * b + 6 * c) * (6 * a - 12 * b + 6 * c) - 4 * (3 * b - 3 * a) * (-3 * a + 9 * b - 9 * c + 3 * d))) / (2 * (-3 * a + 9 * b - 9 * c + 3 * d));
+                double t2 = ((-6 * a + 12 * b - 6 * c) - Math.Sqrt((6 * a - 12 * b + 6 * c) * (6 * a - 12 * b + 6 * c) - 4 * (3 * b - 3 * a) * (-3 * a + 9 * b - 9 * c + 3 * d))) / (2 * (-3 * a + 9 * b - 9 * c + 3 * d));
+
+                if (t1 > 0 && t1 < 1 && t2 > 0 && t2 < 1)
+                {
+                    (CubicBezierSegment seg1, CubicBezierSegment seg2) = this.Subdivide(previousPoint, Math.Min(t1, t2));
+
+                    yield return seg1;
+
+                    foreach (CubicBezierSegment seg in seg2.MonotoniseOnY(seg1.Point))
+                    {
+                        yield return seg;
+                    }
+                }
+                else if (t1 > 0 && t1 < 1)
+                {
+                    (CubicBezierSegment seg1, CubicBezierSegment seg2) = this.Subdivide(previousPoint, t1);
+
+                    yield return seg1;
+                    yield return seg2;
+                }
+                else if (t2 > 0 && t2 < 1)
+                {
+                    (CubicBezierSegment seg1, CubicBezierSegment seg2) = this.Subdivide(previousPoint, t2);
+
+                    yield return seg1;
+                    yield return seg2;
+                }
+                else
+                {
+                    yield return this;
+                }
+            }
+            else
+            {
+                double t = (a - b) / (2 * (a - 2 * b + c));
+
+                if (t > 0 && t < 1)
+                {
+                    (CubicBezierSegment seg1, CubicBezierSegment seg2) = this.Subdivide(previousPoint, t);
+
+                    yield return seg1;
+                    yield return seg2;
+                }
+                else
+                {
+                    yield return this;
+                }
+            }
+        }
+
+        // Based on https://doi.org/10.1016/j.cag.2005.08.002
+        public override IEnumerable<Segment> Flatten(Point? previousPoint, double flatness)
+        {
+            Point currPoint = previousPoint ?? this.Points[0];
+
+            foreach (Segment seg in this.BreakAtInflectionPoints(previousPoint, flatness))
+            {
+                if (seg is CubicBezierSegment cub)
+                {
+                    foreach (Segment seg2 in cub.FlattenPrivate(currPoint, flatness))
+                    {
+                        yield return seg2;
+                    }
+                }
+                else
+                {
+                    yield return seg;
+                }
+                currPoint = seg.Point;
+            }
+        }
+
+        // Based on https://doi.org/10.1016/j.cag.2005.08.002
+        internal IEnumerable<Segment> BreakAtInflectionPoints(Point? previousPoint, double flatness)
+        {
+            Point startingPoint;
+
+            startingPoint = previousPoint ?? this.Points[0];
+
+            double ax = -startingPoint.X + 3 * this.Points[0].X - 3 * this.Points[1].X + this.Points[2].X;
+            double ay = -startingPoint.Y + 3 * this.Points[0].Y - 3 * this.Points[1].Y + this.Points[2].Y;
+            double bx = 3 * startingPoint.X - 6 * this.Points[0].X + 3 * this.Points[1].X;
+            double by = 3 * startingPoint.Y - 6 * this.Points[0].Y + 3 * this.Points[1].Y;
+            double cx = -3 * startingPoint.X + 3 * this.Points[0].X;
+            double cy = -3 * startingPoint.Y + 3 * this.Points[0].Y;
+
+            double tcusp = -0.5 * (ay * cx - ax * cy) / (ay * bx - ax * by);
+
+            double t1 = tcusp - Math.Sqrt(tcusp * tcusp - (by * cx - bx * cy) / (ay * bx - ax * by) / 3);
+            double t2 = tcusp + Math.Sqrt(tcusp * tcusp - (by * cx - bx * cy) / (ay * bx - ax * by) / 3);
+
+            List<double> validInflectionPoints = new List<double>();
+
+            if (t1 >= 0 && t1 <= 1)
+            {
+                validInflectionPoints.Add(t1);
+            }
+
+            if (t2 >= 0 && t2 <= 1 && (validInflectionPoints.Count == 0 || t2 - validInflectionPoints[0] > 1e-5))
+            {
+                validInflectionPoints.Add(t2);
+            }
+
+            if (validInflectionPoints.Count == 0)
+            {
+                yield return this;
+            }
+            else if (validInflectionPoints.Count == 1)
+            {
+                (CubicBezierSegment first, CubicBezierSegment second) = this.Subdivide(startingPoint, validInflectionPoints[0]);
+
+                double s3 = Math.Abs(((second.Points[2].X - first.Point.X) * (second.Points[0].Y - first.Point.Y) - (second.Points[2].Y - first.Point.Y) * (second.Points[0].X - first.Point.X)) / Math.Sqrt((second.Points[0].X - first.Point.X) * (second.Points[0].X - first.Point.X) + (second.Points[0].Y - first.Point.Y) * (second.Points[0].Y - first.Point.Y)));
+
+                double tf = Math.Pow(flatness / s3, 1.0 / 3);
+
+                if (double.IsNaN(tf) || double.IsInfinity(tf))
+                {
+                    tf = 0;
+                }
+
+                double tm = Math.Max(0, validInflectionPoints[0] - tf * (1 - validInflectionPoints[0]));
+                double tp = Math.Min(validInflectionPoints[0] + tf * (1 - validInflectionPoints[0]), 1);
+
+                if (tm > 0 && tp < 1)
+                {
+                    (first, _) = this.Subdivide(startingPoint, tm);
+
+                    CubicBezierSegment temp;
+                    (temp, second) = this.Subdivide(startingPoint, tp);
+
+                    yield return first;
+
+                    if (tm != tp)
+                    {
+                        yield return new LineSegment(temp.Point);
+                    }
+
+                    yield return second;
+                }
+                else if (tm == 0 && tp < 1)
+                {
+                    (first, second) = this.Subdivide(startingPoint, tp);
+
+                    yield return new LineSegment(first.Point);
+
+                    yield return second;
+                }
+                else if (tm > 0 && tp == 1)
+                {
+                    (first, _) = this.Subdivide(startingPoint, tm);
+
+                    yield return first;
+
+                    if (tm != tp)
+                    {
+                        yield return new LineSegment(this.Point);
+                    }
+                }
+                else
+                {
+                    yield return new LineSegment(this.Point);
+                }
+            }
+            else if (validInflectionPoints.Count == 2)
+            {
+                (CubicBezierSegment first, CubicBezierSegment second) = this.Subdivide(startingPoint, validInflectionPoints[0]);
+
+                double s3 = Math.Abs(((second.Points[2].X - first.Point.X) * (second.Points[0].Y - first.Point.Y) - (second.Points[2].Y - first.Point.Y) * (second.Points[0].X - first.Point.X)) / Math.Sqrt((second.Points[0].X - first.Point.X) * (second.Points[0].X - first.Point.X) + (second.Points[0].Y - first.Point.Y) * (second.Points[0].Y - first.Point.Y)));
+
+                double tf = Math.Pow(flatness / s3, 1.0 / 3);
+
+                if (double.IsNaN(tf) || double.IsInfinity(tf))
+                {
+                    tf = 0;
+                }
+
+                double t1m = Math.Max(validInflectionPoints[0] - tf * (1 - validInflectionPoints[0]), 0);
+                double t1p = Math.Min(validInflectionPoints[0] + tf * (1 - validInflectionPoints[0]), validInflectionPoints[1]);
+
+
+                (first, second) = this.Subdivide(startingPoint, validInflectionPoints[1]);
+
+                s3 = Math.Abs(((second.Points[2].X - first.Point.X) * (second.Points[0].Y - first.Point.Y) - (second.Points[2].Y - first.Point.Y) * (second.Points[0].X - first.Point.X)) / Math.Sqrt((second.Points[0].X - first.Point.X) * (second.Points[0].X - first.Point.X) + (second.Points[0].Y - first.Point.Y) * (second.Points[0].Y - first.Point.Y)));
+
+                tf = Math.Pow(flatness / s3, 1.0 / 3);
+
+                if (double.IsNaN(tf) || double.IsInfinity(tf))
+                {
+                    tf = 0;
+                }
+
+                double t2m = Math.Max(validInflectionPoints[1] - tf * (1 - validInflectionPoints[1]), t1p);
+                double t2p = Math.Min(validInflectionPoints[1] + tf * (1 - validInflectionPoints[1]), 1);
+
+                if (t1m > 0)
+                {
+                    (first, _) = this.Subdivide(startingPoint, t1m);
+                    yield return first;
+                }
+
+                if (t1p > t1m)
+                {
+                    CubicBezierSegment temp;
+                    (temp, _) = this.Subdivide(startingPoint, t1p);
+                    yield return new LineSegment(temp.Point);
+                }
+
+                if (t2m > t1p)
+                {
+                    CubicBezierSegment temp, third;
+                    (temp, second) = this.Subdivide(startingPoint, t1p);
+                    (third, _) = second.Subdivide(temp.Point, (t2m - t1p) / (1 - t1p));
+                    yield return third;
+                }
+
+                if (t2p > t2m)
+                {
+                    CubicBezierSegment temp;
+                    (temp, second) = this.Subdivide(startingPoint, t1p);
+                    (temp, _) = second.Subdivide(temp.Point, (t2p - t1p) / (1 - t1p));
+                    yield return new LineSegment(temp.Point);
+                }
+
+                if (t2p < 1)
+                {
+                    CubicBezierSegment temp, fourth;
+                    (temp, second) = this.Subdivide(startingPoint, t1p);
+                    (_, fourth) = second.Subdivide(temp.Point, (t2p - t1p) / (1 - t1p));
+                    yield return fourth;
+                }
+
+                /*
+                
+
+                if (t1m > 0 && t1p < 1)
+                {
+                    (first, _) = this.Subdivide(startingPoint, t1m);
+
+                    CubicBezierSegment temp;
+                    (temp, second) = this.Subdivide(startingPoint, t1p);
+
+                    yield return first;
+
+                    if (t1m != t1p)
+                    {
+                        yield return new LineSegment(temp.Point);
+                    }
+
+                    currPoint = temp.Point;
+                }
+                else if (t1m == 0 && t1p < 1)
+                {
+                    (first, second) = this.Subdivide(startingPoint, t1p);
+
+                    yield return new LineSegment(first.Point);
+
+                    currPoint = first.Point;
+                }
+                else if (t1m > 0 && t1p == 1)
+                {
+                    (first, _) = this.Subdivide(startingPoint, t1m);
+
+                    yield return first;
+
+                    if (t1m != t1p)
+                    {
+                        yield return new LineSegment(this.Point);
+                    }
+
+                    yield break;
+                }
+                else
+                {
+                    yield return new LineSegment(this.Point);
+                    yield break;
+                }
+
+                if (t2m > 0 && t2p < 1)
+                {
+                    CubicBezierSegment temp;
+                    (temp, second) = this.Subdivide(startingPoint, t1p);
+
+                    t2m = (t2m - t1p) / (1 - t1p);
+                    t2p = (t2p - t1p) / (1 - t1p);
+
+                    (CubicBezierSegment third, _) = second.Subdivide(temp.Point, t2m);
+
+                    CubicBezierSegment temp2, fourth;
+                    (temp2, fourth) = second.Subdivide(temp.Point, t2p);
+
+                    yield return first;
+
+                    if (t1m != t1p)
+                    {
+                        yield return new LineSegment(temp.Point);
+                    }
+
+                    currPoint = temp.Point;
+                }
+                else if (t1m == 0 && t1p < 1)
+                {
+                    (first, second) = this.Subdivide(startingPoint, t1p);
+
+                    yield return new LineSegment(first.Point);
+
+                    currPoint = first.Point;
+                }
+                else if (t1m > 0 && t1p == 1)
+                {
+                    (first, _) = this.Subdivide(startingPoint, t1m);
+
+                    yield return first;
+
+                    if (t1m != t1p)
+                    {
+                        yield return new LineSegment(this.Point);
+                    }
+
+                    yield break;
+                }
+                else
+                {
+                    yield return new LineSegment(this.Point);
+                    yield break;
+                }
+                */
+
+                /*
+
+
+
+                (first, _) = this.Subdivide(startingPoint, t1m);
+
+                CubicBezierSegment temp;
+                (temp, second) = this.Subdivide(startingPoint, t1p);
+
+                t2m = (t2m - t1p) / (1 - t1p);
+                t2p = (t2p - t1p) / (1 - t1p);
+
+                (CubicBezierSegment third, _) = second.Subdivide(temp.Point, t2m);
+
+                CubicBezierSegment temp2, fourth;
+                (temp2, fourth) = second.Subdivide(temp.Point, t2p);
+
+                yield return first;
+
+                if (t1m != t1p)
+                {
+                    yield return new LineSegment(temp.Point);
+                }
+
+                yield return third;
+
+                if (t2m != t2p)
+                {
+                    yield return new LineSegment(temp2.Point);
+                }
+
+                yield return fourth;*/
+            }
         }
     }
 
@@ -755,6 +1291,34 @@ namespace VectSharp
                 {
                     yield return seg2;
                 }
+            }
+        }
+
+        public override IEnumerable<Segment> Flatten(Point? previousPoint, double flatness)
+        {
+            double length = this.Measure(previousPoint.Value);
+            double resolution = 2 * Math.Sqrt(flatness * (2 * this.Radius - flatness));
+
+            int segmentCount = (int)Math.Ceiling(length / resolution);
+
+            for (int i = 0; i < segmentCount; i++)
+            {
+                yield return new LineSegment(this.GetPointAt(previousPoint.Value, (double)(i + 1) / segmentCount));
+            }
+        }
+
+        public override IEnumerable<(Point point, Point tangent)> FlattenForOffsetAndGetTangents(Point? previousPoint, double offset, double flatness)
+        {
+            double length = this.Measure(previousPoint.Value);
+            double resolution = 2 * Math.Sqrt(flatness * (2 * (this.Radius + offset) - flatness));
+
+            int segmentCount = (int)Math.Ceiling(length / resolution);
+
+            yield return (this.GetPointAt(previousPoint.Value, 0), this.GetTangentAt(previousPoint.Value, 0));
+
+            for (int i = 0; i < segmentCount; i++)
+            {
+                yield return (this.GetPointAt(previousPoint.Value, (double)(i + 1) / segmentCount), this.GetTangentAt(previousPoint.Value, (double)(i + 1) / segmentCount));
             }
         }
     }
