@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace VectSharp
 {
@@ -1321,7 +1320,7 @@ namespace VectSharp
                                     currLen += segLength;
                                     currPoint = this.Segments[i].Point;
                                 }
-                                else
+                                else if (segLength > 0)
                                 {
                                     double pos = (length - currLen) / segLength;
                                     return this.Segments[i].GetPointAt(currPoint, pos);
@@ -1343,7 +1342,7 @@ namespace VectSharp
                                     currLen += segLength;
                                     currPoint = this.Segments[i].Point;
                                 }
-                                else
+                                else if (segLength > 0)
                                 {
                                     double pos = (length - currLen) / segLength;
                                     return this.Segments[i].GetPointAt(currPoint, pos);
@@ -1362,7 +1361,7 @@ namespace VectSharp
                                     currLen += segLength;
                                     currPoint = this.Segments[i].Point;
                                 }
-                                else
+                                else if (segLength > 0)
                                 {
                                     double pos = (length - currLen) / segLength;
                                     return this.Segments[i].GetPointAt(currPoint, pos);
@@ -1395,7 +1394,7 @@ namespace VectSharp
                                     currLen += segLength;
                                     currPoint = this.Segments[i].Point;
                                 }
-                                else
+                                else if (segLength > 0)
                                 {
                                     double pos = (length - currLen) / segLength;
                                     return this.Segments[i].GetPointAt(currPoint, pos);
@@ -1412,7 +1411,7 @@ namespace VectSharp
                                     currLen += segLength;
                                     currPoint = this.Segments[i].Point;
                                 }
-                                else
+                                else if (segLength > 0)
                                 {
                                     double pos = (length - currLen) / segLength;
                                     return this.Segments[i].GetPointAt(currPoint, pos);
@@ -1976,6 +1975,61 @@ namespace VectSharp
             return Graphics.ReduceMaximumLength(tbr, resolution);
         }
 
+
+        /// <summary>
+        /// Flattens a <see cref="GraphicsPath"/>, replacing curve segments with series of line segments that approximate them, ensuring the specified maximum deviation from the original path.
+        /// </summary>
+        /// <param name="flatness">The maximum deviation from the original path.</param>
+        /// <returns>A <see cref="GraphicsPath"/> composed only of linear segments that approximates the current <see cref="GraphicsPath"/>.</returns>
+        public GraphicsPath Flatten(double flatness)
+        {
+            if (!(flatness > 0))
+            {
+                throw new ArgumentOutOfRangeException(nameof(flatness), flatness, "The flatness must be greater than 0!");
+            }
+
+            GraphicsPath tbr = new GraphicsPath();
+
+            Point?[] previousPoints = new Point?[this.Segments.Count];
+
+            previousPoints[0] = null;
+
+            for (int i = 0; i < this.Segments.Count - 1; i++)
+            {
+                if (this.Segments[i].Type != SegmentType.Close)
+                {
+                    previousPoints[i + 1] = this.Segments[i].Point;
+                }
+                else
+                {
+                    previousPoints[i + 1] = previousPoints[i];
+                }
+            }
+
+            Segment[][] flattenedSegments = new Segment[this.Segments.Count][];
+
+            System.Threading.Tasks.Parallel.For(0, this.Segments.Count, i =>
+            {
+                flattenedSegments[i] = this.Segments[i].Flatten(previousPoints[i], flatness).ToArray();
+            });
+
+            int total = 0;
+
+            for (int i = 0; i < flattenedSegments.Length; i++)
+            {
+                total += flattenedSegments[i].Length;
+            }
+
+            tbr.Segments.Capacity = total;
+
+            for (int i = 0; i < flattenedSegments.Length; i++)
+            {
+                tbr.Segments.AddRange(flattenedSegments[i]);
+            }
+
+            return tbr;
+        }
+
         /// <summary>
         /// Gets a collection of the end points of all the segments in the <see cref="GraphicsPath"/>, divided by figure.
         /// </summary>
@@ -2441,62 +2495,6 @@ namespace VectSharp
                         exploredEdges.Add((prev, vertex));
                         helpers.Add(vertex);
                     }
-
-
-                    /*(int, int) ej = (-1, -1);
-                    (int, int) ek = (-1, -1);
-
-                    double xJ = double.MinValue;
-                    double xK = double.MaxValue;
-
-                    for (int i = 0; i < edges.Count; i++)
-                    {
-                        if ((vertices[edges[i].Item1].Y < pt.Y && vertices[edges[i].Item2].Y > pt.Y) || (vertices[edges[i].Item1].Y > pt.Y && vertices[edges[i].Item2].Y < pt.Y))
-                        {
-                            double dy = pt.Y - vertices[edges[i].Item1].Y;
-                            double dx = dy * (vertices[edges[i].Item2].X - vertices[edges[i].Item1].X) / (vertices[edges[i].Item2].Y - vertices[edges[i].Item1].Y);
-
-                            double x = dx + vertices[edges[i].Item1].X;
-
-                            if (x < pt.X && x >= xJ)
-                            {
-                                xJ = x;
-                                ej = edges[i];
-                            }
-
-                            if (x > pt.X && x <= xK)
-                            {
-                                xK = x;
-                                ek = edges[i];
-                            }
-                        }
-                    }
-
-                    Point helper = new Point(double.NaN, double.MinValue);
-                    int helperIndex = -1;
-
-                    for (int i = 0; i < vertices.Count; i++)
-                    {
-                        Point h = vertices[i];
-                        if (h.Y < pt.Y && h.Y > helper.Y)
-                        {
-                            double dyJ = h.Y - vertices[ej.Item1].Y;
-                            double dxJ = dyJ * (vertices[ej.Item2].X - vertices[ej.Item1].X) / (vertices[ej.Item2].Y - vertices[ej.Item1].Y);
-                            double hxJ = dxJ + vertices[ej.Item1].X;
-
-                            double dyK = h.Y - vertices[ek.Item1].Y;
-                            double dxK = dyJ * (vertices[ek.Item2].X - vertices[ek.Item1].X) / (vertices[ek.Item2].Y - vertices[ek.Item1].Y);
-                            double hxK = dxJ + vertices[ek.Item1].X;
-
-                            if (h.X >= hxJ && h.X <= hxK)
-                            {
-                                helper = h;
-                                helperIndex = i;
-                            }
-                        }
-                    }
-
-                    diagonals.Add((vertex, helperIndex));*/
                 }
                 else if (vertexType == VertexType.Merge)
                 {
@@ -2554,63 +2552,6 @@ namespace VectSharp
 
                         helpers[ejIndex] = vertex;
                     }
-
-                    //gpr.FillPath(new GraphicsPath().MoveTo(pt.X - 1, pt.Y - 1).LineTo(pt.X, pt.Y + 1).LineTo(pt.X + 1, pt.Y - 1).Close(), Colours.Green);
-
-                    /*(int, int) ej = (-1, -1);
-                    (int, int) ek = (-1, -1);
-
-                    double xJ = double.MinValue;
-                    double xK = double.MaxValue;
-
-                    for (int i = 0; i < edges.Count; i++)
-                    {
-                        if ((vertices[edges[i].Item1].Y < pt.Y && vertices[edges[i].Item2].Y > pt.Y) || (vertices[edges[i].Item1].Y > pt.Y && vertices[edges[i].Item2].Y < pt.Y))
-                        {
-                            double dy = pt.Y - vertices[edges[i].Item1].Y;
-                            double dx = dy * (vertices[edges[i].Item2].X - vertices[edges[i].Item1].X) / (vertices[edges[i].Item2].Y - vertices[edges[i].Item1].Y);
-
-                            double x = dx + vertices[edges[i].Item1].X;
-
-                            if (x < pt.X && x >= xJ)
-                            {
-                                xJ = x;
-                                ej = edges[i];
-                            }
-
-                            if (x > pt.X && x <= xK)
-                            {
-                                xK = x;
-                                ek = edges[i];
-                            }
-                        }
-                    }
-
-                    Point helper = new Point(double.NaN, double.MaxValue);
-                    int helperIndex = -1;
-
-                    for (int i = 0; i < vertices.Count; i++)
-                    {
-                        Point h = vertices[i];
-                        if (h.Y > pt.Y && h.Y < helper.Y)
-                        {
-                            double dyJ = h.Y - vertices[ej.Item1].Y;
-                            double dxJ = dyJ * (vertices[ej.Item2].X - vertices[ej.Item1].X) / (vertices[ej.Item2].Y - vertices[ej.Item1].Y);
-                            double hxJ = dxJ + vertices[ej.Item1].X;
-
-                            double dyK = h.Y - vertices[ek.Item1].Y;
-                            double dxK = dyJ * (vertices[ek.Item2].X - vertices[ek.Item1].X) / (vertices[ek.Item2].Y - vertices[ek.Item1].Y);
-                            double hxK = dxJ + vertices[ek.Item1].X;
-
-                            if (h.X >= hxJ && h.X <= hxK)
-                            {
-                                helper = h;
-                                helperIndex = i;
-                            }
-                        }
-                    }
-
-                    diagonals.Add((vertex, helperIndex));*/
                 }
                 else if (vertexType == VertexType.Regular)
                 {
@@ -3128,9 +3069,7 @@ namespace VectSharp
 
                             if (theta1 > theta2)
                             {
-                                double temp = theta1;
-                                theta1 = theta2;
-                                theta2 = temp;
+                                (theta2, theta1) = (theta1, theta2);
                             }
 
                             while (theta1 < 0)
@@ -3356,6 +3295,1165 @@ namespace VectSharp
                 {
                     tbr.Segments.Add(seg);
                 }
+            }
+
+            return tbr;
+        }
+
+        private static Point IntersectLines(Point p1, Point d1, Point p3, Point d3)
+        {
+            Point p2 = p1 + d1;
+            Point p4 = p3 + d3;
+            double denom = d1.X * d3.Y - d1.Y * d3.X;
+
+            double x = (-(p1.X * p2.Y - p1.Y * p2.X) * d3.X + d1.X * (p3.X * p4.Y - p3.Y * p4.X)) / denom;
+            double y = (-(p1.X * p2.Y - p1.Y * p2.X) * d3.Y + d1.Y * (p3.X * p4.Y - p3.Y * p4.X)) / denom;
+
+            return new Point(x, y);
+        }
+
+        /// <summary>
+        /// Reverses the <see cref="GraphicsPath"/>.
+        /// </summary>
+        /// <returns>The reversed <see cref="GraphicsPath"/>.</returns>
+        public GraphicsPath Reverse()
+        {
+            GraphicsPath tbr = new GraphicsPath();
+
+            foreach (GraphicsPath figure in this.GetFigures())
+            {
+                Point currPoint = new Point();
+                Point startPoint = new Point();
+                bool started = false;
+
+                List<(int type, Point p1, Point p2, Point p3, Point p4)> invertedSegments = new List<(int type, Point p1, Point p2, Point p3, Point p4)>();
+
+                for (int i = 0; i < figure.Segments.Count; i++)
+                {
+                    if (figure.Segments[i].Type == SegmentType.Move)
+                    {
+                        currPoint = figure.Segments[i].Point;
+                        startPoint = currPoint;
+                        started = true;
+                    }
+                    else if (figure.Segments[i].Type == SegmentType.Line)
+                    {
+                        invertedSegments.Add((0, figure.Segments[i].Point, currPoint, new Point(), new Point()));
+                        currPoint = figure.Segments[i].Point;
+
+                        if (!started)
+                        {
+                            started = true;
+                            startPoint = currPoint;
+                        }
+                    }
+                    else if (figure.Segments[i].Type == SegmentType.Arc && figure.Segments[i] is ArcSegment arc)
+                    {
+                        invertedSegments.Add((1, figure.Segments[i].Points[0], new Point(arc.Radius, 0), new Point(arc.EndAngle, arc.StartAngle), new Point()));
+                        currPoint = figure.Segments[i].GetPointAt(currPoint, 1);
+
+                        if (!started)
+                        {
+                            started = true;
+                            startPoint = figure.Segments[i].GetPointAt(currPoint, 0);
+                        }
+                    }
+                    else if (figure.Segments[i].Type == SegmentType.CubicBezier)
+                    {
+                        invertedSegments.Add((2, figure.Segments[i].Points[2], figure.Segments[i].Points[1], figure.Segments[i].Points[0], currPoint));
+                        currPoint = figure.Segments[i].GetPointAt(currPoint, 1);
+
+                        if (!started)
+                        {
+                            started = true;
+                            startPoint = figure.Segments[i].GetPointAt(currPoint, 0);
+                        }
+                    }
+                    else if (figure.Segments[i].Type == SegmentType.Close)
+                    {
+                        invertedSegments.Add((3, startPoint, currPoint, new Point(), new Point()));
+                    }
+                }
+
+                bool isClosed = false;
+
+                for (int i = invertedSegments.Count - 1; i >= 0; i--)
+                {
+                    if (invertedSegments[i].type == 3)
+                    {
+                        tbr.MoveTo(invertedSegments[i].p1);
+                        tbr.LineTo(invertedSegments[i].p2);
+                        isClosed = true;
+                    }
+                    else if (invertedSegments[i].type == 0)
+                    {
+                        if (i == invertedSegments.Count - 1)
+                        {
+                            tbr.MoveTo(invertedSegments[i].p1);
+                        }
+
+                        tbr.LineTo(invertedSegments[i].p2);
+                    }
+                    else if (invertedSegments[i].type == 1)
+                    {
+                        tbr.Arc(invertedSegments[i].p1, invertedSegments[i].p2.X, invertedSegments[i].p3.X, invertedSegments[i].p3.Y);
+                    }
+                    else if (invertedSegments[i].type == 2)
+                    {
+                        if (i == invertedSegments.Count - 1)
+                        {
+                            tbr.MoveTo(invertedSegments[i].p1);
+                        }
+
+                        tbr.CubicBezierTo(invertedSegments[i].p2, invertedSegments[i].p3, invertedSegments[i].p4);
+                    }
+                }
+
+                if (isClosed)
+                {
+                    tbr.Close();
+                }
+            }
+
+            return tbr;
+        }
+
+        /// <summary>
+        /// Returns a <see cref="GraphicsPath"/> representing the stroke of the current <see cref="GraphicsPath"/>.
+        /// </summary>
+        /// <param name="lineWidth">The thickness of the stroke.</param>
+        /// <param name="lineCap">The line cap used in the stroke.</param>
+        /// <param name="lineJoin">The line join used in the stroke.</param>
+        /// <returns>A <see cref="GraphicsPath"/> representing the stroke of the current <see cref="GraphicsPath"/>.</returns>
+        public GraphicsPath GetStroke(double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter)
+        {
+            double flatness = lineWidth * 0.0001;
+
+            GraphicsPath tbr = new GraphicsPath();
+
+            foreach (GraphicsPath figure in this.GetFigures())
+            {
+                GraphicsPath half1 = new GraphicsPath();
+
+                ProcessHalfStroke(figure, half1, lineWidth, lineJoin, flatness, true);
+
+                tbr.AddPath(half1);
+
+                GraphicsPath half2 = new GraphicsPath();
+                ProcessHalfStroke(figure, half2, lineWidth, lineJoin, flatness, false);
+
+                half2 = half2.Reverse();
+
+                if (figure.Segments[figure.Segments.Count - 1].Type != SegmentType.Close && half1.Segments.Count > 0 && half2.Segments.Count > 0)
+                {
+                    if (lineCap == LineCaps.Butt)
+                    {
+                        if (half2.Segments[0].Type == SegmentType.Move)
+                        {
+                            half2.Segments[0] = new LineSegment(half2.Segments[0].Point);
+                        }
+
+                        tbr.AddPath(half2);
+                        tbr.Close();
+                    }
+                    else if (lineCap == LineCaps.Square)
+                    {
+                        if (half2.Segments[0].Type == SegmentType.Move)
+                        {
+                            half2.Segments[0] = new LineSegment(half2.Segments[0].Point);
+                        }
+
+                        Point cap1 = tbr.GetPointAtRelative(1);
+                        Point cap2 = half2.GetPointAtRelative(0);
+
+                        Point tangent = this.GetTangentAtRelative(1);
+
+                        tbr.LineTo(cap1 + tangent * lineWidth * 0.5);
+                        tbr.LineTo(cap2 + tangent * lineWidth * 0.5);
+
+                        tbr.AddPath(half2);
+
+                        Point cap3 = tbr.GetPointAtRelative(0);
+                        Point cap4 = half2.GetPointAtRelative(1);
+
+                        Point tangent2 = this.GetTangentAtRelative(0) * -1;
+
+                        tbr.LineTo(cap4 + tangent2 * lineWidth * 0.5);
+                        tbr.LineTo(cap3 + tangent2 * lineWidth * 0.5);
+
+                        tbr.Close();
+                    }
+                    else if (lineCap == LineCaps.Round)
+                    {
+                        if (half2.Segments[0].Type == SegmentType.Move)
+                        {
+                            half2.Segments[0] = new LineSegment(half2.Segments[0].Point);
+                        }
+
+                        Point cap1 = tbr.GetPointAtRelative(1);
+                        Point cap2 = half2.GetPointAtRelative(0);
+
+                        Point center = this.GetPointAtRelative(1);
+
+                        double ang1 = (Math.Atan2(cap1.Y - center.Y, cap1.X - center.X) + 2 * Math.PI) % (2 * Math.PI);
+                        double ang2 = (Math.Atan2(cap2.Y - center.Y, cap2.X - center.X) + 2 * Math.PI) % (2 * Math.PI);
+
+                        tbr.Arc(center, lineWidth * 0.5, ang1, ang2);
+                        
+
+                        tbr.AddPath(half2);
+
+                        Point cap3 = tbr.GetPointAtRelative(0);
+                        Point cap4 = half2.GetPointAtRelative(1);
+
+                        Point center2 = this.GetPointAtRelative(0);
+
+                        double ang3 = (Math.Atan2(cap4.Y - center2.Y, cap4.X - center2.X) + 2 * Math.PI) % (2 * Math.PI);
+                        double ang4 = (Math.Atan2(cap3.Y - center2.Y, cap3.X - center2.X) + 2 * Math.PI) % (2 * Math.PI);
+
+                        tbr.Arc(center2, lineWidth * 0.5, ang3, ang4);
+
+                        tbr.Close();
+                    }
+                }
+                else
+                {
+                    tbr.AddPath(half2);
+                }
+            }
+
+            return RemoveDuplicates(tbr);
+        }
+
+        // Adapted from https://www.particleincell.com/2013/cubic-line-intersection/
+        private static double[] CubicRoots(double a, double b, double c, double d)
+        {
+            double A = b / a;
+            double B = c / a;
+            double C = d / a;
+
+            double Q = (3 * B - A * A) / 9;
+            double R = (9 * A * B - 27 * C - 2 * A * A * A) / 54;
+            double D = Q * Q * Q + R * R; // polynomial discriminant
+
+            if (Math.Abs(D) < Tolerance)
+            {
+                D = 0;
+            }
+
+            double[] t = new double[3];
+
+            if (D >= 0)                                 // complex or duplicate roots
+            {
+                var S = Math.Sign(R + Math.Sqrt(D)) * Math.Pow(Math.Abs(R + Math.Sqrt(D)), (1.0 / 3));
+                var T = Math.Sign(R - Math.Sqrt(D)) * Math.Pow(Math.Abs(R - Math.Sqrt(D)), (1.0 / 3));
+
+                t[0] = -A / 3 + (S + T);                    // real root
+                t[1] = -A / 3 - (S + T) / 2;                  // real part of complex root
+                t[2] = -A / 3 - (S + T) / 2;                  // real part of complex root
+                double Im = Math.Abs(Math.Sqrt(3) * (S - T) / 2);    // complex part of root pair   
+
+                /*discard complex roots*/
+                if (Im > Tolerance)
+                {
+                    t[1] = -1;
+                    t[2] = -1;
+                }
+
+            }
+            else                                          // distinct real roots
+            {
+                var th = Math.Acos(R / Math.Sqrt(-Math.Pow(Q, 3)));
+
+                t[0] = 2 * Math.Sqrt(-Q) * Math.Cos(th / 3) - A / 3;
+                t[1] = 2 * Math.Sqrt(-Q) * Math.Cos((th + 2 * Math.PI) / 3) - A / 3;
+                t[2] = 2 * Math.Sqrt(-Q) * Math.Cos((th + 4 * Math.PI) / 3) - A / 3;
+            }
+
+            return new HashSet<double>(t.Select(x => Math.Abs(x) <= Tolerance ? 0 : Math.Abs(x - 1) <= Tolerance ? 1 : x).Where(x => x >= 0 && x <= 1)).ToArray();
+        }
+
+        /// <summary>
+        /// Determines whether the specified <paramref name="point"/> falls within the current <see cref="GraphicsPath"/>.
+        /// </summary>
+        /// <param name="point">The <see cref="Point"/> being analysed.</param>
+        /// <param name="fillRule">The rule to use to determine whether a point is inside or outside of a the <see cref="GraphicsPath"/>.</param>
+        /// <returns><see langword="true"/> if the <paramref name="point"/> is inside the <see cref="GraphicsPath"/>, or <see langword="false"/> if it is outside. If the point lies exactly on the <see cref="GraphicsPath"/> (or very close to it), the result may be either <see langword="true"/> or <see langword="false"/>, depending on numerical approximations.</returns>
+        public bool ContainsPoint(Point point, FillRule fillRule)
+        {
+            return ContainsPointInternal(point, fillRule == FillRule.EvenOdd) > 0;
+        }
+
+        private GraphicsPath MonotoniseOnY()
+        {
+            GraphicsPath tbr = new GraphicsPath();
+            Point startPoint = new Point();
+            Point currPoint = new Point();
+
+
+            foreach (Segment seg in this.Segments)
+            {
+                switch (seg.Type)
+                {
+                    case SegmentType.Move:
+                        tbr.Segments.Add(seg);
+                        currPoint = seg.Point;
+                        startPoint = seg.Point;
+                        break;
+
+                    case SegmentType.Line:
+                        tbr.Segments.Add(seg);
+                        currPoint = seg.Point;
+                        break;
+
+                    case SegmentType.Close:
+                        tbr.Segments.Add(seg);
+                        currPoint = startPoint;
+                        break;
+
+                    case SegmentType.Arc:
+                        foreach (Segment seg2 in ((ArcSegment)seg).ToBezierSegments())
+                        {
+                            if (seg2 is CubicBezierSegment cub)
+                            {
+                                tbr.Segments.AddRange(cub.MonotoniseOnY(currPoint));
+                                currPoint = tbr.Segments[tbr.Segments.Count - 1].Point;
+                            }
+                            else
+                            {
+                                tbr.Segments.Add(seg2);
+                                currPoint = tbr.Segments[tbr.Segments.Count - 1].Point;
+                            }
+                        }
+                        break;
+                    case SegmentType.CubicBezier:
+                        tbr.Segments.AddRange(((CubicBezierSegment)seg).MonotoniseOnY(currPoint));
+                        currPoint = tbr.Segments[tbr.Segments.Count - 1].Point;
+                        break;
+                }
+            }
+
+            return tbr;
+        }
+
+        private GraphicsPath Monotonise(double flatness)
+        {
+            GraphicsPath tbr = new GraphicsPath();
+            Point startPoint = new Point();
+            Point currPoint = new Point();
+
+            foreach (Segment seg in this.Segments)
+            {
+                switch (seg.Type)
+                {
+                    case SegmentType.Move:
+                        tbr.Segments.Add(seg);
+                        currPoint = seg.Point;
+                        startPoint = seg.Point;
+                        break;
+
+                    case SegmentType.Line:
+                        tbr.Segments.Add(seg);
+                        currPoint = seg.Point;
+                        break;
+
+                    case SegmentType.Close:
+                        tbr.Segments.Add(seg);
+                        currPoint = startPoint;
+                        break;
+
+                    case SegmentType.Arc:
+                        foreach (Segment seg2 in ((ArcSegment)seg).ToBezierSegments())
+                        {
+                            if (seg2 is CubicBezierSegment cub)
+                            {
+                                tbr.Segments.AddRange(cub.BreakAtInflectionPoints(currPoint, flatness));
+                                currPoint = tbr.Segments[tbr.Segments.Count - 1].Point;
+                            }
+                            else
+                            {
+                                tbr.Segments.Add(seg2);
+                                currPoint = tbr.Segments[tbr.Segments.Count - 1].Point;
+                            }
+                        }
+                        break;
+                    case SegmentType.CubicBezier:
+                        tbr.Segments.AddRange(((CubicBezierSegment)seg).BreakAtInflectionPoints(currPoint, flatness));
+                        currPoint = tbr.Segments[tbr.Segments.Count - 1].Point;
+                        break;
+                }
+            }
+
+            return tbr;
+        }
+
+        private int ContainsPointInternal(Point point, bool evenOdd)
+        {
+            int countsAbs = 0;
+            int counts = 0;
+
+            foreach (GraphicsPath figure in this.MonotoniseOnY().GetFigures())
+            {
+                if (figure.Segments[figure.Segments.Count - 1].Type == SegmentType.Close)
+                {
+                    if (figure.Segments[0].Type != SegmentType.Move)
+                    {
+                        throw new InvalidOperationException("Assertion failed: the figure does not start with a move segment!");
+                    }
+
+                    (int, int)[] pointDirections = new (int, int)[figure.Segments.Count - 1];
+
+                    Point startPoint = new Point();
+                    Point currPoint = new Point();
+                    int index = 0;
+
+                    for (int i = 0; i < figure.Segments.Count; i++)
+                    {
+                        if (figure.Segments[i].Type == SegmentType.Move)
+                        {
+                            currPoint = figure.Segments[i].Point;
+                            startPoint = currPoint;
+                        }
+                        else if (figure.Segments[i].Type == SegmentType.Line)
+                        {
+                            int direction = Math.Sign(figure.Segments[i].Point.Y - currPoint.Y);
+
+                            pointDirections[index] = (pointDirections[index].Item1, direction);
+                            pointDirections[index + 1] = (direction, pointDirections[index + 1].Item2);
+
+                            currPoint = figure.Segments[i].Point;
+                            index++;
+                        }
+                        else if (figure.Segments[i].Type == SegmentType.Arc)
+                        {
+                            throw new InvalidOperationException("Path not properly monotonised!");
+                        }
+                        else if (figure.Segments[i].Type == SegmentType.CubicBezier)
+                        {
+                            int direction = Math.Sign(figure.Segments[i].Point.Y - currPoint.Y);
+
+                            pointDirections[index] = (pointDirections[index].Item1, direction);
+                            pointDirections[index + 1] = (direction, pointDirections[index + 1].Item2);
+
+                            currPoint = figure.Segments[i].Point;
+                            index++;
+                        }
+                        else if (figure.Segments[i].Type == SegmentType.Close)
+                        {
+                            int direction = Math.Sign(startPoint.Y - currPoint.Y);
+
+                            pointDirections[index] = (pointDirections[index].Item1, direction);
+                            pointDirections[0] = (direction, pointDirections[0].Item2);
+                        }
+                    }
+
+                    int[] directions = new int[pointDirections.Length * 2];
+
+                    for (int i = 0; i < pointDirections.Length; i++)
+                    {
+                        directions[2 * i] = pointDirections[i].Item1;
+                        directions[2 * i + 1] = pointDirections[i].Item2;
+                    }
+
+                    for (int i = 0; i < directions.Length; i++)
+                    {
+                        if (directions[i] == 0)
+                        {
+                            int nextDir = 0;
+
+                            int j = 0;
+                            while (directions[(i + j) % directions.Length] == 0)
+                            {
+                                j++;
+                            }
+                            nextDir = directions[(i + j) % directions.Length];
+
+                            int prevDir = 0;
+
+                            j = 0;
+                            while (directions[(i - j) >= 0 ? (i - j) : (i - j + directions.Length)] == 0)
+                            {
+                                j++;
+                            }
+                            prevDir = directions[(i - j) >= 0 ? (i - j) : (i - j + directions.Length)];
+
+                            if (prevDir == nextDir)
+                            {
+                                directions[i] = prevDir;
+                            }
+                        }
+                    }
+
+                    for (int i = 0; i < pointDirections.Length; i++)
+                    {
+                        pointDirections[i] = (directions[2 * i], directions[2 * i + 1]);
+                    }
+
+                    startPoint = new Point();
+                    currPoint = new Point();
+                    index = 0;
+
+                    for (int i = 0; i < figure.Segments.Count; i++)
+                    {
+                        if (figure.Segments[i].Type == SegmentType.Move)
+                        {
+                            currPoint = figure.Segments[i].Point;
+                            startPoint = currPoint;
+                        }
+                        else if (figure.Segments[i].Type == SegmentType.Line)
+                        {
+                            if (currPoint.Y != figure.Segments[i].Point.Y)
+                            {
+                                double t = (point.Y - currPoint.Y) / (figure.Segments[i].Point.Y - currPoint.Y);
+
+                                if (t >= 0 && t <= 1)
+                                {
+                                    double x = currPoint.X + (figure.Segments[i].Point.X - currPoint.X) * t;
+
+                                    if (x >= point.X)
+                                    {
+                                        if (t == 0)
+                                        {
+                                            if (!((pointDirections[index].Item1 == -1 && pointDirections[index].Item2 == -1) || (pointDirections[index].Item1 == 0 && pointDirections[index].Item2 == 0)))
+                                            {
+                                                countsAbs++;
+                                                counts += pointDirections[index].Item2;
+                                            }
+                                        }
+                                        else if (t == 1)
+                                        {
+                                            if (!((pointDirections[index + 1].Item1 == 1 && pointDirections[index + 1].Item2 == 1) || (pointDirections[index + 1].Item1 == 0 && pointDirections[index + 1].Item2 == 0)))
+                                            {
+                                                countsAbs++;
+                                                counts += pointDirections[index + 1].Item1;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            countsAbs++;
+                                            counts += Math.Sign(figure.Segments[i].Point.Y - currPoint.Y);
+                                        }
+                                    }
+                                }
+                            }
+                            /* else if (currPoint.Y == point.Y)
+                             {
+                                 if (currPoint.X >= point.X)
+                                 {
+                                     if (!((pointDirections[index].Item1 == -1 && pointDirections[index].Item2 == -1) || (pointDirections[index].Item1 == 0 && pointDirections[index].Item2 == 0)))
+                                     {
+                                         countsAbs++;
+                                         counts += pointDirections[index].Item2;
+                                     }
+                                 }
+
+                                 if (figure.Segments[i].Point.X >= point.X)
+                                 {
+                                     if (!((pointDirections[index + 1].Item1 == 1 && pointDirections[index + 1].Item2 == 1) || (pointDirections[index + 1].Item1 == 0 && pointDirections[index + 1].Item2 == 0)))
+                                     {
+                                         countsAbs++;
+                                         counts += pointDirections[index + 1].Item1;
+                                     }
+                                 }
+                             }*/
+
+                            currPoint = figure.Segments[i].Point;
+                            index++;
+                        }
+                        else if (figure.Segments[i].Type == SegmentType.CubicBezier)
+                        {
+                            double a = -currPoint.Y + 3 * figure.Segments[i].Points[0].Y - 3 * figure.Segments[i].Points[1].Y + figure.Segments[i].Points[2].Y;
+                            double b = 3 * currPoint.Y - 6 * figure.Segments[i].Points[0].Y + 3 * figure.Segments[i].Points[1].Y;
+                            double c = -3 * currPoint.Y + 3 * figure.Segments[i].Points[0].Y;
+
+
+                            double d = currPoint.Y - point.Y;
+
+                            double[] roots = CubicRoots(a, b, c, d);
+
+                            if (roots.Length == 1)
+                            {
+                                double t = roots[0];
+                                double x = (1 - t) * (1 - t) * (1 - t) * currPoint.X + figure.Segments[i].Points[0].X * t * (1 - t) * (1 - t) * 3 + figure.Segments[i].Points[1].X * t * t * (1 - t) * 3 + figure.Segments[i].Points[2].X * t * t * t;
+
+                                if (x >= point.X)
+                                {
+                                    if (t == 0)
+                                    {
+                                        if (!((pointDirections[index].Item1 == -1 && pointDirections[index].Item2 == -1) || (pointDirections[index].Item1 == 0 && pointDirections[index].Item2 == 0)))
+                                        {
+                                            countsAbs++;
+                                            counts += pointDirections[index].Item2;
+                                        }
+                                    }
+                                    else if (t == 1)
+                                    {
+                                        if (!((pointDirections[index + 1].Item1 == 1 && pointDirections[index + 1].Item2 == 1) || (pointDirections[index + 1].Item1 == 0 && pointDirections[index + 1].Item2 == 0)))
+                                        {
+                                            countsAbs++;
+                                            counts += pointDirections[index + 1].Item1;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        countsAbs++;
+                                        counts += Math.Sign(figure.Segments[i].Point.Y - currPoint.Y);
+                                    }
+                                }
+                            }
+                            else if (roots.Length != 0)
+                            {
+                                throw new InvalidOperationException("Path not properly monotonised!");
+                            }
+
+                            currPoint = figure.Segments[i].Point;
+                            index++;
+                        }
+                        else if (figure.Segments[i].Type == SegmentType.Close)
+                        {
+                            if (currPoint.Y != startPoint.Y)
+                            {
+                                double t = (point.Y - currPoint.Y) / (startPoint.Y - currPoint.Y);
+
+                                if (t >= 0 && t <= 1)
+                                {
+                                    double x = currPoint.X + (startPoint.X - currPoint.X) * t;
+
+                                    if (x >= point.X)
+                                    {
+                                        if (t == 0)
+                                        {
+                                            if (!((pointDirections[index].Item1 == -1 && pointDirections[index].Item2 == -1) || (pointDirections[index].Item1 == 0 && pointDirections[index].Item2 == 0)))
+                                            {
+                                                countsAbs++;
+                                                counts += pointDirections[index].Item2;
+                                            }
+                                        }
+                                        else if (t == 1)
+                                        {
+                                            if (!((pointDirections[0].Item1 == 1 && pointDirections[0].Item2 == 1) || (pointDirections[0].Item1 == 0 && pointDirections[0].Item2 == 0)))
+                                            {
+                                                countsAbs++;
+                                                counts += pointDirections[0].Item1;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            countsAbs++;
+                                            counts += Math.Sign(startPoint.Y - currPoint.Y);
+                                        }
+                                    }
+                                }
+                            }
+                            /* else if (currPoint.Y == point.Y)
+                             {
+                                 if (currPoint.X >= point.X)
+                                 {
+                                     if (!((pointDirections[index].Item1 == -1 && pointDirections[index].Item2 == -1) || (pointDirections[index].Item1 == 0 && pointDirections[index].Item2 == 0)))
+                                     {
+                                         countsAbs++;
+                                         counts += pointDirections[index].Item2;
+                                     }
+                                 }
+
+                                 if (startPoint.X >= point.X)
+                                 {
+                                     if (!((pointDirections[0].Item1 == 1 && pointDirections[0].Item2 == 1) || (pointDirections[0].Item1 == 0 && pointDirections[0].Item2 == 0)))
+                                     {
+                                         countsAbs++;
+                                         counts += pointDirections[0].Item1;
+                                     }
+                                 }
+                             }*/
+                        }
+                    }
+                }
+            }
+
+            if (evenOdd)
+            {
+                return countsAbs % 2;
+            }
+            else
+            {
+                return counts != 0 ? 1 : 0;
+            }
+        }
+
+        private static void ProcessHalfStroke(GraphicsPath figure, GraphicsPath tbr, double lineWidth, LineJoins lineJoin, double flatness, bool positive)
+        {
+            Point currPoint = new Point();
+            Point currTangent = new Point(double.NaN, double.NaN);
+            double sign = positive ? 1 : -1;
+
+            bool started = false;
+            Point startPoint = new Point();
+
+            bool isClosed = false;
+
+            figure = RemoveDuplicates(figure.Monotonise(flatness));
+
+            foreach (Segment seg in figure.Segments)
+            {
+                if (seg.Type == SegmentType.Move)
+                {
+                    currPoint = seg.Point;
+                    currTangent = new Point(double.NaN, double.NaN);
+                    startPoint = currPoint;
+                    started = true;
+                }
+                else if (seg.Type == SegmentType.Line)
+                {
+                    Point segStartPoint = currPoint;
+                    Point segTangent = seg.GetTangentAt(segStartPoint, 0);
+                    Point segEndPoint = seg.Point;
+
+                    if (!double.IsNaN(currTangent.X) && !double.IsNaN(currTangent.Y) && (currTangent.X != segTangent.X && currTangent.Y != segTangent.Y) && !double.IsNaN(segTangent.X) && !double.IsNaN(segTangent.Y))
+                    {
+                        Point p = currPoint;
+                        Point pALeft = currPoint - new Point(-currTangent.Y, currTangent.X) * lineWidth * 0.5;
+                        Point pARight = currPoint + new Point(-currTangent.Y, currTangent.X) * lineWidth * 0.5;
+
+                        Point pBLeft = currPoint - new Point(-segTangent.Y, segTangent.X) * lineWidth * 0.5;
+                        Point pBRight = currPoint + new Point(-segTangent.Y, segTangent.X) * lineWidth * 0.5;
+
+                        Point p3_1 = IntersectLines(pALeft, currTangent, pBLeft, segTangent);
+                        Point p3_2 = IntersectLines(pARight, currTangent, pBRight, segTangent);
+
+                        double crossProduct = currTangent.X * segTangent.Y - currTangent.Y * segTangent.X;
+
+                        if (crossProduct > 0 && !positive)
+                        {
+                            if (lineJoin == LineJoins.Round)
+                            {
+                                tbr.Arc(p, lineWidth * 0.5, Math.Atan2(pALeft.Y - p.Y, pALeft.X - p.X), Math.Atan2(pBLeft.Y - p.Y, pBLeft.X - p.X));
+                            }
+                            else if (lineJoin == LineJoins.Miter)
+                            {
+                                tbr.LineTo(p3_1);
+                            }
+                        }
+                        else if (crossProduct < 0 && positive)
+                        {
+                            if (lineJoin == LineJoins.Round)
+                            {
+                                tbr.Arc(p, lineWidth * 0.5, Math.Atan2(pARight.Y - p.Y, pARight.X - p.X), Math.Atan2(pBRight.Y - p.Y, pBRight.X - p.X));
+                            }
+                            else if (lineJoin == LineJoins.Miter)
+                            {
+                                tbr.LineTo(p3_2);
+                            }
+                        }
+                    }
+
+                    if (!double.IsNaN(segTangent.X) && !double.IsNaN(segTangent.Y))
+                    {
+                        tbr.LineTo(currPoint + sign * lineWidth * 0.5 * new Point(-segTangent.Y, segTangent.X));
+                        tbr.LineTo(seg.Point + sign * lineWidth * 0.5 * new Point(-segTangent.Y, segTangent.X));
+                    }
+
+                    currPoint = seg.Point;
+                    currTangent = segTangent;
+
+                    if (!started)
+                    {
+                        startPoint = currPoint;
+                        started = true;
+                    }
+                }
+                else if (seg.Type == SegmentType.Arc && seg is ArcSegment arc)
+                {
+                    Point segStartPoint = currPoint;
+                    Point segTangent = seg.GetTangentAt(segStartPoint, 0);
+                    Point segEndPoint = seg.Point;
+
+                    if (!double.IsNaN(currTangent.X) && !double.IsNaN(currTangent.Y) && (currTangent.X != segTangent.X && currTangent.Y != segTangent.Y) && !double.IsNaN(segTangent.X) && !double.IsNaN(segTangent.Y))
+                    {
+                        Point p = currPoint;
+                        Point pALeft = currPoint - new Point(-currTangent.Y, currTangent.X) * lineWidth * 0.5;
+                        Point pARight = currPoint + new Point(-currTangent.Y, currTangent.X) * lineWidth * 0.5;
+
+                        Point pBLeft = currPoint - new Point(-segTangent.Y, segTangent.X) * lineWidth * 0.5;
+                        Point pBRight = currPoint + new Point(-segTangent.Y, segTangent.X) * lineWidth * 0.5;
+
+                        Point p3_1 = IntersectLines(pALeft, currTangent, pBLeft, segTangent);
+                        Point p3_2 = IntersectLines(pARight, currTangent, pBRight, segTangent);
+
+                        double crossProduct = currTangent.X * segTangent.Y - currTangent.Y * segTangent.X;
+                        if (crossProduct > 0 && !positive)
+                        {
+                            if (lineJoin == LineJoins.Round)
+                            {
+                                tbr.Arc(p, lineWidth * 0.5, Math.Atan2(pALeft.Y - p.Y, pALeft.X - p.X), Math.Atan2(pBLeft.Y - p.Y, pBLeft.X - p.X));
+                            }
+                            else if (lineJoin == LineJoins.Miter)
+                            {
+                                tbr.LineTo(p3_1);
+                            }
+                        }
+                        else if (crossProduct < 0 && positive)
+                        {
+                            if (lineJoin == LineJoins.Round)
+                            {
+                                tbr.Arc(p, lineWidth * 0.5, Math.Atan2(pARight.Y - p.Y, pARight.X - p.X), Math.Atan2(pBRight.Y - p.Y, pBRight.X - p.X));
+                            }
+                            else if (lineJoin == LineJoins.Miter)
+                            {
+                                tbr.LineTo(p3_2);
+                            }
+                        }
+                    }
+
+                    tbr.LineTo(currPoint + sign * lineWidth * 0.5 * new Point(-segTangent.Y, segTangent.X));
+                    tbr.Arc(arc.Points[0], arc.Radius - sign * lineWidth * 0.5 * Math.Sign(arc.EndAngle - arc.StartAngle), arc.StartAngle, arc.EndAngle);
+
+                    currPoint = seg.Point;
+                    currTangent = seg.GetTangentAt(segStartPoint, 1);
+
+                    if (!started)
+                    {
+                        startPoint = currPoint;
+                        started = true;
+                    }
+                }
+                else if (seg.Type == SegmentType.CubicBezier)
+                {
+                    Point segStartPoint = currPoint;
+                    Point segTangent = seg.GetTangentAt(segStartPoint, 0);
+                    Point segEndPoint = seg.Point;
+
+                    if (!double.IsNaN(currTangent.X) && !double.IsNaN(currTangent.Y) && (currTangent.X != segTangent.X && currTangent.Y != segTangent.Y) && !double.IsNaN(segTangent.X) && !double.IsNaN(segTangent.Y))
+                    {
+                        Point p = currPoint;
+                        Point pALeft = currPoint - new Point(-currTangent.Y, currTangent.X) * lineWidth * 0.5;
+                        Point pARight = currPoint + new Point(-currTangent.Y, currTangent.X) * lineWidth * 0.5;
+
+                        Point pBLeft = currPoint - new Point(-segTangent.Y, segTangent.X) * lineWidth * 0.5;
+                        Point pBRight = currPoint + new Point(-segTangent.Y, segTangent.X) * lineWidth * 0.5;
+
+                        Point p3_1 = IntersectLines(pALeft, currTangent, pBLeft, segTangent);
+                        Point p3_2 = IntersectLines(pARight, currTangent, pBRight, segTangent);
+
+                        double crossProduct = currTangent.X * segTangent.Y - currTangent.Y * segTangent.X;
+
+                        if (crossProduct > 1e-7 && !positive)
+                        {
+                            if (lineJoin == LineJoins.Round)
+                            {
+                                tbr.Arc(p, lineWidth * 0.5, Math.Atan2(pALeft.Y - p.Y, pALeft.X - p.X), Math.Atan2(pBLeft.Y - p.Y, pBLeft.X - p.X));
+                            }
+                            else if (lineJoin == LineJoins.Miter)
+                            {
+                                tbr.LineTo(p3_1);
+                            }
+                        }
+                        else if (crossProduct < -1e-7 && positive)
+                        {
+                            if (lineJoin == LineJoins.Round)
+                            {
+                                tbr.Arc(p, lineWidth * 0.5, Math.Atan2(pARight.Y - p.Y, pARight.X - p.X), Math.Atan2(pBRight.Y - p.Y, pBRight.X - p.X));
+                            }
+                            else if (lineJoin == LineJoins.Miter)
+                            {
+                                tbr.LineTo(p3_2);
+                            }
+                        }
+                    }
+
+                    if (!double.IsNaN(segTangent.X) && !double.IsNaN(segTangent.Y))
+                    {
+                        tbr.LineTo(currPoint + sign * lineWidth * 0.5 * new Point(-segTangent.Y, segTangent.X));
+                    }
+                    
+                    List<(Point point, Point tangent)> newPoints = seg.FlattenForOffsetAndGetTangents(currPoint, sign * lineWidth, flatness).ToList();
+
+                    for (int i = 0; i < newPoints.Count; i++)
+                    {
+                        Point pt = newPoints[i].point + sign * lineWidth * 0.5 * new Point(-newPoints[i].tangent.Y, newPoints[i].tangent.X);
+
+                        if (!double.IsNaN(pt.X) && !double.IsNaN(pt.Y))
+                        {
+                            tbr.LineTo(pt);
+                        }
+                    }
+
+                    if ((currPoint.X != newPoints[newPoints.Count - 1].point.X || currPoint.Y != newPoints[newPoints.Count - 1].point.Y) || double.IsNaN(currTangent.X) || double.IsNaN(currTangent.Y))
+                    {
+                        currPoint = newPoints[newPoints.Count - 1].point;
+                        currTangent = newPoints[newPoints.Count - 1].tangent;
+                    }                        
+
+                    if (!started)
+                    {
+                        startPoint = currPoint;
+                        started = true;
+                    }
+                }
+                else if (seg.Type == SegmentType.Close)
+                {
+                    Point segStartPoint = currPoint;
+                    Point segTangent = new Point(startPoint.X - currPoint.X, startPoint.Y - currPoint.Y).Normalize();
+                    Point segEndPoint = startPoint;
+
+                    if (!currPoint.IsEqual(startPoint, Tolerance))
+                    {
+                        if (!double.IsNaN(currTangent.X) && !double.IsNaN(currTangent.Y) && (currTangent.X != segTangent.X && currTangent.Y != segTangent.Y))
+                        {
+                            Point p = currPoint;
+                            Point pALeft = currPoint - new Point(-currTangent.Y, currTangent.X) * lineWidth * 0.5;
+                            Point pARight = currPoint + new Point(-currTangent.Y, currTangent.X) * lineWidth * 0.5;
+
+                            Point pBLeft = currPoint - new Point(-segTangent.Y, segTangent.X) * lineWidth * 0.5;
+                            Point pBRight = currPoint + new Point(-segTangent.Y, segTangent.X) * lineWidth * 0.5;
+
+                            Point p3_1 = IntersectLines(pALeft, currTangent, pBLeft, segTangent);
+                            Point p3_2 = IntersectLines(pARight, currTangent, pBRight, segTangent);
+
+                            double crossProduct = currTangent.X * segTangent.Y - currTangent.Y * segTangent.X;
+
+                            if (crossProduct > 0 && !positive)
+                            {
+                                if (lineJoin == LineJoins.Round)
+                                {
+                                    tbr.Arc(p, lineWidth * 0.5, Math.Atan2(pALeft.Y - p.Y, pALeft.X - p.X), Math.Atan2(pBLeft.Y - p.Y, pBLeft.X - p.X));
+                                }
+                                else if (lineJoin == LineJoins.Miter)
+                                {
+                                    tbr.LineTo(p3_1);
+                                }
+                            }
+                            else if (crossProduct < 0 && positive)
+                            {
+                                if (lineJoin == LineJoins.Round)
+                                {
+                                    tbr.Arc(p, lineWidth * 0.5, Math.Atan2(pARight.Y - p.Y, pARight.X - p.X), Math.Atan2(pBRight.Y - p.Y, pBRight.X - p.X));
+                                }
+                                else if (lineJoin == LineJoins.Miter)
+                                {
+                                    tbr.LineTo(p3_2);
+                                }
+                            }
+                        }
+
+
+                        tbr.LineTo(currPoint + sign * lineWidth * 0.5 * new Point(-segTangent.Y, segTangent.X));
+
+                        tbr.LineTo(startPoint + sign * lineWidth * 0.5 * new Point(-segTangent.Y, segTangent.X));
+
+                        currTangent = segTangent;
+                    }
+
+                    currPoint = startPoint;
+
+
+                    isClosed = true;
+
+                    started = false;
+                }
+            }
+
+
+            if (isClosed)
+            {
+                Point segTangent = figure.GetTangentAtRelative(0);
+
+                if (!double.IsNaN(currTangent.X) && !double.IsNaN(currTangent.Y) && (currTangent.X != segTangent.X && currTangent.Y != segTangent.Y) && !double.IsNaN(segTangent.X) && !double.IsNaN(segTangent.Y))
+                {
+                    Point p = currPoint;
+                    Point pALeft = currPoint - new Point(-currTangent.Y, currTangent.X) * lineWidth * 0.5;
+                    Point pARight = currPoint + new Point(-currTangent.Y, currTangent.X) * lineWidth * 0.5;
+
+                    Point pBLeft = currPoint - new Point(-segTangent.Y, segTangent.X) * lineWidth * 0.5;
+                    Point pBRight = currPoint + new Point(-segTangent.Y, segTangent.X) * lineWidth * 0.5;
+
+                    Point p3_1 = IntersectLines(pALeft, currTangent, pBLeft, segTangent);
+                    Point p3_2 = IntersectLines(pARight, currTangent, pBRight, segTangent);
+
+                    double crossProduct = currTangent.X * segTangent.Y - currTangent.Y * segTangent.X;
+
+                    if (crossProduct > 0 && !positive)
+                    {
+                        if (lineJoin == LineJoins.Round)
+                        {
+                            double ang1 = Math.Atan2(pALeft.Y - p.Y, pALeft.X - p.X);
+                            double ang2 = Math.Atan2(pBLeft.Y - p.Y, pBLeft.X - p.X);
+
+                            if (ang1 < 0)
+                            {
+                                ang1 += 2 * Math.PI;
+                            }
+
+                            if (ang2 < 0)
+                            {
+                                ang2 += 2 * Math.PI;
+                            }
+
+                            tbr.Arc(p, lineWidth * 0.5, ang1, ang2);
+                        }
+                        else if (lineJoin == LineJoins.Miter)
+                        {
+                            tbr.LineTo(p3_1);
+                        }
+                    }
+                    else if (crossProduct < 0 && positive)
+                    {
+                        if (lineJoin == LineJoins.Round)
+                        {
+                            double ang1 = Math.Atan2(pARight.Y - p.Y, pARight.X - p.X);
+                            double ang2 = Math.Atan2(pBRight.Y - p.Y, pBRight.X - p.X);
+
+                            if (ang1 < 0)
+                            {
+                                ang1 += 2 * Math.PI;
+                            }
+
+                            if (ang2 < 0)
+                            {
+                                ang2 += 2 * Math.PI;
+                            }
+
+                            tbr.Arc(p, lineWidth * 0.5, ang1, ang2);
+                        }
+                        else if (lineJoin == LineJoins.Miter)
+                        {
+                            tbr.LineTo(p3_2);
+                        }
+                    }
+                }
+
+
+                tbr.Close();
+            }
+        }
+
+        internal static double Tolerance = 1e-7;
+
+        private static GraphicsPath RemoveDuplicates(GraphicsPath path)
+        {
+            Point currentPoint = new Point();
+            Point startPoint = new Point();
+            bool started = false;
+
+            GraphicsPath tbr = new GraphicsPath();
+
+            GraphicsPath figure = null;
+
+            for (int i = 0; i < path.Segments.Count; i++)
+            {
+                if (path.Segments[i].Type == SegmentType.Move)
+                {
+                    if (figure != null)
+                    {
+                        tbr.AddPath(figure);
+                    }
+
+                    figure = new GraphicsPath();
+
+                    currentPoint = path.Segments[i].Point;
+                    figure.MoveTo(currentPoint);
+                    startPoint = currentPoint;
+                    started = true;
+                }
+                else if (path.Segments[i].Type == SegmentType.Line)
+                {
+                    if (figure == null)
+                    {
+                        figure = new GraphicsPath();
+                    }
+
+                    if (currentPoint.X != path.Segments[i].Point.X || currentPoint.Y != path.Segments[i].Point.Y)
+                    {
+                        currentPoint = path.Segments[i].Point;
+                        figure.LineTo(currentPoint);
+                    }
+
+                    if (!started)
+                    {
+                        startPoint = currentPoint;
+                        started = true;
+                    }
+                }
+                else if (path.Segments[i].Type == SegmentType.Arc && path.Segments[i] is ArcSegment arc)
+                {
+                    if (figure == null)
+                    {
+                        figure = new GraphicsPath();
+                    }
+
+                    Point endPoint = arc.GetPointAt(currentPoint, 1);
+
+                    if (arc.StartAngle != arc.EndAngle)
+                    {
+                        currentPoint = endPoint;
+                        figure.Arc(arc.Points[0], arc.Radius, arc.StartAngle, arc.EndAngle);
+                    }
+                    else if (endPoint.X != currentPoint.X || endPoint.Y != currentPoint.Y)
+                    {
+                        currentPoint = endPoint;
+                        figure.LineTo(endPoint);
+                    }
+
+                    if (!started)
+                    {
+                        startPoint = currentPoint;
+                        started = true;
+                    }
+                }
+                else if (path.Segments[i].Type == SegmentType.CubicBezier)
+                {
+                    if (figure == null)
+                    {
+                        figure = new GraphicsPath();
+                    }
+
+                    if (!currentPoint.IsEqual(path.Segments[i].Points[0], Tolerance) || !currentPoint.IsEqual(path.Segments[i].Points[1], Tolerance) || !currentPoint.IsEqual(path.Segments[i].Points[2], Tolerance))
+                    {
+                        currentPoint = path.Segments[i].Points[2];
+                        figure.CubicBezierTo(path.Segments[i].Points[0], path.Segments[i].Points[1], path.Segments[i].Points[2]);
+                    }
+                    
+                    if (!started)
+                    {
+                        startPoint = currentPoint;
+                        started = true;
+                    }
+                }
+                else if (path.Segments[i].Type == SegmentType.Close)
+                {
+                    if (currentPoint.X != startPoint.X || currentPoint.Y != startPoint.Y)
+                    {
+                        currentPoint = startPoint;
+                        figure.Close();
+
+                        tbr.AddPath(figure);
+                        figure = null;
+                    }
+                    else
+                    {
+                        if (figure.Segments[figure.Segments.Count - 1].Type == SegmentType.Line)
+                        {
+                            figure.Segments.RemoveAt(figure.Segments.Count - 1);
+                        }
+                        else if (figure.Segments[0].Type == SegmentType.Move && figure.Segments[1].Type == SegmentType.Line)
+                        {
+                            figure.Segments[0] = new MoveSegment(figure.Segments[1].Point);
+                            figure.Segments.RemoveAt(1);
+                        }
+
+                        currentPoint = startPoint;
+                        figure.Close();
+
+                        tbr.AddPath(figure);
+                        figure = null;
+                    }
+
+                    started = false;
+                }
+            }
+
+            if (figure != null)
+            {
+                tbr.AddPath(figure);
             }
 
             return tbr;

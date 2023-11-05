@@ -256,6 +256,22 @@ namespace VectSharp
     }
 
     /// <summary>
+    /// Represents a rule used to determine whether a point is inside or outside of a shape.
+    /// </summary>
+    public enum FillRule
+    {
+        /// <summary>
+        /// A point is inside a shape if the perimeter of the shape is hit an odd number of times when moving from the point towards the outside.
+        /// </summary>
+        EvenOdd,
+
+        /// <summary>
+        /// A point is inside a shape if its winding number is not zero.
+        /// </summary>
+        NonZeroWinding
+    }
+
+    /// <summary>
     /// Represents an abstract drawing surface.
     /// </summary>
     public partial class Graphics
