@@ -3113,7 +3113,7 @@ namespace VectSharp.SVG
             timeLine.Arc(controlsHeight * 0.1, controlsHeight * 0.5, controlsHeight * 0.1, Math.PI / 2, 3 * Math.PI / 2).Close();
 
             gpr.FillPath(timeLine, new LinearGradientBrush(new Point(0, controlsHeight * 0.6), new Point(0, controlsHeight * 0.4), new GradientStop(Colour.FromRgba(255, 255, 255, 80), 0), new GradientStop(Colour.FromRgba(255, 255, 255, 40), 1)), tag: "timeLine");
-            gpr.StrokePath(timeLine, Colour.FromRgba(255, 255, 255, 180));
+            gpr.StrokePath(timeLine, Colour.FromRgba(255, 255, 255, 180), tag: "timeLineStroke");
 
             gpr.Restore();
 

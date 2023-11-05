@@ -135,6 +135,8 @@
             }
         });
 
+        document.getElementById("timeLineStroke").style.pointerEvents = "none";
+
         document.getElementById("transition1://thumb").getElementsByTagName("animate")[0].addEventListener("endEvent", function () {
             document.getElementById("playButton").style.display = "";
             document.getElementById("playButtonHitbox").style.display = "";
