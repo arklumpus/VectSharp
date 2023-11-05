@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['textaction_0',['TextAction',['../class_vect_sharp_1_1_canvas_1_1_render_action.html#ae54b19d45bbb1138d9f1dc3f300889ac',1,'VectSharp.Canvas.RenderAction.TextAction()'],['../class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a17ce34b069c42b758e983b07d7cf6e5e',1,'VectSharp.Canvas.SKRenderAction.TextAction()']]],
+  ['textaction_0',['TextAction',['../class_vect_sharp_1_1_canvas_1_1_render_action.html#a273fd781bfd13313c9669ceeadf9ad82',1,'VectSharp.Canvas.RenderAction.TextAction()'],['../class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a17ce34b069c42b758e983b07d7cf6e5e',1,'VectSharp.Canvas.SKRenderAction.TextAction()']]],
   ['textlabel_1',['TextLabel',['../class_vect_sharp_1_1_plots_1_1_text_label.html#aa60f155431ff6744d061d99c719649c8',1,'VectSharp::Plots::TextLabel']]],
   ['tocolour_2',['ToColour',['../class_vect_sharp_1_1_filters_1_1_colour_matrix.html#abd8ebd9336459bd1f98006036acf10c8',1,'VectSharp::Filters::ColourMatrix']]],
   ['tocssstring_3',['ToCSSString',['../struct_vect_sharp_1_1_colour.html#a2ac682d76a238254e3d750254820a9af',1,'VectSharp::Colour']]],

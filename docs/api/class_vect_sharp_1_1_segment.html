@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">VectSharp<span id="projectnumber">&#160;2.4.2</span>
+   <div id="projectname">VectSharp<span id="projectnumber">&#160;2.5.0</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -126,6 +126,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a28fa2e93c13e54bf6deabba2c4219ac7"><td class="memItemLeft" align="right" valign="top">abstract IEnumerable&lt; <a class="el" href="class_vect_sharp_1_1_segment.html">Segment</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_segment.html#a28fa2e93c13e54bf6deabba2c4219ac7">Transform</a> (Func&lt; <a class="el" href="struct_vect_sharp_1_1_point.html">Point</a>, <a class="el" href="struct_vect_sharp_1_1_point.html">Point</a> &gt; transformationFunction)</td></tr>
 <tr class="memdesc:a28fa2e93c13e54bf6deabba2c4219ac7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies an arbitrary transformation to all of the points of the <a class="el" href="class_vect_sharp_1_1_segment.html" title="Represents a segment as part of a GraphicsPath.">Segment</a>.   <a href="class_vect_sharp_1_1_segment.html#a28fa2e93c13e54bf6deabba2c4219ac7">More...</a><br /></td></tr>
 <tr class="separator:a28fa2e93c13e54bf6deabba2c4219ac7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03a28cce2959b321a0598ec733d180da"><td class="memItemLeft" align="right" valign="top">abstract IEnumerable&lt; <a class="el" href="class_vect_sharp_1_1_segment.html">Segment</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_segment.html#a03a28cce2959b321a0598ec733d180da">Flatten</a> (<a class="el" href="struct_vect_sharp_1_1_point.html">Point</a>? previousPoint, double flatness)</td></tr>
+<tr class="memdesc:a03a28cce2959b321a0598ec733d180da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flattens the <a class="el" href="class_vect_sharp_1_1_segment.html" title="Represents a segment as part of a GraphicsPath.">Segment</a>, replacing curve segments with series of line segments that approximate them, ensuring the specified maximum deviation from the original path.   <a href="class_vect_sharp_1_1_segment.html#a03a28cce2959b321a0598ec733d180da">More...</a><br /></td></tr>
+<tr class="separator:a03a28cce2959b321a0598ec733d180da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9004048ae34d4bf93c945249a3ec7cd"><td class="memItemLeft" align="right" valign="top">abstract IEnumerable&lt;(<a class="el" href="struct_vect_sharp_1_1_point.html">Point</a> point, <a class="el" href="struct_vect_sharp_1_1_point.html">Point</a> tangent)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_segment.html#ac9004048ae34d4bf93c945249a3ec7cd">FlattenForOffsetAndGetTangents</a> (<a class="el" href="struct_vect_sharp_1_1_point.html">Point</a>? previousPoint, double offset, double flatness)</td></tr>
+<tr class="memdesc:ac9004048ae34d4bf93c945249a3ec7cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flattens the <a class="el" href="class_vect_sharp_1_1_segment.html" title="Represents a segment as part of a GraphicsPath.">Segment</a>, replacing curve segments with series of line segments that approximate them, ensuring the specified maximum deviation from the original path, assuming that the <a class="el" href="class_vect_sharp_1_1_segment.html" title="Represents a segment as part of a GraphicsPath.">Segment</a> will be drawn with the specified <em>offset</em> .   <a href="class_vect_sharp_1_1_segment.html#ac9004048ae34d4bf93c945249a3ec7cd">More...</a><br /></td></tr>
+<tr class="separator:ac9004048ae34d4bf93c945249a3ec7cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
@@ -169,6 +175,105 @@ Properties</h2></td></tr>
 
 <p>Creates a copy of the <a class="el" href="class_vect_sharp_1_1_segment.html" title="Represents a segment as part of a GraphicsPath.">Segment</a>.  </p>
 <dl class="section return"><dt>Returns</dt><dd>A copy of the <a class="el" href="class_vect_sharp_1_1_segment.html" title="Represents a segment as part of a GraphicsPath.">Segment</a>.</dd></dl>
+
+</div>
+</div>
+<a id="a03a28cce2959b321a0598ec733d180da" name="a03a28cce2959b321a0598ec733d180da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03a28cce2959b321a0598ec733d180da">&#9670;&#160;</a></span>Flatten()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">abstract IEnumerable&lt; <a class="el" href="class_vect_sharp_1_1_segment.html">Segment</a> &gt; VectSharp.Segment.Flatten </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_vect_sharp_1_1_point.html">Point</a>?&#160;</td>
+          <td class="paramname"><em>previousPoint</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>flatness</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Flattens the <a class="el" href="class_vect_sharp_1_1_segment.html" title="Represents a segment as part of a GraphicsPath.">Segment</a>, replacing curve segments with series of line segments that approximate them, ensuring the specified maximum deviation from the original path.  </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">previousPoint</td><td>The point from which the <a class="el" href="class_vect_sharp_1_1_segment.html" title="Represents a segment as part of a GraphicsPath.">Segment</a> starts (i.e. the endpoint of the previous <a class="el" href="class_vect_sharp_1_1_segment.html" title="Represents a segment as part of a GraphicsPath.">Segment</a>).</td></tr>
+    <tr><td class="paramname">flatness</td><td>The maximum deviation from the original path.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A collection of <a class="el" href="class_vect_sharp_1_1_segment.html" title="Represents a segment as part of a GraphicsPath.">Segment</a>s composed only of linear segments that approximates the current <a class="el" href="class_vect_sharp_1_1_segment.html" title="Represents a segment as part of a GraphicsPath.">Segment</a>.</dd></dl>
+
+</div>
+</div>
+<a id="ac9004048ae34d4bf93c945249a3ec7cd" name="ac9004048ae34d4bf93c945249a3ec7cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9004048ae34d4bf93c945249a3ec7cd">&#9670;&#160;</a></span>FlattenForOffsetAndGetTangents()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">abstract IEnumerable&lt;(<a class="el" href="struct_vect_sharp_1_1_point.html">Point</a> point, <a class="el" href="struct_vect_sharp_1_1_point.html">Point</a> tangent)&gt; VectSharp.Segment.FlattenForOffsetAndGetTangents </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_vect_sharp_1_1_point.html">Point</a>?&#160;</td>
+          <td class="paramname"><em>previousPoint</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>offset</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>flatness</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Flattens the <a class="el" href="class_vect_sharp_1_1_segment.html" title="Represents a segment as part of a GraphicsPath.">Segment</a>, replacing curve segments with series of line segments that approximate them, ensuring the specified maximum deviation from the original path, assuming that the <a class="el" href="class_vect_sharp_1_1_segment.html" title="Represents a segment as part of a GraphicsPath.">Segment</a> will be drawn with the specified <em>offset</em> .  </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">previousPoint</td><td>The point from which the <a class="el" href="class_vect_sharp_1_1_segment.html" title="Represents a segment as part of a GraphicsPath.">Segment</a> starts (i.e. the endpoint of the previous <a class="el" href="class_vect_sharp_1_1_segment.html" title="Represents a segment as part of a GraphicsPath.">Segment</a>).</td></tr>
+    <tr><td class="paramname">offset</td><td>The offset that will be used to draw the <a class="el" href="class_vect_sharp_1_1_segment.html" title="Represents a segment as part of a GraphicsPath.">Segment</a> (e.g., the line width of the stroke).</td></tr>
+    <tr><td class="paramname">flatness</td><td>The maximum deviation from the original path.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A collection of tuples where the first element is a <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a> representing the end-point of a linear segment, and the second element is a <a class="el" href="struct_vect_sharp_1_1_point.html" title="Represents a point relative to an origin in the top-left corner.">Point</a> containing the value of the tangent to the original <a class="el" href="class_vect_sharp_1_1_segment.html" title="Represents a segment as part of a GraphicsPath.">Segment</a> at that point.</dd></dl>
 
 </div>
 </div>

@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">VectSharp<span id="projectnumber">&#160;2.4.2</span>
+   <div id="projectname">VectSharp<span id="projectnumber">&#160;2.5.0</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -167,10 +167,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>SetClippingPath</b> (
 <tr class="memitem:a69e9610fd933afb80ea91a3b46465993"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_vect_sharp_1_1_i_graphics_context.html#a69e9610fd933afb80ea91a3b46465993">Rectangle</a> (double x0, double y0, double width, double height)</td></tr>
 <tr class="memdesc:a69e9610fd933afb80ea91a3b46465993"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a rectangle figure to the current path.   <a href="interface_vect_sharp_1_1_i_graphics_context.html#a69e9610fd933afb80ea91a3b46465993">More...</a><br /></td></tr>
 <tr class="separator:a69e9610fd933afb80ea91a3b46465993"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1271cbb1f3085a0c765d20e378390dd1"><td class="memItemLeft" align="right" valign="top"><a id="a1271cbb1f3085a0c765d20e378390dd1" name="a1271cbb1f3085a0c765d20e378390dd1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Fill</b> ()</td></tr>
-<tr class="memdesc:a1271cbb1f3085a0c765d20e378390dd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill the current path using the current <a class="el" href="interface_vect_sharp_1_1_i_graphics_context.html#ad6cb2b84ae5fba52c24d92ba4ffe98fc" title="Current brush used to fill paths.">FillStyle</a>.  <br /></td></tr>
-<tr class="separator:a1271cbb1f3085a0c765d20e378390dd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab599c31b551e6757a896fd9e57ea7e54"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_vect_sharp_1_1_i_graphics_context.html#ab599c31b551e6757a896fd9e57ea7e54">Fill</a> (<a class="el" href="namespace_vect_sharp.html#a3b8bd711a4c9893fce1faad4c26d0df5">FillRule</a> fillRule)</td></tr>
+<tr class="memdesc:ab599c31b551e6757a896fd9e57ea7e54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill the current path using the current <a class="el" href="interface_vect_sharp_1_1_i_graphics_context.html#ad6cb2b84ae5fba52c24d92ba4ffe98fc" title="Current brush used to fill paths.">FillStyle</a>.   <a href="interface_vect_sharp_1_1_i_graphics_context.html#ab599c31b551e6757a896fd9e57ea7e54">More...</a><br /></td></tr>
+<tr class="separator:ab599c31b551e6757a896fd9e57ea7e54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad541c79cdbea3e6b231d9f532db82d12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_vect_sharp_1_1_i_graphics_context.html#ad541c79cdbea3e6b231d9f532db82d12">SetLineDash</a> (<a class="el" href="struct_vect_sharp_1_1_line_dash.html">LineDash</a> dash)</td></tr>
 <tr class="memdesc:ad541c79cdbea3e6b231d9f532db82d12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the current line dash pattern.   <a href="interface_vect_sharp_1_1_i_graphics_context.html#ad541c79cdbea3e6b231d9f532db82d12">More...</a><br /></td></tr>
 <tr class="separator:ad541c79cdbea3e6b231d9f532db82d12"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -401,6 +400,32 @@ Properties</h2></td></tr>
     <tr><td class="paramname">destinationWidth</td><td>The width of the rectangle delimiting the destination area of the image.</td></tr>
     <tr><td class="paramname">destinationHeight</td><td>The height of the rectangle delimiting the destination area of the image.</td></tr>
     <tr><td class="paramname">image</td><td>The image to draw.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ab599c31b551e6757a896fd9e57ea7e54" name="ab599c31b551e6757a896fd9e57ea7e54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab599c31b551e6757a896fd9e57ea7e54">&#9670;&#160;</a></span>Fill()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void VectSharp.IGraphicsContext.Fill </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_vect_sharp.html#a3b8bd711a4c9893fce1faad4c26d0df5">FillRule</a>&#160;</td>
+          <td class="paramname"><em>fillRule</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Fill the current path using the current <a class="el" href="interface_vect_sharp_1_1_i_graphics_context.html#ad6cb2b84ae5fba52c24d92ba4ffe98fc" title="Current brush used to fill paths.">FillStyle</a>.  </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fillRule</td><td>The <a class="el" href="namespace_vect_sharp.html#a3b8bd711a4c9893fce1faad4c26d0df5" title="Represents a rule used to determine whether a point is inside or outside of a shape.">FillRule</a> that determines which parts of the path are filled.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1016,7 +1041,7 @@ Properties</h2></td></tr>
 
 <p>Current line cap used to stroke paths.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00210">210</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00211">211</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1042,7 +1067,7 @@ Properties</h2></td></tr>
 
 <p>Current line join used to stroke paths.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00215">215</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00216">216</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1068,7 +1093,7 @@ Properties</h2></td></tr>
 
 <p>Current line width used to stroke paths.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00205">205</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00206">206</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1120,7 +1145,7 @@ Properties</h2></td></tr>
 
 <p>The current tag. How this can be used depends on each implementation.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00226">226</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00227">227</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>

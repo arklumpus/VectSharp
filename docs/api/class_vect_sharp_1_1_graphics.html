@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">VectSharp<span id="projectnumber">&#160;2.4.2</span>
+   <div id="projectname">VectSharp<span id="projectnumber">&#160;2.5.0</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -109,6 +109,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad2a7b867b829501bcb5b2a62cbdaa572"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_graphics.html#ad2a7b867b829501bcb5b2a62cbdaa572">FillPath</a> (<a class="el" href="class_vect_sharp_1_1_graphics_path.html">GraphicsPath</a> path, <a class="el" href="class_vect_sharp_1_1_brush.html">Brush</a> fillColour, string tag=null)</td></tr>
 <tr class="memdesc:ad2a7b867b829501bcb5b2a62cbdaa572"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill a <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>.   <a href="class_vect_sharp_1_1_graphics.html#ad2a7b867b829501bcb5b2a62cbdaa572">More...</a><br /></td></tr>
 <tr class="separator:ad2a7b867b829501bcb5b2a62cbdaa572"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b8d34df72258585c51cccbbbc8812ec"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_graphics.html#a9b8d34df72258585c51cccbbbc8812ec">FillPath</a> (<a class="el" href="class_vect_sharp_1_1_graphics_path.html">GraphicsPath</a> path, <a class="el" href="class_vect_sharp_1_1_brush.html">Brush</a> fillColour, <a class="el" href="namespace_vect_sharp.html#a3b8bd711a4c9893fce1faad4c26d0df5">FillRule</a> fillRule, string tag=null)</td></tr>
+<tr class="memdesc:a9b8d34df72258585c51cccbbbc8812ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill a <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>.   <a href="class_vect_sharp_1_1_graphics.html#a9b8d34df72258585c51cccbbbc8812ec">More...</a><br /></td></tr>
+<tr class="separator:a9b8d34df72258585c51cccbbbc8812ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43f7247b45e20e171be0ec5739c5bc41"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_graphics.html#a43f7247b45e20e171be0ec5739c5bc41">StrokePath</a> (<a class="el" href="class_vect_sharp_1_1_graphics_path.html">GraphicsPath</a> path, <a class="el" href="class_vect_sharp_1_1_brush.html">Brush</a> strokeColour, double lineWidth=1, <a class="el" href="namespace_vect_sharp.html#a6bde58d6aab37ea51e32240503678209">LineCaps</a> lineCap=LineCaps.Butt, <a class="el" href="namespace_vect_sharp.html#a58a4a36ea254b3d255755654fd9e61f6">LineJoins</a> lineJoin=LineJoins.Miter, <a class="el" href="struct_vect_sharp_1_1_line_dash.html">LineDash</a>? lineDash=null, string tag=null)</td></tr>
 <tr class="memdesc:a43f7247b45e20e171be0ec5739c5bc41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stroke a <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>.   <a href="class_vect_sharp_1_1_graphics.html#a43f7247b45e20e171be0ec5739c5bc41">More...</a><br /></td></tr>
 <tr class="separator:a43f7247b45e20e171be0ec5739c5bc41"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -291,6 +294,9 @@ Properties</h2></td></tr>
 <tr class="memitem:af32ad440108219e8600983cc6d0f6d49"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_vect_sharp.html#a88d2dd0aea021af9a8af889bf292006f">UnbalancedStackActions</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_graphics.html#af32ad440108219e8600983cc6d0f6d49">UnbalancedStackAction</a> = UnbalancedStackActions.Throw<code> [get, set]</code></td></tr>
 <tr class="memdesc:af32ad440108219e8600983cc6d0f6d49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines how an unbalanced graphics state stack (which occurs if the number of calls to <a class="el" href="class_vect_sharp_1_1_graphics.html#a8a11aecb62edf335bebedc920190b403" title="Save the current transform state (rotation, translation, scale).">Save</a> and <a class="el" href="class_vect_sharp_1_1_graphics.html#a8f2e220bda144c50e515fe1aa0e232de" title="Restore the previous transform state (rotation, translation scale).">Restore</a> is not equal) will be treated. The default is UnbalancedStackActions.Throw.   <a href="class_vect_sharp_1_1_graphics.html#af32ad440108219e8600983cc6d0f6d49">More...</a><br /></td></tr>
 <tr class="separator:af32ad440108219e8600983cc6d0f6d49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39d0726b2a00913986556e474ff0976f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_vect_sharp.html#a3b8bd711a4c9893fce1faad4c26d0df5">FillRule</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_graphics.html#a39d0726b2a00913986556e474ff0976f">DefaultFillRule</a> = FillRule.NonZeroWinding<code> [get, set]</code></td></tr>
+<tr class="memdesc:a39d0726b2a00913986556e474ff0976f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default fill rule.   <a href="class_vect_sharp_1_1_graphics.html#a39d0726b2a00913986556e474ff0976f">More...</a><br /></td></tr>
+<tr class="separator:a39d0726b2a00913986556e474ff0976f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52d3fc0919620829e052780f4f8cd8e7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_graphics.html#a52d3fc0919620829e052780f4f8cd8e7">UseUniqueTags</a> = true<code> [get, set]</code></td></tr>
 <tr class="memdesc:a52d3fc0919620829e052780f4f8cd8e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether unique tags should be used for graphics actions that create multiple objects (e.g. drawing text).   <a href="class_vect_sharp_1_1_graphics.html#a52d3fc0919620829e052780f4f8cd8e7">More...</a><br /></td></tr>
 <tr class="separator:a52d3fc0919620829e052780f4f8cd8e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -298,7 +304,7 @@ Properties</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Represents an abstract drawing surface.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00261">261</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00278">278</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a545b7fe5cea9fc34b7bd720020a4ce76" name="a545b7fe5cea9fc34b7bd720020a4ce76"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a545b7fe5cea9fc34b7bd720020a4ce76">&#9670;&#160;</a></span>CopyToIGraphicsContext()</h2>
@@ -324,7 +330,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00632">632</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00666">666</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -363,7 +369,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01661">1661</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01695">1695</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -391,7 +397,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01572">1572</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01606">1606</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -437,7 +443,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00916">916</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00950">950</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -497,7 +503,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00958">958</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00992">992</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -550,7 +556,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00859">859</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00893">893</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -589,7 +595,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00840">840</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00874">874</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -642,7 +648,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00928">928</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00962">962</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -688,7 +694,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00870">870</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00904">904</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -755,7 +761,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00537">537</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00571">571</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -808,7 +814,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00512">512</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00546">546</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -903,7 +909,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00500">500</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00534">534</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -949,7 +955,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00523">523</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00557">557</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1002,12 +1008,65 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00549">549</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00583">583</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+
+</div>
+</div>
+<a id="a9b8d34df72258585c51cccbbbc8812ec" name="a9b8d34df72258585c51cccbbbc8812ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b8d34df72258585c51cccbbbc8812ec">&#9670;&#160;</a></span>FillPath() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void VectSharp.Graphics.FillPath </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_graphics_path.html">GraphicsPath</a>&#160;</td>
+          <td class="paramname"><em>path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_brush.html">Brush</a>&#160;</td>
+          <td class="paramname"><em>fillColour</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_vect_sharp.html#a3b8bd711a4c9893fce1faad4c26d0df5">FillRule</a>&#160;</td>
+          <td class="paramname"><em>fillRule</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>tag</em> = <code>null</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Fill a <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>.  </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>The <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a> to fill.</td></tr>
+    <tr><td class="paramname">fillColour</td><td>The <a class="el" href="class_vect_sharp_1_1_brush.html" title="Represents a brush used to fill or stroke graphics elements. This could be a solid colour,...">Brush</a> with which to fill the <a class="el" href="class_vect_sharp_1_1_graphics_path.html" title="Represents a graphics path that can be filled or stroked.">GraphicsPath</a>.</td></tr>
+    <tr><td class="paramname">fillRule</td><td>The <a class="el" href="namespace_vect_sharp.html#a3b8bd711a4c9893fce1faad4c26d0df5" title="Represents a rule used to determine whether a point is inside or outside of a shape.">FillRule</a> that determines which parts of the path are filled.</td></tr>
+    <tr><td class="paramname">tag</td><td>A tag to identify the filled path.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00310">310</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
 <a id="ad2a7b867b829501bcb5b2a62cbdaa572" name="ad2a7b867b829501bcb5b2a62cbdaa572"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad2a7b867b829501bcb5b2a62cbdaa572">&#9670;&#160;</a></span>FillPath()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2a7b867b829501bcb5b2a62cbdaa572">&#9670;&#160;</a></span>FillPath() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1048,7 +1107,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00276">276</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00298">298</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1115,7 +1174,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00448">448</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00482">482</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1168,7 +1227,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00434">434</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00468">468</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1235,7 +1294,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00490">490</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00512">512</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
 
 </div>
 </div>
@@ -1309,7 +1368,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00056">56</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00057">57</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
 
 </div>
 </div>
@@ -1369,7 +1428,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00395">395</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00411">411</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
 
 </div>
 </div>
@@ -1436,7 +1495,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00036">36</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00034">34</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
 
 </div>
 </div>
@@ -1517,7 +1576,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00124">124</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00134">134</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
 
 </div>
 </div>
@@ -1584,7 +1643,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00714">714</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00754">754</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
 
 </div>
 </div>
@@ -1658,7 +1717,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00646">646</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00680">680</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
 
 </div>
 </div>
@@ -1718,7 +1777,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00727">727</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00767">767</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
 
 </div>
 </div>
@@ -1785,7 +1844,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00660">660</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00694">694</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
 
 </div>
 </div>
@@ -1807,7 +1866,7 @@ Properties</h2></td></tr>
 <p>Computes the rectangular bounds of the region affected by the drawing operations performed on the <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object.  </p>
 <dl class="section return"><dt>Returns</dt><dd>The smallest rectangle that contains all the elements drawn on the <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a>.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01419">1419</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01453">1453</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1829,7 +1888,7 @@ Properties</h2></td></tr>
 <p>Gets all the tags that have been defined in the <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a>.  </p>
 <dl class="section return"><dt>Returns</dt><dd>An IEnumerable&lt;T&gt; of strings that, when enumerated, returns all the tags that have been defined in the <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a>.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01671">1671</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01705">1705</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1858,7 +1917,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A new <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object containing the linearised elements.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01363">1363</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01397">1397</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1888,7 +1947,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The size of the measured <em>text</em> .</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00629">629</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00663">663</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
 
 </div>
 </div>
@@ -1929,7 +1988,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The size of the measured <em>text</em> .</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00618">618</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00645">645</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
 
 </div>
 </div>
@@ -1950,7 +2009,7 @@ Properties</h2></td></tr>
 
 <p>Restore the previous transform state (rotation, translation scale).  </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00565">565</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00599">599</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -1989,7 +2048,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00340">340</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00374">374</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -2035,7 +2094,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00351">351</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00385">385</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -2056,7 +2115,7 @@ Properties</h2></td></tr>
 
 <p>Save the current transform state (rotation, translation, scale).  </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00557">557</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00591">591</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -2102,7 +2161,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00422">422</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00456">456</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -2162,7 +2221,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00319">319</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00353">353</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -2201,7 +2260,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00306">306</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00340">340</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -2247,7 +2306,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00330">330</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00364">364</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -2321,7 +2380,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00296">296</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00330">330</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -2416,7 +2475,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00482">482</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00516">516</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -2497,7 +2556,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00464">464</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00498">498</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -2592,7 +2651,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00606">606</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00633">633</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
 
 </div>
 </div>
@@ -2694,7 +2753,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00103">103</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00110">110</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
 
 </div>
 </div>
@@ -2782,7 +2841,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00507">507</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00529">529</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
 
 </div>
 </div>
@@ -2877,7 +2936,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00079">79</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00083">83</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
 
 </div>
 </div>
@@ -2986,7 +3045,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00263">263</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00276">276</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
 
 </div>
 </div>
@@ -3081,7 +3140,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00826">826</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00874">874</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
 
 </div>
 </div>
@@ -3183,7 +3242,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00680">680</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00717">717</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
 
 </div>
 </div>
@@ -3271,7 +3330,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00843">843</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00891">891</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
 
 </div>
 </div>
@@ -3366,7 +3425,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00698">698</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8_text_8cs_source.html#l00735">735</a> of file <a class="el" href="_graphics_8_text_8cs_source.html">Graphics.Text.cs</a>.</p>
 
 </div>
 </div>
@@ -3440,7 +3499,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00389">389</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00423">423</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -3480,7 +3539,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A new <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object in which all graphics actions have been linearised and transformed using the <em>transformationFunction</em> .</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01036">1036</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01070">1070</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -3527,7 +3586,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A new <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object in which all graphics actions have been linearised and transformed using the <em>transformationFunction</em> .</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01234">1234</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01268">1268</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -3573,7 +3632,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00401">401</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00435">435</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -3612,7 +3671,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00411">411</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00445">445</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -3666,7 +3725,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if the image could be rasterised; <code>false</code> if it could not be rasterised.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01527">1527</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01561">1561</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -3693,11 +3752,37 @@ Properties</h2></td></tr>
 
 <p>A method that is used to rasterise a region of a <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object. Set this to <code>null</code> if you wish to use the default rasterisation methods (implemented by either <a class="el" href="namespace_vect_sharp_1_1_raster.html">VectSharp.Raster</a>, or <a class="el" href="namespace_vect_sharp_1_1_raster_1_1_image_sharp.html">VectSharp.Raster.ImageSharp</a>). You will have to provide your own implementation of this method if neither <a class="el" href="namespace_vect_sharp_1_1_raster.html">VectSharp.Raster</a> nor <a class="el" href="namespace_vect_sharp_1_1_raster_1_1_image_sharp.html">VectSharp.Raster.ImageSharp</a> are referenced by your project. The first argument of this method is the <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> to be rasterised, the second is a <a class="el" href="struct_vect_sharp_1_1_rectangle.html" title="Represents a rectangle.">Rectangle</a> representing the region to rasterise, the third is a double representing the scale, and the third is a boolean value indicating whether the resulting <a class="el" href="class_vect_sharp_1_1_raster_image.html" title="Represents a raster image, created from raw pixel data. Consider using the derived classes included i...">RasterImage</a> should be interpolated.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01517">1517</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l01551">1551</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Property Documentation</h2>
+<a id="a39d0726b2a00913986556e474ff0976f" name="a39d0726b2a00913986556e474ff0976f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39d0726b2a00913986556e474ff0976f">&#9670;&#160;</a></span>DefaultFillRule</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_vect_sharp.html#a3b8bd711a4c9893fce1faad4c26d0df5">FillRule</a> VectSharp.Graphics.DefaultFillRule = FillRule.NonZeroWinding</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The default fill rule.  </p>
+
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00290">290</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+
+</div>
+</div>
 <a id="af32ad440108219e8600983cc6d0f6d49" name="af32ad440108219e8600983cc6d0f6d49"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af32ad440108219e8600983cc6d0f6d49">&#9670;&#160;</a></span>UnbalancedStackAction</h2>
 
@@ -3720,7 +3805,7 @@ Properties</h2></td></tr>
 
 <p>Determines how an unbalanced graphics state stack (which occurs if the number of calls to <a class="el" href="class_vect_sharp_1_1_graphics.html#a8a11aecb62edf335bebedc920190b403" title="Save the current transform state (rotation, translation, scale).">Save</a> and <a class="el" href="class_vect_sharp_1_1_graphics.html#a8f2e220bda144c50e515fe1aa0e232de" title="Restore the previous transform state (rotation, translation scale).">Restore</a> is not equal) will be treated. The default is UnbalancedStackActions.Throw.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00266">266</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00283">283</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>
@@ -3746,7 +3831,7 @@ Properties</h2></td></tr>
 
 <p>Determines whether unique tags should be used for graphics actions that create multiple objects (e.g. drawing text).  </p>
 
-<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00284">284</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00318">318</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
 
 </div>
 </div>

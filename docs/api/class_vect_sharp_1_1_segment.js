@@ -1,6 +1,8 @@
 var class_vect_sharp_1_1_segment =
 [
     [ "Clone", "class_vect_sharp_1_1_segment.html#ad8cc11af24e64a2d051c5ff7f202ebf4", null ],
+    [ "Flatten", "class_vect_sharp_1_1_segment.html#a03a28cce2959b321a0598ec733d180da", null ],
+    [ "FlattenForOffsetAndGetTangents", "class_vect_sharp_1_1_segment.html#ac9004048ae34d4bf93c945249a3ec7cd", null ],
     [ "GetLinearisationTangents", "class_vect_sharp_1_1_segment.html#a80351b51c0972eacd7da135b912eb3da", null ],
     [ "GetPointAt", "class_vect_sharp_1_1_segment.html#a4173586c74090dbb8d2762092c9da75d", null ],
     [ "GetTangentAt", "class_vect_sharp_1_1_segment.html#ace97767c117ee2d9b1935b3b32388af7", null ],

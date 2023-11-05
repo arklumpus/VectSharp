@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">VectSharp<span id="projectnumber">&#160;2.4.2</span>
+   <div id="projectname">VectSharp<span id="projectnumber">&#160;2.5.0</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -106,10 +106,12 @@ Inheritance diagram for VectSharp.IFontLibrary:</div>
 <div class="dyncontent">
 <div class="center"><img src="interface_vect_sharp_1_1_i_font_library__inherit__graph.png" border="0" usemap="#a_vect_sharp_8_i_font_library_inherit__map" alt="Inheritance graph"/></div>
 <map name="a_vect_sharp_8_i_font_library_inherit__map" id="a_vect_sharp_8_i_font_library_inherit__map">
-<area shape="rect" title="Represents a font library with methods to create FontFamily objects from a string or from FontFamily...." alt="" coords="133,5,289,31"/>
-<area shape="rect" href="class_vect_sharp_1_1_font_library.html" title="Abstract class with a default implementation of font family fallbacks." alt="" coords="135,79,287,104"/>
-<area shape="rect" href="class_vect_sharp_1_1_default_font_library.html" title="A default font library that resolves standard families using the embedded fonts." alt="" coords="5,152,200,177"/>
-<area shape="rect" href="class_vect_sharp_1_1_simple_font_library.html" title="A font library that can be used to cache and resolve font family names." alt="" coords="224,152,416,177"/>
+<area shape="rect" title="Represents a font library with methods to create FontFamily objects from a string or from FontFamily...." alt="" coords="5,80,160,105"/>
+<area shape="rect" href="class_vect_sharp_1_1_font_library.html" title="Abstract class with a default implementation of font family fallbacks." alt="" coords="208,80,360,105"/>
+<area shape="rect" href="class_vect_sharp_1_1_default_font_library.html" title="A default font library that resolves standard families using the embedded fonts." alt="" coords="408,5,600,31"/>
+<area shape="rect" href="class_vect_sharp_1_1_folder_font_library.html" title="A font library that resolves fonts from a folder containing TrueType files." alt="" coords="410,55,598,80"/>
+<area shape="rect" href="class_vect_sharp_1_1_multi_font_library.html" title="A font library that tries to resolve fonts using other font libraries." alt="" coords="414,104,594,129"/>
+<area shape="rect" href="class_vect_sharp_1_1_simple_font_library.html" title="A font library that can be used to cache and resolve font family names." alt="" coords="408,153,600,179"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -131,7 +133,7 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Represents a font library with methods to create <a class="el" href="class_vect_sharp_1_1_font_family.html" title="Represents a typeface.">FontFamily</a> objects from a string or from <a class="el" href="class_vect_sharp_1_1_font_family.html#a6cdec4eb0a660064bc416e81f69d3780" title="The 14 standard font families.">FontFamily.StandardFontFamilies</a>.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_font_library_8cs_source.html#l00029">29</a> of file <a class="el" href="_font_library_8cs_source.html">FontLibrary.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_font_library_8cs_source.html#l00028">28</a> of file <a class="el" href="_font_library_8cs_source.html">FontLibrary.cs</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="aa5edae1ac42260badf5963b2e8723278" name="aa5edae1ac42260badf5963b2e8723278"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa5edae1ac42260badf5963b2e8723278">&#9670;&#160;</a></span>ResolveFontFamily() <span class="overload">[1/4]</span></h2>
@@ -158,7 +160,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="class_vect_sharp_1_1_font_family.html" title="Represents a typeface.">FontFamily</a> object corresponding to the specified font family.</dd></dl>
 
-<p>Implemented in <a class="el" href="class_vect_sharp_1_1_font_library.html#aa2b3527549a24f1ed1564b8516a93213">VectSharp.FontLibrary</a>, <a class="el" href="class_vect_sharp_1_1_simple_font_library.html#abbb23adc127eba43dea02811e97aa148">VectSharp.SimpleFontLibrary</a>, and <a class="el" href="class_vect_sharp_1_1_default_font_library.html#a2c52fbf93d45ea691358ab224d89260c">VectSharp.DefaultFontLibrary</a>.</p>
+<p>Implemented in <a class="el" href="class_vect_sharp_1_1_font_library.html#aa2b3527549a24f1ed1564b8516a93213">VectSharp.FontLibrary</a>, <a class="el" href="class_vect_sharp_1_1_simple_font_library.html#abbb23adc127eba43dea02811e97aa148">VectSharp.SimpleFontLibrary</a>, <a class="el" href="class_vect_sharp_1_1_default_font_library.html#a2c52fbf93d45ea691358ab224d89260c">VectSharp.DefaultFontLibrary</a>, <a class="el" href="class_vect_sharp_1_1_folder_font_library.html#a9194dfd783bfd2c499801333d05e2393">VectSharp.FolderFontLibrary</a>, and <a class="el" href="class_vect_sharp_1_1_multi_font_library.html#adf38d46857c2163ef7e14370bdb20124">VectSharp.MultiFontLibrary</a>.</p>
 
 </div>
 </div>
@@ -187,7 +189,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>If the font family name or the true type file is valid, a <a class="el" href="class_vect_sharp_1_1_font_family.html" title="Represents a typeface.">FontFamily</a> object corresponding to the specified font family.</dd></dl>
 
-<p>Implemented in <a class="el" href="class_vect_sharp_1_1_font_library.html#aabf4f02d4ac7b08ef2c4c957100d09a1">VectSharp.FontLibrary</a>, <a class="el" href="class_vect_sharp_1_1_simple_font_library.html#a63ef6efa35f69a22ec60236f8515ade9">VectSharp.SimpleFontLibrary</a>, and <a class="el" href="class_vect_sharp_1_1_default_font_library.html#a24cab54d5c1bf80bffd450336504948d">VectSharp.DefaultFontLibrary</a>.</p>
+<p>Implemented in <a class="el" href="class_vect_sharp_1_1_font_library.html#aabf4f02d4ac7b08ef2c4c957100d09a1">VectSharp.FontLibrary</a>, <a class="el" href="class_vect_sharp_1_1_simple_font_library.html#a63ef6efa35f69a22ec60236f8515ade9">VectSharp.SimpleFontLibrary</a>, <a class="el" href="class_vect_sharp_1_1_default_font_library.html#a24cab54d5c1bf80bffd450336504948d">VectSharp.DefaultFontLibrary</a>, <a class="el" href="class_vect_sharp_1_1_folder_font_library.html#a7578a29286b455a56b82aab5c3294884">VectSharp.FolderFontLibrary</a>, and <a class="el" href="class_vect_sharp_1_1_multi_font_library.html#a84669e4b0f9ece2a617c64785928494a">VectSharp.MultiFontLibrary</a>.</p>
 
 </div>
 </div>

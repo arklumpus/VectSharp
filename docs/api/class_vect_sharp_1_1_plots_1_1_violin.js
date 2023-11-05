@@ -6,6 +6,7 @@ var class_vect_sharp_1_1_plots_1_1_violin =
     [ "CoordinateSystem", "class_vect_sharp_1_1_plots_1_1_violin.html#aa03800732bd78681e0331b9d4a3b89f0", null ],
     [ "Data", "class_vect_sharp_1_1_plots_1_1_violin.html#afacb2f113c6a4626294a24a754eedc8b", null ],
     [ "Direction", "class_vect_sharp_1_1_plots_1_1_violin.html#a1e65cbe23978ee8aa11fee673c5f279c", null ],
+    [ "MaxBins", "class_vect_sharp_1_1_plots_1_1_violin.html#a4137d4000fba60fc798645ec646067df", null ],
     [ "Position", "class_vect_sharp_1_1_plots_1_1_violin.html#a4707971ac84dc897784123ad4e36c1ed", null ],
     [ "PresentationAttributes", "class_vect_sharp_1_1_plots_1_1_violin.html#a36947d5fe436411b41a075ffeeff7e40", null ],
     [ "Sides", "class_vect_sharp_1_1_plots_1_1_violin.html#ae3ad6f031ca12117c990deb75abbe1e3", null ],

@@ -32,8 +32,8 @@ var class_vect_sharp_1_1_canvas_1_1_s_k_render_action =
     [ "TextY", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a6eb4f61743288d7a85c91228ec8cea64", null ],
     [ "Transform", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#ae3a4a45722da29d9e94903cb5f72d0b8", null ],
     [ "ZIndex", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a167e0f08833581485ad3306f02a13537", null ],
-    [ "PointerEnter", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a9fcaa4a1234333232b62fb61d42f0312", null ],
-    [ "PointerLeave", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#a3f7ecaf0b56ef83b1d3afb003e8e396c", null ],
+    [ "PointerEntered", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#af9d38d3f666b05671289033b28082d1d", null ],
+    [ "PointerExited", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#ad8458cdb3489a23b69c0f06466562611", null ],
     [ "PointerPressed", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#ab107c394c719c319995ef2c901914cd3", null ],
     [ "PointerReleased", "class_vect_sharp_1_1_canvas_1_1_s_k_render_action.html#aab151075702a608c4596833ea81c7fcb", null ]
 ];

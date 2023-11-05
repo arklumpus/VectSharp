@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">VectSharp<span id="projectnumber">&#160;2.4.2</span>
+   <div id="projectname">VectSharp<span id="projectnumber">&#160;2.5.0</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -125,6 +125,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_document.html">Document</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a collection of pages.   <a href="class_vect_sharp_1_1_document.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_folder_font_library.html">FolderFontLibrary</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A font library that resolves fonts from a folder containing TrueType files.   <a href="class_vect_sharp_1_1_folder_font_library.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_font.html">Font</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a typeface with a specific size.   <a href="class_vect_sharp_1_1_font.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -181,6 +184,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_vect_sharp_1_1_line_dash.html">LineDash</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents instructions on how to paint a dashed line.   <a href="struct_vect_sharp_1_1_line_dash.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_multi_font_library.html">MultiFontLibrary</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A font library that tries to resolve fonts using other font libraries.   <a href="class_vect_sharp_1_1_multi_font_library.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_page.html">Page</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object with a width and height.   <a href="class_vect_sharp_1_1_page.html#details">More...</a><br /></td></tr>
@@ -248,11 +254,32 @@ Enumerations</h2></td></tr>
 <tr class="memitem:ad89d060535c63df4196d494335867778"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_vect_sharp.html#ad89d060535c63df4196d494335867778">Script</a> </td></tr>
 <tr class="memdesc:ad89d060535c63df4196d494335867778"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the position of the text.   <a href="namespace_vect_sharp.html#ad89d060535c63df4196d494335867778">More...</a><br /></td></tr>
 <tr class="separator:ad89d060535c63df4196d494335867778"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b8bd711a4c9893fce1faad4c26d0df5"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_vect_sharp.html#a3b8bd711a4c9893fce1faad4c26d0df5">FillRule</a> </td></tr>
+<tr class="memdesc:a3b8bd711a4c9893fce1faad4c26d0df5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a rule used to determine whether a point is inside or outside of a shape.   <a href="namespace_vect_sharp.html#a3b8bd711a4c9893fce1faad4c26d0df5">More...</a><br /></td></tr>
+<tr class="separator:a3b8bd711a4c9893fce1faad4c26d0df5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ccfe4c0d79758b6c0e2fda8a319125c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_vect_sharp.html#a9ccfe4c0d79758b6c0e2fda8a319125c">PixelFormats</a> </td></tr>
 <tr class="memdesc:a9ccfe4c0d79758b6c0e2fda8a319125c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the pixel format of a raster image.   <a href="namespace_vect_sharp.html#a9ccfe4c0d79758b6c0e2fda8a319125c">More...</a><br /></td></tr>
 <tr class="separator:a9ccfe4c0d79758b6c0e2fda8a319125c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="a3b8bd711a4c9893fce1faad4c26d0df5" name="a3b8bd711a4c9893fce1faad4c26d0df5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b8bd711a4c9893fce1faad4c26d0df5">&#9670;&#160;</a></span>FillRule</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespace_vect_sharp.html#a3b8bd711a4c9893fce1faad4c26d0df5">VectSharp.FillRule</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Represents a rule used to determine whether a point is inside or outside of a shape.  </p>
+
+<p class="definition">Definition at line <a class="el" href="_graphics_8cs_source.html#l00262">262</a> of file <a class="el" href="_graphics_8cs_source.html">Graphics.cs</a>.</p>
+
+</div>
+</div>
 <a id="a6bde58d6aab37ea51e32240503678209" name="a6bde58d6aab37ea51e32240503678209"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6bde58d6aab37ea51e32240503678209">&#9670;&#160;</a></span>LineCaps</h2>
 

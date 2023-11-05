@@ -14,13 +14,13 @@ var hierarchy =
       ] ],
       [ "VectSharp.SolidColourBrush", "class_vect_sharp_1_1_solid_colour_brush.html", null ]
     ] ],
-    [ "Avalonia.Controls.Canvas", null, [
-      [ "VectSharp.Canvas.AnimatedCanvas", "class_vect_sharp_1_1_canvas_1_1_animated_canvas.html", null ],
-      [ "VectSharp.Canvas.SKMultiLayerRenderCanvas", "class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html", null ]
-    ] ],
     [ "VectSharp.TrueTypeFile.ClassDefinitionTable.ClassRangeRecord", "struct_vect_sharp_1_1_true_type_file_1_1_class_definition_table_1_1_class_range_record.html", null ],
     [ "VectSharp.Filters.ColourMatrix", "class_vect_sharp_1_1_filters_1_1_colour_matrix.html", null ],
     [ "VectSharp.Colours", "class_vect_sharp_1_1_colours.html", null ],
+    [ "Avalonia.Controls.Control", null, [
+      [ "VectSharp.Canvas.AnimatedCanvas", "class_vect_sharp_1_1_canvas_1_1_animated_canvas.html", null ],
+      [ "VectSharp.Canvas.SKMultiLayerRenderCanvas", "class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html", null ]
+    ] ],
     [ "VectSharp.Font.DetailedFontMetrics", "class_vect_sharp_1_1_font_1_1_detailed_font_metrics.html", null ],
     [ "VectSharp.Document", "class_vect_sharp_1_1_document.html", null ],
     [ "Exception", null, [
@@ -117,6 +117,8 @@ var hierarchy =
     [ "VectSharp.IFontLibrary", "interface_vect_sharp_1_1_i_font_library.html", [
       [ "VectSharp.FontLibrary", "class_vect_sharp_1_1_font_library.html", [
         [ "VectSharp.DefaultFontLibrary", "class_vect_sharp_1_1_default_font_library.html", null ],
+        [ "VectSharp.FolderFontLibrary", "class_vect_sharp_1_1_folder_font_library.html", null ],
+        [ "VectSharp.MultiFontLibrary", "class_vect_sharp_1_1_multi_font_library.html", null ],
         [ "VectSharp.SimpleFontLibrary", "class_vect_sharp_1_1_simple_font_library.html", null ]
       ] ]
     ] ],
@@ -193,6 +195,7 @@ var hierarchy =
     [ "VectSharp.Markdown.SyntaxHighlighter", "class_vect_sharp_1_1_markdown_1_1_syntax_highlighter.html", null ],
     [ "VectSharp.Transition", "class_vect_sharp_1_1_transition.html", null ],
     [ "VectSharp.TrueTypeFile", "class_vect_sharp_1_1_true_type_file.html", null ],
+    [ "VectSharp.TrueTypeFile.TrueTypeName", "struct_vect_sharp_1_1_true_type_file_1_1_true_type_name.html", null ],
     [ "VectSharp.TrueTypeFile.TrueTypePoint", "struct_vect_sharp_1_1_true_type_file_1_1_true_type_point.html", null ],
     [ "UserControl", null, [
       [ "VectSharp.MarkdownCanvas.MarkdownCanvasControl", "class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html", null ]

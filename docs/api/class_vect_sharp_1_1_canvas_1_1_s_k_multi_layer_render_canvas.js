@@ -18,7 +18,7 @@ var class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas =
     [ "LayerTransforms", "class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#aa8cabc258828463f73b9d90612d9abee", null ],
     [ "RenderActions", "class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#aab220bda90e3a0c36f27b87bfbeff6f0", null ],
     [ "RenderLock", "class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a7ff6c67552e1715308850a5bba174941", null ],
+    [ "ClipMargin", "class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a477d90bbd72a0656f8b05cb436ef2e91", null ],
     [ "PageHeight", "class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#aabe2d24ee767ba8e7bac57f98d88a0ef", null ],
-    [ "PageWidth", "class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a4fd73dc712c4f90ed8e00412eb50bdd2", null ],
-    [ "Spinner", "class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a6d4c4c30f79f3b6c45f848e7888e1765", null ]
+    [ "PageWidth", "class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html#a4fd73dc712c4f90ed8e00412eb50bdd2", null ]
 ];

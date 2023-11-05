@@ -14,6 +14,7 @@ var class_vect_sharp_1_1_graphics =
     [ "DrawRasterImage", "class_vect_sharp_1_1_graphics.html#a4fb7e7abe8792e3d16d08482f532006c", null ],
     [ "DrawRasterImage", "class_vect_sharp_1_1_graphics.html#acbe2fb8ae969e0fe05d4acf378081ba4", null ],
     [ "DrawRasterImage", "class_vect_sharp_1_1_graphics.html#a7386a20b2a5fccaf6accf650b79044c4", null ],
+    [ "FillPath", "class_vect_sharp_1_1_graphics.html#a9b8d34df72258585c51cccbbbc8812ec", null ],
     [ "FillPath", "class_vect_sharp_1_1_graphics.html#ad2a7b867b829501bcb5b2a62cbdaa572", null ],
     [ "FillRectangle", "class_vect_sharp_1_1_graphics.html#a1bbbe9ea1f41bf66275fc3877bc20077", null ],
     [ "FillRectangle", "class_vect_sharp_1_1_graphics.html#a30201a35455b7ef559703aebf8525f50", null ],
@@ -58,6 +59,7 @@ var class_vect_sharp_1_1_graphics =
     [ "Translate", "class_vect_sharp_1_1_graphics.html#adc3cc93ddf9bf9707fde1d22325f1f69", null ],
     [ "TryRasterise", "class_vect_sharp_1_1_graphics.html#a6d3ec4a011650e50171a888531e0c53c", null ],
     [ "RasterisationMethod", "class_vect_sharp_1_1_graphics.html#a5033bbb29d924589df774638c31f93ad", null ],
+    [ "DefaultFillRule", "class_vect_sharp_1_1_graphics.html#a39d0726b2a00913986556e474ff0976f", null ],
     [ "UnbalancedStackAction", "class_vect_sharp_1_1_graphics.html#af32ad440108219e8600983cc6d0f6d49", null ],
     [ "UseUniqueTags", "class_vect_sharp_1_1_graphics.html#a52d3fc0919620829e052780f4f8cd8e7", null ]
 ];

@@ -1,0 +1,5 @@
+<map id="VectSharp.FolderFontLibrary" name="VectSharp.FolderFontLibrary">
+<area shape="rect" id="node1" title="A font library that resolves fonts from a folder containing TrueType files." alt="" coords="5,152,193,177"/>
+<area shape="rect" id="node2" href="$class_vect_sharp_1_1_font_library.html" title="Abstract class with a default implementation of font family fallbacks." alt="" coords="56,79,143,104"/>
+<area shape="rect" id="node3" href="$interface_vect_sharp_1_1_i_font_library.html" title="Represents a font library with methods to create FontFamily objects from a string or from FontFamily...." alt="" coords="54,5,145,31"/>
+</map>

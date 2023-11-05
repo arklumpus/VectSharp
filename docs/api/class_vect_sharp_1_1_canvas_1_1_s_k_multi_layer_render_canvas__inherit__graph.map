@@ -1,6 +1,6 @@
 <map id="VectSharp.Canvas.SKMultiLayerRenderCanvas" name="VectSharp.Canvas.SKMultiLayerRenderCanvas">
-<area shape="rect" id="node1" title="Represents a multi&#45;threaded, triple&#45;buffered canvas on which the image is drawn using SkiaSharp." alt="" coords="113,93,296,133"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,135,45"/>
-<area shape="rect" id="node3" title=" " alt="" coords="159,13,250,38"/>
-<area shape="rect" id="node4" title=" " alt="" coords="274,13,405,38"/>
+<area shape="rect" id="node1" title="Represents a multi&#45;threaded, triple&#45;buffered canvas on which the image is drawn using SkiaSharp." alt="" coords="111,93,290,133"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,132,45"/>
+<area shape="rect" id="node3" title=" " alt="" coords="156,13,245,38"/>
+<area shape="rect" id="node4" title=" " alt="" coords="269,13,396,38"/>
 </map>

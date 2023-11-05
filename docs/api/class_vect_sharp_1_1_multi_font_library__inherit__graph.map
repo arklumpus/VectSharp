@@ -1,0 +1,5 @@
+<map id="VectSharp.MultiFontLibrary" name="VectSharp.MultiFontLibrary">
+<area shape="rect" id="node1" title="A font library that tries to resolve fonts using other font libraries." alt="" coords="5,152,185,177"/>
+<area shape="rect" id="node2" href="$class_vect_sharp_1_1_font_library.html" title="Abstract class with a default implementation of font family fallbacks." alt="" coords="52,79,139,104"/>
+<area shape="rect" id="node3" href="$interface_vect_sharp_1_1_i_font_library.html" title="Represents a font library with methods to create FontFamily objects from a string or from FontFamily...." alt="" coords="50,5,141,31"/>
+</map>

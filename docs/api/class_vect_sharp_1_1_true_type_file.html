@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">VectSharp<span id="projectnumber">&#160;2.4.2</span>
+   <div id="projectname">VectSharp<span id="projectnumber">&#160;2.5.0</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -95,6 +95,7 @@ $(document).ready(function(){initNavTree('class_vect_sharp_1_1_true_type_file.ht
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#properties">Properties</a> &#124;
 <a href="class_vect_sharp_1_1_true_type_file-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">VectSharp.TrueTypeFile Class Reference</div></div>
@@ -111,6 +112,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_true_type_file_1_1_pair_kerning.html">PairKerning</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains information describing how the position of two glyphs in a kerning pair should be altered.   <a href="class_vect_sharp_1_1_true_type_file_1_1_pair_kerning.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_vect_sharp_1_1_true_type_file_1_1_true_type_name.html">TrueTypeName</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represets a TrueType name.   <a href="struct_vect_sharp_1_1_true_type_file_1_1_true_type_name.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_vect_sharp_1_1_true_type_file_1_1_true_type_point.html">TrueTypePoint</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a point in a TrueType path description.   <a href="struct_vect_sharp_1_1_true_type_file_1_1_true_type_point.html#details">More...</a><br /></td></tr>
@@ -224,6 +228,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a533bb576f83c40d4a148e7357b34f89c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the kerning between two glyphs.   <a href="class_vect_sharp_1_1_true_type_file.html#a533bb576f83c40d4a148e7357b34f89c">More...</a><br /></td></tr>
 <tr class="separator:a533bb576f83c40d4a148e7357b34f89c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a5ba04a3800f6b7a044255303b2d2e0aa"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_true_type_file.html#a5ba04a3800f6b7a044255303b2d2e0aa">GetNames</a> (string file, out List&lt; <a class="el" href="struct_vect_sharp_1_1_true_type_file_1_1_true_type_name.html">TrueTypeName</a> &gt; names)</td></tr>
+<tr class="memdesc:a5ba04a3800f6b7a044255303b2d2e0aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether the file is a valid TrueType file and retrieves the list of names defined in it.   <a href="class_vect_sharp_1_1_true_type_file.html#a5ba04a3800f6b7a044255303b2d2e0aa">More...</a><br /></td></tr>
+<tr class="separator:a5ba04a3800f6b7a044255303b2d2e0aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22b28617c914ec8da254adc48d8a05f7"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_true_type_file.html#a22b28617c914ec8da254adc48d8a05f7">GetNames</a> (Stream fs, out List&lt; <a class="el" href="struct_vect_sharp_1_1_true_type_file_1_1_true_type_name.html">TrueTypeName</a> &gt; names)</td></tr>
+<tr class="memdesc:a22b28617c914ec8da254adc48d8a05f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether the stream contains a valid TrueType file and retrieves the list of names defined in it.   <a href="class_vect_sharp_1_1_true_type_file.html#a22b28617c914ec8da254adc48d8a05f7">More...</a><br /></td></tr>
+<tr class="separator:a22b28617c914ec8da254adc48d8a05f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:a8df9028202564d2a8ca841102e558a1f"><td class="memItemLeft" align="right" valign="top">Stream&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_true_type_file.html#a8df9028202564d2a8ca841102e558a1f">FontStream</a><code> [get]</code></td></tr>
@@ -233,7 +246,7 @@ Properties</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Represents a font file in TrueType format. Reference: <a href="http://stevehanov.ca/blog/?id=143">http://stevehanov.ca/blog/?id=143</a>, <a href="https://developer.apple.com/fonts/TrueType-Reference-Manual/">https://developer.apple.com/fonts/TrueType-Reference-Manual/</a>, <a href="https://docs.microsoft.com/en-us/typography/opentype/spec/">https://docs.microsoft.com/en-us/typography/opentype/spec/</a>  </p>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l00030">30</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l00029">29</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="af90110e53ded920a9f3fbb1906ebcfd2" name="af90110e53ded920a9f3fbb1906ebcfd2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af90110e53ded920a9f3fbb1906ebcfd2">&#9670;&#160;</a></span>Destroy()</h2>
@@ -252,7 +265,7 @@ Properties</h2></td></tr>
 
 <p>Remove this TrueType file from the cache, clear the tables and release the <a class="el" href="class_vect_sharp_1_1_true_type_file.html#a8df9028202564d2a8ca841102e558a1f" title="A stream pointing to the TrueType file source (either on disk or in memory). Never dispose this strea...">FontStream</a>. Only call this when the actual file that was used to create this object needs to be changed!  </p>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l00053">53</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l00052">52</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -274,7 +287,7 @@ Properties</h2></td></tr>
 <p>Computes the font ascent, in thousandths of em unit.  </p>
 <dl class="section return"><dt>Returns</dt><dd>The font ascent in thousandths of em unit.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02131">2131</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02265">2265</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -296,7 +309,7 @@ Properties</h2></td></tr>
 <p>Computes the font descent, in thousandths of em unit.  </p>
 <dl class="section return"><dt>Returns</dt><dd>The font descent in thousandths of em unit.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02141">2141</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02275">2275</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -325,7 +338,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The left- and right- side bearings of the glyph in thousandths of em unit</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02223">2223</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02357">2357</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -354,7 +367,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The vertical metrics of a glyph, in thousandths of em unit.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02271">2271</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02405">2405</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -383,7 +396,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The advance width of the glyph in thousandths of em unit.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02082">2082</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02216">2216</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -412,7 +425,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The advance width of the glyph in thousandths of em unit.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02100">2100</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02234">2234</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -452,7 +465,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="class_vect_sharp_1_1_true_type_file_1_1_pair_kerning.html" title="Contains information describing how the position of two glyphs in a kerning pair should be altered.">PairKerning</a> object containing information about how the position of each glyphs should be altered.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02500">2500</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02634">2634</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -492,7 +505,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="class_vect_sharp_1_1_true_type_file_1_1_pair_kerning.html" title="Contains information describing how the position of two glyphs in a kerning pair should be altered.">PairKerning</a> object containing information about how the position of each glyphs should be altered.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02514">2514</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02648">2648</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -539,7 +552,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>If the underline does not intersect the glyph, this method returns <code>null</code>. Otherwise, it returns an array containing two elements, representing the horizontal coordinates of the leftmost and rightmost intersection points.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02350">2350</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02484">2484</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -561,7 +574,7 @@ Properties</h2></td></tr>
 <p>Computes the distance of the top of the underline from the baseline, in thousandths of em unit.  </p>
 <dl class="section return"><dt>Returns</dt><dd>The distance of the top of the underline from the baseline, in thousandths of em unit.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02288">2288</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02422">2422</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -583,7 +596,7 @@ Properties</h2></td></tr>
 <p>Computes the thickness of the underline, in thousandths of em unit.  </p>
 <dl class="section return"><dt>Returns</dt><dd>The thickness of the underline, in thousandths of em unit.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02304">2304</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02438">2438</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -605,7 +618,7 @@ Properties</h2></td></tr>
 <p>Computes the font's Win ascent, in thousandths of em unit.  </p>
 <dl class="section return"><dt>Returns</dt><dd>The font's Win ascent in thousandths of em unit.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02111">2111</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02245">2245</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -627,7 +640,7 @@ Properties</h2></td></tr>
 <p>Computes the maximum distance to the right of the glyph origin of the font, in thousandths of em unit.  </p>
 <dl class="section return"><dt>Returns</dt><dd>The maximum distance to the right of the glyph origin of the font in thousandths of em unit.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02168">2168</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02302">2302</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -649,7 +662,7 @@ Properties</h2></td></tr>
 <p>Computes the maximum distance to the left of the glyph origin of the font, in thousandths of em unit.  </p>
 <dl class="section return"><dt>Returns</dt><dd>The maximum distance to the left of the glyph origin of the font in thousandths of em unit.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02177">2177</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02311">2311</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -671,7 +684,7 @@ Properties</h2></td></tr>
 <p>Computes the maximum height over the baseline of the font, in thousandths of em unit.  </p>
 <dl class="section return"><dt>Returns</dt><dd>The maximum height over the baseline of the font in thousandths of em unit.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02150">2150</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02284">2284</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -693,7 +706,7 @@ Properties</h2></td></tr>
 <p>Computes the maximum depth below the baseline of the font, in thousandths of em unit.  </p>
 <dl class="section return"><dt>Returns</dt><dd>The maximum depth below the baseline of the font in thousandths of em unit.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02159">2159</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02293">2293</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -715,7 +728,7 @@ Properties</h2></td></tr>
 <p>Returns the index of the first character glyph represented by the font.  </p>
 <dl class="section return"><dt>Returns</dt><dd>The index of the first character glyph represented by the font.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l01920">1920</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02054">2054</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -737,7 +750,7 @@ Properties</h2></td></tr>
 <p>Obtains the font family name from the TrueType file.  </p>
 <dl class="section return"><dt>Returns</dt><dd>The font family name, if available; <code>null</code> otherwise.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l01846">1846</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l01980">1980</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -759,7 +772,7 @@ Properties</h2></td></tr>
 <p>Obtains the PostScript font name from the TrueType file.  </p>
 <dl class="section return"><dt>Returns</dt><dd>The PostScript font name, if available; <code>null</code> otherwise.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l01901">1901</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02035">2035</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -781,7 +794,7 @@ Properties</h2></td></tr>
 <p>Obtains the full font family name from the TrueType file.  </p>
 <dl class="section return"><dt>Returns</dt><dd>The full font family name, if available; <code>null</code> otherwise.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l01873">1873</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02007">2007</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -810,7 +823,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The index of the glyph in the TrueType file.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02010">2010</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02144">2144</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -850,7 +863,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An array of contours, each of which is itself an array of TrueType points.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02072">2072</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02206">2206</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -890,7 +903,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An array of contours, each of which is itself an array of TrueType points.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02061">2061</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02195">2195</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -912,7 +925,7 @@ Properties</h2></td></tr>
 <p>Computes the italic angle for the current font, in thousandths of em unit. This is computed from the vertical and is negative for text that leans forwards.  </p>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02330">2330</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02464">2464</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -934,7 +947,103 @@ Properties</h2></td></tr>
 <p>Returns the index of the last character glyph represented by the font.  </p>
 <dl class="section return"><dt>Returns</dt><dd>The index of the last character glyph represented by the font.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l01931">1931</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02065">2065</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+
+</div>
+</div>
+<a id="a22b28617c914ec8da254adc48d8a05f7" name="a22b28617c914ec8da254adc48d8a05f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22b28617c914ec8da254adc48d8a05f7">&#9670;&#160;</a></span>GetNames() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool VectSharp.TrueTypeFile.GetNames </td>
+          <td>(</td>
+          <td class="paramtype">Stream&#160;</td>
+          <td class="paramname"><em>fs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">out List&lt; <a class="el" href="struct_vect_sharp_1_1_true_type_file_1_1_true_type_name.html">TrueTypeName</a> &gt;&#160;</td>
+          <td class="paramname"><em>names</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Determines whether the stream contains a valid TrueType file and retrieves the list of names defined in it.  </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fs</td><td>The stream containing the TrueType file.</td></tr>
+    <tr><td class="paramname">names</td><td>The list of names that will be returned. These will only include names with TrueType identifiers 1, 4, 6, or 16.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>If the stream does not contain a valid TrueType file, <code>false</code>. If the TrueType file appears valid but does not contain a name table, <code>true</code>, but <em>names</em>  will be <code>null</code>. Otherwise, <code>true</code> and <em>names</em>  will not be null (but it might still be empty).</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l00620">620</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+
+</div>
+</div>
+<a id="a5ba04a3800f6b7a044255303b2d2e0aa" name="a5ba04a3800f6b7a044255303b2d2e0aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ba04a3800f6b7a044255303b2d2e0aa">&#9670;&#160;</a></span>GetNames() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool VectSharp.TrueTypeFile.GetNames </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">out List&lt; <a class="el" href="struct_vect_sharp_1_1_true_type_file_1_1_true_type_name.html">TrueTypeName</a> &gt;&#160;</td>
+          <td class="paramname"><em>names</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Determines whether the file is a valid TrueType file and retrieves the list of names defined in it.  </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file</td><td>The TrueType file.</td></tr>
+    <tr><td class="paramname">names</td><td>The list of names that will be returned. These will only include names with TrueType identifiers 1, 4, 6, or 16.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>If an error occurred while opening the file, or the file does not contain a valid TrueType file, <code>false</code>. If the TrueType file appears valid but does not contain a name table, <code>true</code>, but <em>names</em>  will be <code>null</code>. Otherwise, <code>true</code> and <em>names</em>  will not be null (but it might still be empty).</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l00596">596</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -956,7 +1065,7 @@ Properties</h2></td></tr>
 <p>Returns the number of units for each em in the font file. Multiplying any glyph measurement by this size should generally lead to an integer value.  </p>
 <dl class="section return"><dt>Returns</dt><dd>The number of units for each em in the font file.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02321">2321</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02455">2455</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -978,7 +1087,7 @@ Properties</h2></td></tr>
 <p>Determines whether the typeface is Bold or not.  </p>
 <dl class="section return"><dt>Returns</dt><dd>A bool indicating whether the typeface is Bold or not</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l01965">1965</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02099">2099</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -1000,7 +1109,7 @@ Properties</h2></td></tr>
 <p>Determines whether the typeface is fixed-pitch (aka monospaces) or not.  </p>
 <dl class="section return"><dt>Returns</dt><dd>A bool indicating whether the typeface is fixed-pitch (aka monospaces) or not.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l01976">1976</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02110">2110</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -1022,7 +1131,7 @@ Properties</h2></td></tr>
 <p>Determines whether the typeface is Italic or Oblique or not.  </p>
 <dl class="section return"><dt>Returns</dt><dd>A bool indicating whether the typeface is Italic or Oblique or not.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l01943">1943</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02077">2077</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -1044,7 +1153,7 @@ Properties</h2></td></tr>
 <p>Determines whether the typeface is Oblique or not.  </p>
 <dl class="section return"><dt>Returns</dt><dd>A bool indicating whether the typeface is Oblique or not.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l01954">1954</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02088">2088</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -1066,7 +1175,7 @@ Properties</h2></td></tr>
 <p>Determines whether the typeface is a script typeface or not.  </p>
 <dl class="section return"><dt>Returns</dt><dd>A bool indicating whether the typeface is a script typeface or not.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l01998">1998</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02132">2132</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -1088,7 +1197,7 @@ Properties</h2></td></tr>
 <p>Determines whether the typeface is serifed or not.  </p>
 <dl class="section return"><dt>Returns</dt><dd>A bool indicating whether the typeface is serifed or not.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l01987">1987</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l02121">2121</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -1135,7 +1244,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l00562">562</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l00696">696</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
@@ -1162,7 +1271,7 @@ Properties</h2></td></tr>
 
 <p>A stream pointing to the TrueType file source (either on disk or in memory). Never dispose this stream directly; if you really need to, call <a class="el" href="class_vect_sharp_1_1_true_type_file.html#af90110e53ded920a9f3fbb1906ebcfd2" title="Remove this TrueType file from the cache, clear the tables and release the FontStream....">Destroy</a> instead.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l00047">47</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_true_type_8cs_source.html#l00046">46</a> of file <a class="el" href="_true_type_8cs_source.html">TrueType.cs</a>.</p>
 
 </div>
 </div>
