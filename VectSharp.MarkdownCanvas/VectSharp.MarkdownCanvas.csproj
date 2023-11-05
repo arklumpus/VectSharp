@@ -26,7 +26,7 @@
   
   <ItemGroup>
     <PackageReference Include="VectSharp.Canvas" Version="2.7.0" />
-	<PackageReference Include="VectSharp.Markdown" Version="1.4.1" />
+	<PackageReference Include="VectSharp.Markdown" Version="1.4.2" />
   </ItemGroup>
 
 </Project>

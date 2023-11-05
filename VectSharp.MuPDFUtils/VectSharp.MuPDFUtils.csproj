@@ -10,7 +10,7 @@
     <Description>A library to produce vector graphics (including text) without too many dependencies. Extensible to support multiple output formats. This package provides utilities using MuPDFCore to make it possible to include in VectSharp graphics images in various formats. For more information, see https://github.com/arklumpus/VectSharp</Description>
     <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/arklumpus/VectSharp</PackageProjectUrl>
-    <Version>1.1.9</Version>
+    <Version>1.1.10</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <PackageReference Include="MuPDFCore" Version="1.6.0" />
-    <PackageReference Include="VectSharp" Version="2.4.0" />
+    <PackageReference Include="VectSharp" Version="2.5.0" />
   </ItemGroup>
 
 </Project>

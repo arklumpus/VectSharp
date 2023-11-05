@@ -15,7 +15,7 @@
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.5" />
     <PackageReference Include="Avalonia.Desktop" Version="11.0.5" />
     <PackageReference Include="Avalonia.Diagnostics" Version="11.0.5" />
-    <PackageReference Include="VectSharp.MuPDFUtils" Version="1.1.9" />
+    <PackageReference Include="VectSharp.MuPDFUtils" Version="1.1.10" />
    </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VectSharp.MarkdownCanvas\VectSharp.MarkdownCanvas.csproj" />

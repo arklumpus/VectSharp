@@ -10,10 +10,10 @@
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.0.4" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.0.4" />
-	<PackageReference Include="Avalonia.Themes.Simple" Version="11.0.4" />
-    <PackageReference Include="VectSharp.Canvas" Version="2.7.0-a4" />
-    <PackageReference Include="VectSharp.ThreeD" Version="1.1.1" />
+    <PackageReference Include="Avalonia" Version="11.0.5" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.0.5" />
+	<PackageReference Include="Avalonia.Themes.Simple" Version="11.0.5" />
+    <PackageReference Include="VectSharp.Canvas" Version="2.7.0" />
+    <PackageReference Include="VectSharp.ThreeD" Version="1.1.2" />
   </ItemGroup>
 </Project>
