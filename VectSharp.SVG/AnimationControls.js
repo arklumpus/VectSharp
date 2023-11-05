@@ -104,7 +104,7 @@
         });
 
         document.getElementById("timeLineBackground").addEventListener("mousemove", function (event) {
-            if (event.which == 1) {
+            if (event.buttons == 1) {
                 let bounds = document.getElementById("timeLine").getBoundingClientRect();
 
                 let position = (event.clientX - bounds.left) / bounds.width;
@@ -120,7 +120,7 @@
         });
 
         document.getElementById("timeLine").addEventListener("mousemove", function (event) {
-            if (event.which == 1) {
+            if (event.buttons == 1) {
                 let bounds = document.getElementById("timeLine").getBoundingClientRect();
 
                 let position = (event.clientX - bounds.left) / bounds.width;
