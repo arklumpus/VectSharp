@@ -216,6 +216,50 @@ namespace VectSharp
 
             return new Point(array[0], array[1]);
         }
+
+        /// <summary>
+        /// Subtract the coordinates of two points.
+        /// </summary>
+        /// <param name="p1">The first point.</param>
+        /// <param name="p2">The second point.</param>
+        /// <returns>A new <see cref="Point"/> whose coordinates are the difference between the coordinates of the original points.</returns>
+        public static Point operator -(Point p1, Point p2)
+        {
+            return new Point(p1.X - p2.X, p1.Y - p2.Y);
+        }
+
+        /// <summary>
+        /// Add the coordinates of two points.
+        /// </summary>
+        /// <param name="p1">The first point.</param>
+        /// <param name="p2">The second point.</param>
+        /// <returns>A new <see cref="Point"/> whose coordinates are the sum of the coordinates of the original points.</returns>
+        public static Point operator +(Point p1, Point p2)
+        {
+            return new Point(p1.X + p2.X, p1.Y + p2.Y);
+        }
+
+        /// <summary>
+        /// Multiply the coordinates of a point by a scalar.
+        /// </summary>
+        /// <param name="t">The scalar.</param>
+        /// <param name="p">The point.</param>
+        /// <returns>A new <see cref="Point"/> whose coordinates are the product of the original points' and the scalar.</returns>
+        public static Point operator *(double t, Point p)
+        {
+            return new Point(t * p.X, t * p.Y);
+        }
+
+        /// <summary>
+        /// Multiply the coordinates of a point by a scalar.
+        /// </summary>
+        /// <param name="t">The scalar.</param>
+        /// <param name="p">The point.</param>
+        /// <returns>A new <see cref="Point"/> whose coordinates are the product of the original points' and the scalar.</returns>
+        public static Point operator *(Point p, double t)
+        {
+            return new Point(t * p.X, t * p.Y);
+        }
     }
 
     /// <summary>
