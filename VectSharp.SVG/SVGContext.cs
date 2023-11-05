@@ -2246,6 +2246,9 @@ namespace VectSharp.SVG
             /// </summary>
             DoNotEmbed,
 
+            /// <summary>
+            /// Converts all text items into paths, but defines each glyph only once and reuses it when needed.
+            /// </summary>
             ConvertIntoPathsUsingGlyphs
         }
 
@@ -2756,6 +2759,9 @@ namespace VectSharp.SVG
                 if (i > 0 && transitions[i - 1].Item3.Duration > 0)
                 {
                     XmlNode clonedSVG = Document.ImportNode(transitions[i - 1].Item1.GetElementsByTagName("svg")[0], true);
+                    XmlNode clonedG = Document.CreateElement("g", SVGContext.SVGNamespace);
+                    clonedG.InnerXml = clonedSVG.InnerXml;
+                    clonedSVG = clonedG;
 
                     {
                         XmlElement animate = Document.CreateElement("animate", SVGContext.SVGNamespace);
@@ -3258,6 +3264,8 @@ namespace VectSharp.SVG
             for (int i = 0; i < frames.Length; i++)
             {
                 XmlNode clonedSVG = Document.ImportNode(frames[i].Item1.GetElementsByTagName("svg")[0], true);
+                XmlNode clonedG = Document.CreateElement("g", SVGContext.SVGNamespace);
+                clonedG.InnerXml = clonedSVG.InnerXml;
 
                 XmlElement animate = Document.CreateElement("animate", SVGContext.SVGNamespace);
                 animate.SetAttribute("attributeName", "display");
@@ -3265,9 +3273,9 @@ namespace VectSharp.SVG
                 animate.SetAttribute("dur", totalDuration.ToString(System.Globalization.CultureInfo.InvariantCulture) + "ms");
                 animate.SetAttribute("repeatCount", repeatCount);
                 animate.SetAttribute("keyTimes", "0;" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + frames[i].Item2) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + frames[i].Item2) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
-                clonedSVG.InsertBefore(animate, clonedSVG.FirstChild);
+                clonedG.InsertBefore(animate, clonedG.FirstChild);
 
-                currentElement.AppendChild(clonedSVG);
+                currentElement.AppendChild(clonedG);
 
                 currentTime += frames[i].Item2;
             }
