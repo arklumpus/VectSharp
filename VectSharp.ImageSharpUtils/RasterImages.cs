@@ -41,11 +41,11 @@ namespace VectSharp.ImageSharpUtils
 
             if (alpha)
             {
-                image = Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(fileName, out SixLabors.ImageSharp.Formats.IImageFormat format);
+                image = Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(fileName);
             }
             else
             {
-                image = Image.Load<SixLabors.ImageSharp.PixelFormats.Rgb24>(fileName, out SixLabors.ImageSharp.Formats.IImageFormat format);
+                image = Image.Load<SixLabors.ImageSharp.PixelFormats.Rgb24>(fileName);
             }
 
             image.Mutate(x => x.AutoOrient());
@@ -117,11 +117,11 @@ namespace VectSharp.ImageSharpUtils
 
             if (alpha)
             {
-                image = Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(imageStream, out SixLabors.ImageSharp.Formats.IImageFormat format);
+                image = Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(imageStream);
             }
             else
             {
-                image = Image.Load<SixLabors.ImageSharp.PixelFormats.Rgb24>(imageStream, out SixLabors.ImageSharp.Formats.IImageFormat format);
+                image = Image.Load<SixLabors.ImageSharp.PixelFormats.Rgb24>(imageStream);
             }
 
             image.Mutate(x => x.AutoOrient());
@@ -192,11 +192,11 @@ namespace VectSharp.ImageSharpUtils
 
                 if (alpha)
                 {
-                    image = Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(imageSpan, out SixLabors.ImageSharp.Formats.IImageFormat format);
+                    image = Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(imageSpan);
                 }
                 else
                 {
-                    image = Image.Load<SixLabors.ImageSharp.PixelFormats.Rgb24>(imageSpan, out SixLabors.ImageSharp.Formats.IImageFormat format);
+                    image = Image.Load<SixLabors.ImageSharp.PixelFormats.Rgb24>(imageSpan);
                 }
 
                 image.Mutate(x => x.AutoOrient());
