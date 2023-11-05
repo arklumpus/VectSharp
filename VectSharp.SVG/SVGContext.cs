@@ -2770,7 +2770,7 @@ namespace VectSharp.SVG
                         animate.SetAttribute("dur", totalDuration.ToString(System.Globalization.CultureInfo.InvariantCulture) + "ms");
                         animate.SetAttribute("repeatCount", repeatCount);
                         animate.SetAttribute("fill", "freeze");
-                        animate.SetAttribute("keyTimes", "0;" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
+                        animate.SetAttribute("keyTimes", "0;" + Math.Min(1, currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + Math.Min(1, currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + Math.Min(1, (currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + Math.Min(1, (currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
                         clonedSVG.InsertBefore(animate, clonedSVG.FirstChild);
                     }
 
@@ -2839,7 +2839,7 @@ namespace VectSharp.SVG
                                     animate.SetAttribute("dur", totalDuration.ToString(System.Globalization.CultureInfo.InvariantCulture) + "ms");
                                     animate.SetAttribute("repeatCount", repeatCount);
                                     animate.SetAttribute("fill", "freeze");
-                                    animate.SetAttribute("keyTimes", "0;" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
+                                    animate.SetAttribute("keyTimes", "0;" + Math.Min(1, currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + Math.Min(1, (currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
 
                                     if (!string.IsNullOrEmpty(easing))
                                     {
@@ -2876,7 +2876,7 @@ namespace VectSharp.SVG
                                             animate.SetAttribute("repeatCount", repeatCount);
                                             animate.SetAttribute("fill", "freeze");
                                             animate.SetAttribute("additive", "sum");
-                                            animate.SetAttribute("keyTimes", "0;" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
+                                            animate.SetAttribute("keyTimes", "0;" + Math.Min(1, currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + Math.Min(1, (currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
                                             if (!string.IsNullOrEmpty(easing))
                                             {
                                                 animate.SetAttribute("calcMode", "spline");
@@ -2906,7 +2906,7 @@ namespace VectSharp.SVG
                                             animate.SetAttribute("repeatCount", repeatCount);
                                             animate.SetAttribute("fill", "freeze");
                                             animate.SetAttribute("additive", "sum");
-                                            animate.SetAttribute("keyTimes", "0;" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
+                                            animate.SetAttribute("keyTimes", "0;" + Math.Min(1, currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + Math.Min(1, (currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
                                             if (!string.IsNullOrEmpty(easing))
                                             {
                                                 animate.SetAttribute("calcMode", "spline");
@@ -2936,7 +2936,7 @@ namespace VectSharp.SVG
                                             animate.SetAttribute("repeatCount", repeatCount);
                                             animate.SetAttribute("fill", "freeze");
                                             animate.SetAttribute("additive", "sum");
-                                            animate.SetAttribute("keyTimes", "0;" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
+                                            animate.SetAttribute("keyTimes", "0;" + Math.Min(1, currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + Math.Min(1, (currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
                                             if (!string.IsNullOrEmpty(easing))
                                             {
                                                 animate.SetAttribute("calcMode", "spline");
@@ -2966,7 +2966,7 @@ namespace VectSharp.SVG
                                             animate.SetAttribute("repeatCount", repeatCount);
                                             animate.SetAttribute("fill", "freeze");
                                             animate.SetAttribute("additive", "sum");
-                                            animate.SetAttribute("keyTimes", "0;" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
+                                            animate.SetAttribute("keyTimes", "0;" + Math.Min(1, currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + Math.Min(1, (currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
                                             if (!string.IsNullOrEmpty(easing))
                                             {
                                                 animate.SetAttribute("calcMode", "spline");
@@ -2996,7 +2996,7 @@ namespace VectSharp.SVG
                                             animate.SetAttribute("repeatCount", repeatCount);
                                             animate.SetAttribute("fill", "freeze");
                                             animate.SetAttribute("additive", "sum");
-                                            animate.SetAttribute("keyTimes", "0;" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
+                                            animate.SetAttribute("keyTimes", "0;" + Math.Min(1, currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + Math.Min(1, (currentTime + transitions[i - 1].Item3.Duration * durationScaling) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
                                             if (!string.IsNullOrEmpty(easing))
                                             {
                                                 animate.SetAttribute("calcMode", "spline");
@@ -3039,7 +3039,7 @@ namespace VectSharp.SVG
                         animate.SetAttribute("fill", "freeze");
                     }
 
-                    animate.SetAttribute("keyTimes", "0;" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + durations[i]) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + durations[i]) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
+                    animate.SetAttribute("keyTimes", "0;" + Math.Min(1, currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + Math.Min(1, currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + Math.Min(1, (currentTime + durations[i]) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + Math.Min(1, (currentTime + durations[i]) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
                     clonedSVG.InsertBefore(animate, clonedSVG.FirstChild);
 
                     currentElement.AppendChild(clonedSVG);
@@ -3272,7 +3272,7 @@ namespace VectSharp.SVG
                 animate.SetAttribute("values", "none;none;block;block;none;none");
                 animate.SetAttribute("dur", totalDuration.ToString(System.Globalization.CultureInfo.InvariantCulture) + "ms");
                 animate.SetAttribute("repeatCount", repeatCount);
-                animate.SetAttribute("keyTimes", "0;" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + (currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + frames[i].Item2) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + ((currentTime + frames[i].Item2) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
+                animate.SetAttribute("keyTimes", "0;" + Math.Min(1, currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + Math.Min(1, currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + Math.Min(1, (currentTime + frames[i].Item2) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + Math.Min(1, (currentTime + frames[i].Item2) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
                 clonedG.InsertBefore(animate, clonedG.FirstChild);
 
                 currentElement.AppendChild(clonedG);
