@@ -299,7 +299,7 @@ namespace VectSharp
         /// <returns>A <see cref="Size"/> object representing the width and height of the text.</returns>
         public Size MeasureText(string text)
         {
-            if (this.FontFamily.TrueTypeFile != null)
+            if (this.FontFamily.TrueTypeFile != null && !string.IsNullOrEmpty(text))
             {
                 double width = 0;
                 double yMin = 0;
@@ -356,7 +356,7 @@ namespace VectSharp
         /// <returns>A <see cref="DetailedFontMetrics"/> object representing the metrics of the text.</returns>
         public DetailedFontMetrics MeasureTextAdvanced(string text)
         {
-            if (this.FontFamily.TrueTypeFile != null)
+            if (this.FontFamily.TrueTypeFile != null && !string.IsNullOrEmpty(text))
             {
                 double width = 0;
                 double yMin = 0;

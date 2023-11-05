@@ -33,11 +33,14 @@ namespace VectSharp
         /// <param name="tag">A tag to identify the filled text.</param>
         public void FillText(Point origin, string text, Font font, Brush fillColour, TextBaselines textBaseline = TextBaselines.Top, string tag = null)
         {
-            Actions.Add(new TextAction(origin, text, font, textBaseline, fillColour, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, tag));
-
-            if (font.Underline != null)
+            if (!string.IsNullOrEmpty(text))
             {
-                FillTextUnderline(origin, text, font, fillColour, textBaseline, (!string.IsNullOrEmpty(tag) && UseUniqueTags) ? (tag + "@underline") : tag);
+                Actions.Add(new TextAction(origin, text, font, textBaseline, fillColour, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, tag));
+
+                if (font.Underline != null)
+                {
+                    FillTextUnderline(origin, text, font, fillColour, textBaseline, (!string.IsNullOrEmpty(tag) && UseUniqueTags) ? (tag + "@underline") : tag);
+                }
             }
         }
 
@@ -53,11 +56,14 @@ namespace VectSharp
         /// <param name="tag">A tag to identify the filled text.</param>
         public void FillText(double originX, double originY, string text, Font font, Brush fillColour, TextBaselines textBaseline = TextBaselines.Top, string tag = null)
         {
-            Actions.Add(new TextAction(new Point(originX, originY), text, font, textBaseline, fillColour, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, tag));
-
-            if (font.Underline != null)
+            if (!string.IsNullOrEmpty(text))
             {
-                FillTextUnderline(originX, originY, text, font, fillColour, textBaseline, (!string.IsNullOrEmpty(tag) && UseUniqueTags) ? (tag + "@underline") : tag);
+                Actions.Add(new TextAction(new Point(originX, originY), text, font, textBaseline, fillColour, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, tag));
+
+                if (font.Underline != null)
+                {
+                    FillTextUnderline(originX, originY, text, font, fillColour, textBaseline, (!string.IsNullOrEmpty(tag) && UseUniqueTags) ? (tag + "@underline") : tag);
+                }
             }
         }
 
@@ -76,11 +82,14 @@ namespace VectSharp
         /// <param name="tag">A tag to identify the stroked text.</param>
         public void StrokeText(Point origin, string text, Font font, Brush strokeColour, TextBaselines textBaseline = TextBaselines.Top, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
         {
-            Actions.Add(new TextAction(origin, text, font, textBaseline, null, strokeColour, lineWidth, lineCap, lineJoin, lineDash ?? LineDash.SolidLine, tag));
-
-            if (font.Underline != null)
+            if (!string.IsNullOrEmpty(text))
             {
-                StrokeTextUnderline(origin, text, font, strokeColour, textBaseline, lineWidth, lineCap, lineJoin, lineDash, (!string.IsNullOrEmpty(tag) && UseUniqueTags) ? (tag + "@underline") : tag);
+                Actions.Add(new TextAction(origin, text, font, textBaseline, null, strokeColour, lineWidth, lineCap, lineJoin, lineDash ?? LineDash.SolidLine, tag));
+
+                if (font.Underline != null)
+                {
+                    StrokeTextUnderline(origin, text, font, strokeColour, textBaseline, lineWidth, lineCap, lineJoin, lineDash, (!string.IsNullOrEmpty(tag) && UseUniqueTags) ? (tag + "@underline") : tag);
+                }
             }
         }
 
@@ -100,11 +109,14 @@ namespace VectSharp
         /// <param name="tag">A tag to identify the stroked text.</param>
         public void StrokeText(double originX, double originY, string text, Font font, Brush strokeColour, TextBaselines textBaseline = TextBaselines.Top, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
         {
-            Actions.Add(new TextAction(new Point(originX, originY), text, font, textBaseline, null, strokeColour, lineWidth, lineCap, lineJoin, lineDash ?? LineDash.SolidLine, tag));
-
-            if (font.Underline != null)
+            if (!string.IsNullOrEmpty(text))
             {
-                StrokeTextUnderline(originX, originY, text, font, strokeColour, textBaseline, lineWidth, lineCap, lineJoin, lineDash, (!string.IsNullOrEmpty(tag) && UseUniqueTags) ? (tag + "@underline") : tag);
+                Actions.Add(new TextAction(new Point(originX, originY), text, font, textBaseline, null, strokeColour, lineWidth, lineCap, lineJoin, lineDash ?? LineDash.SolidLine, tag));
+
+                if (font.Underline != null)
+                {
+                    StrokeTextUnderline(originX, originY, text, font, strokeColour, textBaseline, lineWidth, lineCap, lineJoin, lineDash, (!string.IsNullOrEmpty(tag) && UseUniqueTags) ? (tag + "@underline") : tag);
+                }
             }
         }
 
@@ -121,124 +133,127 @@ namespace VectSharp
         /// <param name="tag">A tag to identify the filled text.</param>
         public void FillTextOnPath(GraphicsPath path, string text, Font font, Brush fillColour, double reference = 0, TextAnchors anchor = TextAnchors.Left, TextBaselines textBaseline = TextBaselines.Top, string tag = null)
         {
-            if (font.Underline != null)
+            if (!string.IsNullOrEmpty(text))
             {
-                font = new Font(font.FontFamily, font.FontSize, false);
-            }
-
-            double currDelta = 0;
-            double pathLength = path.MeasureLength();
-
-            Font.DetailedFontMetrics fullMetrics = font.MeasureTextAdvanced(text);
-
-            switch (anchor)
-            {
-                case TextAnchors.Left:
-                    break;
-                case TextAnchors.Center:
-                    currDelta = -fullMetrics.Width * 0.5 / pathLength;
-                    break;
-                case TextAnchors.Right:
-                    currDelta = -fullMetrics.Width / pathLength;
-                    break;
-            }
-
-            Point currentGlyphPlacementDelta = new Point();
-            Point currentGlyphAdvanceDelta = new Point();
-            Point nextGlyphPlacementDelta = new Point();
-            Point nextGlyphAdvanceDelta = new Point();
-
-            for (int i = 0; i < text.Length; i++)
-            {
-                string c = text.Substring(i, 1);
-
-                if (Font.EnableKerning && i < text.Length - 1)
+                if (font.Underline != null)
                 {
-                    currentGlyphPlacementDelta = nextGlyphPlacementDelta;
-                    currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
-                    nextGlyphAdvanceDelta = new Point();
-                    nextGlyphPlacementDelta = new Point();
+                    font = new Font(font.FontFamily, font.FontSize, false);
+                }
 
-                    TrueTypeFile.PairKerning kerning = font.FontFamily.TrueTypeFile.Get1000EmKerning(text[i], text[i + 1]);
+                double currDelta = 0;
+                double pathLength = path.MeasureLength();
 
-                    if (kerning != null)
+                Font.DetailedFontMetrics fullMetrics = font.MeasureTextAdvanced(text);
+
+                switch (anchor)
+                {
+                    case TextAnchors.Left:
+                        break;
+                    case TextAnchors.Center:
+                        currDelta = -fullMetrics.Width * 0.5 / pathLength;
+                        break;
+                    case TextAnchors.Right:
+                        currDelta = -fullMetrics.Width / pathLength;
+                        break;
+                }
+
+                Point currentGlyphPlacementDelta = new Point();
+                Point currentGlyphAdvanceDelta = new Point();
+                Point nextGlyphPlacementDelta = new Point();
+                Point nextGlyphAdvanceDelta = new Point();
+
+                for (int i = 0; i < text.Length; i++)
+                {
+                    string c = text.Substring(i, 1);
+
+                    if (Font.EnableKerning && i < text.Length - 1)
                     {
-                        currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
-                        currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+                        currentGlyphPlacementDelta = nextGlyphPlacementDelta;
+                        currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
+                        nextGlyphAdvanceDelta = new Point();
+                        nextGlyphPlacementDelta = new Point();
 
-                        nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
-                        nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
+                        TrueTypeFile.PairKerning kerning = font.FontFamily.TrueTypeFile.Get1000EmKerning(text[i], text[i + 1]);
+
+                        if (kerning != null)
+                        {
+                            currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
+                            currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+
+                            nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
+                            nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
+                        }
                     }
-                }
 
-                Font.DetailedFontMetrics metrics = font.MeasureTextAdvanced(c);
+                    Font.DetailedFontMetrics metrics = font.MeasureTextAdvanced(c);
 
-                Point origin = path.GetPointAtRelative(reference + currDelta + currentGlyphPlacementDelta.X * font.FontSize / 1000);
+                    Point origin = path.GetPointAtRelative(reference + currDelta + currentGlyphPlacementDelta.X * font.FontSize / 1000);
 
-                Point tangent = path.GetTangentAtRelative(reference + currDelta + currentGlyphPlacementDelta.X * font.FontSize / 1000 + (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing) / pathLength * 0.5);
+                    Point tangent = path.GetTangentAtRelative(reference + currDelta + currentGlyphPlacementDelta.X * font.FontSize / 1000 + (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing) / pathLength * 0.5);
 
-                origin = new Point(origin.X - tangent.Y * currentGlyphPlacementDelta.Y * font.FontSize / 1000, origin.Y + tangent.X * currentGlyphPlacementDelta.Y * font.FontSize / 1000);
+                    origin = new Point(origin.X - tangent.Y * currentGlyphPlacementDelta.Y * font.FontSize / 1000, origin.Y + tangent.X * currentGlyphPlacementDelta.Y * font.FontSize / 1000);
 
-                this.Save();
+                    this.Save();
 
-                this.Translate(origin);
-                this.Rotate(Math.Atan2(tangent.Y, tangent.X));
+                    this.Translate(origin);
+                    this.Rotate(Math.Atan2(tangent.Y, tangent.X));
 
-                string glyphTag = (!string.IsNullOrEmpty(tag) && UseUniqueTags) ? (tag + "@" + i.ToString()) : tag;
+                    string glyphTag = (!string.IsNullOrEmpty(tag) && UseUniqueTags) ? (tag + "@" + i.ToString()) : tag;
 
-                switch (textBaseline)
-                {
-                    case TextBaselines.Top:
-                        if (i > 0)
-                        {
-                            this.FillText(new Point(metrics.LeftSideBearing, fullMetrics.Top), c, font, fillColour, textBaseline: TextBaselines.Baseline, glyphTag);
-                        }
-                        else
-                        {
-                            this.FillText(new Point(0, fullMetrics.Top), c, font, fillColour, textBaseline: TextBaselines.Baseline, glyphTag);
-                        }
-                        break;
-                    case TextBaselines.Baseline:
-                        if (i > 0)
-                        {
-                            this.FillText(new Point(metrics.LeftSideBearing, 0), c, font, fillColour, textBaseline: TextBaselines.Baseline, glyphTag);
-                        }
-                        else
-                        {
-                            this.FillText(new Point(0, 0), c, font, fillColour, textBaseline: TextBaselines.Baseline, glyphTag);
-                        }
-                        break;
-                    case TextBaselines.Bottom:
-                        if (i > 0)
-                        {
-                            this.FillText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom), c, font, fillColour, textBaseline: TextBaselines.Baseline, glyphTag);
-                        }
-                        else
-                        {
-                            this.FillText(new Point(0, fullMetrics.Bottom), c, font, fillColour, textBaseline: TextBaselines.Baseline, glyphTag);
-                        }
-                        break;
-                    case TextBaselines.Middle:
-                        if (i > 0)
-                        {
-                            this.FillText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, fillColour, textBaseline: TextBaselines.Baseline, glyphTag);
-                        }
-                        else
-                        {
-                            this.FillText(new Point(0, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, fillColour, textBaseline: TextBaselines.Baseline, glyphTag);
-                        }
-                        break;
-                }
+                    switch (textBaseline)
+                    {
+                        case TextBaselines.Top:
+                            if (i > 0)
+                            {
+                                this.FillText(new Point(metrics.LeftSideBearing, fullMetrics.Top), c, font, fillColour, textBaseline: TextBaselines.Baseline, glyphTag);
+                            }
+                            else
+                            {
+                                this.FillText(new Point(0, fullMetrics.Top), c, font, fillColour, textBaseline: TextBaselines.Baseline, glyphTag);
+                            }
+                            break;
+                        case TextBaselines.Baseline:
+                            if (i > 0)
+                            {
+                                this.FillText(new Point(metrics.LeftSideBearing, 0), c, font, fillColour, textBaseline: TextBaselines.Baseline, glyphTag);
+                            }
+                            else
+                            {
+                                this.FillText(new Point(0, 0), c, font, fillColour, textBaseline: TextBaselines.Baseline, glyphTag);
+                            }
+                            break;
+                        case TextBaselines.Bottom:
+                            if (i > 0)
+                            {
+                                this.FillText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom), c, font, fillColour, textBaseline: TextBaselines.Baseline, glyphTag);
+                            }
+                            else
+                            {
+                                this.FillText(new Point(0, fullMetrics.Bottom), c, font, fillColour, textBaseline: TextBaselines.Baseline, glyphTag);
+                            }
+                            break;
+                        case TextBaselines.Middle:
+                            if (i > 0)
+                            {
+                                this.FillText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, fillColour, textBaseline: TextBaselines.Baseline, glyphTag);
+                            }
+                            else
+                            {
+                                this.FillText(new Point(0, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, fillColour, textBaseline: TextBaselines.Baseline, glyphTag);
+                            }
+                            break;
+                    }
 
-                this.Restore();
+                    this.Restore();
 
-                if (i > 0)
-                {
-                    currDelta += (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing + currentGlyphAdvanceDelta.X * font.FontSize / 1000) / pathLength;
-                }
-                else
-                {
-                    currDelta += (metrics.Width + metrics.RightSideBearing + currentGlyphAdvanceDelta.X * font.FontSize / 1000) / pathLength;
+                    if (i > 0)
+                    {
+                        currDelta += (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing + currentGlyphAdvanceDelta.X * font.FontSize / 1000) / pathLength;
+                    }
+                    else
+                    {
+                        currDelta += (metrics.Width + metrics.RightSideBearing + currentGlyphAdvanceDelta.X * font.FontSize / 1000) / pathLength;
+                    }
                 }
             }
         }
@@ -260,124 +275,127 @@ namespace VectSharp
         /// <param name="tag">A tag to identify the stroked text.</param>
         public void StrokeTextOnPath(GraphicsPath path, string text, Font font, Brush strokeColour, double reference = 0, TextAnchors anchor = TextAnchors.Left, TextBaselines textBaseline = TextBaselines.Top, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
         {
-            if (font.Underline != null)
+            if (!string.IsNullOrEmpty(text))
             {
-                font = new Font(font.FontFamily, font.FontSize, false);
-            }
-
-            double currDelta = 0;
-            double pathLength = path.MeasureLength();
-
-            Font.DetailedFontMetrics fullMetrics = font.MeasureTextAdvanced(text);
-
-            switch (anchor)
-            {
-                case TextAnchors.Left:
-                    break;
-                case TextAnchors.Center:
-                    currDelta = -fullMetrics.Width * 0.5 / pathLength;
-                    break;
-                case TextAnchors.Right:
-                    currDelta = -fullMetrics.Width / pathLength;
-                    break;
-            }
-
-            Point currentGlyphPlacementDelta = new Point();
-            Point currentGlyphAdvanceDelta = new Point();
-            Point nextGlyphPlacementDelta = new Point();
-            Point nextGlyphAdvanceDelta = new Point();
-
-            for (int i = 0; i < text.Length; i++)
-            {
-                string c = text.Substring(i, 1);
-
-                if (Font.EnableKerning && i < text.Length - 1)
+                if (font.Underline != null)
                 {
-                    currentGlyphPlacementDelta = nextGlyphPlacementDelta;
-                    currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
-                    nextGlyphAdvanceDelta = new Point();
-                    nextGlyphPlacementDelta = new Point();
+                    font = new Font(font.FontFamily, font.FontSize, false);
+                }
 
-                    TrueTypeFile.PairKerning kerning = font.FontFamily.TrueTypeFile.Get1000EmKerning(text[i], text[i + 1]);
+                double currDelta = 0;
+                double pathLength = path.MeasureLength();
 
-                    if (kerning != null)
+                Font.DetailedFontMetrics fullMetrics = font.MeasureTextAdvanced(text);
+
+                switch (anchor)
+                {
+                    case TextAnchors.Left:
+                        break;
+                    case TextAnchors.Center:
+                        currDelta = -fullMetrics.Width * 0.5 / pathLength;
+                        break;
+                    case TextAnchors.Right:
+                        currDelta = -fullMetrics.Width / pathLength;
+                        break;
+                }
+
+                Point currentGlyphPlacementDelta = new Point();
+                Point currentGlyphAdvanceDelta = new Point();
+                Point nextGlyphPlacementDelta = new Point();
+                Point nextGlyphAdvanceDelta = new Point();
+
+                for (int i = 0; i < text.Length; i++)
+                {
+                    string c = text.Substring(i, 1);
+
+                    if (Font.EnableKerning && i < text.Length - 1)
                     {
-                        currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
-                        currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+                        currentGlyphPlacementDelta = nextGlyphPlacementDelta;
+                        currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
+                        nextGlyphAdvanceDelta = new Point();
+                        nextGlyphPlacementDelta = new Point();
 
-                        nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
-                        nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
+                        TrueTypeFile.PairKerning kerning = font.FontFamily.TrueTypeFile.Get1000EmKerning(text[i], text[i + 1]);
+
+                        if (kerning != null)
+                        {
+                            currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
+                            currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+
+                            nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
+                            nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
+                        }
                     }
-                }
 
-                Font.DetailedFontMetrics metrics = font.MeasureTextAdvanced(c);
+                    Font.DetailedFontMetrics metrics = font.MeasureTextAdvanced(c);
 
-                Point origin = path.GetPointAtRelative(reference + currDelta + currentGlyphPlacementDelta.X * font.FontSize / 1000);
+                    Point origin = path.GetPointAtRelative(reference + currDelta + currentGlyphPlacementDelta.X * font.FontSize / 1000);
 
-                Point tangent = path.GetTangentAtRelative(reference + currDelta + currentGlyphPlacementDelta.X * font.FontSize / 1000 + (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing) / pathLength * 0.5);
+                    Point tangent = path.GetTangentAtRelative(reference + currDelta + currentGlyphPlacementDelta.X * font.FontSize / 1000 + (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing) / pathLength * 0.5);
 
-                origin = new Point(origin.X - tangent.Y * currentGlyphPlacementDelta.Y * font.FontSize / 1000, origin.Y + tangent.X * currentGlyphPlacementDelta.Y * font.FontSize / 1000);
+                    origin = new Point(origin.X - tangent.Y * currentGlyphPlacementDelta.Y * font.FontSize / 1000, origin.Y + tangent.X * currentGlyphPlacementDelta.Y * font.FontSize / 1000);
 
-                this.Save();
+                    this.Save();
 
-                this.Translate(origin);
-                this.Rotate(Math.Atan2(tangent.Y, tangent.X));
+                    this.Translate(origin);
+                    this.Rotate(Math.Atan2(tangent.Y, tangent.X));
 
-                string glyphTag = (!string.IsNullOrEmpty(tag) && UseUniqueTags) ? (tag + "@" + i.ToString()) : tag;
+                    string glyphTag = (!string.IsNullOrEmpty(tag) && UseUniqueTags) ? (tag + "@" + i.ToString()) : tag;
 
-                switch (textBaseline)
-                {
-                    case TextBaselines.Top:
-                        if (i > 0)
-                        {
-                            this.StrokeText(new Point(metrics.LeftSideBearing, fullMetrics.Top), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, glyphTag);
-                        }
-                        else
-                        {
-                            this.StrokeText(new Point(0, fullMetrics.Top), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, glyphTag);
-                        }
-                        break;
-                    case TextBaselines.Baseline:
-                        if (i > 0)
-                        {
-                            this.StrokeText(new Point(metrics.LeftSideBearing, 0), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, glyphTag);
-                        }
-                        else
-                        {
-                            this.StrokeText(new Point(0, 0), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, glyphTag);
-                        }
-                        break;
-                    case TextBaselines.Bottom:
-                        if (i > 0)
-                        {
-                            this.StrokeText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, glyphTag);
-                        }
-                        else
-                        {
-                            this.StrokeText(new Point(0, fullMetrics.Bottom), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, glyphTag);
-                        }
-                        break;
-                    case TextBaselines.Middle:
-                        if (i > 0)
-                        {
-                            this.StrokeText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, glyphTag);
-                        }
-                        else
-                        {
-                            this.StrokeText(new Point(0, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, glyphTag);
-                        }
-                        break;
-                }
+                    switch (textBaseline)
+                    {
+                        case TextBaselines.Top:
+                            if (i > 0)
+                            {
+                                this.StrokeText(new Point(metrics.LeftSideBearing, fullMetrics.Top), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, glyphTag);
+                            }
+                            else
+                            {
+                                this.StrokeText(new Point(0, fullMetrics.Top), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, glyphTag);
+                            }
+                            break;
+                        case TextBaselines.Baseline:
+                            if (i > 0)
+                            {
+                                this.StrokeText(new Point(metrics.LeftSideBearing, 0), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, glyphTag);
+                            }
+                            else
+                            {
+                                this.StrokeText(new Point(0, 0), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, glyphTag);
+                            }
+                            break;
+                        case TextBaselines.Bottom:
+                            if (i > 0)
+                            {
+                                this.StrokeText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, glyphTag);
+                            }
+                            else
+                            {
+                                this.StrokeText(new Point(0, fullMetrics.Bottom), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, glyphTag);
+                            }
+                            break;
+                        case TextBaselines.Middle:
+                            if (i > 0)
+                            {
+                                this.StrokeText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, glyphTag);
+                            }
+                            else
+                            {
+                                this.StrokeText(new Point(0, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, strokeColour, textBaseline: TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, glyphTag);
+                            }
+                            break;
+                    }
 
-                this.Restore();
+                    this.Restore();
 
-                if (i > 0)
-                {
-                    currDelta += (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing + currentGlyphAdvanceDelta.X * font.FontSize / 1000) / pathLength;
-                }
-                else
-                {
-                    currDelta += (metrics.Width + metrics.RightSideBearing + currentGlyphAdvanceDelta.X * font.FontSize / 1000) / pathLength;
+                    if (i > 0)
+                    {
+                        currDelta += (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing + currentGlyphAdvanceDelta.X * font.FontSize / 1000) / pathLength;
+                    }
+                    else
+                    {
+                        currDelta += (metrics.Width + metrics.RightSideBearing + currentGlyphAdvanceDelta.X * font.FontSize / 1000) / pathLength;
+                    }
                 }
             }
         }
@@ -392,85 +410,91 @@ namespace VectSharp
         /// <param name="tag">A tag to identify the filled text.</param>
         public void FillText(Point origin, IEnumerable<FormattedText> text, Brush fillColour, TextBaselines textBaseline = TextBaselines.Top, string tag = null)
         {
-            List<FormattedText> enumeratedText = new List<FormattedText>();
-            List<Font.DetailedFontMetrics> allMetrics = new List<Font.DetailedFontMetrics>();
-
-            Font.DetailedFontMetrics fullMetrics = text.Measure(enumeratedText, allMetrics);
-
-            Point baselineOrigin = origin;
-
-            switch (textBaseline)
+            if (text != null)
             {
-                case TextBaselines.Baseline:
-                    baselineOrigin = origin;
-                    break;
-                case TextBaselines.Top:
-                    baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Top);
-                    break;
-                case TextBaselines.Bottom:
-                    baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Bottom);
-                    break;
-                case TextBaselines.Middle:
-                    baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Top * 0.5 + fullMetrics.Bottom * 0.5);
-                    break;
-            }
+                List<FormattedText> enumeratedText = new List<FormattedText>();
+                List<Font.DetailedFontMetrics> allMetrics = new List<Font.DetailedFontMetrics>();
 
-            for (int i = 0; i < enumeratedText.Count; i++)
-            {
-                FormattedText txt = enumeratedText[i];
+                Font.DetailedFontMetrics fullMetrics = text.Measure(enumeratedText, allMetrics);
 
-                string spanTag = (!string.IsNullOrEmpty(tag) && UseUniqueTags) ? (tag + "@" + i.ToString()) : tag;
-
-                if (txt.Script == Script.Normal)
+                if (enumeratedText.Count > 0)
                 {
-                    Font.DetailedFontMetrics metrics = allMetrics[i];
+                    Point baselineOrigin = origin;
 
-                    if (i > 0)
+                    switch (textBaseline)
                     {
-                        FillText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
-                    }
-                    else
-                    {
-                        FillText(baselineOrigin, txt.Text, txt.Font, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
-                    }
-
-                    if (i > 0)
-                    {
-                        baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing, baselineOrigin.Y);
-                    }
-                    else
-                    {
-                        baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing, baselineOrigin.Y);
-                    }
-                }
-                else
-                {
-                    Font newFont = new Font(txt.Font.FontFamily, txt.Font.FontSize * 0.7, txt.Font.Underline);
-
-                    Font.DetailedFontMetrics metrics = allMetrics[i];
-
-                    if (i == 0)
-                    {
-                        baselineOrigin = new Point(baselineOrigin.X - metrics.LeftSideBearing, baselineOrigin.Y);
+                        case TextBaselines.Baseline:
+                            baselineOrigin = origin;
+                            break;
+                        case TextBaselines.Top:
+                            baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Top);
+                            break;
+                        case TextBaselines.Bottom:
+                            baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Bottom);
+                            break;
+                        case TextBaselines.Middle:
+                            baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Top * 0.5 + fullMetrics.Bottom * 0.5);
+                            break;
                     }
 
-                    if (txt.Script == Script.Subscript)
+                    for (int i = 0; i < enumeratedText.Count; i++)
                     {
-                        FillText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + txt.Font.FontSize * 0.14, txt.Text, newFont, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
-                    }
-                    else if (txt.Script == Script.Superscript)
-                    {
-                        FillText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y - txt.Font.FontSize * 0.33, txt.Text, newFont, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
-                    }
+                        FormattedText txt = enumeratedText[i];
+
+                        string spanTag = (!string.IsNullOrEmpty(tag) && UseUniqueTags) ? (tag + "@" + i.ToString()) : tag;
+
+                        if (txt.Script == Script.Normal)
+                        {
+                            Font.DetailedFontMetrics metrics = allMetrics[i];
+
+                            if (i > 0)
+                            {
+                                FillText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
+                            }
+                            else
+                            {
+                                FillText(baselineOrigin, txt.Text, txt.Font, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
+                            }
+
+                            if (i > 0)
+                            {
+                                baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing, baselineOrigin.Y);
+                            }
+                            else
+                            {
+                                baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing, baselineOrigin.Y);
+                            }
+                        }
+                        else
+                        {
+                            Font newFont = new Font(txt.Font.FontFamily, txt.Font.FontSize * 0.7, txt.Font.Underline);
+
+                            Font.DetailedFontMetrics metrics = allMetrics[i];
+
+                            if (i == 0)
+                            {
+                                baselineOrigin = new Point(baselineOrigin.X - metrics.LeftSideBearing, baselineOrigin.Y);
+                            }
+
+                            if (txt.Script == Script.Subscript)
+                            {
+                                FillText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + txt.Font.FontSize * 0.14, txt.Text, newFont, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
+                            }
+                            else if (txt.Script == Script.Superscript)
+                            {
+                                FillText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y - txt.Font.FontSize * 0.33, txt.Text, newFont, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
+                            }
 
 
-                    if (i > 0)
-                    {
-                        baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing, baselineOrigin.Y);
-                    }
-                    else
-                    {
-                        baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing, baselineOrigin.Y);
+                            if (i > 0)
+                            {
+                                baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing, baselineOrigin.Y);
+                            }
+                            else
+                            {
+                                baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing, baselineOrigin.Y);
+                            }
+                        }
                     }
                 }
             }
@@ -504,85 +528,90 @@ namespace VectSharp
         /// <param name="tag">A tag to identify the stroked text.</param>
         public void StrokeText(Point origin, IEnumerable<FormattedText> text, Brush strokeColour, TextBaselines textBaseline = TextBaselines.Top, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
         {
-            List<FormattedText> enumeratedText = new List<FormattedText>();
-            List<Font.DetailedFontMetrics> allMetrics = new List<Font.DetailedFontMetrics>();
-
-            Font.DetailedFontMetrics fullMetrics = text.Measure(enumeratedText, allMetrics);
-
-            Point baselineOrigin = origin;
-
-            switch (textBaseline)
+            if (text != null)
             {
-                case TextBaselines.Baseline:
-                    baselineOrigin = origin;
-                    break;
-                case TextBaselines.Top:
-                    baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Top);
-                    break;
-                case TextBaselines.Bottom:
-                    baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Bottom);
-                    break;
-                case TextBaselines.Middle:
-                    baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Top * 0.5 + fullMetrics.Bottom * 0.5);
-                    break;
-            }
+                List<FormattedText> enumeratedText = new List<FormattedText>();
+                List<Font.DetailedFontMetrics> allMetrics = new List<Font.DetailedFontMetrics>();
 
-            for (int i = 0; i < enumeratedText.Count; i++)
-            {
-                FormattedText txt = enumeratedText[i];
-
-                string spanTag = (!string.IsNullOrEmpty(tag) && UseUniqueTags) ? (tag + "@" + i.ToString()) : tag;
-
-                if (txt.Script == Script.Normal)
+                Font.DetailedFontMetrics fullMetrics = text.Measure(enumeratedText, allMetrics);
+                if (enumeratedText.Count > 0)
                 {
-                    Font.DetailedFontMetrics metrics = allMetrics[i];
+                    Point baselineOrigin = origin;
 
-                    if (i > 0)
+                    switch (textBaseline)
                     {
-                        StrokeText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
-                    }
-                    else
-                    {
-                        StrokeText(baselineOrigin, txt.Text, txt.Font, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
-                    }
-
-                    if (i > 0)
-                    {
-                        baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing, baselineOrigin.Y);
-                    }
-                    else
-                    {
-                        baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing, baselineOrigin.Y);
-                    }
-                }
-                else
-                {
-                    Font newFont = new Font(txt.Font.FontFamily, txt.Font.FontSize * 0.7, txt.Font.Underline);
-
-                    Font.DetailedFontMetrics metrics = allMetrics[i];
-
-                    if (i == 0)
-                    {
-                        baselineOrigin = new Point(baselineOrigin.X - metrics.LeftSideBearing, baselineOrigin.Y);
+                        case TextBaselines.Baseline:
+                            baselineOrigin = origin;
+                            break;
+                        case TextBaselines.Top:
+                            baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Top);
+                            break;
+                        case TextBaselines.Bottom:
+                            baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Bottom);
+                            break;
+                        case TextBaselines.Middle:
+                            baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Top * 0.5 + fullMetrics.Bottom * 0.5);
+                            break;
                     }
 
-                    if (txt.Script == Script.Subscript)
+                    for (int i = 0; i < enumeratedText.Count; i++)
                     {
-                        StrokeText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + txt.Font.FontSize * 0.14, txt.Text, newFont, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
-                    }
-                    else if (txt.Script == Script.Superscript)
-                    {
-                        StrokeText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y - txt.Font.FontSize * 0.33, txt.Text, newFont, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
-                    }
+                        FormattedText txt = enumeratedText[i];
+
+                        string spanTag = (!string.IsNullOrEmpty(tag) && UseUniqueTags) ? (tag + "@" + i.ToString()) : tag;
+
+                        if (txt.Script == Script.Normal)
+                        {
+                            Font.DetailedFontMetrics metrics = allMetrics[i];
+
+                            if (i > 0)
+                            {
+                                StrokeText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
+                            }
+                            else
+                            {
+                                StrokeText(baselineOrigin, txt.Text, txt.Font, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
+                            }
+
+                            if (i > 0)
+                            {
+                                baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing, baselineOrigin.Y);
+                            }
+                            else
+                            {
+                                baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing, baselineOrigin.Y);
+                            }
+                        }
+                        else
+                        {
+                            Font newFont = new Font(txt.Font.FontFamily, txt.Font.FontSize * 0.7, txt.Font.Underline);
+
+                            Font.DetailedFontMetrics metrics = allMetrics[i];
+
+                            if (i == 0)
+                            {
+                                baselineOrigin = new Point(baselineOrigin.X - metrics.LeftSideBearing, baselineOrigin.Y);
+                            }
+
+                            if (txt.Script == Script.Subscript)
+                            {
+                                StrokeText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + txt.Font.FontSize * 0.14, txt.Text, newFont, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
+                            }
+                            else if (txt.Script == Script.Superscript)
+                            {
+                                StrokeText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y - txt.Font.FontSize * 0.33, txt.Text, newFont, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
+                            }
 
 
-                    if (i > 0)
-                    {
-                        baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing, baselineOrigin.Y);
-                    }
-                    else
-                    {
-                        baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing, baselineOrigin.Y);
+                            if (i > 0)
+                            {
+                                baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing, baselineOrigin.Y);
+                            }
+                            else
+                            {
+                                baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing, baselineOrigin.Y);
+                            }
+                        }
                     }
                 }
             }
@@ -615,7 +644,14 @@ namespace VectSharp
         /// <returns>The size of the measured <paramref name="text"/>.</returns>
         public Size MeasureText(string text, Font font)
         {
-            return font.MeasureText(text);
+            if (!string.IsNullOrEmpty(text))
+            {
+                return font.MeasureText(text);
+            }
+            else
+            {
+                return new Size(0, 0);
+            }
         }
 
         /// <summary>
@@ -657,8 +693,11 @@ namespace VectSharp
         /// <param name="tag">A tag to identify the filled underline.</param>
         public void FillTextUnderline(Point origin, string text, Font font, Brush fillColour, TextBaselines textBaseline = TextBaselines.Top, string tag = null)
         {
-            GraphicsPath underline = new GraphicsPath().AddTextUnderline(origin, text, font, textBaseline);
-            FillPath(underline, fillColour, tag);
+            if (!string.IsNullOrEmpty(text))
+            {
+                GraphicsPath underline = new GraphicsPath().AddTextUnderline(origin, text, font, textBaseline);
+                FillPath(underline, fillColour, tag);
+            }
         }
 
         /// <summary>
@@ -695,8 +734,11 @@ namespace VectSharp
         /// <param name="tag">A tag to identify the stroked underline.</param>
         public void StrokeTextUnderline(Point origin, string text, Font font, Brush strokeColour, TextBaselines textBaseline = TextBaselines.Top, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
         {
-            GraphicsPath underline = new GraphicsPath().AddTextUnderline(origin, text, font, textBaseline);
-            StrokePath(underline, strokeColour, lineWidth, lineCap, lineJoin, lineDash, tag);
+            if (!string.IsNullOrEmpty(text))
+            {
+                GraphicsPath underline = new GraphicsPath().AddTextUnderline(origin, text, font, textBaseline);
+                StrokePath(underline, strokeColour, lineWidth, lineCap, lineJoin, lineDash, tag);
+            }
         }
 
 
@@ -724,85 +766,93 @@ namespace VectSharp
         /// <param name="tag">A tag to identify the filled underlined.</param>
         public void FillTextUnderline(Point origin, IEnumerable<FormattedText> text, Brush fillColour, TextBaselines textBaseline = TextBaselines.Top, string tag = null)
         {
-            List<FormattedText> enumeratedText = new List<FormattedText>();
-            List<Font.DetailedFontMetrics> allMetrics = new List<Font.DetailedFontMetrics>();
-
-            Font.DetailedFontMetrics fullMetrics = text.Measure(enumeratedText, allMetrics);
-
-            Point baselineOrigin = origin;
-
-            switch (textBaseline)
+            if (text != null)
             {
-                case TextBaselines.Baseline:
-                    baselineOrigin = origin;
-                    break;
-                case TextBaselines.Top:
-                    baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Top);
-                    break;
-                case TextBaselines.Bottom:
-                    baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Bottom);
-                    break;
-                case TextBaselines.Middle:
-                    baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Top * 0.5 + fullMetrics.Bottom * 0.5);
-                    break;
-            }
 
-            for (int i = 0; i < enumeratedText.Count; i++)
-            {
-                FormattedText txt = enumeratedText[i];
+                List<FormattedText> enumeratedText = new List<FormattedText>();
+                List<Font.DetailedFontMetrics> allMetrics = new List<Font.DetailedFontMetrics>();
 
-                string spanTag = (!string.IsNullOrEmpty(tag) && UseUniqueTags) ? (tag + "@" + i.ToString()) : tag;
+                Font.DetailedFontMetrics fullMetrics = text.Measure(enumeratedText, allMetrics);
 
-                if (txt.Script == Script.Normal)
+                if (enumeratedText.Count > 0)
                 {
-                    Font.DetailedFontMetrics metrics = allMetrics[i];
 
-                    if (i > 0)
-                    {
-                        FillTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
-                    }
-                    else
-                    {
-                        FillTextUnderline(baselineOrigin, txt.Text, txt.Font, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
-                    }
+                    Point baselineOrigin = origin;
 
-                    if (i > 0)
+                    switch (textBaseline)
                     {
-                        baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing, baselineOrigin.Y);
-                    }
-                    else
-                    {
-                        baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing, baselineOrigin.Y);
-                    }
-                }
-                else
-                {
-                    Font newFont = new Font(txt.Font.FontFamily, txt.Font.FontSize * 0.7, txt.Font.Underline);
-
-                    Font.DetailedFontMetrics metrics = allMetrics[i];
-
-                    if (i == 0)
-                    {
-                        baselineOrigin = new Point(baselineOrigin.X - metrics.LeftSideBearing, baselineOrigin.Y);
+                        case TextBaselines.Baseline:
+                            baselineOrigin = origin;
+                            break;
+                        case TextBaselines.Top:
+                            baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Top);
+                            break;
+                        case TextBaselines.Bottom:
+                            baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Bottom);
+                            break;
+                        case TextBaselines.Middle:
+                            baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Top * 0.5 + fullMetrics.Bottom * 0.5);
+                            break;
                     }
 
-                    if (txt.Script == Script.Subscript)
+                    for (int i = 0; i < enumeratedText.Count; i++)
                     {
-                        FillTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + txt.Font.FontSize * 0.14, txt.Text, newFont, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
-                    }
-                    else if (txt.Script == Script.Superscript)
-                    {
-                        FillTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y - txt.Font.FontSize * 0.33, txt.Text, newFont, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
-                    }
+                        FormattedText txt = enumeratedText[i];
+
+                        string spanTag = (!string.IsNullOrEmpty(tag) && UseUniqueTags) ? (tag + "@" + i.ToString()) : tag;
+
+                        if (txt.Script == Script.Normal)
+                        {
+                            Font.DetailedFontMetrics metrics = allMetrics[i];
+
+                            if (i > 0)
+                            {
+                                FillTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
+                            }
+                            else
+                            {
+                                FillTextUnderline(baselineOrigin, txt.Text, txt.Font, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
+                            }
+
+                            if (i > 0)
+                            {
+                                baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing, baselineOrigin.Y);
+                            }
+                            else
+                            {
+                                baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing, baselineOrigin.Y);
+                            }
+                        }
+                        else
+                        {
+                            Font newFont = new Font(txt.Font.FontFamily, txt.Font.FontSize * 0.7, txt.Font.Underline);
+
+                            Font.DetailedFontMetrics metrics = allMetrics[i];
+
+                            if (i == 0)
+                            {
+                                baselineOrigin = new Point(baselineOrigin.X - metrics.LeftSideBearing, baselineOrigin.Y);
+                            }
+
+                            if (txt.Script == Script.Subscript)
+                            {
+                                FillTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + txt.Font.FontSize * 0.14, txt.Text, newFont, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
+                            }
+                            else if (txt.Script == Script.Superscript)
+                            {
+                                FillTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y - txt.Font.FontSize * 0.33, txt.Text, newFont, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
+                            }
 
 
-                    if (i > 0)
-                    {
-                        baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing, baselineOrigin.Y);
-                    }
-                    else
-                    {
-                        baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing, baselineOrigin.Y);
+                            if (i > 0)
+                            {
+                                baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing, baselineOrigin.Y);
+                            }
+                            else
+                            {
+                                baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing, baselineOrigin.Y);
+                            }
+                        }
                     }
                 }
             }
@@ -840,85 +890,92 @@ namespace VectSharp
         /// <param name="tag">A tag to identify the stroked underline.</param>
         public void StrokeTextUnderline(Point origin, IEnumerable<FormattedText> text, Brush strokeColour, TextBaselines textBaseline = TextBaselines.Top, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
         {
-            List<FormattedText> enumeratedText = new List<FormattedText>();
-            List<Font.DetailedFontMetrics> allMetrics = new List<Font.DetailedFontMetrics>();
-
-            Font.DetailedFontMetrics fullMetrics = text.Measure(enumeratedText, allMetrics);
-
-            Point baselineOrigin = origin;
-
-            switch (textBaseline)
+            if (text != null)
             {
-                case TextBaselines.Baseline:
-                    baselineOrigin = origin;
-                    break;
-                case TextBaselines.Top:
-                    baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Top);
-                    break;
-                case TextBaselines.Bottom:
-                    baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Bottom);
-                    break;
-                case TextBaselines.Middle:
-                    baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Top * 0.5 + fullMetrics.Bottom * 0.5);
-                    break;
-            }
+                List<FormattedText> enumeratedText = new List<FormattedText>();
+                List<Font.DetailedFontMetrics> allMetrics = new List<Font.DetailedFontMetrics>();
 
-            for (int i = 0; i < enumeratedText.Count; i++)
-            {
-                FormattedText txt = enumeratedText[i];
+                Font.DetailedFontMetrics fullMetrics = text.Measure(enumeratedText, allMetrics);
 
-                string spanTag = (!string.IsNullOrEmpty(tag) && UseUniqueTags) ? (tag + "@" + i.ToString()) : tag;
-
-                if (txt.Script == Script.Normal)
+                if (enumeratedText.Count > 0)
                 {
-                    Font.DetailedFontMetrics metrics = allMetrics[i];
 
-                    if (i > 0)
-                    {
-                        StrokeTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
-                    }
-                    else
-                    {
-                        StrokeTextUnderline(baselineOrigin, txt.Text, txt.Font, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
-                    }
+                    Point baselineOrigin = origin;
 
-                    if (i > 0)
+                    switch (textBaseline)
                     {
-                        baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing, baselineOrigin.Y);
-                    }
-                    else
-                    {
-                        baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing, baselineOrigin.Y);
-                    }
-                }
-                else
-                {
-                    Font newFont = new Font(txt.Font.FontFamily, txt.Font.FontSize * 0.7, txt.Font.Underline);
-
-                    Font.DetailedFontMetrics metrics = allMetrics[i];
-
-                    if (i == 0)
-                    {
-                        baselineOrigin = new Point(baselineOrigin.X - metrics.LeftSideBearing, baselineOrigin.Y);
+                        case TextBaselines.Baseline:
+                            baselineOrigin = origin;
+                            break;
+                        case TextBaselines.Top:
+                            baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Top);
+                            break;
+                        case TextBaselines.Bottom:
+                            baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Bottom);
+                            break;
+                        case TextBaselines.Middle:
+                            baselineOrigin = new Point(origin.X, origin.Y + fullMetrics.Top * 0.5 + fullMetrics.Bottom * 0.5);
+                            break;
                     }
 
-                    if (txt.Script == Script.Subscript)
+                    for (int i = 0; i < enumeratedText.Count; i++)
                     {
-                        StrokeTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + txt.Font.FontSize * 0.14, txt.Text, newFont, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
-                    }
-                    else if (txt.Script == Script.Superscript)
-                    {
-                        StrokeTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y - txt.Font.FontSize * 0.33, txt.Text, newFont, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
-                    }
+                        FormattedText txt = enumeratedText[i];
+
+                        string spanTag = (!string.IsNullOrEmpty(tag) && UseUniqueTags) ? (tag + "@" + i.ToString()) : tag;
+
+                        if (txt.Script == Script.Normal)
+                        {
+                            Font.DetailedFontMetrics metrics = allMetrics[i];
+
+                            if (i > 0)
+                            {
+                                StrokeTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
+                            }
+                            else
+                            {
+                                StrokeTextUnderline(baselineOrigin, txt.Text, txt.Font, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
+                            }
+
+                            if (i > 0)
+                            {
+                                baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing, baselineOrigin.Y);
+                            }
+                            else
+                            {
+                                baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing, baselineOrigin.Y);
+                            }
+                        }
+                        else
+                        {
+                            Font newFont = new Font(txt.Font.FontFamily, txt.Font.FontSize * 0.7, txt.Font.Underline);
+
+                            Font.DetailedFontMetrics metrics = allMetrics[i];
+
+                            if (i == 0)
+                            {
+                                baselineOrigin = new Point(baselineOrigin.X - metrics.LeftSideBearing, baselineOrigin.Y);
+                            }
+
+                            if (txt.Script == Script.Subscript)
+                            {
+                                StrokeTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + txt.Font.FontSize * 0.14, txt.Text, newFont, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
+                            }
+                            else if (txt.Script == Script.Superscript)
+                            {
+                                StrokeTextUnderline(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y - txt.Font.FontSize * 0.33, txt.Text, newFont, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
+                            }
 
 
-                    if (i > 0)
-                    {
-                        baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing, baselineOrigin.Y);
-                    }
-                    else
-                    {
-                        baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing, baselineOrigin.Y);
+                            if (i > 0)
+                            {
+                                baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing, baselineOrigin.Y);
+                            }
+                            else
+                            {
+                                baselineOrigin = new Point(baselineOrigin.X + metrics.Width + metrics.RightSideBearing, baselineOrigin.Y);
+                            }
+                        }
                     }
                 }
             }

@@ -369,92 +369,95 @@ namespace VectSharp
         /// <returns>The <see cref="GraphicsPath"/>, to allow for chained calls.</returns>
         public GraphicsPath AddText(Point origin, string text, Font font, TextBaselines textBaseline = TextBaselines.Top)
         {
-            Font.DetailedFontMetrics metrics = font.MeasureTextAdvanced(text);
-
-            Point baselineOrigin = origin;
-
-            switch (textBaseline)
+            if (!string.IsNullOrEmpty(text))
             {
-                case TextBaselines.Baseline:
-                    baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y);
-                    break;
-                case TextBaselines.Top:
-                    baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y + metrics.Top);
-                    break;
-                case TextBaselines.Bottom:
-                    baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y + metrics.Bottom);
-                    break;
-                case TextBaselines.Middle:
-                    baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y + (metrics.Top - metrics.Bottom) * 0.5 + metrics.Bottom);
-                    break;
-            }
+                Font.DetailedFontMetrics metrics = font.MeasureTextAdvanced(text);
 
-            Point currentGlyphPlacementDelta = new Point();
-            Point currentGlyphAdvanceDelta = new Point();
-            Point nextGlyphPlacementDelta = new Point();
-            Point nextGlyphAdvanceDelta = new Point();
+                Point baselineOrigin = origin;
 
-            for (int i = 0; i < text.Length; i++)
-            {
-                char c = text[i];
-
-                if (Font.EnableKerning && i < text.Length - 1)
+                switch (textBaseline)
                 {
-                    currentGlyphPlacementDelta = nextGlyphPlacementDelta;
-                    currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
-                    nextGlyphAdvanceDelta = new Point();
-                    nextGlyphPlacementDelta = new Point();
-
-                    TrueTypeFile.PairKerning kerning = font.FontFamily.TrueTypeFile.Get1000EmKerning(c, text[i + 1]);
-
-                    if (kerning != null)
-                    {
-                        currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
-                        currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
-
-                        nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
-                        nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
-                    }
+                    case TextBaselines.Baseline:
+                        baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y);
+                        break;
+                    case TextBaselines.Top:
+                        baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y + metrics.Top);
+                        break;
+                    case TextBaselines.Bottom:
+                        baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y + metrics.Bottom);
+                        break;
+                    case TextBaselines.Middle:
+                        baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y + (metrics.Top - metrics.Bottom) * 0.5 + metrics.Bottom);
+                        break;
                 }
 
-                TrueTypeFile.TrueTypePoint[][] glyphPaths = font.FontFamily.TrueTypeFile.GetGlyphPath(c, font.FontSize);
+                Point currentGlyphPlacementDelta = new Point();
+                Point currentGlyphAdvanceDelta = new Point();
+                Point nextGlyphPlacementDelta = new Point();
+                Point nextGlyphAdvanceDelta = new Point();
 
-                for (int j = 0; j < glyphPaths.Length; j++)
+                for (int i = 0; i < text.Length; i++)
                 {
-                    for (int k = 0; k < glyphPaths[j].Length; k++)
+                    char c = text[i];
+
+                    if (Font.EnableKerning && i < text.Length - 1)
                     {
-                        if (k == 0)
+                        currentGlyphPlacementDelta = nextGlyphPlacementDelta;
+                        currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
+                        nextGlyphAdvanceDelta = new Point();
+                        nextGlyphPlacementDelta = new Point();
+
+                        TrueTypeFile.PairKerning kerning = font.FontFamily.TrueTypeFile.Get1000EmKerning(c, text[i + 1]);
+
+                        if (kerning != null)
                         {
-                            this.MoveTo(glyphPaths[j][k].X + baselineOrigin.X + currentGlyphPlacementDelta.X, -glyphPaths[j][k].Y + baselineOrigin.Y + currentGlyphPlacementDelta.Y);
+                            currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
+                            currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+
+                            nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
+                            nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
                         }
-                        else
+                    }
+
+                    TrueTypeFile.TrueTypePoint[][] glyphPaths = font.FontFamily.TrueTypeFile.GetGlyphPath(c, font.FontSize);
+
+                    for (int j = 0; j < glyphPaths.Length; j++)
+                    {
+                        for (int k = 0; k < glyphPaths[j].Length; k++)
                         {
-                            if (glyphPaths[j][k].IsOnCurve)
+                            if (k == 0)
                             {
-                                this.LineTo(glyphPaths[j][k].X + baselineOrigin.X + currentGlyphPlacementDelta.X, -glyphPaths[j][k].Y + baselineOrigin.Y + currentGlyphPlacementDelta.Y);
+                                this.MoveTo(glyphPaths[j][k].X + baselineOrigin.X + currentGlyphPlacementDelta.X, -glyphPaths[j][k].Y + baselineOrigin.Y + currentGlyphPlacementDelta.Y);
                             }
                             else
                             {
-                                Point startPoint = this.Segments.Last().Point;
-                                Point quadCtrl = new Point(glyphPaths[j][k].X + baselineOrigin.X + currentGlyphPlacementDelta.X, -glyphPaths[j][k].Y + baselineOrigin.Y + currentGlyphPlacementDelta.Y);
-                                Point endPoint = new Point(glyphPaths[j][k + 1].X + baselineOrigin.X + currentGlyphPlacementDelta.X, -glyphPaths[j][k + 1].Y + baselineOrigin.Y + currentGlyphPlacementDelta.Y);
+                                if (glyphPaths[j][k].IsOnCurve)
+                                {
+                                    this.LineTo(glyphPaths[j][k].X + baselineOrigin.X + currentGlyphPlacementDelta.X, -glyphPaths[j][k].Y + baselineOrigin.Y + currentGlyphPlacementDelta.Y);
+                                }
+                                else
+                                {
+                                    Point startPoint = this.Segments.Last().Point;
+                                    Point quadCtrl = new Point(glyphPaths[j][k].X + baselineOrigin.X + currentGlyphPlacementDelta.X, -glyphPaths[j][k].Y + baselineOrigin.Y + currentGlyphPlacementDelta.Y);
+                                    Point endPoint = new Point(glyphPaths[j][k + 1].X + baselineOrigin.X + currentGlyphPlacementDelta.X, -glyphPaths[j][k + 1].Y + baselineOrigin.Y + currentGlyphPlacementDelta.Y);
 
 
-                                Point ctrl1 = new Point(startPoint.X / 3 + 2 * quadCtrl.X / 3, startPoint.Y / 3 + 2 * quadCtrl.Y / 3);
-                                Point ctrl2 = new Point(endPoint.X / 3 + 2 * quadCtrl.X / 3, endPoint.Y / 3 + 2 * quadCtrl.Y / 3);
+                                    Point ctrl1 = new Point(startPoint.X / 3 + 2 * quadCtrl.X / 3, startPoint.Y / 3 + 2 * quadCtrl.Y / 3);
+                                    Point ctrl2 = new Point(endPoint.X / 3 + 2 * quadCtrl.X / 3, endPoint.Y / 3 + 2 * quadCtrl.Y / 3);
 
-                                this.CubicBezierTo(ctrl1, ctrl2, endPoint);
+                                    this.CubicBezierTo(ctrl1, ctrl2, endPoint);
 
-                                k++;
+                                    k++;
+                                }
                             }
                         }
+
+                        this.Close();
                     }
 
-                    this.Close();
+                    baselineOrigin.X += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
+                    baselineOrigin.Y += (currentGlyphAdvanceDelta.Y) * font.FontSize / 1000;
                 }
-
-                baselineOrigin.X += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
-                baselineOrigin.Y += (currentGlyphAdvanceDelta.Y) * font.FontSize / 1000;
             }
             return this;
         }
@@ -471,133 +474,136 @@ namespace VectSharp
         /// <returns>The <see cref="GraphicsPath"/>, to allow for chained calls.</returns>
         public GraphicsPath AddTextOnPath(GraphicsPath path, string text, Font font, double reference = 0, TextAnchors anchor = TextAnchors.Left, TextBaselines textBaseline = TextBaselines.Top)
         {
-            cachedLength = double.NaN;
-            cachedBounds = Rectangle.NaN;
-
-            double currDelta = 0;
-            double pathLength = path.MeasureLength();
-
-            Font.DetailedFontMetrics fullMetrics = font.MeasureTextAdvanced(text);
-
-            switch (anchor)
+            if (!string.IsNullOrEmpty(text))
             {
-                case TextAnchors.Left:
-                    break;
-                case TextAnchors.Center:
-                    currDelta = -fullMetrics.Width * 0.5 / pathLength;
-                    break;
-                case TextAnchors.Right:
-                    currDelta = -fullMetrics.Width / pathLength;
-                    break;
-            }
+                cachedLength = double.NaN;
+                cachedBounds = Rectangle.NaN;
 
-            Point currentGlyphPlacementDelta = new Point();
-            Point currentGlyphAdvanceDelta = new Point();
-            Point nextGlyphPlacementDelta = new Point();
-            Point nextGlyphAdvanceDelta = new Point();
+                double currDelta = 0;
+                double pathLength = path.MeasureLength();
 
-            for (int i = 0; i < text.Length; i++)
-            {
-                string c = text.Substring(i, 1);
+                Font.DetailedFontMetrics fullMetrics = font.MeasureTextAdvanced(text);
 
-                if (Font.EnableKerning && i < text.Length - 1)
+                switch (anchor)
                 {
-                    currentGlyphPlacementDelta = nextGlyphPlacementDelta;
-                    currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
-                    nextGlyphAdvanceDelta = new Point();
-                    nextGlyphPlacementDelta = new Point();
-
-                    TrueTypeFile.PairKerning kerning = font.FontFamily.TrueTypeFile.Get1000EmKerning(text[i], text[i + 1]);
-
-                    if (kerning != null)
-                    {
-                        currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
-                        currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
-
-                        nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
-                        nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
-                    }
-                }
-
-                Font.DetailedFontMetrics metrics = font.MeasureTextAdvanced(c);
-
-                Point origin = path.GetPointAtRelative(reference + currDelta + currentGlyphPlacementDelta.X * font.FontSize / 1000);
-
-                Point tangent = path.GetTangentAtRelative(reference + currDelta + currentGlyphPlacementDelta.X * font.FontSize / 1000 + (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing) / pathLength * 0.5);
-
-                origin = new Point(origin.X - tangent.Y * currentGlyphPlacementDelta.Y * font.FontSize / 1000, origin.Y + tangent.X * currentGlyphPlacementDelta.Y * font.FontSize / 1000);
-
-                GraphicsPath glyphPath = new GraphicsPath();
-
-                switch (textBaseline)
-                {
-                    case TextBaselines.Top:
-                        if (i > 0)
-                        {
-                            glyphPath.AddText(new Point(metrics.LeftSideBearing, fullMetrics.Top), c, font, textBaseline: TextBaselines.Baseline);
-                        }
-                        else
-                        {
-                            glyphPath.AddText(new Point(0, fullMetrics.Top), c, font, textBaseline: TextBaselines.Baseline);
-                        }
+                    case TextAnchors.Left:
                         break;
-                    case TextBaselines.Baseline:
-                        if (i > 0)
-                        {
-                            glyphPath.AddText(new Point(metrics.LeftSideBearing, 0), c, font, textBaseline: TextBaselines.Baseline);
-                        }
-                        else
-                        {
-                            glyphPath.AddText(new Point(0, 0), c, font, textBaseline: TextBaselines.Baseline);
-                        }
+                    case TextAnchors.Center:
+                        currDelta = -fullMetrics.Width * 0.5 / pathLength;
                         break;
-                    case TextBaselines.Bottom:
-                        if (i > 0)
-                        {
-                            glyphPath.AddText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom), c, font, textBaseline: TextBaselines.Baseline);
-                        }
-                        else
-                        {
-                            glyphPath.AddText(new Point(0, fullMetrics.Bottom), c, font, textBaseline: TextBaselines.Baseline);
-                        }
-                        break;
-                    case TextBaselines.Middle:
-                        if (i > 0)
-                        {
-                            glyphPath.AddText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, textBaseline: TextBaselines.Baseline);
-                        }
-                        else
-                        {
-                            glyphPath.AddText(new Point(0, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, textBaseline: TextBaselines.Baseline);
-                        }
+                    case TextAnchors.Right:
+                        currDelta = -fullMetrics.Width / pathLength;
                         break;
                 }
 
-                double angle = Math.Atan2(tangent.Y, tangent.X);
+                Point currentGlyphPlacementDelta = new Point();
+                Point currentGlyphAdvanceDelta = new Point();
+                Point nextGlyphPlacementDelta = new Point();
+                Point nextGlyphAdvanceDelta = new Point();
 
-                for (int j = 0; j < glyphPath.Segments.Count; j++)
+                for (int i = 0; i < text.Length; i++)
                 {
-                    if (glyphPath.Segments[j].Points != null)
-                    {
-                        for (int k = 0; k < glyphPath.Segments[j].Points.Length; k++)
-                        {
-                            double newX = glyphPath.Segments[j].Points[k].X * Math.Cos(angle) - glyphPath.Segments[j].Points[k].Y * Math.Sin(angle) + origin.X;
-                            double newY = glyphPath.Segments[j].Points[k].X * Math.Sin(angle) + glyphPath.Segments[j].Points[k].Y * Math.Cos(angle) + origin.Y;
+                    string c = text.Substring(i, 1);
 
-                            glyphPath.Segments[j].Points[k] = new Point(newX, newY);
+                    if (Font.EnableKerning && i < text.Length - 1)
+                    {
+                        currentGlyphPlacementDelta = nextGlyphPlacementDelta;
+                        currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
+                        nextGlyphAdvanceDelta = new Point();
+                        nextGlyphPlacementDelta = new Point();
+
+                        TrueTypeFile.PairKerning kerning = font.FontFamily.TrueTypeFile.Get1000EmKerning(text[i], text[i + 1]);
+
+                        if (kerning != null)
+                        {
+                            currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
+                            currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+
+                            nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
+                            nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
                         }
                     }
 
-                    this.Segments.Add(glyphPath.Segments[j]);
-                }
+                    Font.DetailedFontMetrics metrics = font.MeasureTextAdvanced(c);
 
-                if (i > 0)
-                {
-                    currDelta += (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing + currentGlyphAdvanceDelta.X * font.FontSize / 1000) / pathLength;
-                }
-                else
-                {
-                    currDelta += (metrics.Width + metrics.RightSideBearing + currentGlyphAdvanceDelta.X * font.FontSize / 1000) / pathLength;
+                    Point origin = path.GetPointAtRelative(reference + currDelta + currentGlyphPlacementDelta.X * font.FontSize / 1000);
+
+                    Point tangent = path.GetTangentAtRelative(reference + currDelta + currentGlyphPlacementDelta.X * font.FontSize / 1000 + (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing) / pathLength * 0.5);
+
+                    origin = new Point(origin.X - tangent.Y * currentGlyphPlacementDelta.Y * font.FontSize / 1000, origin.Y + tangent.X * currentGlyphPlacementDelta.Y * font.FontSize / 1000);
+
+                    GraphicsPath glyphPath = new GraphicsPath();
+
+                    switch (textBaseline)
+                    {
+                        case TextBaselines.Top:
+                            if (i > 0)
+                            {
+                                glyphPath.AddText(new Point(metrics.LeftSideBearing, fullMetrics.Top), c, font, textBaseline: TextBaselines.Baseline);
+                            }
+                            else
+                            {
+                                glyphPath.AddText(new Point(0, fullMetrics.Top), c, font, textBaseline: TextBaselines.Baseline);
+                            }
+                            break;
+                        case TextBaselines.Baseline:
+                            if (i > 0)
+                            {
+                                glyphPath.AddText(new Point(metrics.LeftSideBearing, 0), c, font, textBaseline: TextBaselines.Baseline);
+                            }
+                            else
+                            {
+                                glyphPath.AddText(new Point(0, 0), c, font, textBaseline: TextBaselines.Baseline);
+                            }
+                            break;
+                        case TextBaselines.Bottom:
+                            if (i > 0)
+                            {
+                                glyphPath.AddText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom), c, font, textBaseline: TextBaselines.Baseline);
+                            }
+                            else
+                            {
+                                glyphPath.AddText(new Point(0, fullMetrics.Bottom), c, font, textBaseline: TextBaselines.Baseline);
+                            }
+                            break;
+                        case TextBaselines.Middle:
+                            if (i > 0)
+                            {
+                                glyphPath.AddText(new Point(metrics.LeftSideBearing, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, textBaseline: TextBaselines.Baseline);
+                            }
+                            else
+                            {
+                                glyphPath.AddText(new Point(0, fullMetrics.Bottom + fullMetrics.Height / 2), c, font, textBaseline: TextBaselines.Baseline);
+                            }
+                            break;
+                    }
+
+                    double angle = Math.Atan2(tangent.Y, tangent.X);
+
+                    for (int j = 0; j < glyphPath.Segments.Count; j++)
+                    {
+                        if (glyphPath.Segments[j].Points != null)
+                        {
+                            for (int k = 0; k < glyphPath.Segments[j].Points.Length; k++)
+                            {
+                                double newX = glyphPath.Segments[j].Points[k].X * Math.Cos(angle) - glyphPath.Segments[j].Points[k].Y * Math.Sin(angle) + origin.X;
+                                double newY = glyphPath.Segments[j].Points[k].X * Math.Sin(angle) + glyphPath.Segments[j].Points[k].Y * Math.Cos(angle) + origin.Y;
+
+                                glyphPath.Segments[j].Points[k] = new Point(newX, newY);
+                            }
+                        }
+
+                        this.Segments.Add(glyphPath.Segments[j]);
+                    }
+
+                    if (i > 0)
+                    {
+                        currDelta += (metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing + currentGlyphAdvanceDelta.X * font.FontSize / 1000) / pathLength;
+                    }
+                    else
+                    {
+                        currDelta += (metrics.Width + metrics.RightSideBearing + currentGlyphAdvanceDelta.X * font.FontSize / 1000) / pathLength;
+                    }
                 }
             }
 
@@ -616,335 +622,136 @@ namespace VectSharp
         /// <returns>The <see cref="GraphicsPath"/>, to allow for chained calls.</returns>
         public GraphicsPath AddTextUnderline(Point origin, string text, Font font, TextBaselines textBaseline = TextBaselines.Top)
         {
-            if (font.Underline == null)
+            if (!string.IsNullOrEmpty(text))
             {
-                return this;
-            }
-
-            Font.DetailedFontMetrics metrics = font.MeasureTextAdvanced(text);
-
-            double italicAngle = font.FontFamily.TrueTypeFile?.GetItalicAngle() ?? 0;
-
-            if (double.IsNaN(italicAngle))
-            {
-                italicAngle = 0;
-            }
-
-            Point baselineOrigin = origin;
-
-            switch (textBaseline)
-            {
-                case TextBaselines.Baseline:
-                    baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y);
-                    break;
-                case TextBaselines.Top:
-                    baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y + metrics.Top);
-                    break;
-                case TextBaselines.Bottom:
-                    baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y + metrics.Bottom);
-                    break;
-                case TextBaselines.Middle:
-                    baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y + (metrics.Top - metrics.Bottom) * 0.5 + metrics.Bottom);
-                    break;
-            }
-
-            if (!font.Underline.SkipDescenders)
-            {
-                double italicShift;
-
-                if (!font.Underline.FollowItalicAngle || italicAngle == 0)
+                if (font.Underline == null)
                 {
-                    italicShift = 0;
+                    return this;
+                }
+
+                Font.DetailedFontMetrics metrics = font.MeasureTextAdvanced(text);
+
+                double italicAngle = font.FontFamily.TrueTypeFile?.GetItalicAngle() ?? 0;
+
+                if (double.IsNaN(italicAngle))
+                {
+                    italicAngle = 0;
+                }
+
+                Point baselineOrigin = origin;
+
+                switch (textBaseline)
+                {
+                    case TextBaselines.Baseline:
+                        baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y);
+                        break;
+                    case TextBaselines.Top:
+                        baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y + metrics.Top);
+                        break;
+                    case TextBaselines.Bottom:
+                        baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y + metrics.Bottom);
+                        break;
+                    case TextBaselines.Middle:
+                        baselineOrigin = new Point(origin.X - metrics.LeftSideBearing, origin.Y + (metrics.Top - metrics.Bottom) * 0.5 + metrics.Bottom);
+                        break;
+                }
+
+                if (!font.Underline.SkipDescenders)
+                {
+                    double italicShift;
+
+                    if (!font.Underline.FollowItalicAngle || italicAngle == 0)
+                    {
+                        italicShift = 0;
+                    }
+                    else
+                    {
+                        italicShift = font.Underline.Thickness * font.FontSize * Math.Tan(italicAngle / 180.0 * Math.PI);
+                    }
+
+                    if (font.Underline.LineCap == LineCaps.Butt)
+                    {
+                        if (!font.Underline.FollowItalicAngle || italicAngle == 0)
+                        {
+                            this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                            this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                            this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                            this.LineTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                            this.Close();
+                        }
+                        else
+                        {
+                            this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                            this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                            this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                            this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                            this.Close();
+                        }
+                    }
+                    else if (font.Underline.LineCap == LineCaps.Square)
+                    {
+                        if (!font.Underline.FollowItalicAngle || italicAngle == 0)
+                        {
+                            this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                            this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                            this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                            this.LineTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                            this.Close();
+                        }
+                        else
+                        {
+                            this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                            this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                            this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + font.Underline.Thickness * font.FontSize * 0.5 + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                            this.LineTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize * 0.5 + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                            this.Close();
+                        }
+                    }
+                    else if (font.Underline.LineCap == LineCaps.Round)
+                    {
+                        if (!font.Underline.FollowItalicAngle || italicAngle == 0)
+                        {
+                            this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                            this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                            this.Arc(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize * 0.5, font.Underline.Thickness * font.FontSize * 0.5, -Math.PI / 2, Math.PI / 2);
+                            this.LineTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                            this.Arc(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize * 0.5, font.Underline.Thickness * font.FontSize * 0.5, Math.PI / 2, 3 * Math.PI / 2);
+                            this.Close();
+                        }
+                        else
+                        {
+                            this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing - italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                            this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                            this.CubicBezierTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize,
+                                baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + italicShift + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize,
+                                baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+
+                            this.LineTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                            this.CubicBezierTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize,
+                                baselineOrigin.X + metrics.LeftSideBearing - italicShift - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize,
+                                baselineOrigin.X + metrics.LeftSideBearing - italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+
+                            this.Close();
+                        }
+                    }
+
+                    return this;
                 }
                 else
                 {
-                    italicShift = font.Underline.Thickness * font.FontSize * Math.Tan(italicAngle / 180.0 * Math.PI);
-                }
-
-                if (font.Underline.LineCap == LineCaps.Butt)
-                {
-                    if (!font.Underline.FollowItalicAngle || italicAngle == 0)
+                    if (font.Underline.LineCap == LineCaps.Butt)
                     {
-                        this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-                        this.Close();
-                    }
-                    else
-                    {
-                        this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-                        this.Close();
-                    }
-                }
-                else if (font.Underline.LineCap == LineCaps.Square)
-                {
-                    if (!font.Underline.FollowItalicAngle || italicAngle == 0)
-                    {
-                        this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-                        this.Close();
-                    }
-                    else
-                    {
-                        this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + font.Underline.Thickness * font.FontSize * 0.5 + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize * 0.5 + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-                        this.Close();
-                    }
-                }
-                else if (font.Underline.LineCap == LineCaps.Round)
-                {
-                    if (!font.Underline.FollowItalicAngle || italicAngle == 0)
-                    {
-                        this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-                        this.Arc(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize * 0.5, font.Underline.Thickness * font.FontSize * 0.5, -Math.PI / 2, Math.PI / 2);
-                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-                        this.Arc(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize * 0.5, font.Underline.Thickness * font.FontSize * 0.5, Math.PI / 2, 3 * Math.PI / 2);
-                        this.Close();
-                    }
-                    else
-                    {
-                        this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing - italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-                        this.CubicBezierTo(baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize,
-                            baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + italicShift + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize,
-                            baselineOrigin.X + metrics.LeftSideBearing + metrics.Width + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                        double italicShift;
 
-                        this.LineTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-                        this.CubicBezierTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize,
-                            baselineOrigin.X + metrics.LeftSideBearing - italicShift - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize,
-                            baselineOrigin.X + metrics.LeftSideBearing - italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-
-                        this.Close();
-                    }
-                }
-
-                return this;
-            }
-            else
-            {
-                if (font.Underline.LineCap == LineCaps.Butt)
-                {
-                    double italicShift;
-
-                    if (!font.Underline.FollowItalicAngle || italicAngle == 0)
-                    {
-                        italicShift = 0;
-                    }
-                    else
-                    {
-                        italicShift = font.Underline.Thickness * font.FontSize * Math.Tan(italicAngle / 180.0 * Math.PI);
-                    }
-
-                    bool started = false;
-
-                    double currX = baselineOrigin.X;
-                    double underlineStartX = baselineOrigin.X + metrics.LeftSideBearing;
-                    double currUnderlineX = underlineStartX - metrics.LeftSideBearing;
-
-                    Point currentGlyphPlacementDelta = new Point();
-                    Point currentGlyphAdvanceDelta = new Point();
-                    Point nextGlyphPlacementDelta = new Point();
-                    Point nextGlyphAdvanceDelta = new Point();
-
-                    for (int i = 0; i < text.Length; i++)
-                    {
-                        char c = text[i];
-
-                        if (Font.EnableKerning && i < text.Length - 1)
+                        if (!font.Underline.FollowItalicAngle || italicAngle == 0)
                         {
-                            currentGlyphPlacementDelta = nextGlyphPlacementDelta;
-                            currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
-                            nextGlyphAdvanceDelta = new Point();
-                            nextGlyphPlacementDelta = new Point();
-
-                            TrueTypeFile.PairKerning kerning = font.FontFamily.TrueTypeFile.Get1000EmKerning(c, text[i + 1]);
-
-                            if (kerning != null)
-                            {
-                                currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
-                                currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
-
-                                nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
-                                nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
-                            }
-                        }
-
-                        double[] intersections = font.FontFamily.TrueTypeFile.Get1000EmUnderlineIntersections(c, font.Underline.Position * 1000, font.Underline.Thickness * 1000);
-
-                        if (intersections != null)
-                        {
-                            intersections[0] = intersections[0] * font.FontSize / 1000;
-                            intersections[1] = intersections[1] * font.FontSize / 1000;
-
-                            if (currX + intersections[0] - font.Underline.Thickness * font.FontSize >= underlineStartX)
-                            {
-                                if (!started)
-                                {
-                                    started = true;
-                                    this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize).LineTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-                                }
-
-                                this.LineTo(currX + intersections[0] - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-                                this.LineTo(currX + intersections[0] - font.Underline.Thickness * font.FontSize + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-                                this.Close();
-                            }
-
-                            started = true;
-
-                            this.MoveTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-                            this.LineTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-
-                            underlineStartX = currX + intersections[1] + font.Underline.Thickness * font.FontSize;
-                            currUnderlineX = Math.Max(currX + intersections[1] + font.Underline.Thickness * font.FontSize, currX + (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000);
-                        }
-                        else if (i == text.Length - 1)
-                        {
-                            if (c != ' ')
-                            {
-                                currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000;
-                            }
-                            else
-                            {
-                                currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
-                            }
+                            italicShift = 0;
                         }
                         else
                         {
-                            currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
+                            italicShift = font.Underline.Thickness * font.FontSize * Math.Tan(italicAngle / 180.0 * Math.PI);
                         }
 
-                        currX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
-                    }
-
-                    if (!started)
-                    {
-                        started = true;
-                        this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize).LineTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-                    }
-
-                    this.LineTo(currUnderlineX, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-                    this.LineTo(currUnderlineX + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-                    this.LineTo(underlineStartX + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-                    this.Close();
-                }
-                else if (font.Underline.LineCap == LineCaps.Square)
-                {
-                    double italicShift;
-
-                    if (!font.Underline.FollowItalicAngle || italicAngle == 0)
-                    {
-                        italicShift = 0;
-                    }
-                    else
-                    {
-                        italicShift = font.Underline.Thickness * font.FontSize * Math.Tan(italicAngle / 180.0 * Math.PI);
-                    }
-
-                    bool started = false;
-
-                    double currX = baselineOrigin.X;
-                    double underlineStartX = baselineOrigin.X + metrics.LeftSideBearing;
-                    double currUnderlineX = underlineStartX - metrics.LeftSideBearing;
-
-                    Point currentGlyphPlacementDelta = new Point();
-                    Point currentGlyphAdvanceDelta = new Point();
-                    Point nextGlyphPlacementDelta = new Point();
-                    Point nextGlyphAdvanceDelta = new Point();
-
-                    for (int i = 0; i < text.Length; i++)
-                    {
-                        char c = text[i];
-
-                        if (Font.EnableKerning && i < text.Length - 1)
-                        {
-                            currentGlyphPlacementDelta = nextGlyphPlacementDelta;
-                            currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
-                            nextGlyphAdvanceDelta = new Point();
-                            nextGlyphPlacementDelta = new Point();
-
-                            TrueTypeFile.PairKerning kerning = font.FontFamily.TrueTypeFile.Get1000EmKerning(c, text[i + 1]);
-
-                            if (kerning != null)
-                            {
-                                currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
-                                currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
-
-                                nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
-                                nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
-                            }
-                        }
-
-                        double[] intersections = font.FontFamily.TrueTypeFile.Get1000EmUnderlineIntersections(c, font.Underline.Position * 1000, font.Underline.Thickness * 1000);
-
-                        if (intersections != null)
-                        {
-                            intersections[0] = intersections[0] * font.FontSize / 1000;
-                            intersections[1] = intersections[1] * font.FontSize / 1000;
-
-                            if (currX + intersections[0] - font.Underline.Thickness * font.FontSize >= underlineStartX)
-                            {
-                                if (!started)
-                                {
-                                    started = true;
-                                    this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing + italicShift - font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize).LineTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-                                }
-                                this.LineTo(currX + intersections[0] - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-                                this.LineTo(currX + intersections[0] - font.Underline.Thickness * font.FontSize + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-
-                                this.Close();
-                            }
-
-                            started = true;
-
-                            this.MoveTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-                            this.LineTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-
-                            underlineStartX = currX + intersections[1] + font.Underline.Thickness * font.FontSize;
-                            currUnderlineX = Math.Max(currX + intersections[1] + font.Underline.Thickness * font.FontSize, currX + (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000);
-                        }
-                        else if (i == text.Length - 1)
-                        {
-                            if (c != ' ')
-                            {
-                                currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000;
-                            }
-                            else
-                            {
-                                currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
-                            }
-                        }
-                        else
-                        {
-                            currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
-                        }
-
-                        currX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
-                    }
-
-                    if (!started)
-                    {
-                        started = true;
-                        this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing + italicShift - font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize).LineTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-                    }
-
-                    this.LineTo(currUnderlineX + font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-                    this.LineTo(currUnderlineX + italicShift + font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-                    this.LineTo(underlineStartX + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-                    this.Close();
-                }
-                else if (font.Underline.LineCap == LineCaps.Round)
-                {
-                    if (!font.Underline.FollowItalicAngle || italicAngle == 0)
-                    {
                         bool started = false;
 
                         double currX = baselineOrigin.X;
@@ -991,19 +798,17 @@ namespace VectSharp
                                     if (!started)
                                     {
                                         started = true;
-                                        this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-                                        this.Arc(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize * 0.5, font.Underline.Thickness * font.FontSize * 0.5, Math.PI / 2, 3 * Math.PI / 2);
+                                        this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize).LineTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize);
                                     }
 
                                     this.LineTo(currX + intersections[0] - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-                                    this.LineTo(currX + intersections[0] - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-
+                                    this.LineTo(currX + intersections[0] - font.Underline.Thickness * font.FontSize + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
                                     this.Close();
                                 }
 
                                 started = true;
 
-                                this.MoveTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                                this.MoveTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
                                 this.LineTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
 
                                 underlineStartX = currX + intersections[1] + font.Underline.Thickness * font.FontSize;
@@ -1031,20 +836,26 @@ namespace VectSharp
                         if (!started)
                         {
                             started = true;
-                            this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-                            this.Arc(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize * 0.5, font.Underline.Thickness * font.FontSize * 0.5, Math.PI / 2, 3 * Math.PI / 2);
+                            this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize).LineTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize);
                         }
 
                         this.LineTo(currUnderlineX, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-
-                        this.Arc(currUnderlineX, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize * 0.5, font.Underline.Thickness * font.FontSize * 0.5, -Math.PI / 2, Math.PI / 2);
-
-                        this.LineTo(underlineStartX, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                        this.LineTo(currUnderlineX + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                        this.LineTo(underlineStartX + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
                         this.Close();
                     }
-                    else
+                    else if (font.Underline.LineCap == LineCaps.Square)
                     {
-                        double italicShift = font.Underline.Thickness * font.FontSize * Math.Tan(italicAngle / 180.0 * Math.PI);
+                        double italicShift;
+
+                        if (!font.Underline.FollowItalicAngle || italicAngle == 0)
+                        {
+                            italicShift = 0;
+                        }
+                        else
+                        {
+                            italicShift = font.Underline.Thickness * font.FontSize * Math.Tan(italicAngle / 180.0 * Math.PI);
+                        }
 
                         bool started = false;
 
@@ -1092,14 +903,8 @@ namespace VectSharp
                                     if (!started)
                                     {
                                         started = true;
-
-                                        this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-
-                                        this.CubicBezierTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize,
-                                            baselineOrigin.X + metrics.LeftSideBearing - italicShift - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize,
-                                            baselineOrigin.X + metrics.LeftSideBearing - italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                                        this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing + italicShift - font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize).LineTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize);
                                     }
-
                                     this.LineTo(currX + intersections[0] - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
                                     this.LineTo(currX + intersections[0] - font.Underline.Thickness * font.FontSize + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
 
@@ -1136,23 +941,227 @@ namespace VectSharp
                         if (!started)
                         {
                             started = true;
-
-                            this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-
-                            this.CubicBezierTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize,
-                                baselineOrigin.X + metrics.LeftSideBearing - italicShift - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize,
-                                baselineOrigin.X + metrics.LeftSideBearing - italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                            this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing + italicShift - font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize).LineTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize);
                         }
 
-                        this.LineTo(currUnderlineX, baselineOrigin.Y + font.Underline.Position * font.FontSize);
-
-                        //this.LineTo(currUnderlineX + italicShift + font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-                        this.CubicBezierTo(currUnderlineX + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize,
-                            currUnderlineX + italicShift + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize,
-                            currUnderlineX + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
-
+                        this.LineTo(currUnderlineX + font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                        this.LineTo(currUnderlineX + italicShift + font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
                         this.LineTo(underlineStartX + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
                         this.Close();
+                    }
+                    else if (font.Underline.LineCap == LineCaps.Round)
+                    {
+                        if (!font.Underline.FollowItalicAngle || italicAngle == 0)
+                        {
+                            bool started = false;
+
+                            double currX = baselineOrigin.X;
+                            double underlineStartX = baselineOrigin.X + metrics.LeftSideBearing;
+                            double currUnderlineX = underlineStartX - metrics.LeftSideBearing;
+
+                            Point currentGlyphPlacementDelta = new Point();
+                            Point currentGlyphAdvanceDelta = new Point();
+                            Point nextGlyphPlacementDelta = new Point();
+                            Point nextGlyphAdvanceDelta = new Point();
+
+                            for (int i = 0; i < text.Length; i++)
+                            {
+                                char c = text[i];
+
+                                if (Font.EnableKerning && i < text.Length - 1)
+                                {
+                                    currentGlyphPlacementDelta = nextGlyphPlacementDelta;
+                                    currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
+                                    nextGlyphAdvanceDelta = new Point();
+                                    nextGlyphPlacementDelta = new Point();
+
+                                    TrueTypeFile.PairKerning kerning = font.FontFamily.TrueTypeFile.Get1000EmKerning(c, text[i + 1]);
+
+                                    if (kerning != null)
+                                    {
+                                        currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
+                                        currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+
+                                        nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
+                                        nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
+                                    }
+                                }
+
+                                double[] intersections = font.FontFamily.TrueTypeFile.Get1000EmUnderlineIntersections(c, font.Underline.Position * 1000, font.Underline.Thickness * 1000);
+
+                                if (intersections != null)
+                                {
+                                    intersections[0] = intersections[0] * font.FontSize / 1000;
+                                    intersections[1] = intersections[1] * font.FontSize / 1000;
+
+                                    if (currX + intersections[0] - font.Underline.Thickness * font.FontSize >= underlineStartX)
+                                    {
+                                        if (!started)
+                                        {
+                                            started = true;
+                                            this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                                            this.Arc(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize * 0.5, font.Underline.Thickness * font.FontSize * 0.5, Math.PI / 2, 3 * Math.PI / 2);
+                                        }
+
+                                        this.LineTo(currX + intersections[0] - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                                        this.LineTo(currX + intersections[0] - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+
+                                        this.Close();
+                                    }
+
+                                    started = true;
+
+                                    this.MoveTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                                    this.LineTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+
+                                    underlineStartX = currX + intersections[1] + font.Underline.Thickness * font.FontSize;
+                                    currUnderlineX = Math.Max(currX + intersections[1] + font.Underline.Thickness * font.FontSize, currX + (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000);
+                                }
+                                else if (i == text.Length - 1)
+                                {
+                                    if (c != ' ')
+                                    {
+                                        currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000;
+                                    }
+                                    else
+                                    {
+                                        currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
+                                    }
+                                }
+                                else
+                                {
+                                    currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
+                                }
+
+                                currX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
+                            }
+
+                            if (!started)
+                            {
+                                started = true;
+                                this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                                this.Arc(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize * 0.5, font.Underline.Thickness * font.FontSize * 0.5, Math.PI / 2, 3 * Math.PI / 2);
+                            }
+
+                            this.LineTo(currUnderlineX, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+
+                            this.Arc(currUnderlineX, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize * 0.5, font.Underline.Thickness * font.FontSize * 0.5, -Math.PI / 2, Math.PI / 2);
+
+                            this.LineTo(underlineStartX, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                            this.Close();
+                        }
+                        else
+                        {
+                            double italicShift = font.Underline.Thickness * font.FontSize * Math.Tan(italicAngle / 180.0 * Math.PI);
+
+                            bool started = false;
+
+                            double currX = baselineOrigin.X;
+                            double underlineStartX = baselineOrigin.X + metrics.LeftSideBearing;
+                            double currUnderlineX = underlineStartX - metrics.LeftSideBearing;
+
+                            Point currentGlyphPlacementDelta = new Point();
+                            Point currentGlyphAdvanceDelta = new Point();
+                            Point nextGlyphPlacementDelta = new Point();
+                            Point nextGlyphAdvanceDelta = new Point();
+
+                            for (int i = 0; i < text.Length; i++)
+                            {
+                                char c = text[i];
+
+                                if (Font.EnableKerning && i < text.Length - 1)
+                                {
+                                    currentGlyphPlacementDelta = nextGlyphPlacementDelta;
+                                    currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
+                                    nextGlyphAdvanceDelta = new Point();
+                                    nextGlyphPlacementDelta = new Point();
+
+                                    TrueTypeFile.PairKerning kerning = font.FontFamily.TrueTypeFile.Get1000EmKerning(c, text[i + 1]);
+
+                                    if (kerning != null)
+                                    {
+                                        currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
+                                        currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+
+                                        nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
+                                        nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
+                                    }
+                                }
+
+                                double[] intersections = font.FontFamily.TrueTypeFile.Get1000EmUnderlineIntersections(c, font.Underline.Position * 1000, font.Underline.Thickness * 1000);
+
+                                if (intersections != null)
+                                {
+                                    intersections[0] = intersections[0] * font.FontSize / 1000;
+                                    intersections[1] = intersections[1] * font.FontSize / 1000;
+
+                                    if (currX + intersections[0] - font.Underline.Thickness * font.FontSize >= underlineStartX)
+                                    {
+                                        if (!started)
+                                        {
+                                            started = true;
+
+                                            this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+
+                                            this.CubicBezierTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize,
+                                                baselineOrigin.X + metrics.LeftSideBearing - italicShift - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize,
+                                                baselineOrigin.X + metrics.LeftSideBearing - italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                                        }
+
+                                        this.LineTo(currX + intersections[0] - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                                        this.LineTo(currX + intersections[0] - font.Underline.Thickness * font.FontSize + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+
+                                        this.Close();
+                                    }
+
+                                    started = true;
+
+                                    this.MoveTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                                    this.LineTo(currX + intersections[1] + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+
+                                    underlineStartX = currX + intersections[1] + font.Underline.Thickness * font.FontSize;
+                                    currUnderlineX = Math.Max(currX + intersections[1] + font.Underline.Thickness * font.FontSize, currX + (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000);
+                                }
+                                else if (i == text.Length - 1)
+                                {
+                                    if (c != ' ')
+                                    {
+                                        currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000 - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000;
+                                    }
+                                    else
+                                    {
+                                        currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
+                                    }
+                                }
+                                else
+                                {
+                                    currUnderlineX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
+                                }
+
+                                currX += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000;
+                            }
+
+                            if (!started)
+                            {
+                                started = true;
+
+                                this.MoveTo(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+
+                                this.CubicBezierTo(baselineOrigin.X + metrics.LeftSideBearing - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize,
+                                    baselineOrigin.X + metrics.LeftSideBearing - italicShift - font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize,
+                                    baselineOrigin.X + metrics.LeftSideBearing - italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+                            }
+
+                            this.LineTo(currUnderlineX, baselineOrigin.Y + font.Underline.Position * font.FontSize);
+
+                            //this.LineTo(currUnderlineX + italicShift + font.Underline.Thickness * font.FontSize * 0.5, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                            this.CubicBezierTo(currUnderlineX + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize,
+                                currUnderlineX + italicShift + font.Underline.Thickness * font.FontSize, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize,
+                                currUnderlineX + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+
+                            this.LineTo(underlineStartX + italicShift, baselineOrigin.Y + font.Underline.Position * font.FontSize + font.Underline.Thickness * font.FontSize);
+                            this.Close();
+                        }
                     }
                 }
             }

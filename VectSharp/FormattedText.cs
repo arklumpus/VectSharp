@@ -78,7 +78,7 @@ namespace VectSharp
         /// <param name="brush">The brush that will be used by the new <see cref="FormattedText"/>.</param>
         public FormattedText(string text, Font font, Script script = Script.Normal, Brush brush = null)
         {
-            this.Text = text;
+            this.Text = text ?? "";
             this.Font = font;
             this.Script = script;
             this.Brush = brush;
@@ -104,6 +104,11 @@ namespace VectSharp
         /// <returns>A lazy collection of <see cref="FormattedText"/> objects. Note that every enumeration of this collection causes the text to be parsed again; if you need to enumerate this collection more than once, you should probably convert it e.g. to a <see cref="List{T}"/>.</returns>
         public static IEnumerable<FormattedText> Format(string text, Font normalFont, Font boldFont, Font italicFont, Font boldItalicFont, Brush defaultBrush = null)
         {
+            if (string.IsNullOrEmpty(text))
+            {
+                yield break;
+            }
+
             StringBuilder currentRun = new StringBuilder();
             int boldDepth = 0;
             int italicsDepth = 0;
@@ -551,65 +556,68 @@ namespace VectSharp
 
             foreach (FormattedText txt in text)
             {
-                items?.Add(txt);
-
-                if (txt.Script == Script.Normal)
+                if (text != null && !string.IsNullOrEmpty(txt.Text))
                 {
-                    Font.DetailedFontMetrics metrics = txt.Font.MeasureTextAdvanced(txt.Text);
-                    allMetrics?.Add(metrics);
+                    items?.Add(txt);
 
-                    top = Math.Max(top, metrics.Top);
-                    bottom = Math.Min(bottom, metrics.Bottom);
-                    rsb = metrics.RightSideBearing;
-
-                    advanceWidth += metrics.AdvanceWidth;
-
-                    if (!isFirst)
+                    if (txt.Script == Script.Normal)
                     {
-                        width += metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing;
+                        Font.DetailedFontMetrics metrics = txt.Font.MeasureTextAdvanced(txt.Text);
+                        allMetrics?.Add(metrics);
+
+                        top = Math.Max(top, metrics.Top);
+                        bottom = Math.Min(bottom, metrics.Bottom);
+                        rsb = metrics.RightSideBearing;
+
+                        advanceWidth += metrics.AdvanceWidth;
+
+                        if (!isFirst)
+                        {
+                            width += metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing;
+                        }
+                        else
+                        {
+                            width += metrics.Width + metrics.RightSideBearing;
+                            lsb = metrics.LeftSideBearing;
+                        }
                     }
                     else
                     {
-                        width += metrics.Width + metrics.RightSideBearing;
-                        lsb = metrics.LeftSideBearing;
+                        Font newFont = new Font(txt.Font.FontFamily, txt.Font.FontSize * 0.7);
+
+                        Font.DetailedFontMetrics metrics = newFont.MeasureTextAdvanced(txt.Text);
+                        allMetrics?.Add(metrics);
+
+                        advanceWidth += metrics.AdvanceWidth;
+
+                        if (txt.Script == Script.Subscript)
+                        {
+                            top = Math.Max(top, metrics.Top - txt.Font.FontSize * 0.14);
+                            bottom = Math.Min(bottom, metrics.Bottom - txt.Font.FontSize * 0.14);
+                        }
+                        else if (txt.Script == Script.Superscript)
+                        {
+                            top = Math.Max(top, metrics.Top + txt.Font.FontSize * 0.33);
+                            bottom = Math.Min(bottom, metrics.Bottom + txt.Font.FontSize * 0.33);
+                        }
+
+                        rsb = metrics.RightSideBearing;
+
+                        if (!isFirst)
+                        {
+                            width += metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing;
+                        }
+                        else
+                        {
+                            width += metrics.Width + metrics.RightSideBearing;
+                            lsb = metrics.LeftSideBearing;
+                        }
                     }
-                }
-                else
-                {
-                    Font newFont = new Font(txt.Font.FontFamily, txt.Font.FontSize * 0.7);
 
-                    Font.DetailedFontMetrics metrics = newFont.MeasureTextAdvanced(txt.Text);
-                    allMetrics?.Add(metrics);
-
-                    advanceWidth += metrics.AdvanceWidth;
-
-                    if (txt.Script == Script.Subscript)
+                    if (isFirst)
                     {
-                        top = Math.Max(top, metrics.Top - txt.Font.FontSize * 0.14);
-                        bottom = Math.Min(bottom, metrics.Bottom - txt.Font.FontSize * 0.14);
+                        isFirst = false;
                     }
-                    else if (txt.Script == Script.Superscript)
-                    {
-                        top = Math.Max(top, metrics.Top + txt.Font.FontSize * 0.33);
-                        bottom = Math.Min(bottom, metrics.Bottom + txt.Font.FontSize * 0.33);
-                    }
-
-                    rsb = metrics.RightSideBearing;
-
-                    if (!isFirst)
-                    {
-                        width += metrics.Width + metrics.RightSideBearing + metrics.LeftSideBearing;
-                    }
-                    else
-                    {
-                        width += metrics.Width + metrics.RightSideBearing;
-                        lsb = metrics.LeftSideBearing;
-                    }
-                }
-
-                if (isFirst)
-                {
-                    isFirst = false;
                 }
             }
 
