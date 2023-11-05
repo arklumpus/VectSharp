@@ -206,6 +206,7 @@ namespace VectSharp.PDF
     internal class PathFigure : IFigure
     {
         public Brush Fill { get; }
+        public FillRule FillRule { get; }
         public Brush Stroke { get; }
         public bool IsClipping { get; }
         public double LineWidth { get; }
@@ -221,7 +222,7 @@ namespace VectSharp.PDF
 
         private Rectangle Bounds { get; }
 
-        public PathFigure(IEnumerable<Segment> segments, Rectangle bounds, Brush fill, Brush stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, bool isClipping, string tag)
+        public PathFigure(IEnumerable<Segment> segments, Rectangle bounds, Brush fill, Brush stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, bool isClipping, FillRule fillRule, string tag)
         {
             List<Segment> segs = new List<Segment>();
 
@@ -240,6 +241,7 @@ namespace VectSharp.PDF
             LineDash = lineDash;
             IsClipping = isClipping;
             this.Tag = tag;
+            this.FillRule = fillRule;
 
             if (stroke == null)
             {
@@ -427,7 +429,7 @@ namespace VectSharp.PDF
 
             this.Rectangle(0, 0, width, height);
             this.SetFillStyle(background);
-            this.Fill();
+            this.Fill(FillRule.NonZeroWinding);
 
             this.SetFillStyle(Colour.FromRgb(0, 0, 0));
 
@@ -606,15 +608,15 @@ namespace VectSharp.PDF
             return gpr;
         }
 
-        public void Fill()
+        public void Fill(FillRule fillRule)
         {
             if (IsCompatible(_fillStyle))
             {
-                _figures.Add(new PathFigure(_currentFigure, VectSharp.Rectangle.NaN, _fillStyle, null, 0, LineCaps.Butt, LineJoins.Bevel, new LineDash(0, 0, 0), false, this.Tag));
+                _figures.Add(new PathFigure(_currentFigure, VectSharp.Rectangle.NaN, _fillStyle, null, 0, LineCaps.Butt, LineJoins.Bevel, new LineDash(0, 0, 0), false, fillRule, this.Tag));
             }
             else
             {
-                _figures.Add(new PathFigure(_currentFigure, GetGraphicsPath(_currentFigure).GetBounds(), _fillStyle, null, 0, LineCaps.Butt, LineJoins.Bevel, new LineDash(0, 0, 0), false, this.Tag));
+                _figures.Add(new PathFigure(_currentFigure, GetGraphicsPath(_currentFigure).GetBounds(), _fillStyle, null, 0, LineCaps.Butt, LineJoins.Bevel, new LineDash(0, 0, 0), false, fillRule, this.Tag));
             }
 
             _currentFigure = new List<Segment>();
@@ -624,11 +626,11 @@ namespace VectSharp.PDF
         {
             if (IsCompatible(_strokeStyle))
             {
-                _figures.Add(new PathFigure(_currentFigure, VectSharp.Rectangle.NaN, null, _strokeStyle, LineWidth, LineCap, LineJoin, _lineDash, false, this.Tag));
+                _figures.Add(new PathFigure(_currentFigure, VectSharp.Rectangle.NaN, null, _strokeStyle, LineWidth, LineCap, LineJoin, _lineDash, false, FillRule.NonZeroWinding, this.Tag));
             }
             else
             {
-                _figures.Add(new PathFigure(_currentFigure, GetGraphicsPath(_currentFigure).GetBounds(), null, _strokeStyle, LineWidth, LineCap, LineJoin, _lineDash, false, this.Tag));
+                _figures.Add(new PathFigure(_currentFigure, GetGraphicsPath(_currentFigure).GetBounds(), null, _strokeStyle, LineWidth, LineCap, LineJoin, _lineDash, false, FillRule.NonZeroWinding, this.Tag));
             }
 
             _currentFigure = new List<Segment>();
@@ -636,7 +638,7 @@ namespace VectSharp.PDF
 
         public void SetClippingPath()
         {
-            _figures.Add(new PathFigure(_currentFigure, VectSharp.Rectangle.NaN, null, null, 0, LineCaps.Butt, LineJoins.Bevel, new LineDash(0, 0, 0), true, this.Tag));
+            _figures.Add(new PathFigure(_currentFigure, VectSharp.Rectangle.NaN, null, null, 0, LineCaps.Butt, LineJoins.Bevel, new LineDash(0, 0, 0), true, FillRule.NonZeroWinding, this.Tag));
             _currentFigure = new List<Segment>();
         }
 
@@ -685,7 +687,7 @@ namespace VectSharp.PDF
             else
             {
                 PathText(text, x, y);
-                Fill();
+                Fill(FillRule.NonZeroWinding);
             }
         }
 
@@ -828,28 +830,6 @@ namespace VectSharp.PDF
     /// </summary>
     public static class PDFContextInterpreter
     {
-        /// <summary>
-        /// Fill rules determine the region of a path to fill.
-        /// </summary>
-        public enum FillRules
-        {
-            /// <summary>
-            /// Use the even-odd fill rule to fill paths.
-            /// </summary>
-            Evenodd,
-
-            /// <summary>
-            /// Use the nonzero fill rule to fill paths.
-            /// </summary>
-            Nonzero
-        }
-
-
-        /// <summary>
-        /// The fill rule that determines the region of a path to fill.
-        /// </summary>
-        public static FillRules FillRule { get; set; } = FillRules.Evenodd;
-
         private static string GetKernedString(string text, Font font)
         {
             List<(string, Point)> tSpans = new List<(string, Point)>();
@@ -2710,7 +2690,7 @@ namespace VectSharp.PDF
                 {
                     if (fig.Fill != null)
                     {
-                        if (PDFContextInterpreter.FillRule == FillRules.Evenodd)
+                        if (fig.FillRule == FillRule.EvenOdd)
                         {
                             sb.Append("f*\n");
                         }

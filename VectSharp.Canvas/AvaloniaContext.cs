@@ -468,7 +468,7 @@ namespace VectSharp.Canvas
             else
             {
                 PathText(text, x, y);
-                Fill();
+                Fill(FillRule.NonZeroWinding);
             }
         }
 
@@ -781,7 +781,7 @@ namespace VectSharp.Canvas
             }
         }
 
-        public void Fill()
+        public void Fill(FillRule fillRule)
         {
             if (figureInitialised)
             {
@@ -804,6 +804,17 @@ namespace VectSharp.Canvas
             }
 
             Path pth = new Path() { Fill = fill, Stroke = null };
+
+            switch (fillRule)
+            {
+                case FillRule.NonZeroWinding:
+                    currentPath.FillRule = Avalonia.Media.FillRule.NonZero;
+                    break;
+
+                case FillRule.EvenOdd:
+                    currentPath.FillRule = Avalonia.Media.FillRule.EvenOdd;
+                    break;
+            }
 
             pth.Data = currentPath;
 
@@ -1992,7 +2003,7 @@ namespace VectSharp.Canvas
             else
             {
                 PathText(text, x, y);
-                Fill();
+                Fill(FillRule.NonZeroWinding);
             }
         }
 
@@ -2311,7 +2322,7 @@ namespace VectSharp.Canvas
             figureInitialised = false;
         }
 
-        public void Fill()
+        public void Fill(FillRule fillRule)
         {
             if (figureInitialised)
             {
@@ -2331,6 +2342,17 @@ namespace VectSharp.Canvas
             else if (this.FillStyle is RadialGradientBrush radialGradient)
             {
                 fill = radialGradient.ToRadialGradientBrush(currentPath.Bounds.Width);
+            }
+
+            switch (fillRule)
+            {
+                case FillRule.NonZeroWinding:
+                    currentPath.FillRule = Avalonia.Media.FillRule.NonZero;
+                    break;
+
+                case FillRule.EvenOdd:
+                    currentPath.FillRule = Avalonia.Media.FillRule.EvenOdd;
+                    break;
             }
 
             RenderAction act = RenderAction.PathAction(currentPath, null, fill, _transform.ToAvaloniaMatrix(), _clippingPath?.Clone(), Tag);

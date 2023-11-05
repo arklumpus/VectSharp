@@ -10,7 +10,7 @@
 		<PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/arklumpus/VectSharp</PackageProjectUrl>
 		<PackageIcon>icon.png</PackageIcon>
-		<Version>1.8.2</Version>
+		<Version>1.9.0-a1</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -30,7 +30,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="ExCSS" Version="4.1.4" />
-		<PackageReference Include="VectSharp" Version="2.5.0-a1" />
+		<PackageReference Include="VectSharp" Version="2.5.0-a2" />
 	</ItemGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

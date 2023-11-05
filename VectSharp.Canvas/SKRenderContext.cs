@@ -1042,7 +1042,7 @@ namespace VectSharp.Canvas
             else
             {
                 PathText(text, x, y);
-                Fill();
+                Fill(FillRule.NonZeroWinding);
             }
         }
 
@@ -1292,7 +1292,7 @@ namespace VectSharp.Canvas
             figureInitialised = false;
         }
 
-        public void Fill()
+        public void Fill(FillRule fillRule)
         {
             SKPaint fill = new SKPaint() { IsStroke = false, IsAntialias = true, Style = SKPaintStyle.Fill };
 
@@ -1307,6 +1307,17 @@ namespace VectSharp.Canvas
             else if (this.FillStyle is RadialGradientBrush radialGradient)
             {
                 fill.Shader = radialGradient.ToSKShader();
+            }
+
+            switch (fillRule)
+            {
+                case FillRule.NonZeroWinding:
+                    currentPath.FillType = SKPathFillType.Winding;
+                    break;
+
+                case FillRule.EvenOdd:
+                    currentPath.FillType = SKPathFillType.EvenOdd;
+                    break;
             }
 
             SKRenderAction act = SKRenderAction.PathAction(currentPath, fill, Tag);

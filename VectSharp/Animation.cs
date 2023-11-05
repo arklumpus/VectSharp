@@ -709,8 +709,8 @@ namespace VectSharp
 
             if (AreTheyTheSame(startPath, endPath))
             {
-                this.StartValue = new PathAction(startPath, startValue.Fill, startValue.Stroke, startValue.LineWidth, startValue.LineCap, startValue.LineJoin, startValue.LineDash, startValue.Tag, startValue.IsClipping);
-                this.EndValue = new PathAction(endPath, endValue.Fill, endValue.Stroke, endValue.LineWidth, endValue.LineCap, endValue.LineJoin, endValue.LineDash, endValue.Tag, endValue.IsClipping);
+                this.StartValue = new PathAction(startPath, startValue.Fill, startValue.Stroke, startValue.LineWidth, startValue.LineCap, startValue.LineJoin, startValue.LineDash, startValue.Tag, startValue.FillRule, startValue.IsClipping);
+                this.EndValue = new PathAction(endPath, endValue.Fill, endValue.Stroke, endValue.LineWidth, endValue.LineCap, endValue.LineJoin, endValue.LineDash, endValue.Tag, endValue.FillRule, endValue.IsClipping);
             }
             else
             {
@@ -849,8 +849,8 @@ namespace VectSharp
                     }
                 }
 
-                this.StartValue = new PathAction(startPath, startValue.Fill, startValue.Stroke, startValue.LineWidth, startValue.LineCap, startValue.LineJoin, startValue.LineDash, startValue.Tag, startValue.IsClipping);
-                this.EndValue = new PathAction(endPath, endValue.Fill, endValue.Stroke, endValue.LineWidth, endValue.LineCap, endValue.LineJoin, endValue.LineDash, endValue.Tag, endValue.IsClipping);
+                this.StartValue = new PathAction(startPath, startValue.Fill, startValue.Stroke, startValue.LineWidth, startValue.LineCap, startValue.LineJoin, startValue.LineDash, startValue.Tag, startValue.FillRule, startValue.IsClipping);
+                this.EndValue = new PathAction(endPath, endValue.Fill, endValue.Stroke, endValue.LineWidth, endValue.LineCap, endValue.LineJoin, endValue.LineDash, endValue.Tag, endValue.FillRule, endValue.IsClipping);
 
             }
         }
@@ -909,7 +909,7 @@ namespace VectSharp
                 path.Segments.Add(InterpolateSegment(this.StartValue.Path.Segments[i], this.EndValue.Path.Segments[i], position));
             }
 
-            return new PathAction(path, fill, stroke, lineWidth, lineCap, lineJoin, lineDash, position < 0.5 ? this.StartValue.Tag : this.EndValue.Tag, position < 0.5 ? this.StartValue.IsClipping : this.EndValue.IsClipping);
+            return new PathAction(path, fill, stroke, lineWidth, lineCap, lineJoin, lineDash, position < 0.5 ? this.StartValue.Tag : this.EndValue.Tag, position < 0.5 ? this.StartValue.FillRule : this.EndValue.FillRule, position < 0.5 ? this.StartValue.IsClipping : this.EndValue.IsClipping);
         }
     }
 

@@ -3613,7 +3613,7 @@ namespace VectSharp.SVG
             throw new NotImplementedException();
         }
 
-        public void Fill()
+        public void Fill(FillRule fillRule)
         {
 
         }

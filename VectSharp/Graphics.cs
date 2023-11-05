@@ -197,7 +197,8 @@ namespace VectSharp
         /// <summary>
         /// Fill the current path using the current <see cref="FillStyle"/>.
         /// </summary>
-        void Fill();
+        /// <param name="fillRule">The <see cref="FillRule"/> that determines which parts of the path are filled.</param>
+        void Fill(FillRule fillRule);
 
         /// <summary>
         /// Current line width used to stroke paths.
@@ -284,6 +285,11 @@ namespace VectSharp
         internal List<IGraphicsAction> Actions = new List<IGraphicsAction>();
 
         /// <summary>
+        /// The default fill rule.
+        /// </summary>
+        public FillRule DefaultFillRule { get; set; } = FillRule.NonZeroWinding;
+
+        /// <summary>
         /// Fill a <see cref="GraphicsPath"/>.
         /// </summary>
         /// <param name="path">The <see cref="GraphicsPath"/> to fill.</param>
@@ -291,7 +297,19 @@ namespace VectSharp
         /// <param name="tag">A tag to identify the filled path.</param>
         public void FillPath(GraphicsPath path, Brush fillColour, string tag = null)
         {
-            Actions.Add(new PathAction(path, fillColour, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, tag, false));
+            FillPath(path, fillColour, DefaultFillRule, tag);
+        }
+
+        /// <summary>
+        /// Fill a <see cref="GraphicsPath"/>.
+        /// </summary>
+        /// <param name="path">The <see cref="GraphicsPath"/> to fill.</param>
+        /// <param name="fillColour">The <see cref="Brush"/> with which to fill the <see cref="GraphicsPath"/>.</param>
+        /// <param name="fillRule">The <see cref="FillRule"/> that determines which parts of the path are filled.</param>
+        /// <param name="tag">A tag to identify the filled path.</param>
+        public void FillPath(GraphicsPath path, Brush fillColour, FillRule fillRule, string tag = null)
+        {
+            Actions.Add(new PathAction(path, fillColour, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, tag, fillRule, false));
         }
 
         /// <summary>
@@ -311,7 +329,7 @@ namespace VectSharp
         /// <param name="tag">A tag to identify the stroked path.</param>
         public void StrokePath(GraphicsPath path, Brush strokeColour, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
         {
-            Actions.Add(new PathAction(path, null, strokeColour, lineWidth, lineCap, lineJoin, lineDash ?? LineDash.SolidLine, tag, false));
+            Actions.Add(new PathAction(path, null, strokeColour, lineWidth, lineCap, lineJoin, lineDash ?? LineDash.SolidLine, tag, DefaultFillRule, false));
         }
 
         /// <summary>
@@ -321,7 +339,7 @@ namespace VectSharp
         /// <param name="tag">A tag to identify the clipping path.</param>
         public void SetClippingPath(GraphicsPath path, string tag = null)
         {
-            Actions.Add(new PathAction(path, null, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, tag, true));
+            Actions.Add(new PathAction(path, null, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, tag, DefaultFillRule, true));
         }
 
         /// <summary>
@@ -345,7 +363,7 @@ namespace VectSharp
         /// <param name="tag">A tag to identify the clipping path.</param>
         public void SetClippingPath(Point topLeft, Size size, string tag = null)
         {
-            Actions.Add(new PathAction(new GraphicsPath().MoveTo(topLeft).LineTo(topLeft.X + size.Width, topLeft.Y).LineTo(topLeft.X + size.Width, topLeft.Y + size.Height).LineTo(topLeft.X, topLeft.Y + size.Height).Close(), null, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, tag, true));
+            Actions.Add(new PathAction(new GraphicsPath().MoveTo(topLeft).LineTo(topLeft.X + size.Width, topLeft.Y).LineTo(topLeft.X + size.Width, topLeft.Y + size.Height).LineTo(topLeft.X, topLeft.Y + size.Height).Close(), null, null, 0, LineCaps.Butt, LineJoins.Miter, LineDash.SolidLine, tag, DefaultFillRule, true));
         }
 
         /// <summary>
@@ -664,7 +682,7 @@ namespace VectSharp
                         {
                             destinationContext.SetFillStyle(rec.Fill);
                         }
-                        destinationContext.Fill();
+                        destinationContext.Fill(FillRule.EvenOdd);
                     }
                     else if (rec.Stroke != null)
                     {
@@ -741,7 +759,7 @@ namespace VectSharp
                             {
                                 destinationContext.SetFillStyle(pth.Fill);
                             }
-                            destinationContext.Fill();
+                            destinationContext.Fill(pth.FillRule);
                         }
                         else if (pth.Stroke != null)
                         {

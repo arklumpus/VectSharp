@@ -354,7 +354,7 @@ namespace VectSharp.SVG
             currentFigure.PointCount += 3;
         }
 
-        public void Fill()
+        public void Fill(FillRule fillRule)
         {
             if (currentFigure.PointCount > 0)
             {
@@ -430,6 +430,17 @@ namespace VectSharp.SVG
             {
                 path.SetAttribute("stroke", "none");
 
+                switch (fillRule)
+                {
+                    case FillRule.EvenOdd:
+                        path.SetAttribute("fill-rule", "evenodd");
+                        break;
+
+                    case FillRule.NonZeroWinding:
+                        path.SetAttribute("fill-rule", "nonzero");
+                        break;
+                }
+
                 if (FillStyle is SolidColourBrush solid)
                 {
                     path.SetAttribute("fill", solid.Colour.ToCSSString(false));
@@ -453,6 +464,17 @@ namespace VectSharp.SVG
                 Dictionary<string, string> style = new Dictionary<string, string>();
 
                 style.Add("stroke", "none");
+
+                switch (fillRule)
+                {
+                    case FillRule.EvenOdd:
+                        style.Add("fill-rule", "evenodd");
+                        break;
+
+                    case FillRule.NonZeroWinding:
+                        style.Add("fill-rule", "nonzero");
+                        break;
+                }
 
                 if (FillStyle is SolidColourBrush solid)
                 {
@@ -746,7 +768,7 @@ namespace VectSharp.SVG
             else
             {
                 PathText(text, x, y);
-                Fill();
+                Fill(FillRule.NonZeroWinding);
             }
         }
 
@@ -2374,7 +2396,7 @@ namespace VectSharp.SVG
 
             ctx.Rectangle(0, 0, page.Width, page.Height);
             ctx.SetFillStyle(page.Background);
-            ctx.Fill();
+            ctx.Fill(FillRule.NonZeroWinding);
             ctx.SetFillStyle((0, 0, 0, 1));
 
             page.Graphics.CopyToIGraphicsContext(ctx);

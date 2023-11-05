@@ -213,11 +213,12 @@ namespace VectSharp
         public LineJoins LineJoin { get; }
         public LineDash LineDash { get; }
         public bool IsClipping { get; }
+        public FillRule FillRule { get; }
         public Rectangle GetBounds()
         {
             return this.Path.GetBounds();
         }
-        public PathAction(GraphicsPath path, Brush fill, Brush stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, string tag, bool isClipping)
+        public PathAction(GraphicsPath path, Brush fill, Brush stroke, double lineWidth, LineCaps lineCap, LineJoins lineJoin, LineDash lineDash, string tag, FillRule fillRule, bool isClipping)
         {
             this.Path = path;
             this.Fill = fill;
@@ -228,6 +229,7 @@ namespace VectSharp
             this.LineDash = lineDash;
             this.Tag = tag;
             this.IsClipping = isClipping;
+            this.FillRule = fillRule;
         }
     }
 

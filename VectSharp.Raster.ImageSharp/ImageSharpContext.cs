@@ -318,18 +318,31 @@ namespace VectSharp.Raster.ImageSharp
             }
         }
 
-        public void Fill()
+        public void Fill(FillRule fillRule)
         {
             IPath path = this.currentPath.Build();
 
+            ShapeOptions shapeOptions = new ShapeOptions();
+
+            switch (fillRule)
+            {
+                case FillRule.NonZeroWinding:
+                    shapeOptions.IntersectionRule = IntersectionRule.Nonzero;
+                    break;
+                case FillRule.EvenOdd:
+                    shapeOptions.IntersectionRule = IntersectionRule.OddEven;
+                    break;
+
+            }
+
             if (this.CurrentClip == null)
             {
-                this.Image.Mutate(x => x.Fill(new DrawingOptions() { Transform = _transform.ToMatrix() }, this.FillStyle.ToImageSharpBrush(_transform), path));
+                this.Image.Mutate(x => x.Fill(new DrawingOptions() { Transform = _transform.ToMatrix(), ShapeOptions = shapeOptions }, this.FillStyle.ToImageSharpBrush(_transform), path));
             }
             else
             {
                 this.ClipBuffer.Mutate(x => x.Clear(Color.FromRgba(0, 0, 0, 0)));
-                this.ClipBuffer.Mutate(x => x.Fill(new DrawingOptions() { Transform = _transform.ToMatrix() }, this.FillStyle.ToImageSharpBrush(_transform), path));
+                this.ClipBuffer.Mutate(x => x.Fill(new DrawingOptions() { Transform = _transform.ToMatrix(), ShapeOptions = shapeOptions }, this.FillStyle.ToImageSharpBrush(_transform), path));
 
                 GraphicsOptions opt = new GraphicsOptions() { AlphaCompositionMode = SixLabors.ImageSharp.PixelFormats.PixelAlphaCompositionMode.SrcIn };
 
@@ -347,7 +360,7 @@ namespace VectSharp.Raster.ImageSharp
         public void FillText(string text, double x, double y)
         {
             PathText(text, x, y);
-            Fill();
+            Fill(FillRule.NonZeroWinding);
         }
 
         private void PathText(string text, double x, double y)
