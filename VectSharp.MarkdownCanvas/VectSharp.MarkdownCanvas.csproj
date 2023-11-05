@@ -6,7 +6,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Company>University of Bristol</Company>
     <Description>A library to produce vector graphics (including text) without too many dependencies. Extensible to support multiple output formats. This package contains a control to display Markdown documents in Avalonia applications. For more information, see https://github.com/arklumpus/VectSharp</Description>
-    <Version>1.4.1</Version>
+    <Version>1.4.2</Version>
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/arklumpus/VectSharp</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
@@ -25,7 +25,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="VectSharp.Canvas" Version="2.7.0-a3" />
+    <PackageReference Include="VectSharp.Canvas" Version="2.7.0" />
 	<PackageReference Include="VectSharp.Markdown" Version="1.4.1" />
   </ItemGroup>
 
