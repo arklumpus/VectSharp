@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 80 20" version="1.1" xmlns="http://www.w3.org/2000/svg">
-  <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 80 20" version="1.1" style="font-synthesis: none;">
+  <g>
     <animate attributeName="display" values="none;none;block;block;none;none" dur="3000ms" repeatCount="indefinite" fill="freeze" keyTimes="0;0;0;0.3333333333333333;0.3333333333333333;1" />
     <style>
     @font-face
@@ -13,8 +13,8 @@
     <style>	</style>
     <path d="M 0 0 L 80 0 L 80 20 L 0 20 Z " stroke="none" fill="#FFFFFF" fill-opacity="0" transform="matrix(1,0,0,1,0,0)" />
     <text x="0" y="0" transform="matrix(1,0,0,1,4.94,15)" stroke="none" fill="#009E73" fill-opacity="1" font-size="15" font-family="Arimo-9b481b8f-eb37-4171-8db4-8b33a4d93633, sans-serif" font-weight="regular" font-style="normal" id="frame0://text"><tspan>V</tspan><tspan dx="-0.82763671875">ectSharp</tspan></text>
-  </svg>
-  <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 80 20" version="1.1" style="font-synthesis: none;">
+  </g>
+  <g>
     <animate attributeName="display" values="none;none;block;block;none;none" dur="3000ms" repeatCount="indefinite" fill="freeze" keyTimes="0;0.3333333333333333;0.3333333333333333;0.6666666666666666;0.6666666666666666;1" />
     <style>
     @font-face
@@ -27,8 +27,8 @@
     <style>	</style>
     <path d="M 0 0 L 80 0 L 80 20 L 0 20 Z " stroke="none" fill="#FFFFFF" fill-opacity="0" transform="matrix(1,0,0,1,0,0)" />
     <text x="0" y="0" stroke="none" fill-opacity="1" font-size="15" font-weight="regular" font-style="normal" id="transition1://text"><animate attributeName="font-family" values="Arimo-0770e3fd-03ce-4588-a9e0-751bb3d1ae09, sans-serif;Arimo-0770e3fd-03ce-4588-a9e0-751bb3d1ae09, sans-serif;Arimo-798ab945-7990-477a-8b2e-10374a437066, sans-serif;Arimo-798ab945-7990-477a-8b2e-10374a437066, sans-serif" dur="3000ms" repeatCount="indefinite" fill="freeze" keyTimes="0;0.3333333333333333;0.6666666666666666;1" xmlns="http://www.w3.org/2000/svg" /><animate attributeName="fill" values="#009E73;#009E73;#0073B2;#0073B2" dur="3000ms" repeatCount="indefinite" fill="freeze" keyTimes="0;0.3333333333333333;0.6666666666666666;1" xmlns="http://www.w3.org/2000/svg" /><animateTransform attributeName="transform" type="translate" values="4.94 15;4.94 15;4.985 15;4.985 15" dur="3000ms" repeatCount="indefinite" fill="freeze" additive="sum" keyTimes="0;0.3333333333333333;0.6666666666666666;1" xmlns="http://www.w3.org/2000/svg" /><animateTransform attributeName="transform" type="scale" values="1 1;1 1;1 1;1 1" dur="3000ms" repeatCount="indefinite" fill="freeze" additive="sum" keyTimes="0;0.3333333333333333;0.6666666666666666;1" xmlns="http://www.w3.org/2000/svg" /><tspan>V</tspan><tspan dx="-0.82763671875">ectSharp</tspan></text>
-  </svg>
-  <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 80 20" version="1.1" style="font-synthesis: none;">
+  </g>
+  <g>
     <animate attributeName="display" values="none;none;block;block;none;none" dur="3000ms" repeatCount="indefinite" keyTimes="0;0.6666666666666666;0.6666666666666666;1;1;1" />
     <style>
     @font-face
@@ -41,5 +41,5 @@
     <style>	</style>
     <path d="M 0 0 L 80 0 L 80 20 L 0 20 Z " stroke="none" fill="#FFFFFF" fill-opacity="0" transform="matrix(1,0,0,1,0,0)" />
     <text x="0" y="0" transform="matrix(1,0,0,1,4.985,15)" stroke="none" fill="#0073B2" fill-opacity="1" font-size="15" font-family="Arimo-b5c05ddb-ef7d-4c1d-b81c-fcd757448d70, sans-serif" font-weight="regular" font-style="normal" id="frame1://text"><tspan>Animation</tspan></text>
-  </svg>
+  </g>
 </svg>
