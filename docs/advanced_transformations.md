@@ -144,11 +144,17 @@ page.SaveAsSVG("PathTransformation.svg");
 
 ## The `Graphics.Transform` method
 
-The `Graphics.Transform` method can be used to do the same thing as the `Transform` method of the `GraphicsPath` class. This method has three overloads: an overload that takes six `double` parameter describing an affine transformation matrix, which has already been discussed in the context of [coordinate system transformations](transformations.html), and two overloads whose first parameter is a `Func<Point, Point>` like the `GraphicsPath.Transform` method.
+The overloads of the `Graphics.Transform` method can be used to do the same thing as the `Transform` method of the `GraphicsPath` class. The `Graphics.Transform` method has three overloads:
 
-One of these overloads takes just another parameter, a `double` representing the linearisation resolution; when this overload is used, the `Graphics` is linearised using the specified linearisation resolution, and then the transformation function is applied. The other overload, instead, in addition to the `linearisationResolution` also takes another parameter, representing the maximum length of any line segment in the plot. When this method is used, in addition to linearising all paths in the plot, line segments that are longer than the specified length are also divided in smaller segments, using a similar approach as the one used in the example above.
+1. `public void Transform(double a, double b, double c, double d, double e, double f, string tag = null)`: here, the six `double` parameters describe an affine transformation matrix, which has already been discussed in the context of [coordinate system transformations](transformations.html). This method transforms the coordinate system of the `Graphics` object, and only affects drawing calls performed _after_ it has been invoked.
+2. `public Graphics Transform(Func<Point, Point> transformationFunction, double linearisationResolution)`: the first parameter of this overload is a `Func<Point, Point>` like the `GraphicsPath.Transform` method, while the second represents the linearisation resolution. When this overload is used, the `Graphics` is linearised using the specified linearisation resolution, and then the transformation function is applied. This overload returns a new `Graphics` object where the transformation has been applied to the elements that had already been drawn.
+3. `public Graphics Transform(Func<Point, Point> transformationFunction, double linearisationResolution, double maxSegmentLength)`: this overload has the same parameters as overload 2, with an additional parameter representing the maximum length of any line segment in the plot. When this overload is used, in addition to linearising all paths in the plot, line segments that are longer than the specified length are also divided in smaller segments, using a similar approach as the one used in the `GraphicsPath` example above. Like overload 2, this overload returns a new `Graphics` object where the transformation has been applied to the elements that had already been drawn.
 
-As discussed above, you should use the overload accepting only the linearisation resolution for transformations that you are sure are projective transformations; for generic transformations, you should use the overload that takes a maximum segment length as well.
+As discussed above:
+
+* If the transformation you want to apply is an affine transformation, you should use overload 1 _before_ drawing the plot elements on the `Graphics` object.
+* If the transformation is projective, you should use overload 2 _after_ drawing the plot elements.
+* If the transformation is not projective (or if you are not sure), you should use overload 3 _after_ drawing the plot elements.
 
 The following example shows how to apply a non-projective transformation.
 
