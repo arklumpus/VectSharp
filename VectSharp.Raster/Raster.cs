@@ -271,5 +271,32 @@ namespace VectSharp.Raster
                 SaveAsAnimatedPNG(animation, fs, scale, frameRate, durationScaling, interframeCompression);
             }
         }
+
+
+        /// <summary>
+        /// Render the page to a JPEG file.
+        /// </summary>
+        /// <param name="page">The <see cref="Page"/> to render.</param>
+        /// <param name="fileName">The full path to the file to save. If it exists, it will be overwritten.</param>
+        /// <param name="scale">The scale to be used when rasterising the page. This will determine the width and height of the image file.</param>
+        /// <param name="quality">The quality of the JPEG output (ranging from 0 to 100).</param>
+        public static void SaveAsJPEG(this Page page, string fileName, double scale = 1, int quality = 90)
+        {
+            Document doc = new Document();
+            doc.Pages.Add(page);
+
+            MemoryStream ms = new MemoryStream();
+            doc.SaveAsPDF(ms, textOption: PDFContextInterpreter.TextOptions.ConvertIntoPaths, filterOption: new PDFContextInterpreter.FilterOption(PDFContextInterpreter.FilterOption.FilterOperations.RasteriseAll, scale, true));
+
+            using (MuPDFContext context = new MuPDFContext())
+            {
+                using (MuPDFDocument muDoc = new MuPDFDocument(context, ref ms, InputFileTypes.PDF))
+                {
+                    muDoc.SaveImageAsJPEG(0, scale, fileName, quality);
+                }
+            }
+
+            ms.Dispose();
+        }
     }
 }
