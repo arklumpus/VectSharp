@@ -414,12 +414,13 @@ namespace VectSharp.Markdown
         /// <param name="markdownSource">The markdown source to parse.</param>
         /// <param name="width">The width of the page.</param>
         /// <param name="linkDestinations">When this method returns, this value will contain a dictionary used to associate graphic action tags to hyperlinks. This can be used to enable such links when rendering the <see cref="Page"/> to a file.</param>
+        /// <param name="headingTree">When this method returns, this object will contain a list of the headings contained in the document and the corresponding tag. This can be used to create a document outline.</param>
         /// <returns>A <see cref="Page"/> containing a rendering of the supplied markdown document.</returns>
-        public Page RenderSinglePage(string markdownSource, double width, out Dictionary<string, string> linkDestinations)
+        public Page RenderSinglePage(string markdownSource, double width, out Dictionary<string, string> linkDestinations, out List<(int level, string heading, string tag)> headingTree)
         {
             MarkdownDocument document = Markdig.Markdown.Parse(markdownSource, new MarkdownPipelineBuilder().UseGridTables().UsePipeTables().UseEmphasisExtras().UseGenericAttributes().UseAutoIdentifiers().UseAutoLinks().UseTaskLists().UseListExtras().UseCitations().UseMathematics().UseSmartyPants().Build());
 
-            return this.RenderSinglePage(document, width, out linkDestinations);
+            return this.RenderSinglePage(document, width, out linkDestinations, out headingTree);
         }
 
         /// <summary>
@@ -428,8 +429,9 @@ namespace VectSharp.Markdown
         /// <param name="markdownDocument">The markdown document to render.</param>
         /// <param name="width">The width of the page.</param>
         /// <param name="linkDestinations">When this method returns, this value will contain a dictionary used to associate graphic action tags to hyperlinks. This can be used to enable such links when rendering the <see cref="Page"/> to a file.</param>
+        /// <param name="headingTree">When this method returns, this object will contain a list of the headings contained in the document and the corresponding tag. This can be used to create a document outline.</param>
         /// <returns>A <see cref="Page"/> containing a rendering of the supplied markdown document.</returns>
-        public Page RenderSinglePage(MarkdownDocument markdownDocument, double width, out Dictionary<string, string> linkDestinations)
+        public Page RenderSinglePage(MarkdownDocument markdownDocument, double width, out Dictionary<string, string> linkDestinations, out List<(int level, string heading, string tag)> headingTree)
         {
             Size prevPageSize = this.PageSize;
             bool allowPageBreak = this.AllowPageBreak;
@@ -479,6 +481,7 @@ namespace VectSharp.Markdown
             pag.Crop(new Point(0, 0), new Size(width, context.BottomRight.Y + this.Margins.Bottom));
 
             linkDestinations = context.LinkDestinations;
+            headingTree = context.Headings;
             return pag;
         }
 
@@ -487,21 +490,23 @@ namespace VectSharp.Markdown
         /// </summary>
         /// <param name="markdownSource">The markdown source to parse.</param>
         /// <param name="linkDestinations">When this method returns, this value will contain a dictionary used to associate graphic action tags to hyperlinks. This can be used to enable such links when rendering the <see cref="Document"/> to a file.</param>
+        /// <param name="headingTree">When this method returns, this object will contain a list of the headings contained in the document and the corresponding tag. This can be used to create a document outline.</param>
         /// <returns>A <see cref="Document"/> containing a rendering of the supplied markdown document, consisting of one or more pages of the size specified in the <see cref="PageSize"/> of the current instance.</returns>
-        public Document Render(string markdownSource, out Dictionary<string, string> linkDestinations)
+        public Document Render(string markdownSource, out Dictionary<string, string> linkDestinations, out List<(int level, string heading, string tag)> headingTree)
         {
             MarkdownDocument document = Markdig.Markdown.Parse(markdownSource, new MarkdownPipelineBuilder().UseGridTables().UsePipeTables().UseEmphasisExtras().UseGenericAttributes().UseAutoIdentifiers().UseAutoLinks().UseTaskLists().UseListExtras().UseCitations().UseMathematics().UseSmartyPants().Build());
 
-            return this.Render(document, out linkDestinations);
+            return this.Render(document, out linkDestinations, out headingTree);
         }
 
         /// <summary>
         /// Renders the supplied <paramref name="mardownDocument"/>. The <see cref="Document"/> produced consists of one or more pages of the size specified in the <see cref="PageSize"/> of the current instance.
         /// </summary>
         /// <param name="mardownDocument">The markdown document to render.</param>
-        /// <param name="linkDestinations">When this method returns, this value will contain a dictionary used to associate graphic action tags to hyperlinks. This can be used to enable such links when rendering the <see cref="Document"/> to a file.</param>
+        /// <param name="linkDestinations">When this method returns, this object will contain a dictionary used to associate graphic action tags to hyperlinks. This can be used to enable such links when rendering the <see cref="Document"/> to a file.</param>
+        /// <param name="headingTree">When this method returns, this object will contain a list of the headings contained in the document and the corresponding tag. This can be used to create a document outline.</param>
         /// <returns>A <see cref="Document"/> containing a rendering of the supplied markdown document, consisting of one or more pages of the size specified in the <see cref="PageSize"/> of the current instance.</returns>
-        public Document Render(MarkdownDocument mardownDocument, out Dictionary<string, string> linkDestinations)
+        public Document Render(MarkdownDocument mardownDocument, out Dictionary<string, string> linkDestinations, out List<(int level, string heading, string tag)> headingTree)
         {
             Document doc = new Document();
             Page pag = new Page(PageSize.Width, PageSize.Height) { Background = BackgroundColour };
@@ -551,6 +556,7 @@ namespace VectSharp.Markdown
             }
 
             linkDestinations = context.LinkDestinations;
+            headingTree = context.Headings;
 
             return doc;
         }
@@ -610,6 +616,8 @@ namespace VectSharp.Markdown
         {
             HtmlAttributes attributes = block.TryGetAttributes();
 
+            string tag = null;
+
             if (attributes != null && !string.IsNullOrEmpty(attributes.Id))
             {
                 Point cursor = context.Cursor;
@@ -620,6 +628,7 @@ namespace VectSharp.Markdown
                 };
 
                 RenderHTMLBlock("<a name=\"" + attributes.Id + "\"></a>", false, ref context, ref graphics, reversibleNewPageAction, spaceBefore, spaceAfter);
+                tag = context.InternalAnchors["#" + attributes.Id];
                 context.Cursor = cursor;
             }
 
@@ -627,7 +636,9 @@ namespace VectSharp.Markdown
             {
                 if (leaf is HeadingBlock heading)
                 {
-                    RenderHeadingBlock(heading, ref context, ref graphics, newPageAction, spaceBefore, spaceAfter);
+                    string headingText = RenderHeadingBlock(heading, ref context, ref graphics, newPageAction, spaceBefore, spaceAfter);
+
+                    context.Headings.Add((heading.Level, headingText, tag));
                 }
                 else if (leaf is ParagraphBlock paragraph)
                 {
@@ -719,7 +730,7 @@ namespace VectSharp.Markdown
             }
         }
 
-        private void RenderHeadingBlock(HeadingBlock heading, ref MarkdownContext context, ref Graphics graphics, NewPageAction newPageAction, bool spaceBefore, bool spaceAfter)
+        private string RenderHeadingBlock(HeadingBlock heading, ref MarkdownContext context, ref Graphics graphics, NewPageAction newPageAction, bool spaceBefore, bool spaceAfter)
         {
             MarkdownContext prevContext = context.Clone();
 
@@ -750,9 +761,11 @@ namespace VectSharp.Markdown
                 }
             }
 
+            StringBuilder headingText = new StringBuilder();
+
             foreach (Inline inline in heading.Inline)
             {
-                RenderInline(inline, ref context, ref graphics, newPageAction);
+                headingText.Append(RenderInline(inline, ref context, ref graphics, newPageAction));
             }
 
             if (this.HeaderLineThicknesses[heading.Level - 1] > 0)
@@ -783,6 +796,8 @@ namespace VectSharp.Markdown
             prevContext.CurrentLine = context.CurrentLine;
 
             context = prevContext;
+
+            return headingText.ToString();
         }
 
         private void RenderParagraphBlock(ParagraphBlock paragraph, ref MarkdownContext context, ref Graphics graphics, NewPageAction newPageAction, bool spaceBefore, bool spaceAfter)
@@ -1038,7 +1053,7 @@ namespace VectSharp.Markdown
             }
         }
 
-        private void RenderInline(Inline inline, ref MarkdownContext context, ref Graphics graphics, NewPageAction newPageAction)
+        private string RenderInline(Inline inline, ref MarkdownContext context, ref Graphics graphics, NewPageAction newPageAction)
         {
             HtmlAttributes attributes = inline.TryGetAttributes();
 
@@ -1056,27 +1071,29 @@ namespace VectSharp.Markdown
                     LinkInline link = new LinkInline((autoLink.IsEmail ? "mailto:" : "") + autoLink.Url, "");
                     link.AppendChild(new LiteralInline(autoLink.Url));
 
-                    RenderLinkInline(link, ref context, ref graphics, newPageAction);
+                    return RenderLinkInline(link, ref context, ref graphics, newPageAction);
                 }
                 else if (inline is CodeInline code)
                 {
-                    RenderCodeInline(code, ref context, ref graphics, newPageAction);
+                    return RenderCodeInline(code, ref context, ref graphics, newPageAction);
                 }
                 else if (inline is HtmlEntityInline htmlEntity)
                 {
-                    RenderLiteralInline(new LiteralInline(htmlEntity.Transcoded), ref context, ref graphics, newPageAction);
+                    return RenderLiteralInline(new LiteralInline(htmlEntity.Transcoded), ref context, ref graphics, newPageAction);
                 }
                 else if (inline is HtmlInline html)
                 {
                     RenderHTMLBlock(html.Tag, true, ref context, ref graphics, newPageAction, true, true);
+                    return "";
                 }
                 else if (inline is LineBreakInline lineBreak)
                 {
                     RenderLineBreakInline(lineBreak.IsHard, false, ref context, ref graphics, newPageAction);
+                    return "\n";
                 }
                 else if (inline is LiteralInline literal)
                 {
-                    RenderLiteralInline(literal, ref context, ref graphics, newPageAction);
+                    return RenderLiteralInline(literal, ref context, ref graphics, newPageAction);
                 }
                 else if (inline is Markdig.Extensions.Mathematics.MathInline math)
                 {
@@ -1103,49 +1120,46 @@ namespace VectSharp.Markdown
 
                     string imageUri = "<img src=\"data:image/svg+xml;base64," + Convert.ToBase64String(svgData) + "\">";
                     RenderHTMLBlock(imageUri, true, ref context, ref graphics, newPageAction, true, true);
+                    return math.Content.ToString();
                 }
                 else if (inline is Markdig.Extensions.SmartyPants.SmartyPant smartyPant)
                 {
                     switch (smartyPant.Type)
                     {
                         case Markdig.Extensions.SmartyPants.SmartyPantType.LeftDoubleQuote:
-                            RenderLiteralInline(new LiteralInline("“"), ref context, ref graphics, newPageAction);
-                            break;
+                            return RenderLiteralInline(new LiteralInline("“"), ref context, ref graphics, newPageAction);
                         case Markdig.Extensions.SmartyPants.SmartyPantType.RightDoubleQuote:
-                            RenderLiteralInline(new LiteralInline("”"), ref context, ref graphics, newPageAction);
-                            break;
+                            return RenderLiteralInline(new LiteralInline("”"), ref context, ref graphics, newPageAction);
                         case Markdig.Extensions.SmartyPants.SmartyPantType.LeftQuote:
-                            RenderLiteralInline(new LiteralInline("‘"), ref context, ref graphics, newPageAction);
-                            break;
+                            return RenderLiteralInline(new LiteralInline("‘"), ref context, ref graphics, newPageAction);
                         case Markdig.Extensions.SmartyPants.SmartyPantType.RightQuote:
-                            RenderLiteralInline(new LiteralInline("’"), ref context, ref graphics, newPageAction);
-                            break;
+                            return RenderLiteralInline(new LiteralInline("’"), ref context, ref graphics, newPageAction);
                         case Markdig.Extensions.SmartyPants.SmartyPantType.Dash2:
-                            RenderLiteralInline(new LiteralInline("–"), ref context, ref graphics, newPageAction);
-                            break;
+                            return RenderLiteralInline(new LiteralInline("–"), ref context, ref graphics, newPageAction);
                         case Markdig.Extensions.SmartyPants.SmartyPantType.Dash3:
-                            RenderLiteralInline(new LiteralInline("—"), ref context, ref graphics, newPageAction);
-                            break;
+                            return RenderLiteralInline(new LiteralInline("—"), ref context, ref graphics, newPageAction);
                         case Markdig.Extensions.SmartyPants.SmartyPantType.DoubleQuote:
-                            RenderLiteralInline(new LiteralInline("\""), ref context, ref graphics, newPageAction);
-                            break;
+                            return RenderLiteralInline(new LiteralInline("\""), ref context, ref graphics, newPageAction);
                         case Markdig.Extensions.SmartyPants.SmartyPantType.Ellipsis:
-                            RenderLiteralInline(new LiteralInline("…"), ref context, ref graphics, newPageAction);
-                            break;
+                            return RenderLiteralInline(new LiteralInline("…"), ref context, ref graphics, newPageAction);
                         case Markdig.Extensions.SmartyPants.SmartyPantType.LeftAngleQuote:
-                            RenderLiteralInline(new LiteralInline("«"), ref context, ref graphics, newPageAction);
-                            break;
+                            return RenderLiteralInline(new LiteralInline("«"), ref context, ref graphics, newPageAction);
                         case Markdig.Extensions.SmartyPants.SmartyPantType.Quote:
-                            RenderLiteralInline(new LiteralInline("'"), ref context, ref graphics, newPageAction);
-                            break;
+                            return RenderLiteralInline(new LiteralInline("'"), ref context, ref graphics, newPageAction);
                         case Markdig.Extensions.SmartyPants.SmartyPantType.RightAngleQuote:
-                            RenderLiteralInline(new LiteralInline("»"), ref context, ref graphics, newPageAction);
-                            break;
+                            return RenderLiteralInline(new LiteralInline("»"), ref context, ref graphics, newPageAction);
+                        default:
+                            return "";
                     }
                 }
                 else if (inline is Markdig.Extensions.TaskLists.TaskList)
                 {
                     // Nothing to render here (the checkbox has already been rendered)
+                    return "";
+                }
+                else
+                {
+                    return "";
                 }
             }
             else if (inline is ContainerInline)
@@ -1153,15 +1167,24 @@ namespace VectSharp.Markdown
                 if (inline is DelimiterInline)
                 {
                     // Nothing to render here
+                    return "";
                 }
                 else if (inline is EmphasisInline emphasis)
                 {
-                    RenderEmphasisInline(emphasis, ref context, ref graphics, newPageAction);
+                    return RenderEmphasisInline(emphasis, ref context, ref graphics, newPageAction);
                 }
                 else if (inline is LinkInline link)
                 {
-                    RenderLinkInline(link, ref context, ref graphics, newPageAction);
+                    return RenderLinkInline(link, ref context, ref graphics, newPageAction);
                 }
+                else
+                {
+                    return "";
+                }
+            }
+            else
+            {
+                return "";
             }
         }
 
@@ -1189,7 +1212,7 @@ namespace VectSharp.Markdown
             }
         }
 
-        private void RenderLiteralInline(LiteralInline literal, ref MarkdownContext context, ref Graphics graphics, NewPageAction newPageAction)
+        private string RenderLiteralInline(LiteralInline literal, ref MarkdownContext context, ref Graphics graphics, NewPageAction newPageAction)
         {
             string text = literal.Content.ToString();
 
@@ -1282,9 +1305,11 @@ namespace VectSharp.Markdown
             {
                 context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), new Point(underlineEnd, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Tag));
             }
+
+            return text;
         }
 
-        private void RenderCodeInline(CodeInline code, ref MarkdownContext context, ref Graphics graphics, NewPageAction newPageAction)
+        private string RenderCodeInline(CodeInline code, ref MarkdownContext context, ref Graphics graphics, NewPageAction newPageAction)
         {
             MarkdownContext prevContext = context.Clone();
 
@@ -1392,6 +1417,7 @@ namespace VectSharp.Markdown
             prevContext.CurrentLine = context.CurrentLine;
 
             context = prevContext;
+            return text;
         }
 
         private void RenderCodeBlockLine(string text, ref MarkdownContext context, ref Graphics graphics, NewPageAction newPageAction)
@@ -1484,7 +1510,7 @@ namespace VectSharp.Markdown
             context.CurrentLine.Fragments.Insert(0, new RectangleFragment(new Point(minX, context.Cursor.Y - context.Font.YMax), new Size(currLineMaxX + context.Font.FontSize - minX, context.Font.YMax - context.Font.YMin + this.SpaceAfterLine * context.Font.FontSize), CodeBlockBackgroundColour, context.Tag));
         }
 
-        private void RenderEmphasisInline(EmphasisInline emphasis, ref MarkdownContext context, ref Graphics graphics, NewPageAction newPageAction)
+        private string RenderEmphasisInline(EmphasisInline emphasis, ref MarkdownContext context, ref Graphics graphics, NewPageAction newPageAction)
         {
             MarkdownContext prevContext = context.Clone();
 
@@ -1604,10 +1630,12 @@ namespace VectSharp.Markdown
                     break;
             }
 
+            StringBuilder text = new StringBuilder();
+
             foreach (Inline innerInline in emphasis)
             {
-                RenderInline(innerInline, ref context, ref graphics, newPageAction);
-            }
+                text.Append(RenderInline(innerInline, ref context, ref graphics, newPageAction));
+            }            
 
             if (translationToUndo.X != 0 || translationToUndo.Y != 0)
             {
@@ -1621,9 +1649,11 @@ namespace VectSharp.Markdown
             prevContext.CurrentLine = context.CurrentLine;
 
             context = prevContext;
+
+            return text.ToString();
         }
 
-        private void RenderLinkInline(LinkInline link, ref MarkdownContext context, ref Graphics graphics, NewPageAction newPageAction)
+        private string RenderLinkInline(LinkInline link, ref MarkdownContext context, ref Graphics graphics, NewPageAction newPageAction)
         {
             if (!link.IsImage)
             {
@@ -1657,9 +1687,11 @@ namespace VectSharp.Markdown
 
                 context.Tag = tag;
 
+                StringBuilder text = new StringBuilder();
+
                 foreach (Inline innerInline in link)
                 {
-                    RenderInline(innerInline, ref context, ref graphics, newPageAction);
+                    text.Append(RenderInline(innerInline, ref context, ref graphics, newPageAction));
                 }
 
                 prevContext.Cursor = context.Cursor;
@@ -1668,12 +1700,16 @@ namespace VectSharp.Markdown
                 prevContext.CurrentLine = context.CurrentLine;
 
                 context = prevContext;
+
+                return text.ToString();
             }
             else
             {
                 HtmlTag tag = HtmlTag.Parse("<img src=\"" + link.Url.Replace("\"", "\\\"") + "\">").FirstOrDefault();
 
                 RenderHTMLImage(tag, true, ref context, ref graphics, newPageAction);
+
+                return "";
             }
         }
 

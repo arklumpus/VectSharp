@@ -79,6 +79,7 @@ namespace VectSharp.Markdown
         public Dictionary<string, string> LinkDestinations { get; set; } = new Dictionary<string, string>();
         public Dictionary<string, string> InternalAnchors { get; set; } = new Dictionary<string, string>();
 
+        public List<(int level, string heading, string tag)> Headings = new List<(int level, string heading, string tag)>();
         public MarkdownContext()
         {
             this.ForbiddenAreasRight = new List<(double MaxX, double MinY, double MaxY)>();
@@ -103,7 +104,8 @@ namespace VectSharp.Markdown
                 Tag = this.Tag,
                 LinkDestinations = this.LinkDestinations,
                 InternalAnchors = this.InternalAnchors,
-                MarginBottomRight = this.MarginBottomRight
+                MarginBottomRight = this.MarginBottomRight,
+                Headings = this.Headings,
             };
         }
 

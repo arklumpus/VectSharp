@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace VectSharp.PDF
 {
@@ -29,6 +30,35 @@ namespace VectSharp.PDF
         {
             this.TopLevelItems = new List<OutlineTreeNode>();
         }
+
+        /// <summary>
+        /// Creates an <see cref="OutlineTree"/> from a list of headings, such as the one produced by VectSharp.Markdown.
+        /// </summary>
+        /// <param name="headings">The list of headings. Each element specifies a heading level (starting from 1), the text for the heading, and a tag for the corresponding object in the document.</param>
+        /// <returns>An <see cref="OutlineTree"/> representation of the heading list.</returns>
+        public static OutlineTree CreateFromHeadings(List<(int level, string heading, string tag)> headings)
+        {
+            OutlineTree tbr = new OutlineTree();
+
+            Stack<(IList<OutlineTreeNode>, int)> parents = new Stack<(IList<OutlineTreeNode>, int)>();
+            parents.Push((tbr, 0));
+
+            for (int i = 0; i < headings.Count; i++)
+            {
+                OutlineTreeNode item = new OutlineTreeNode(headings[i].heading, headings[i].tag);
+
+                while (headings[i].level <= parents.Peek().Item2)
+                {
+                    parents.Pop();
+                }
+
+                parents.Peek().Item1.Add(item);
+                parents.Push((item, headings[i].level));
+            }
+
+            return tbr;
+        }
+
 
         /// <inheritdoc/>
         public int IndexOf(OutlineTreeNode item)
