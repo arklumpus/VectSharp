@@ -67,6 +67,11 @@ namespace VectSharp.PDF.PDFObjects
         public PDFPages Pages { get; }
 
         /// <summary>
+        /// Document outline (table of contents).
+        /// </summary>
+        public PDFOutline Outlines { get; set; }
+
+        /// <summary>
         /// Create a new <see cref="PDFCatalog"/>.
         /// </summary>
         /// <param name="pages"><see cref="PDFPages"/> object containing the pages of the document.</param>

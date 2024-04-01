@@ -274,16 +274,16 @@ namespace VectSharp.PDF
             return imageObjects;
         }
 
-        private static PDFStream[] GeneratePageContentStreams(PDFContext[] pageContexts, Dictionary<(string fontFamilyName, bool isSymbolic), PDFFont> fontObjects, double[] alphas, Dictionary<string, PDFImage> imageObjects, bool compressStreams, List<PDFReferenceableObject> pdfObjects, out Dictionary<string, (int index, List<Rectangle> taggedRects)>[] taggedObjectRectsByPage, out List<(GradientBrush, double[,], IFigure)> gradients)
+        private static PDFStream[] GeneratePageContentStreams(PDFContext[] pageContexts, Dictionary<(string fontFamilyName, bool isSymbolic), PDFFont> fontObjects, double[] alphas, Dictionary<string, PDFImage> imageObjects, bool compressStreams, List<PDFReferenceableObject> pdfObjects, out Dictionary<string, List<Rectangle>>[] taggedObjectRectsByPage, out List<(GradientBrush, double[,], IFigure)> gradients)
         {
             PDFStream[] pageContentStreams = new PDFStream[pageContexts.Length];
 
-            taggedObjectRectsByPage = new Dictionary<string, (int index, List<Rectangle> taggedRects)>[pageContexts.Length];
+            taggedObjectRectsByPage = new Dictionary<string, List<Rectangle>>[pageContexts.Length];
             gradients = new List<(GradientBrush, double[,], IFigure)>();
 
             for (int pageInd = 0; pageInd < pageContexts.Length; pageInd++)
             {
-                taggedObjectRectsByPage[pageInd] = new Dictionary<string, (int, List<Rectangle>)>();
+                taggedObjectRectsByPage[pageInd] = new Dictionary<string, List<Rectangle>>();
 
                 double[,] transformationMatrix = new double[3, 3] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
                 Stack<double[,]> savedStates = new Stack<double[,]>();
@@ -302,12 +302,12 @@ namespace VectSharp.PDF
                         {
                             Rectangle boundingRect = PDFProcessFigure.MeasureFigure(pageContexts[pageInd]._figures[i], ref transformationMatrix, savedStates);
 
-                            if (!taggedObjectRectsByPage[pageInd].TryGetValue(pageContexts[pageInd]._figures[i].Tag, out (int index, List<Rectangle> taggedRects) rects))
+                            if (!taggedObjectRectsByPage[pageInd].TryGetValue(pageContexts[pageInd]._figures[i].Tag, out List<Rectangle> rects))
                             {
-                                rects = (taggedObjectRectsByPage[pageInd].Count, new List<Rectangle>());
+                                rects = new List<Rectangle>();
                                 taggedObjectRectsByPage[pageInd].Add(pageContexts[pageInd]._figures[i].Tag, rects);
                             }
-                            rects.taggedRects.Add(boundingRect);
+                            rects.Add(boundingRect);
                         }
                         else if (isTransform)
                         {
@@ -416,36 +416,51 @@ namespace VectSharp.PDF
             return pdfGradients;
         }
 
-        private static void GenerateLinkAnnotations(PDFPage[] pages, Dictionary<string, (int, List<Rectangle>)>[] taggedObjectRectsByPage, Dictionary<string, string> linkDestinations, List<PDFReferenceableObject> pdfObjects)
+
+        private static (int page, Rectangle rect) GetTagRectangle(string tag, Dictionary<string, List<Rectangle>>[] taggedObjectRectsByPage)
+        {
+            if (!string.IsNullOrEmpty(tag))
+            {
+                for (int k = 0; k < taggedObjectRectsByPage.Length; k++)
+                {
+                    if (taggedObjectRectsByPage[k].TryGetValue(tag, out List<Rectangle> target))
+                    {
+                        return (k, target[0]);
+                    }
+                }
+            }
+
+            return (-1, new Rectangle());
+        }
+
+
+        private static void GenerateLinkAnnotations(PDFPage[] pages, Dictionary<string, List<Rectangle>>[] taggedObjectRectsByPage, Dictionary<string, string> linkDestinations, List<PDFReferenceableObject> pdfObjects)
         {
             for (int i = 0; i < pages.Length; i++)
             {
-                foreach (KeyValuePair<string, (int, List<Rectangle>)> kvp in taggedObjectRectsByPage[i])
+                foreach (KeyValuePair<string, List<Rectangle>> kvp in taggedObjectRectsByPage[i])
                 {
                     if (linkDestinations.TryGetValue(kvp.Key, out string destination))
                     {
                         if (destination.StartsWith("#"))
                         {
-                            for (int k = 0; k < taggedObjectRectsByPage.Length; k++)
-                            {
-                                if (taggedObjectRectsByPage[k].TryGetValue(destination.Substring(1), out (int index, List<Rectangle> taggedRects) target))
-                                {
-                                    for (int l = 0; l < kvp.Value.Item2.Count; l++)
-                                    {
-                                        PDFInternalLinkAnnotation annot = new PDFInternalLinkAnnotation(kvp.Value.Item2[l], pages[k], target.taggedRects[0].Location.X, target.taggedRects[0].Location.Y);
-                                        pdfObjects.Add(annot);
-                                        pages[i].AddAnnotation(annot);
-                                    }
+                            (int pageNum, Rectangle target) = GetTagRectangle(destination.Substring(1), taggedObjectRectsByPage);
 
-                                    break;
+                            if (pageNum >= 0)
+                            {
+                                for (int l = 0; l < kvp.Value.Count; l++)
+                                {
+                                    PDFInternalLinkAnnotation annot = new PDFInternalLinkAnnotation(kvp.Value[l], pages[pageNum], target.Location.X, target.Location.Y + target.Size.Height);
+                                    pdfObjects.Add(annot);
+                                    pages[i].AddAnnotation(annot);
                                 }
                             }
                         }
                         else
                         {
-                            for (int l = 0; l < kvp.Value.Item2.Count; l++)
+                            for (int l = 0; l < kvp.Value.Count; l++)
                             {
-                                PDFExternalLinkAnnotation annot = new PDFExternalLinkAnnotation(kvp.Value.Item2[l], destination);
+                                PDFExternalLinkAnnotation annot = new PDFExternalLinkAnnotation(kvp.Value[l], destination);
                                 pdfObjects.Add(annot);
                                 pages[i].AddAnnotation(annot);
                             }
@@ -455,6 +470,83 @@ namespace VectSharp.PDF
             }
         }
 
+        private static PDFOutlineItem CreateOutlineItem(OutlineTreeNode outlineNode, PDFPage[] pages, Dictionary<string, List<Rectangle>>[] taggedObjectRectsByPage, List<PDFReferenceableObject> pdfObjects)
+        {
+            (int pageNum, Rectangle target) = GetTagRectangle(outlineNode.DestinationTag, taggedObjectRectsByPage);
+
+            PDFOutlineItem item;
+
+            if (pageNum >= 0)
+            {
+                item = new PDFOutlineItem(outlineNode.Title, pages[pageNum], target.Location.X, target.Location.Y + target.Size.Height, colour: outlineNode.Colour, bold: outlineNode.Bold, italic: outlineNode.Italic);
+            }
+            else
+            {
+                item = new PDFOutlineItem(outlineNode.Title, colour: outlineNode.Colour, bold: outlineNode.Bold, italic: outlineNode.Italic);
+            }
+            
+            if (outlineNode.Children.Count > 0)
+            {
+                PDFOutlineItem[] children = new PDFOutlineItem[outlineNode.Children.Count];
+
+                for (int i = 0; i < outlineNode.Children.Count; i++)
+                {
+                    children[i] = CreateOutlineItem(outlineNode.Children[i], pages, taggedObjectRectsByPage, pdfObjects);
+                }
+
+                for (int i = 0; i < children.Length; i++)
+                {
+                    if (i > 0)
+                    {
+                        children[i].Prev = children[i - 1];
+                    }
+                    
+                    if (i < children.Length - 1)
+                    {
+                        children[i].Next = children[i + 1];
+                    }
+
+                    children[i].Parent = item;
+                }
+
+                item.First = children[0];
+                item.Last = children[children.Length - 1];
+            }
+
+            pdfObjects.Add(item);
+            return item;
+        }
+
+        private static PDFOutline GenerateOutline(OutlineTree outline, PDFPage[] pages, Dictionary<string, List<Rectangle>>[] taggedObjectRectsByPage, List<PDFReferenceableObject> pdfObjects)
+        {
+            PDFOutlineItem[] topLevelItems = new PDFOutlineItem[outline.TopLevelItems.Count];
+
+            for (int i = 0; i < outline.TopLevelItems.Count; i++)
+            {
+                topLevelItems[i] = CreateOutlineItem(outline.TopLevelItems[i], pages, taggedObjectRectsByPage, pdfObjects);
+            }
+
+            PDFOutline pdfOutline = new PDFOutline(topLevelItems[0], topLevelItems[topLevelItems.Length - 1]);
+            pdfObjects.Add(pdfOutline);
+
+            for (int i = 0; i < topLevelItems.Length; i++)
+            {
+                if (i > 0)
+                {
+                    topLevelItems[i].Prev = topLevelItems[i - 1];
+                }
+
+                if (i < topLevelItems.Length - 1)
+                {
+                    topLevelItems[i].Next = topLevelItems[i + 1];
+                }
+
+                topLevelItems[i].Parent = pdfOutline;
+            }
+
+            return pdfOutline;
+        }
+
         /// <summary>
         /// Convert the document to a <see cref="PDFDocument"/> representation.
         /// </summary>
@@ -462,8 +554,9 @@ namespace VectSharp.PDF
         /// <param name="textOption">Defines whether the used fonts should be included in the PDF document.</param>
         /// <param name="compressStreams">Indicates whether the streams in the PDF document should be compressed.</param>
         /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
+        /// <param name="outline">Document outline (table of contents).</param>
         /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
-        public static PDFDocument CreatePDFDocument(this Document document, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, FilterOption filterOption = default)
+        public static PDFDocument CreatePDFDocument(this Document document, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, OutlineTree outline = null, FilterOption filterOption = default)
         {
             if (linkDestinations == null)
             {
@@ -495,7 +588,7 @@ namespace VectSharp.PDF
             Dictionary<(string fontFamilyName, bool isSymbolic), PDFFont> fontObjects = GenerateFontObjects(fontFamilies, tagManager, pdfObjects, compressStreams, out PDFRawDictionary fontList);
             Dictionary<string, PDFImage> imageObjects = GenerateImageObjects(allImages, tagManager, pdfObjects, compressStreams);
 
-            PDFStream[] pageContentStreams = GeneratePageContentStreams(pageContexts, fontObjects, alphas, imageObjects, compressStreams, pdfObjects, out Dictionary<string, (int index, List<Rectangle> taggedRects)>[] taggedObjectRectsByPage, out List<(GradientBrush, double[,], IFigure)> gradients);
+            PDFStream[] pageContentStreams = GeneratePageContentStreams(pageContexts, fontObjects, alphas, imageObjects, compressStreams, pdfObjects, out Dictionary<string, List<Rectangle>>[] taggedObjectRectsByPage, out List<(GradientBrush, double[,], IFigure)> gradients);
 
             List<(PDFGradient, PDFGradientAlphaMask)> pdfGradients = GenerateGradients(gradients, tagManager, pdfObjects, compressStreams);
 
@@ -523,6 +616,12 @@ namespace VectSharp.PDF
             PDFCatalog catalog = new PDFCatalog(pdfPages);
             pdfObjects.Add(catalog);
 
+            if (outline != null)
+            {
+                PDFOutline pdfOutline = GenerateOutline(outline, pages, taggedObjectRectsByPage, pdfObjects);
+                catalog.Outlines = pdfOutline;
+            }
+
             return new PDFDocument(pdfObjects);
         }
 
@@ -534,12 +633,13 @@ namespace VectSharp.PDF
         /// <param name="textOption">Defines whether the used fonts should be included in the file.</param>
         /// <param name="compressStreams">Indicates whether the streams in the PDF file should be compressed.</param>
         /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
+        /// <param name="outline">Document outline (table of contents).</param>
         /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
-        public static void SaveAsPDF(this Document document, string fileName, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, FilterOption filterOption = default)
+        public static void SaveAsPDF(this Document document, string fileName, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, OutlineTree outline = null, FilterOption filterOption = default)
         {
             using (FileStream stream = new FileStream(fileName, FileMode.Create))
             {
-                document.SaveAsPDF(stream, textOption, compressStreams, linkDestinations, filterOption);
+                document.SaveAsPDF(stream, textOption, compressStreams, linkDestinations, outline, filterOption);
             }
         }
 
@@ -551,10 +651,11 @@ namespace VectSharp.PDF
         /// <param name="textOption">Defines whether the used fonts should be included in the file.</param>
         /// <param name="compressStreams">Indicates whether the streams in the PDF file should be compressed.</param>
         /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
+        /// <param name="outline">Document outline (table of contents).</param>
         /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
-        public static void SaveAsPDF(this Document document, Stream stream, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, FilterOption filterOption = default)
+        public static void SaveAsPDF(this Document document, Stream stream, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, OutlineTree outline = null, FilterOption filterOption = default)
         {
-            PDFDocument pdfDoc = document.CreatePDFDocument(textOption, compressStreams, linkDestinations, filterOption);
+            PDFDocument pdfDoc = document.CreatePDFDocument(textOption, compressStreams, linkDestinations, outline, filterOption);
             pdfDoc.Write(stream);
         }
     }
