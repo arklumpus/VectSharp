@@ -2458,7 +2458,7 @@ namespace VectSharp
         }
 
         /// <summary>
-        /// Computes the italic angle for the current font, in thousandths of em unit. This is computed from the vertical and is negative for text that leans forwards.
+        /// Computes the italic angle for the current font, in counter-clockwise degrees from the vertical. This is negative for text that leans forwards.
         /// </summary>
         /// <returns></returns>
         public double GetItalicAngle()
