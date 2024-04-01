@@ -322,6 +322,27 @@ namespace VectSharp.PDF.PDFObjects
     }
 
     /// <summary>
+    /// A PDF date/time object.
+    /// </summary>
+    public class PDFDate : PDFString
+    {
+        /// <summary>
+        /// The value represented by this object.
+        /// </summary>
+        public new DateTime Value { get; }
+
+        /// <summary>
+        /// Create a new <see cref="PDFDate"/> holding the specified <paramref name="value"/>.
+        /// </summary>
+        /// <param name="value">The value represented by the new <see cref="PDFDate"/> object.</param>
+        /// <param name="timeZone">The time zone to which the <paramref name="value"/> refers.</param>
+        public PDFDate(DateTime value, TimeZoneInfo timeZone) : base("D:" + value.ToString("yyyyMMddHHmmss") + ((timeZone.GetUtcOffset(value) > TimeSpan.Zero) ? "+" : ((timeZone.GetUtcOffset(value) < TimeSpan.Zero) ? "-" : "Z")) + timeZone.GetUtcOffset(value).ToString("hh\\'mm"), StringDelimiter.Brackets)
+        {
+            this.Value = value;
+        }
+    }
+
+    /// <summary>
     /// An array of PDF objects.
     /// </summary>
     /// <typeparam name="T">The type of PDF objects contained in the array. Arrays of mixed types can be created by using an abstract type.</typeparam>

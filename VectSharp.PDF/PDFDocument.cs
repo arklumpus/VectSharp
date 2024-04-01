@@ -1,4 +1,21 @@
-﻿using System;
+﻿/*
+    VectSharp - A light library for C# vector graphics.
+    Copyright (C) 2024 Giorgio Bianchini
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, version 3.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -85,6 +102,80 @@ namespace VectSharp.PDF
         }
 
         /// <summary>
+        /// Gets or sets the PDF document info object.
+        /// </summary>
+        public PDFDocumentInfo Info
+        {
+            get
+            {
+                bool found = false;
+                PDFDocumentInfo tbr = null;
+
+                foreach (PDFReferenceableObject obj in Contents)
+                {
+                    if (obj is PDFDocumentInfo info)
+                    {
+                        if (!found)
+                        {
+                            found = true;
+                            tbr = info;
+                        }
+                        else
+                        {
+                            throw new ArgumentException("The document contains multiple document info objects!");
+                        }
+                    }
+                }
+
+                if (found)
+                {
+                    return tbr;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            set
+            {
+                bool found = false;
+                int infoIndex = -1;
+
+                for (int i = 0; i < Contents.Count; i++)
+                {
+                    if (Contents[i] is PDFDocumentInfo)
+                    {
+                        if (!found)
+                        {
+                            found = true;
+                            infoIndex = i;
+                        }
+                        else
+                        {
+                            throw new ArgumentException("The document contains multiple document info objects!");
+                        }
+                    }
+                }
+                if (value != null)
+                {
+                    if (found)
+                    {
+                        Contents[infoIndex] = value;
+                    }
+                    else
+                    {
+                        Contents.Add(value);
+                    }
+                }
+                else if (found)
+                {
+                    Contents.RemoveAt(infoIndex);
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the document page list.
         /// </summary>
         public List<PDFPage> Pages
@@ -143,7 +234,13 @@ namespace VectSharp.PDF
             }
 
             //Trailer
-            sw.Write("trailer\n<< /Size " + (objectPositions.Length + 1).ToString() + " /Root " + this.Catalog.ObjectNumber.ToString() + " 0 R >>\nstartxref\n" + startXref.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + "\n%%EOF\n");
+
+            sw.Write("trailer\n");
+            sw.Flush();
+            PDFTrailer trailer = new PDFTrailer(objectPositions.Length + 1, this.Catalog, this.Info);
+            trailer.Write(stream, sw);
+            
+            sw.Write("\nstartxref\n" + startXref.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + "\n%%EOF\n");
 
             sw.Flush();
             sw.Dispose();

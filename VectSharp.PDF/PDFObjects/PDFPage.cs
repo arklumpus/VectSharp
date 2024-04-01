@@ -16,7 +16,6 @@
 */
 
 using System.Collections.Generic;
-using System.Threading;
 
 namespace VectSharp.PDF.PDFObjects
 {
@@ -70,6 +69,16 @@ namespace VectSharp.PDF.PDFObjects
         /// Document outline (table of contents).
         /// </summary>
         public PDFOutline Outlines { get; set; }
+
+        /// <summary>
+        /// Viewer preferences dictionary.
+        /// </summary>
+        public PDFRawDictionary ViewerPreferences { get; set; }
+
+        /// <summary>
+        /// Page mode.
+        /// </summary>
+        public PDFString PageMode { get; set; }
 
         /// <summary>
         /// Create a new <see cref="PDFCatalog"/>.

@@ -28,10 +28,10 @@ namespace VectSharp.PDF.PDFObjects
     /// </summary>
     public abstract class PDFDictionary : PDFReferenceableObject
     {
-        private static readonly object GettersLock = new object();
-        private static readonly Dictionary<string, Dictionary<string, Func<PDFDictionary, IPDFObject>>> Getters = new Dictionary<string, Dictionary<string, Func<PDFDictionary, IPDFObject>>>();
+        internal static readonly object GettersLock = new object();
+        internal static readonly Dictionary<string, Dictionary<string, Func<PDFDictionary, IPDFObject>>> Getters = new Dictionary<string, Dictionary<string, Func<PDFDictionary, IPDFObject>>>();
 
-        private static void Initialize(Type t)
+        internal static void Initialize(Type t)
         {
             Dictionary<string, Func<PDFDictionary, IPDFObject>> getters = new Dictionary<string, Func<PDFDictionary, IPDFObject>>();
 

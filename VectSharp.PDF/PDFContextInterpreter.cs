@@ -555,8 +555,9 @@ namespace VectSharp.PDF
         /// <param name="compressStreams">Indicates whether the streams in the PDF document should be compressed.</param>
         /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
         /// <param name="outline">Document outline (table of contents).</param>
+        /// <param name="metadata">Document metadata. Use <see cref="PDFMetadata.NoMetadata()"/> if you do not wish to include metadata in the document.</param>
         /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
-        public static PDFDocument CreatePDFDocument(this Document document, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, OutlineTree outline = null, FilterOption filterOption = default)
+        public static PDFDocument CreatePDFDocument(this Document document, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, OutlineTree outline = null, PDFMetadata metadata = default, FilterOption filterOption = default)
         {
             if (linkDestinations == null)
             {
@@ -566,6 +567,11 @@ namespace VectSharp.PDF
             if (filterOption == null)
             {
                 filterOption = FilterOption.Default;
+            }
+
+            if (metadata == null)
+            {
+                metadata = new PDFMetadata();
             }
 
             PDFContext[] pageContexts = new PDFContext[document.Pages.Count];
@@ -620,9 +626,26 @@ namespace VectSharp.PDF
             {
                 PDFOutline pdfOutline = GenerateOutline(outline, pages, taggedObjectRectsByPage, pdfObjects);
                 catalog.Outlines = pdfOutline;
+                catalog.PageMode = new PDFString("UseOutlines", PDFString.StringDelimiter.StartingForwardSlash);
             }
 
-            return new PDFDocument(pdfObjects);
+            PDFDocument doc = new PDFDocument(pdfObjects);
+
+
+            PDFDocumentInfo info = metadata.ToPDFDocumentInfo();
+
+            if (info != null)
+            {
+                doc.Info = info;
+
+                if (info.Title != null)
+                {
+                    catalog.ViewerPreferences = new PDFRawDictionary();
+                    catalog.ViewerPreferences.Keys["DisplayDocTitle"] = new PDFBool(true);
+                }
+            }
+
+            return doc;
         }
 
         /// <summary>
@@ -634,12 +657,13 @@ namespace VectSharp.PDF
         /// <param name="compressStreams">Indicates whether the streams in the PDF file should be compressed.</param>
         /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
         /// <param name="outline">Document outline (table of contents).</param>
+        /// <param name="metadata">Document metadata. Use <see cref="PDFMetadata.NoMetadata()"/> if you do not wish to include metadata in the document.</param>
         /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
-        public static void SaveAsPDF(this Document document, string fileName, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, OutlineTree outline = null, FilterOption filterOption = default)
+        public static void SaveAsPDF(this Document document, string fileName, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, OutlineTree outline = null, PDFMetadata metadata = default, FilterOption filterOption = default)
         {
             using (FileStream stream = new FileStream(fileName, FileMode.Create))
             {
-                document.SaveAsPDF(stream, textOption, compressStreams, linkDestinations, outline, filterOption);
+                document.SaveAsPDF(stream, textOption, compressStreams, linkDestinations, outline, metadata, filterOption);
             }
         }
 
@@ -652,10 +676,11 @@ namespace VectSharp.PDF
         /// <param name="compressStreams">Indicates whether the streams in the PDF file should be compressed.</param>
         /// <param name="linkDestinations">A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</param>
         /// <param name="outline">Document outline (table of contents).</param>
+        /// <param name="metadata">Document metadata. Use <see cref="PDFMetadata.NoMetadata()"/> if you do not wish to include metadata in the document.</param>
         /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
-        public static void SaveAsPDF(this Document document, Stream stream, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, OutlineTree outline = null, FilterOption filterOption = default)
+        public static void SaveAsPDF(this Document document, Stream stream, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, OutlineTree outline = null, PDFMetadata metadata = default, FilterOption filterOption = default)
         {
-            PDFDocument pdfDoc = document.CreatePDFDocument(textOption, compressStreams, linkDestinations, outline, filterOption);
+            PDFDocument pdfDoc = document.CreatePDFDocument(textOption, compressStreams, linkDestinations, outline, metadata, filterOption);
             pdfDoc.Write(stream);
         }
     }
