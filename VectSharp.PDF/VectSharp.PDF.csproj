@@ -7,7 +7,7 @@
     <Company>University of Bristol</Company>
     <Description>A library to produce vector graphics (including text) without too many dependencies. Extensible to support multiple output formats. This package provides PDF output capability. For more information, see https://github.com/arklumpus/VectSharp</Description>
     <Product>VectSharp</Product>
-    <Version>2.7.0</Version>
+    <Version>3.0.0-a1</Version>
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/arklumpus/VectSharp</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
