@@ -143,25 +143,28 @@ namespace VectSharp.PDF
                     tbr.ModDate = new PDFDate(this.ModificationDate.Value, this.ModificationDateTimeZone ?? TimeZoneInfo.Utc);
                 }
 
-                foreach (KeyValuePair<string, object> kvp in this.CustomProperties)
+                if (this.CustomProperties != null)
                 {
-                    if (kvp.Value != null)
+                    foreach (KeyValuePair<string, object> kvp in this.CustomProperties)
                     {
-                        if (kvp.Value is string s)
+                        if (kvp.Value != null)
                         {
-                            tbr.CustomProperties[kvp.Key] = new PDFString(s, PDFString.StringDelimiter.Brackets);
-                        }
-                        else if (kvp.Value is double d)
-                        {
-                            tbr.CustomProperties[kvp.Key] = new PDFString(d.ToString(System.Globalization.CultureInfo.InvariantCulture), PDFString.StringDelimiter.Brackets);
-                        }
-                        else if (kvp.Value is DateTime t)
-                        {
-                            tbr.CustomProperties[kvp.Key] = new PDFDate(t, TimeZoneInfo.Utc);
-                        }
-                        else
-                        {
-                            tbr.CustomProperties[kvp.Key] = new PDFString(kvp.Value.ToString(), PDFString.StringDelimiter.Brackets);
+                            if (kvp.Value is string s)
+                            {
+                                tbr.CustomProperties[kvp.Key] = new PDFString(s, PDFString.StringDelimiter.Brackets);
+                            }
+                            else if (kvp.Value is double d)
+                            {
+                                tbr.CustomProperties[kvp.Key] = new PDFString(d.ToString(System.Globalization.CultureInfo.InvariantCulture), PDFString.StringDelimiter.Brackets);
+                            }
+                            else if (kvp.Value is DateTime t)
+                            {
+                                tbr.CustomProperties[kvp.Key] = new PDFDate(t, TimeZoneInfo.Utc);
+                            }
+                            else
+                            {
+                                tbr.CustomProperties[kvp.Key] = new PDFString(kvp.Value.ToString(), PDFString.StringDelimiter.Brackets);
+                            }
                         }
                     }
                 }
