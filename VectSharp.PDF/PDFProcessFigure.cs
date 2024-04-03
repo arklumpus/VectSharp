@@ -298,7 +298,7 @@ namespace VectSharp.PDF
             return sb.ToString();
         }
 
-        public static void WriteFigure(IFigure figure, Dictionary<(string fontFamilyName, bool isSymbolic), PDFFont> fonts, double[] alphas, Dictionary<string, PDFImage> imageObjects, double[,] transformationMatrix, List<(GradientBrush, double[,], IFigure)> gradients, StreamWriter sw)
+        public static void WriteFigure(IFigure figure, Dictionary<(string fontFamilyName, bool isSymbolic), PDFFont> fonts, double[] alphas, Dictionary<string, PDFImage> imageObjects, double[,] transformationMatrix, List<(GradientBrush, double[,], IFigure)> gradients, Dictionary<string, PDFOptionalContentGroupMembership> optionalContentGroups, StreamWriter sw)
         {
             bool restoreAtEnd = false;
 
@@ -583,6 +583,17 @@ namespace VectSharp.PDF
             {
                 sw.Write("/a" + Array.IndexOf(alphas, 1).ToString() + " gs\n");
                 sw.Write("/" + imageObjects[fig.Image.Id].ReferenceName + " Do\n");
+            }
+            else if (figure is OptionalContentFigure opt)
+            {
+                if (opt.FigureType == OptionalContentFigure.OptionalContentType.Start)
+                {
+                    sw.Write("/OC /" + optionalContentGroups[opt.VisibilityExpression.ToString()].ReferenceName + " BDC\n");
+                }
+                else if (opt.FigureType == OptionalContentFigure.OptionalContentType.End)
+                {
+                    sw.Write("EMC\n");
+                }
             }
 
             if (restoreAtEnd)

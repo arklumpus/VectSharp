@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using VectSharp.Filters;
 using VectSharp.PDF.Figures;
+using VectSharp.PDF.OptionalContentGroups;
 
 namespace VectSharp.PDF
 {
@@ -47,10 +48,17 @@ namespace VectSharp.PDF
 
         private readonly PDFContextInterpreter.FilterOption _filterOption;
 
-        public PDFContext(double width, double height, Colour background, Dictionary<string, (FontFamily, HashSet<char>)> fontFamilies, Dictionary<string, RasterImage> images, HashSet<double> alphas, bool textToPaths, PDFContextInterpreter.FilterOption filterOption)
+        private OptionalContentGroupExpression _currentVisibilityExpression = null;
+        private readonly Dictionary<string, OptionalContentGroupExpression> _ocgVisibilityExpressions;
+        public readonly Dictionary<string, OptionalContentGroupExpression> VisibilityExpressions;
+
+        public PDFContext(double width, double height, Colour background, Dictionary<string, (FontFamily, HashSet<char>)> fontFamilies, Dictionary<string, RasterImage> images, HashSet<double> alphas, bool textToPaths, PDFContextInterpreter.FilterOption filterOption, Dictionary<string, OptionalContentGroupExpression> ocgVisibilityExpressions, Dictionary<string, OptionalContentGroupExpression> visibilityExpressions)
         {
             this.Width = width;
             this.Height = height;
+
+            this._ocgVisibilityExpressions = ocgVisibilityExpressions;
+            this.VisibilityExpressions = visibilityExpressions;
 
             _currentFigure = new List<Figures.Segment>();
             _figures = new List<IFigure>();
@@ -83,6 +91,14 @@ namespace VectSharp.PDF
             this.SetFillStyle(Colour.FromRgb(0, 0, 0));
 
             this._filterOption = filterOption;
+        }
+
+        public void Finish()
+        {
+            if (_currentVisibilityExpression != null)
+            {
+                _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.End, _currentVisibilityExpression));
+            }
         }
 
 
@@ -209,6 +225,29 @@ namespace VectSharp.PDF
 
         public void Fill(FillRule fillRule)
         {
+            OptionalContentGroupExpression ocge = null;
+
+            if (_ocgVisibilityExpressions != null && this.Tag != null)
+            {
+                _ocgVisibilityExpressions.TryGetValue(this.Tag, out ocge);
+            }
+
+            if (ocge != _currentVisibilityExpression)
+            {
+                if (_currentVisibilityExpression != null)
+                {
+                    _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.End, _currentVisibilityExpression));
+                }
+
+                if (ocge != null)
+                {
+                    _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.Start, ocge));
+                    this.VisibilityExpressions[ocge.ToString()] = ocge;
+                }
+                
+                _currentVisibilityExpression = ocge;
+            }
+
             if (IsCompatible(_fillStyle))
             {
                 _figures.Add(new PathFigure(_currentFigure, VectSharp.Rectangle.NaN, _fillStyle, null, 0, LineCaps.Butt, LineJoins.Bevel, new LineDash(0, 0, 0), false, fillRule, this.Tag));
@@ -235,6 +274,29 @@ namespace VectSharp.PDF
 
         public void Stroke()
         {
+            OptionalContentGroupExpression ocge = null;
+
+            if (_ocgVisibilityExpressions != null && this.Tag != null)
+            {
+                _ocgVisibilityExpressions.TryGetValue(this.Tag, out ocge);
+            }
+
+            if (ocge != _currentVisibilityExpression)
+            {
+                if (_currentVisibilityExpression != null)
+                {
+                    _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.End, _currentVisibilityExpression));
+                }
+
+                if (ocge != null)
+                {
+                    _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.Start, ocge));
+                    this.VisibilityExpressions[ocge.ToString()] = ocge;
+                }
+
+                _currentVisibilityExpression = ocge;
+            }
+
             if (IsCompatible(_strokeStyle))
             {
                 _figures.Add(new PathFigure(_currentFigure, VectSharp.Rectangle.NaN, null, _strokeStyle, LineWidth, LineCap, LineJoin, _lineDash, false, FillRule.NonZeroWinding, this.Tag));
@@ -305,6 +367,29 @@ namespace VectSharp.PDF
         {
             if (!_textToPaths)
             {
+                OptionalContentGroupExpression ocge = null;
+
+                if (_ocgVisibilityExpressions != null && this.Tag != null)
+                {
+                    _ocgVisibilityExpressions.TryGetValue(this.Tag, out ocge);
+                }
+
+                if (ocge != _currentVisibilityExpression)
+                {
+                    if (_currentVisibilityExpression != null)
+                    {
+                        _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.End, _currentVisibilityExpression));
+                    }
+
+                    if (ocge != null)
+                    {
+                        _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.Start, ocge));
+                        this.VisibilityExpressions[ocge.ToString()] = ocge;
+                    }
+
+                    _currentVisibilityExpression = ocge;
+                }
+
                 if (!FontFamilies.TryGetValue(this.Font.FontFamily.FileName, out (FontFamily, HashSet<char>) usedChars))
                 {
                     usedChars = (this.Font.FontFamily, new HashSet<char>());
@@ -341,16 +426,85 @@ namespace VectSharp.PDF
 
         public void Restore()
         {
+            OptionalContentGroupExpression ocge = null;
+
+            if (_ocgVisibilityExpressions != null && this.Tag != null)
+            {
+                _ocgVisibilityExpressions.TryGetValue(this.Tag, out ocge);
+            }
+
+            if (ocge != _currentVisibilityExpression)
+            {
+                if (_currentVisibilityExpression != null)
+                {
+                    _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.End, _currentVisibilityExpression));
+                }
+
+                if (ocge != null)
+                {
+                    _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.Start, ocge));
+                    this.VisibilityExpressions[ocge.ToString()] = ocge;
+                }
+
+                _currentVisibilityExpression = ocge;
+            }
+
             _figures.Add(new TransformFigure(TransformFigure.TransformTypes.Restore, null, this.Tag));
         }
 
         public void Rotate(double angle)
         {
+            OptionalContentGroupExpression ocge = null;
+
+            if (_ocgVisibilityExpressions != null && this.Tag != null)
+            {
+                _ocgVisibilityExpressions.TryGetValue(this.Tag, out ocge);
+            }
+
+            if (ocge != _currentVisibilityExpression)
+            {
+                if (_currentVisibilityExpression != null)
+                {
+                    _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.End, _currentVisibilityExpression));
+                }
+
+                if (ocge != null)
+                {
+                    _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.Start, ocge));
+                    this.VisibilityExpressions[ocge.ToString()] = ocge;
+                }
+
+                _currentVisibilityExpression = ocge;
+            }
+
             _figures.Add(new TransformFigure(TransformFigure.TransformTypes.Transform, new double[,] { { Math.Cos(angle), Math.Sin(angle), 0 }, { -Math.Sin(angle), Math.Cos(angle), 0 }, { 0, 0, 1 } }, this.Tag));
         }
 
         public void Save()
         {
+            OptionalContentGroupExpression ocge = null;
+
+            if (_ocgVisibilityExpressions != null && this.Tag != null)
+            {
+                _ocgVisibilityExpressions.TryGetValue(this.Tag, out ocge);
+            }
+
+            if (ocge != _currentVisibilityExpression)
+            {
+                if (_currentVisibilityExpression != null)
+                {
+                    _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.End, _currentVisibilityExpression));
+                }
+
+                if (ocge != null)
+                {
+                    _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.Start, ocge));
+                    this.VisibilityExpressions[ocge.ToString()] = ocge;
+                }
+
+                _currentVisibilityExpression = ocge;
+            }
+
             _figures.Add(new TransformFigure(TransformFigure.TransformTypes.Save, null, this.Tag));
         }
 
@@ -359,6 +513,40 @@ namespace VectSharp.PDF
         {
             if (!_textToPaths)
             {
+                OptionalContentGroupExpression ocge = null;
+
+                if (_ocgVisibilityExpressions != null && this.Tag != null)
+                {
+                    _ocgVisibilityExpressions.TryGetValue(this.Tag, out ocge);
+                }
+
+                if (ocge != _currentVisibilityExpression)
+                {
+                    if (_currentVisibilityExpression != null)
+                    {
+                        _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.End, _currentVisibilityExpression));
+                    }
+
+                    if (ocge != null)
+                    {
+                        _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.Start, ocge));
+                        this.VisibilityExpressions[ocge.ToString()] = ocge;
+                    }
+
+                    _currentVisibilityExpression = ocge;
+                }
+
+                if (!FontFamilies.TryGetValue(this.Font.FontFamily.FileName, out (FontFamily, HashSet<char>) usedChars))
+                {
+                    usedChars = (this.Font.FontFamily, new HashSet<char>());
+                    FontFamilies[this.Font.FontFamily.FileName] = usedChars;
+                }
+
+                foreach (char c in text)
+                {
+                    usedChars.Item2.Add(c);
+                }
+
                 _figures.Add(new TextFigure(text, Font, new Point(x, y), TextBaseline, null, _strokeStyle, LineWidth, LineCap, LineJoin, _lineDash, this.Tag));
             }
             else
@@ -382,21 +570,110 @@ namespace VectSharp.PDF
 
         public void Translate(double x, double y)
         {
+            OptionalContentGroupExpression ocge = null;
+
+            if (_ocgVisibilityExpressions != null && this.Tag != null)
+            {
+                _ocgVisibilityExpressions.TryGetValue(this.Tag, out ocge);
+            }
+
+            if (ocge != _currentVisibilityExpression)
+            {
+                if (_currentVisibilityExpression != null)
+                {
+                    _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.End, _currentVisibilityExpression));
+                }
+
+                if (ocge != null)
+                {
+                    _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.Start, ocge));
+                    this.VisibilityExpressions[ocge.ToString()] = ocge;
+                }
+
+                _currentVisibilityExpression = ocge;
+            }
             _figures.Add(new TransformFigure(TransformFigure.TransformTypes.Transform, new double[,] { { 1, 0, x }, { 0, 1, y }, { 0, 0, 1 } }, this.Tag));
         }
 
         public void Scale(double scaleX, double scaleY)
         {
+            OptionalContentGroupExpression ocge = null;
+
+            if (_ocgVisibilityExpressions != null && this.Tag != null)
+            {
+                _ocgVisibilityExpressions.TryGetValue(this.Tag, out ocge);
+            }
+
+            if (ocge != _currentVisibilityExpression)
+            {
+                if (_currentVisibilityExpression != null)
+                {
+                    _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.End, _currentVisibilityExpression));
+                }
+
+                if (ocge != null)
+                {
+                    _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.Start, ocge));
+                    this.VisibilityExpressions[ocge.ToString()] = ocge;
+                }
+
+                _currentVisibilityExpression = ocge;
+            }
             _figures.Add(new TransformFigure(TransformFigure.TransformTypes.Transform, new double[,] { { scaleX, 0, 0 }, { 0, scaleY, 0 }, { 0, 0, 1 } }, this.Tag));
         }
 
         public void Transform(double a, double b, double c, double d, double e, double f)
         {
+            OptionalContentGroupExpression ocge = null;
+
+            if (_ocgVisibilityExpressions != null && this.Tag != null)
+            {
+                _ocgVisibilityExpressions.TryGetValue(this.Tag, out ocge);
+            }
+
+            if (ocge != _currentVisibilityExpression)
+            {
+                if (_currentVisibilityExpression != null)
+                {
+                    _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.End, _currentVisibilityExpression));
+                }
+
+                if (ocge != null)
+                {
+                    _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.Start, ocge));
+                    this.VisibilityExpressions[ocge.ToString()] = ocge;
+                }
+
+                _currentVisibilityExpression = ocge;
+            }
             _figures.Add(new TransformFigure(TransformFigure.TransformTypes.Transform, new double[,] { { a, b, e }, { c, d, f }, { 0, 0, 1 } }, this.Tag));
         }
 
         public void DrawRasterImage(int sourceX, int sourceY, int sourceWidth, int sourceHeight, double destinationX, double destinationY, double destinationWidth, double destinationHeight, RasterImage image)
         {
+            OptionalContentGroupExpression ocge = null;
+
+            if (_ocgVisibilityExpressions != null && this.Tag != null)
+            {
+                _ocgVisibilityExpressions.TryGetValue(this.Tag, out ocge);
+            }
+
+            if (ocge != _currentVisibilityExpression)
+            {
+                if (_currentVisibilityExpression != null)
+                {
+                    _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.End, _currentVisibilityExpression));
+                }
+
+                if (ocge != null)
+                {
+                    _figures.Add(new OptionalContentFigure(OptionalContentFigure.OptionalContentType.Start, ocge));
+                    this.VisibilityExpressions[ocge.ToString()] = ocge;
+                }
+
+                _currentVisibilityExpression = ocge;
+            }
+
             Save();
 
             MoveTo(destinationX, destinationY);

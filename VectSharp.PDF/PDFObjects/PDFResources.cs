@@ -72,13 +72,19 @@ namespace VectSharp.PDF.PDFObjects
         public PDFRawDictionary Pattern { get; }
 
         /// <summary>
+        /// A dictionary that maps resource names to property list dictionaries.
+        /// </summary>
+        public PDFRawDictionary Properties { get; }
+
+        /// <summary>
         /// Create a new <see cref="PDFResources"/> container.
         /// </summary>
         /// <param name="font">Font list dictionary.</param>
         /// <param name="alphas">Alpha values used in the document.</param>
         /// <param name="gradients">Gradients used in the document.</param>
         /// <param name="images">Images used in the document.</param>
-        public PDFResources(PDFRawDictionary font, double[] alphas, List<(PDFGradient gradient, PDFGradientAlphaMask alphaMask)> gradients, IEnumerable<PDFImage> images)
+        /// <param name="optionalContentGroupMemberships">Optional content group membership expressions.</param>
+        public PDFResources(PDFRawDictionary font, double[] alphas, List<(PDFGradient gradient, PDFGradientAlphaMask alphaMask)> gradients, IEnumerable<PDFImage> images, Dictionary<string, PDFOptionalContentGroupMembership> optionalContentGroupMemberships)
         {
             this.Font = font;
 
@@ -133,6 +139,15 @@ namespace VectSharp.PDF.PDFObjects
             else
             {
                 this.Pattern = null;
+            }
+
+            if (optionalContentGroupMemberships != null && optionalContentGroupMemberships.Count > 0)
+            {
+                this.Properties = new PDFRawDictionary();
+                foreach (KeyValuePair<string, PDFOptionalContentGroupMembership> kvp in optionalContentGroupMemberships)
+                {
+                    this.Properties.Keys[kvp.Value.ReferenceName] = kvp.Value;
+                }
             }
         }
 

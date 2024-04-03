@@ -16,6 +16,7 @@
 */
 
 using System.Collections.Generic;
+using VectSharp.PDF.OptionalContentGroups;
 
 namespace VectSharp.PDF.Figures
 {
@@ -307,4 +308,41 @@ namespace VectSharp.PDF.Figures
             }
         }
     }
+
+    internal class OptionalContentFigure : IFigure
+    {
+        public enum OptionalContentType
+        {
+            Start, End
+        }
+
+        public OptionalContentType FigureType { get; }
+
+        public Brush Fill { get; }
+        public Brush Stroke { get; }
+
+        public bool IsClipping { get; }
+        public double LineWidth { get; }
+
+        public OptionalContentGroupExpression VisibilityExpression { get; }
+
+        public LineCaps LineCap { get; }
+
+        public LineJoins LineJoin { get; }
+
+        public LineDash LineDash { get; }
+        public string Tag { get; }
+
+        public OptionalContentFigure(OptionalContentType type, OptionalContentGroupExpression visibilityExpression)
+        {
+            this.FigureType = type;
+            this.VisibilityExpression = visibilityExpression;
+        }
+
+        public Rectangle GetBounds()
+        {
+            return Rectangle.NaN;
+        }
+    }
+
 }

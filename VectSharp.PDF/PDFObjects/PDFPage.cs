@@ -76,6 +76,11 @@ namespace VectSharp.PDF.PDFObjects
         public PDFRawDictionary ViewerPreferences { get; set; }
 
         /// <summary>
+        /// Optional content properties.
+        /// </summary>
+        public PDFOptionalContentProperties OCProperties { get; set; }
+
+        /// <summary>
         /// Page mode.
         /// </summary>
         public PDFString PageMode { get; set; }

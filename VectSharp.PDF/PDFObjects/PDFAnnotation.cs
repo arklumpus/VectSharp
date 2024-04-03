@@ -63,6 +63,11 @@ namespace VectSharp.PDF.PDFObjects
         public PDFArray<PDFDouble> Rect { get; }
 
         /// <summary>
+        /// Optional content group membership dictionary for the annotation.
+        /// </summary>
+        public PDFOptionalContentGroupMembership OC { get; set; }
+
+        /// <summary>
         /// Create a new <see cref="PDFAnnotation"/> with the specified <paramref name="rect"/>.
         /// </summary>
         /// <param name="rect">The annotation rectangle.</param>

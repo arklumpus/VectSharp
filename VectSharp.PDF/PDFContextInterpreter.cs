@@ -22,6 +22,7 @@ using System.Text;
 using VectSharp.PDF.PDFObjects;
 using System.Linq;
 using VectSharp.PDF.Figures;
+using VectSharp.PDF.OptionalContentGroups;
 
 namespace VectSharp.PDF
 {
@@ -32,6 +33,7 @@ namespace VectSharp.PDF
         private int FontIndex = 1;
         private int PatternIndex = 1;
         private int ImageIndex = 1;
+        private int OptionalContentGroupMembershipIndex = 1;
 
         public AssetTagManager(Random random = null)
         {
@@ -68,6 +70,13 @@ namespace VectSharp.PDF
             string imageId = "Img" + ImageIndex.ToString();
             ImageIndex++;
             return imageId;
+        }
+
+        public string GetOptionalGroupMembershipReferenceName()
+        {
+            string ocId = "oc" + OptionalContentGroupMembershipIndex.ToString();
+            OptionalContentGroupMembershipIndex++;
+            return ocId;
         }
     }
 
@@ -274,7 +283,7 @@ namespace VectSharp.PDF
             return imageObjects;
         }
 
-        private static PDFStream[] GeneratePageContentStreams(PDFContext[] pageContexts, Dictionary<(string fontFamilyName, bool isSymbolic), PDFFont> fontObjects, double[] alphas, Dictionary<string, PDFImage> imageObjects, bool compressStreams, List<PDFReferenceableObject> pdfObjects, out Dictionary<string, List<Rectangle>>[] taggedObjectRectsByPage, out List<(GradientBrush, double[,], IFigure)> gradients)
+        private static PDFStream[] GeneratePageContentStreams(PDFContext[] pageContexts, Dictionary<(string fontFamilyName, bool isSymbolic), PDFFont> fontObjects, double[] alphas, Dictionary<string, PDFImage> imageObjects, bool compressStreams, List<PDFReferenceableObject> pdfObjects, out Dictionary<string, List<Rectangle>>[] taggedObjectRectsByPage, out List<(GradientBrush, double[,], IFigure)> gradients, Dictionary<string, PDFOptionalContentGroupMembership> contentGroups)
         {
             PDFStream[] pageContentStreams = new PDFStream[pageContexts.Length];
 
@@ -314,7 +323,7 @@ namespace VectSharp.PDF
                             PDFProcessFigure.MeasureFigure(pageContexts[pageInd]._figures[i], ref transformationMatrix, savedStates);
                         }
 
-                        PDFProcessFigure.WriteFigure(pageContexts[pageInd]._figures[i], fontObjects, alphas, imageObjects, transformationMatrix, gradients, ctW);
+                        PDFProcessFigure.WriteFigure(pageContexts[pageInd]._figures[i], fontObjects, alphas, imageObjects, transformationMatrix, gradients, contentGroups, ctW);
                     }
                 }
 
@@ -434,7 +443,7 @@ namespace VectSharp.PDF
         }
 
 
-        private static void GenerateLinkAnnotations(PDFPage[] pages, Dictionary<string, List<Rectangle>>[] taggedObjectRectsByPage, Dictionary<string, string> linkDestinations, List<PDFReferenceableObject> pdfObjects)
+        private static void GenerateLinkAnnotations(PDFPage[] pages, Dictionary<string, List<Rectangle>>[] taggedObjectRectsByPage, Dictionary<string, string> linkDestinations, Dictionary<string, PDFOptionalContentGroup> optionalContentGroups, Dictionary<string, OptionalContentGroupExpression> optionalContenGroupExpressions, Dictionary<string, PDFOptionalContentGroupMembership> optionalContentGroupMemberships, List<PDFReferenceableObject> pdfObjects)
         {
             for (int i = 0; i < pages.Length; i++)
             {
@@ -444,15 +453,65 @@ namespace VectSharp.PDF
                     {
                         if (destination.StartsWith("#"))
                         {
-                            (int pageNum, Rectangle target) = GetTagRectangle(destination.Substring(1), taggedObjectRectsByPage);
-
-                            if (pageNum >= 0)
+                            if (destination.StartsWith("#@OCG:"))
                             {
+                                destination = destination.Substring(6);
+
+                                string[] splitDestination = destination.Split(';');
+
+                                List<PDFOptionalContentGroup> on = new List<PDFOptionalContentGroup>();
+                                List<PDFOptionalContentGroup> off = new List<PDFOptionalContentGroup>();
+                                List<PDFOptionalContentGroup> toggle = new List<PDFOptionalContentGroup>();
+
+                                for (int j = 0; j < splitDestination.Length; j++)
+                                {
+                                    string[] splitSplitDestination = splitDestination[j].Split(',');
+
+                                    switch (splitSplitDestination[1].ToLowerInvariant())
+                                    {
+                                        case "on":
+                                            on.Add(optionalContentGroups[splitSplitDestination[0]]);
+                                            break;
+                                        case "off":
+                                            off.Add(optionalContentGroups[splitSplitDestination[0]]);
+                                            break;
+                                        case "toggle":
+                                            toggle.Add(optionalContentGroups[splitSplitDestination[0]]);
+                                            break;
+                                    }
+                                }
+
                                 for (int l = 0; l < kvp.Value.Count; l++)
                                 {
-                                    PDFInternalLinkAnnotation annot = new PDFInternalLinkAnnotation(kvp.Value[l], pages[pageNum], target.Location.X, target.Location.Y + target.Size.Height);
+                                    PDFSetOCGStateActionAnnotation annot = new PDFSetOCGStateActionAnnotation(kvp.Value[l], new PDFSetOCGStateAction(on, off, toggle));
+
+                                    if (optionalContenGroupExpressions.TryGetValue(kvp.Key, out OptionalContentGroupExpression ocge))
+                                    {
+                                        annot.OC = optionalContentGroupMemberships[ocge.ToString()];
+                                    }
+
                                     pdfObjects.Add(annot);
                                     pages[i].AddAnnotation(annot);
+                                }
+                            }
+                            else
+                            {
+                                (int pageNum, Rectangle target) = GetTagRectangle(destination.Substring(1), taggedObjectRectsByPage);
+
+                                if (pageNum >= 0)
+                                {
+                                    for (int l = 0; l < kvp.Value.Count; l++)
+                                    {
+                                        PDFInternalLinkAnnotation annot = new PDFInternalLinkAnnotation(kvp.Value[l], pages[pageNum], target.Location.X, target.Location.Y + target.Size.Height);
+                                        
+                                        if (optionalContentGroupMemberships.TryGetValue(kvp.Key, out PDFOptionalContentGroupMembership ocgm))
+                                        {
+                                            annot.OC = ocgm;
+                                        }
+
+                                        pdfObjects.Add(annot);
+                                        pages[i].AddAnnotation(annot);
+                                    }
                                 }
                             }
                         }
@@ -461,6 +520,12 @@ namespace VectSharp.PDF
                             for (int l = 0; l < kvp.Value.Count; l++)
                             {
                                 PDFExternalLinkAnnotation annot = new PDFExternalLinkAnnotation(kvp.Value[l], destination);
+
+                                if (optionalContentGroupMemberships.TryGetValue(kvp.Key, out PDFOptionalContentGroupMembership ocgm))
+                                {
+                                    annot.OC = ocgm;
+                                }
+
                                 pdfObjects.Add(annot);
                                 pages[i].AddAnnotation(annot);
                             }
@@ -484,7 +549,7 @@ namespace VectSharp.PDF
             {
                 item = new PDFOutlineItem(outlineNode.Title, colour: outlineNode.Colour, bold: outlineNode.Bold, italic: outlineNode.Italic);
             }
-            
+
             if (outlineNode.Children.Count > 0)
             {
                 PDFOutlineItem[] children = new PDFOutlineItem[outlineNode.Children.Count];
@@ -500,7 +565,7 @@ namespace VectSharp.PDF
                     {
                         children[i].Prev = children[i - 1];
                     }
-                    
+
                     if (i < children.Length - 1)
                     {
                         children[i].Next = children[i + 1];
@@ -547,6 +612,112 @@ namespace VectSharp.PDF
             return pdfOutline;
         }
 
+        private static void CreateOptionalContentGroups(OptionalContentGroupExpression expression, Dictionary<string, PDFOptionalContentGroup> pdfOcgs, List<PDFReferenceableObject> pdfObjects, Dictionary<string, OptionalContentGroup> ocgs)
+        {
+            if (expression is OptionalContentGroup group)
+            {
+                if (!pdfOcgs.ContainsKey(group.ToString()))
+                {
+                    ocgs[group.ToString()] = group;
+                    PDFOptionalContentGroup ocg = new PDFOptionalContentGroup(group.Name, group.Intent, group.DefaultViewState, group.DefaultPrintState, group.DefaultExportState);
+                    pdfOcgs[group.ToString()] = ocg;
+                    pdfObjects.Add(ocg);
+                }
+            }
+            else
+            {
+                foreach (OptionalContentGroupExpression expr in expression.Arguments)
+                {
+                    CreateOptionalContentGroups(expr, pdfOcgs, pdfObjects, ocgs);
+                }
+            }
+        }
+
+        private static IEnumerable<IPDFObject> CreateOCGOrder(OptionalContentGroupTreeNode node, Dictionary<string, PDFOptionalContentGroup> pdfOcgs)
+        {
+            if (node.Children.Count == 0)
+            {
+                if (node.Label.LabelType == OptionalContentGroupTreeLabel.Type.OptionalContentGroup)
+                {
+                    yield return pdfOcgs[node.Label.LabelOptionalContentGroup.ToString()];
+                }
+                else
+                {
+                    throw new ArgumentException("A leaf node must have an optional content group label and not a string label!");
+                }
+            }
+            else
+            {
+                if (node.Label.LabelType == OptionalContentGroupTreeLabel.Type.String)
+                {
+                    yield return new PDFArray<IPDFObject>(new IPDFObject[] { new PDFString(node.Label.LabelString, PDFString.StringDelimiter.Brackets) }.Concat(node.Children.SelectMany(x => CreateOCGOrder(x, pdfOcgs))));
+                }
+                else if (node.Label.LabelType == OptionalContentGroupTreeLabel.Type.OptionalContentGroup)
+                {
+                    yield return pdfOcgs[node.Label.LabelOptionalContentGroup.ToString()];
+                    yield return new PDFArray<IPDFObject>(node.Children.SelectMany(x => CreateOCGOrder(x, pdfOcgs)));
+                }
+            }
+        }
+
+        private static Dictionary<string, PDFOptionalContentGroupMembership> GenerateOptionalContentGroups(Dictionary<string, OptionalContentGroupExpression> expressions, OptionalContentGroupSettings groupSettings, IEnumerable<IEnumerable<OptionalContentGroup>> radioButtonGroups, AssetTagManager tagManager, List<PDFReferenceableObject> pdfObjects, out Dictionary<string, PDFOptionalContentGroup> contentGroups, out PDFOptionalContentProperties optionalContentProperties)
+        {
+            Dictionary<string, PDFOptionalContentGroupMembership> tbr = new Dictionary<string, PDFOptionalContentGroupMembership>();
+            Dictionary<string, PDFOptionalContentGroup> pdfOcgs = new Dictionary<string, PDFOptionalContentGroup>();
+            Dictionary<string, OptionalContentGroup> ocgs = new Dictionary<string, OptionalContentGroup>();
+
+            foreach (KeyValuePair<string, OptionalContentGroupExpression> kvp in expressions)
+            {
+                CreateOptionalContentGroups(kvp.Value, pdfOcgs, pdfObjects, ocgs);
+
+                if (!tbr.ContainsKey(kvp.Key))
+                {
+                    PDFOptionalContentGroupMembership ocgm = new PDFOptionalContentGroupMembership(kvp.Value, pdfOcgs, tagManager.GetOptionalGroupMembershipReferenceName());
+                    tbr[kvp.Key] = ocgm;
+                    pdfObjects.Add(ocgm);
+                }
+            }
+
+            List<PDFUsageApplication> uas = new List<PDFUsageApplication>();
+
+            PDFUsageApplication uaView = new PDFUsageApplication(PDFUsageApplication.UsageApplicationEvent.View, pdfOcgs.Values);
+            if (uaView.OCGs.Values.Count > 0)
+            {
+                pdfObjects.Add(uaView);
+                uas.Add(uaView);
+            }
+
+            PDFUsageApplication uaPrint = new PDFUsageApplication(PDFUsageApplication.UsageApplicationEvent.Print, pdfOcgs.Values);
+            if (uaPrint.OCGs.Values.Count > 0)
+            {
+                pdfObjects.Add(uaPrint);
+                uas.Add(uaPrint);
+            }
+
+            PDFUsageApplication uaExport = new PDFUsageApplication(PDFUsageApplication.UsageApplicationEvent.Export, pdfOcgs.Values);
+            if (uaExport.OCGs.Values.Count > 0)
+            {
+                pdfObjects.Add(uaExport);
+                uas.Add(uaExport);
+            }
+
+            IEnumerable<IPDFObject> order = pdfOcgs.Values;
+
+            if (groupSettings?.OptionalContentGroupTree != null)
+            {
+                order = groupSettings.OptionalContentGroupTree.SelectMany(x => CreateOCGOrder(x, pdfOcgs));
+            }
+
+            PDFOptionalContentConfiguration defaultConfiguration = new PDFOptionalContentConfiguration(ocgs.Values.Where(x => !x.DefaultState).Select(x => pdfOcgs[x.ToString()]), uas, order, radioButtonGroups?.Select(x => x.Select(y => pdfOcgs[y.ToString()])));
+            pdfObjects.Add(defaultConfiguration);
+
+            optionalContentProperties = new PDFOptionalContentProperties(pdfOcgs.Values, defaultConfiguration);
+            contentGroups = pdfOcgs;
+
+            return tbr;
+
+        }
+
         /// <summary>
         /// Convert the document to a <see cref="PDFDocument"/> representation.
         /// </summary>
@@ -557,7 +728,8 @@ namespace VectSharp.PDF
         /// <param name="outline">Document outline (table of contents).</param>
         /// <param name="metadata">Document metadata. Use <see cref="PDFMetadata.NoMetadata()"/> if you do not wish to include metadata in the document.</param>
         /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
-        public static PDFDocument CreatePDFDocument(this Document document, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, OutlineTree outline = null, PDFMetadata metadata = default, FilterOption filterOption = default)
+        /// <param name="optionalContentGroupSettings">Settings for optional content groups (layers).</param>
+        public static PDFDocument CreatePDFDocument(this Document document, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, OutlineTree outline = null, PDFMetadata metadata = default, FilterOption filterOption = default, OptionalContentGroupSettings optionalContentGroupSettings = default)
         {
             if (linkDestinations == null)
             {
@@ -574,16 +746,23 @@ namespace VectSharp.PDF
                 metadata = new PDFMetadata();
             }
 
+            if (optionalContentGroupSettings == null)
+            {
+                optionalContentGroupSettings = new OptionalContentGroupSettings();
+            }
+
             PDFContext[] pageContexts = new PDFContext[document.Pages.Count];
 
             Dictionary<string, (FontFamily, HashSet<char>)> fontFamilies = new Dictionary<string, (FontFamily, HashSet<char>)>();
             Dictionary<string, RasterImage> allImages = new Dictionary<string, RasterImage>();
             HashSet<double> allAlphas = new HashSet<double>();
+            Dictionary<string, OptionalContentGroupExpression> allVisibilityExpressions = new Dictionary<string, OptionalContentGroupExpression>();
 
             for (int i = 0; i < document.Pages.Count; i++)
             {
-                pageContexts[i] = new PDFContext(document.Pages[i].Width, document.Pages[i].Height, document.Pages[i].Background, fontFamilies, allImages, allAlphas, textOption == TextOptions.ConvertIntoPaths, filterOption);
+                pageContexts[i] = new PDFContext(document.Pages[i].Width, document.Pages[i].Height, document.Pages[i].Background, fontFamilies, allImages, allAlphas, textOption == TextOptions.ConvertIntoPaths, filterOption, optionalContentGroupSettings.Groups, allVisibilityExpressions);
                 document.Pages[i].Graphics.CopyToIGraphicsContext(pageContexts[i]);
+                pageContexts[i].Finish();
             }
 
             double[] alphas = allAlphas.ToArray();
@@ -594,11 +773,20 @@ namespace VectSharp.PDF
             Dictionary<(string fontFamilyName, bool isSymbolic), PDFFont> fontObjects = GenerateFontObjects(fontFamilies, tagManager, pdfObjects, compressStreams, out PDFRawDictionary fontList);
             Dictionary<string, PDFImage> imageObjects = GenerateImageObjects(allImages, tagManager, pdfObjects, compressStreams);
 
-            PDFStream[] pageContentStreams = GeneratePageContentStreams(pageContexts, fontObjects, alphas, imageObjects, compressStreams, pdfObjects, out Dictionary<string, List<Rectangle>>[] taggedObjectRectsByPage, out List<(GradientBrush, double[,], IFigure)> gradients);
+            PDFOptionalContentProperties optionalContentProperties = null;
+            Dictionary<string, PDFOptionalContentGroupMembership> contentGroupMemberships = new Dictionary<string, PDFOptionalContentGroupMembership>();
+            Dictionary<string, PDFOptionalContentGroup> contentGroups = new Dictionary<string, PDFOptionalContentGroup>();
+
+            if (allVisibilityExpressions.Count > 0)
+            {
+                contentGroupMemberships = GenerateOptionalContentGroups(allVisibilityExpressions, optionalContentGroupSettings, optionalContentGroupSettings?.RadioButtonGroups, tagManager, pdfObjects, out contentGroups, out optionalContentProperties);
+            }
+
+            PDFStream[] pageContentStreams = GeneratePageContentStreams(pageContexts, fontObjects, alphas, imageObjects, compressStreams, pdfObjects, out Dictionary<string, List<Rectangle>>[] taggedObjectRectsByPage, out List<(GradientBrush, double[,], IFigure)> gradients, contentGroupMemberships);
 
             List<(PDFGradient, PDFGradientAlphaMask)> pdfGradients = GenerateGradients(gradients, tagManager, pdfObjects, compressStreams);
 
-            PDFResources resources = new PDFResources(fontList, alphas, pdfGradients, imageObjects.Values);
+            PDFResources resources = new PDFResources(fontList, alphas, pdfGradients, imageObjects.Values, contentGroupMemberships);
             pdfObjects.Add(resources);
 
             PDFPage[] pages = new PDFPage[document.Pages.Count];
@@ -609,7 +797,7 @@ namespace VectSharp.PDF
                 pdfObjects.Add(pages[i]);
             }
 
-            GenerateLinkAnnotations(pages, taggedObjectRectsByPage, linkDestinations, pdfObjects);
+            GenerateLinkAnnotations(pages, taggedObjectRectsByPage, linkDestinations, contentGroups, optionalContentGroupSettings.Groups, contentGroupMemberships, pdfObjects);
 
             PDFPages pdfPages = new PDFPages(pages);
             pdfObjects.Add(pdfPages);
@@ -631,6 +819,11 @@ namespace VectSharp.PDF
 
             PDFDocument doc = new PDFDocument(pdfObjects);
 
+            if (optionalContentProperties != null)
+            {
+                catalog.OCProperties = optionalContentProperties;
+                doc.PDFVersion = "1.6";
+            }
 
             PDFDocumentInfo info = metadata.ToPDFDocumentInfo();
 
@@ -659,11 +852,12 @@ namespace VectSharp.PDF
         /// <param name="outline">Document outline (table of contents).</param>
         /// <param name="metadata">Document metadata. Use <see cref="PDFMetadata.NoMetadata()"/> if you do not wish to include metadata in the document.</param>
         /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
-        public static void SaveAsPDF(this Document document, string fileName, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, OutlineTree outline = null, PDFMetadata metadata = default, FilterOption filterOption = default)
+        /// <param name="optionalContentGroupSettings">Settings for optional content groups (layers).</param>
+        public static void SaveAsPDF(this Document document, string fileName, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, OutlineTree outline = null, PDFMetadata metadata = default, FilterOption filterOption = default, OptionalContentGroupSettings optionalContentGroupSettings = default)
         {
             using (FileStream stream = new FileStream(fileName, FileMode.Create))
             {
-                document.SaveAsPDF(stream, textOption, compressStreams, linkDestinations, outline, metadata, filterOption);
+                document.SaveAsPDF(stream, textOption, compressStreams, linkDestinations, outline, metadata, filterOption, optionalContentGroupSettings);
             }
         }
 
@@ -678,9 +872,10 @@ namespace VectSharp.PDF
         /// <param name="outline">Document outline (table of contents).</param>
         /// <param name="metadata">Document metadata. Use <see cref="PDFMetadata.NoMetadata()"/> if you do not wish to include metadata in the document.</param>
         /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
-        public static void SaveAsPDF(this Document document, Stream stream, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, OutlineTree outline = null, PDFMetadata metadata = default, FilterOption filterOption = default)
+        /// <param name="optionalContentGroupSettings">Settings for optional content groups (layers).</param>
+        public static void SaveAsPDF(this Document document, Stream stream, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, OutlineTree outline = null, PDFMetadata metadata = default, FilterOption filterOption = default, OptionalContentGroupSettings optionalContentGroupSettings = default)
         {
-            PDFDocument pdfDoc = document.CreatePDFDocument(textOption, compressStreams, linkDestinations, outline, metadata, filterOption);
+            PDFDocument pdfDoc = document.CreatePDFDocument(textOption, compressStreams, linkDestinations, outline, metadata, filterOption, optionalContentGroupSettings);
             pdfDoc.Write(stream);
         }
     }

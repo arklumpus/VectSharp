@@ -34,6 +34,11 @@ namespace VectSharp.PDF
         public IList<PDFReferenceableObject> Contents { get; }
 
         /// <summary>
+        /// PDF specification version. This is only included in the header and not enforced.
+        /// </summary>
+        public string PDFVersion { get; set; } = "1.4";
+
+        /// <summary>
         /// Gets or sets the PDF catalog object.
         /// </summary>
         public PDFCatalog Catalog
@@ -193,8 +198,7 @@ namespace VectSharp.PDF
         /// </summary>
         /// <param name="stream">The stream on which the PDF document should be written.</param>
         /// <param name="encoding">The document encoding (default: ISO 8859-1).</param>
-        /// <param name="pdfVersion">PDF specification version. This is only included in the header and not enforced.</param>
-        public void Write(Stream stream, Encoding encoding = default, string pdfVersion = "1.4")
+        public void Write(Stream stream, Encoding encoding = default)
         {
             if (encoding == null)
             {
@@ -211,7 +215,7 @@ namespace VectSharp.PDF
             StreamWriter sw = new StreamWriter(stream, encoding, 1024, true);
 
             //Header
-            sw.Write("%PDF-" + pdfVersion + "\n");
+            sw.Write("%PDF-" + this.PDFVersion + "\n");
             sw.Flush();
 
             for (int i = 0; i < this.Contents.Count; i++)
@@ -251,12 +255,11 @@ namespace VectSharp.PDF
         /// </summary>
         /// <param name="file">The file on which the PDF document should be written.</param>
         /// <param name="encoding">The document encoding (default: ISO 8859-1).</param>
-        /// <param name="pdfVersion">PDF specification version. This is only included in the header and not enforced.</param>
-        public void Write(string file, Encoding encoding = default, string pdfVersion = "1.4")
+        public void Write(string file, Encoding encoding = default)
         {
             using (FileStream fs = new FileStream(file, FileMode.Create))
             {
-                this.Write(fs, encoding, pdfVersion);
+                this.Write(fs, encoding);
             }
         }
 
