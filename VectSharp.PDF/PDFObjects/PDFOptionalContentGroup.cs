@@ -462,7 +462,10 @@ namespace VectSharp.PDF.PDFObjects
         /// </summary>
         /// <param name="rect">The annotation rectangle.</param>
         /// <param name="action">The action triggered by the annotation.</param>
-        public PDFSetOCGStateActionAnnotation(Rectangle rect, PDFSetOCGStateAction action) : base(rect)
+        /// <param name="borderWidth">Thickness of the annotation border.</param>
+        /// <param name="borderDash">Dash style for the annotation border.</param>
+        /// <param name="borderColour">Colour for the annotation border.</param>
+        public PDFSetOCGStateActionAnnotation(Rectangle rect, PDFSetOCGStateAction action, double borderWidth, LineDash? borderDash, Colour borderColour) : base(rect, borderWidth, borderDash, borderColour)
         {
             this.A = action;
         }

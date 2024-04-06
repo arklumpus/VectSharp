@@ -443,7 +443,7 @@ namespace VectSharp.PDF
         }
 
 
-        private static void GenerateLinkAnnotations(PDFPage[] pages, Dictionary<string, List<Rectangle>>[] taggedObjectRectsByPage, Dictionary<string, string> linkDestinations, Dictionary<string, PDFOptionalContentGroup> optionalContentGroups, Dictionary<string, OptionalContentGroupExpression> optionalContenGroupExpressions, Dictionary<string, PDFOptionalContentGroupMembership> optionalContentGroupMemberships, List<PDFReferenceableObject> pdfObjects)
+        private static void GenerateLinkAnnotations(PDFPage[] pages, Dictionary<string, List<Rectangle>>[] taggedObjectRectsByPage, Dictionary<string, string> linkDestinations, Dictionary<string, PDFOptionalContentGroup> optionalContentGroups, Dictionary<string, OptionalContentGroupExpression> optionalContenGroupExpressions, Dictionary<string, PDFOptionalContentGroupMembership> optionalContentGroupMemberships, List<PDFReferenceableObject> pdfObjects, AnnotationStyleCollection annotationStyles)
         {
             for (int i = 0; i < pages.Length; i++)
             {
@@ -481,9 +481,14 @@ namespace VectSharp.PDF
                                     }
                                 }
 
+                                if (!annotationStyles.TryGetValue(kvp.Key, out AnnotationStyle style))
+                                {
+                                    style = annotationStyles.DefaultStyle;
+                                }
+
                                 for (int l = 0; l < kvp.Value.Count; l++)
                                 {
-                                    PDFSetOCGStateActionAnnotation annot = new PDFSetOCGStateActionAnnotation(kvp.Value[l], new PDFSetOCGStateAction(on, off, toggle));
+                                    PDFSetOCGStateActionAnnotation annot = new PDFSetOCGStateActionAnnotation(kvp.Value[l], new PDFSetOCGStateAction(on, off, toggle), style.BorderWidth, style.BorderDash, style.BorderColour);
 
                                     if (optionalContenGroupExpressions.TryGetValue(kvp.Key, out OptionalContentGroupExpression ocge))
                                     {
@@ -500,9 +505,14 @@ namespace VectSharp.PDF
 
                                 if (pageNum >= 0)
                                 {
+                                    if (!annotationStyles.TryGetValue(kvp.Key, out AnnotationStyle style))
+                                    {
+                                        style = annotationStyles.DefaultStyle;
+                                    }
+
                                     for (int l = 0; l < kvp.Value.Count; l++)
                                     {
-                                        PDFInternalLinkAnnotation annot = new PDFInternalLinkAnnotation(kvp.Value[l], pages[pageNum], target.Location.X, target.Location.Y + target.Size.Height);
+                                        PDFInternalLinkAnnotation annot = new PDFInternalLinkAnnotation(kvp.Value[l], pages[pageNum], target.Location.X, target.Location.Y + target.Size.Height, style.BorderWidth, style.BorderDash, style.BorderColour);
                                         
                                         if (optionalContentGroupMemberships.TryGetValue(kvp.Key, out PDFOptionalContentGroupMembership ocgm))
                                         {
@@ -517,9 +527,14 @@ namespace VectSharp.PDF
                         }
                         else
                         {
+                            if (!annotationStyles.TryGetValue(kvp.Key, out AnnotationStyle style))
+                            {
+                                style = annotationStyles.DefaultStyle;
+                            }
+
                             for (int l = 0; l < kvp.Value.Count; l++)
                             {
-                                PDFExternalLinkAnnotation annot = new PDFExternalLinkAnnotation(kvp.Value[l], destination);
+                                PDFExternalLinkAnnotation annot = new PDFExternalLinkAnnotation(kvp.Value[l], destination, style.BorderWidth, style.BorderDash, style.BorderColour);
 
                                 if (optionalContentGroupMemberships.TryGetValue(kvp.Key, out PDFOptionalContentGroupMembership ocgm))
                                 {
@@ -729,7 +744,8 @@ namespace VectSharp.PDF
         /// <param name="metadata">Document metadata. Use <see cref="PDFMetadata.NoMetadata()"/> if you do not wish to include metadata in the document.</param>
         /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
         /// <param name="optionalContentGroupSettings">Settings for optional content groups (layers).</param>
-        public static PDFDocument CreatePDFDocument(this Document document, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, OutlineTree outline = null, PDFMetadata metadata = default, FilterOption filterOption = default, OptionalContentGroupSettings optionalContentGroupSettings = default)
+        /// <param name="annotationStyles">Annotation appearance styles.</param>
+        public static PDFDocument CreatePDFDocument(this Document document, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, OutlineTree outline = null, PDFMetadata metadata = default, FilterOption filterOption = default, OptionalContentGroupSettings optionalContentGroupSettings = default, AnnotationStyleCollection annotationStyles = default)
         {
             if (linkDestinations == null)
             {
@@ -749,6 +765,11 @@ namespace VectSharp.PDF
             if (optionalContentGroupSettings == null)
             {
                 optionalContentGroupSettings = new OptionalContentGroupSettings();
+            }
+
+            if (annotationStyles == null)
+            {
+                annotationStyles = new AnnotationStyleCollection();
             }
 
             PDFContext[] pageContexts = new PDFContext[document.Pages.Count];
@@ -797,7 +818,7 @@ namespace VectSharp.PDF
                 pdfObjects.Add(pages[i]);
             }
 
-            GenerateLinkAnnotations(pages, taggedObjectRectsByPage, linkDestinations, contentGroups, optionalContentGroupSettings.Groups, contentGroupMemberships, pdfObjects);
+            GenerateLinkAnnotations(pages, taggedObjectRectsByPage, linkDestinations, contentGroups, optionalContentGroupSettings.Groups, contentGroupMemberships, pdfObjects, annotationStyles);
 
             PDFPages pdfPages = new PDFPages(pages);
             pdfObjects.Add(pdfPages);
@@ -853,11 +874,12 @@ namespace VectSharp.PDF
         /// <param name="metadata">Document metadata. Use <see cref="PDFMetadata.NoMetadata()"/> if you do not wish to include metadata in the document.</param>
         /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
         /// <param name="optionalContentGroupSettings">Settings for optional content groups (layers).</param>
-        public static void SaveAsPDF(this Document document, string fileName, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, OutlineTree outline = null, PDFMetadata metadata = default, FilterOption filterOption = default, OptionalContentGroupSettings optionalContentGroupSettings = default)
+        /// <param name="annotationStyles">Annotation appearance styles.</param>
+        public static void SaveAsPDF(this Document document, string fileName, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, OutlineTree outline = null, PDFMetadata metadata = default, FilterOption filterOption = default, OptionalContentGroupSettings optionalContentGroupSettings = default, AnnotationStyleCollection annotationStyles = default)
         {
             using (FileStream stream = new FileStream(fileName, FileMode.Create))
             {
-                document.SaveAsPDF(stream, textOption, compressStreams, linkDestinations, outline, metadata, filterOption, optionalContentGroupSettings);
+                document.SaveAsPDF(stream, textOption, compressStreams, linkDestinations, outline, metadata, filterOption, optionalContentGroupSettings, annotationStyles);
             }
         }
 
@@ -873,9 +895,10 @@ namespace VectSharp.PDF
         /// <param name="metadata">Document metadata. Use <see cref="PDFMetadata.NoMetadata()"/> if you do not wish to include metadata in the document.</param>
         /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
         /// <param name="optionalContentGroupSettings">Settings for optional content groups (layers).</param>
-        public static void SaveAsPDF(this Document document, Stream stream, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, OutlineTree outline = null, PDFMetadata metadata = default, FilterOption filterOption = default, OptionalContentGroupSettings optionalContentGroupSettings = default)
+        /// <param name="annotationStyles">Annotation appearance styles.</param>
+        public static void SaveAsPDF(this Document document, Stream stream, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, OutlineTree outline = null, PDFMetadata metadata = default, FilterOption filterOption = default, OptionalContentGroupSettings optionalContentGroupSettings = default, AnnotationStyleCollection annotationStyles = default)
         {
-            PDFDocument pdfDoc = document.CreatePDFDocument(textOption, compressStreams, linkDestinations, outline, metadata, filterOption, optionalContentGroupSettings);
+            PDFDocument pdfDoc = document.CreatePDFDocument(textOption, compressStreams, linkDestinations, outline, metadata, filterOption, optionalContentGroupSettings, annotationStyles);
             pdfDoc.Write(stream);
         }
     }
