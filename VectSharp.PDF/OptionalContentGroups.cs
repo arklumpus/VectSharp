@@ -241,7 +241,7 @@ namespace VectSharp.PDF.OptionalContentGroups
         /// <param name="on"><see cref="OptionalContentGroup"/>s to turn on.</param>
         /// <param name="off"><see cref="OptionalContentGroup"/>s to turn off.</param>
         /// <param name="toggle"><see cref="OptionalContentGroup"/>s to toggle.</param>
-        /// <returns>A string representation of an action that sets the specified optional content group states. Use this within the <c>linkDestionations</c> parameter of the <see cref="PDFContextInterpreter.CreatePDFDocument(Document, PDFContextInterpreter.TextOptions, bool, Dictionary{string, string}, OutlineTree, PDFMetadata, PDFContextInterpreter.FilterOption, OptionalContentGroupSettings)"/> method.</returns>
+        /// <returns>A string representation of an action that sets the specified optional content group states. Use this within the <c>linkDestionations</c> parameter of the <see cref="PDFContextInterpreter.CreatePDFDocument"/> method.</returns>
         /// <exception cref="ArgumentException">Thrown if no <see cref="OptionalContentGroup"/>s are provided in any of the arguments.</exception>
         public static string CreateSetOCGLink(IReadOnlyList<OptionalContentGroup> on = null, IReadOnlyList<OptionalContentGroup> off = null, IReadOnlyList<OptionalContentGroup> toggle = null)
         {
