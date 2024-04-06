@@ -15,6 +15,7 @@
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -232,6 +233,73 @@ namespace VectSharp.PDF.OptionalContentGroups
         public override string ToString()
         {
             return this.Guid;
+        }
+
+        /// <summary>
+        /// Creates a link destination that sets the state of one or more <see cref="OptionalContentGroup"/>s.
+        /// </summary>
+        /// <param name="on"><see cref="OptionalContentGroup"/>s to turn on.</param>
+        /// <param name="off"><see cref="OptionalContentGroup"/>s to turn off.</param>
+        /// <param name="toggle"><see cref="OptionalContentGroup"/>s to toggle.</param>
+        /// <returns>A string representation of an action that sets the specified optional content group states. Use this within the <c>linkDestionations</c> parameter of the <see cref="PDFContextInterpreter.CreatePDFDocument(Document, PDFContextInterpreter.TextOptions, bool, Dictionary{string, string}, OutlineTree, PDFMetadata, PDFContextInterpreter.FilterOption, OptionalContentGroupSettings)"/> method.</returns>
+        /// <exception cref="ArgumentException">Thrown if no <see cref="OptionalContentGroup"/>s are provided in any of the arguments.</exception>
+        public static string CreateSetOCGLink(IReadOnlyList<OptionalContentGroup> on = null, IReadOnlyList<OptionalContentGroup> off = null, IReadOnlyList<OptionalContentGroup> toggle = null)
+        {
+            StringBuilder tbr = new StringBuilder("#@OCG:");
+
+            bool any = false;
+
+            if (on != null)
+            {
+                for (int i = 0; i < on.Count; i++)
+                {
+                    any = true;
+                    tbr.Append(on[i].ToString());
+                    tbr.Append(",on");
+
+                    if (i < on.Count - 1 || off?.Count > 0 || toggle?.Count > 0)
+                    {
+                        tbr.Append(";");
+                    }
+                }
+            }
+
+            if (off != null)
+            {
+                for (int i = 0; i < off.Count; i++)
+                {
+                    any = true;
+                    tbr.Append(off[i].ToString());
+                    tbr.Append(",off");
+
+                    if (i < off.Count - 1 || toggle?.Count > 0)
+                    {
+                        tbr.Append(";");
+                    }
+                }
+            }
+
+            if (toggle != null)
+            {
+                for (int i = 0; i < toggle.Count; i++)
+                {
+                    any = true;
+                    tbr.Append(toggle[i].ToString());
+                    tbr.Append(",toggle");
+
+                    if (i < toggle.Count - 1)
+                    {
+                        tbr.Append(";");
+                    }
+                }
+            }
+
+            if (!any)
+            {
+                throw new ArgumentException("No optional content groups provided!");
+            }
+
+            return tbr.ToString();
         }
     }
 
