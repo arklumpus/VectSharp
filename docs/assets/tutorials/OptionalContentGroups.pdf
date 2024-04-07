@@ -1,0 +1,79 @@
+%PDF-1.6
+1 0 obj
+<< /Type /OCG /Name (Red) /Intent /View >>
+endobj
+2 0 obj
+<< /Type /OCMD /OCGs [ 1 0 R ] /P /AllOn >>
+endobj
+3 0 obj
+<< /Type /OCG /Name (Green) /Intent /View >>
+endobj
+4 0 obj
+<< /Type /OCMD /OCGs [ 3 0 R ] /P /AllOn >>
+endobj
+5 0 obj
+<< /Type /OCG /Name (Blue) /Intent /View >>
+endobj
+6 0 obj
+<< /Type /OCMD /OCGs [ 5 0 R ] /P /AllOn >>
+endobj
+7 0 obj
+<< /Type /OCMD /VE [ /And 1 0 R 3 0 R ] >>
+endobj
+8 0 obj
+<< /Type /OCMD /VE [ /And 5 0 R 3 0 R ] >>
+endobj
+9 0 obj
+<< /Type /OCMD /VE [ /And 1 0 R 5 0 R ] >>
+endobj
+10 0 obj
+<< /Name (Default) /Creator (VectSharp.PDF v3.0.0) /BaseState /ON /OFF [ 5 0 R ] /Intent /View /Order [ 1 0 R 3 0 R 5 0 R ] >>
+endobj
+11 0 obj
+<< /Length 446 /Length1 1386 /Filter [ /FlateDecode ] >>
+stream
+xeTËNÄ0¼ïWøÈæöJáˆø‰åü¿„Iê,ªZOR{<“¤u`ñrt[õ~!háIéú¹]®n¿š¾s²…Æ‘îÖ	|Ágç˜×÷®ßÕÁóËÑß1Ÿ#¾h¡$d”Ø(nÁø²#„î|¢g—MñÎ—”iì–
+Ç<˜c!Ÿiª"3>«fÇq\*DOE7¯oÇ°àÙ‚X;-ìİ‚ÄFQ	RPØ‚ê„cì®ÒroQ¥iÈ	la-#ª…ø¿…Ğ-‰ÓBNœ)hb Æh7{gOÛl±$+±Btç¢ÑLXêBçÃÕNàƒ‰#Õ-›C|«îÄ3y©úlÅ~¸ÖIÅ$Ù›ZG»qaÙ{HqÂÍã+Â%³e›CÙd&úµRÆœÉÈÎtU™‹pr¬º›¼)kåĞù`/Íƒ§w­XHÁàºŞaÂÆ°˜¸õ.ÙäÑÛà±!­y­ÃÊS)éb1+f¢ÿİx×euäµ³
+¬º§L¡$U<µ>˜Ìó¡MÆ¡ÿâobÑ‰‡i5h‡IüÌW“aY!u9•NU'6˜u˜T=e
+%©â©u˜ü‹ÎQendstream
+endobj
+12 0 obj
+<< /ExtGState << /a0 << /CA 0 /ca 0 >> /a1 << /CA 1 /ca 1 >> >> /Properties << /oc1 2 0 R /oc2 4 0 R /oc3 6 0 R /oc4 7 0 R /oc5 8 0 R /oc6 9 0 R >> >>
+endobj
+13 0 obj
+<< /Type /Page /Parent 14 0 R /MediaBox [ 0 0 100 100 ] /Resources 12 0 R /Contents 11 0 R >>
+endobj
+14 0 obj
+<< /Type /Pages /Kids [ 13 0 R ] /Count 1 >>
+endobj
+15 0 obj
+<< /Type /Catalog /Pages 14 0 R /OCProperties << /OCGs [ 1 0 R 3 0 R 5 0 R ] /D 10 0 R >> >>
+endobj
+16 0 obj
+<< /Author (Giorgio) /Creator (VectSharp v2.5.0) /Producer (VectSharp.PDF v3.0.0) /CreationDate (D:20240406161504+01'00) /ModDate (D:20240406161504+01'00) >>
+endobj
+
+xref
+0 17
+0000000000 65535 f 
+0000000009 00000 n 
+0000000067 00000 n 
+0000000126 00000 n 
+0000000186 00000 n 
+0000000245 00000 n 
+0000000304 00000 n 
+0000000363 00000 n 
+0000000421 00000 n 
+0000000479 00000 n 
+0000000537 00000 n 
+0000000680 00000 n 
+0000001216 00000 n 
+0000001383 00000 n 
+0000001493 00000 n 
+0000001554 00000 n 
+0000001663 00000 n 
+trailer
+<< /Size 17 /Root 15 0 R /Info 16 0 R >>
+startxref
+1837
+%%EOF
