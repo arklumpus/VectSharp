@@ -51,8 +51,9 @@ namespace VectSharp.PDF
         /// Creates an <see cref="OutlineTree"/> from a list of headings, such as the one produced by VectSharp.Markdown.
         /// </summary>
         /// <param name="headings">The list of headings. Each element specifies a heading level (starting from 1), the text for the heading, and a tag for the corresponding object in the document.</param>
+        /// <param name="topLevel">The heading level for top-level headings. Headings above this level will not be included in the outline tree. Setting this to a value higher than 1 is useful e.g. if the document has a title included as a level 1 heading.</param>
         /// <returns>An <see cref="OutlineTree"/> representation of the heading list.</returns>
-        public static OutlineTree CreateFromHeadings(List<(int level, string heading, string tag)> headings)
+        public static OutlineTree CreateFromHeadings(List<(int level, string heading, string tag)> headings, int topLevel = 1)
         {
             OutlineTree tbr = new OutlineTree();
 
@@ -61,15 +62,20 @@ namespace VectSharp.PDF
 
             for (int i = 0; i < headings.Count; i++)
             {
-                OutlineTreeNode item = new OutlineTreeNode(headings[i].heading, headings[i].tag);
-
-                while (headings[i].level <= parents.Peek().Item2)
+                if (headings[i].level >= topLevel)
                 {
-                    parents.Pop();
-                }
+                    int lev = headings[i].level - topLevel + 1;
 
-                parents.Peek().Item1.Add(item);
-                parents.Push((item, headings[i].level));
+                    OutlineTreeNode item = new OutlineTreeNode(headings[i].heading, headings[i].tag);
+
+                    while (lev <= parents.Peek().Item2)
+                    {
+                        parents.Pop();
+                    }
+
+                    parents.Peek().Item1.Add(item);
+                    parents.Push((item, lev));
+                }
             }
 
             return tbr;
