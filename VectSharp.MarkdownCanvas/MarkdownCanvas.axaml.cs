@@ -201,7 +201,7 @@ namespace VectSharp.MarkdownCanvas
 
                     try
                     {
-                        pag = Renderer.RenderSinglePage(this.Document, width, out linkDestinations);
+                        pag = Renderer.RenderSinglePage(this.Document, width, out linkDestinations, out _);
                     }
                     catch
                     {
