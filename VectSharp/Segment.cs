@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace VectSharp
@@ -53,6 +54,7 @@ namespace VectSharp
         /// Creates a copy of the <see cref="Segment"/>.
         /// </summary>
         /// <returns>A copy of the <see cref="Segment"/>.</returns>
+        [Pure]
         public abstract Segment Clone();
 
         /// <summary>
@@ -84,6 +86,7 @@ namespace VectSharp
         /// <param name="previousPoint">The point from which the <see cref="Segment"/> starts (i.e. the endpoint of the previous <see cref="Segment"/>).</param>
         /// <param name="resolution">The absolute length between successive samples in curve segments.</param>
         /// <returns>A collection of linear segments that approximate the current segment.</returns>
+        [Pure]
         public abstract IEnumerable<Segment> Linearise(Point? previousPoint, double resolution);
 
         /// <summary>
@@ -99,6 +102,7 @@ namespace VectSharp
         /// </summary>
         /// <param name="transformationFunction">An arbitrary transformation function.</param>
         /// <returns>A collection of <see cref="Segment"/>s that have been transformed according to the <paramref name="transformationFunction"/>.</returns>
+        [Pure]
         public abstract IEnumerable<Segment> Transform(Func<Point, Point> transformationFunction);
 
         /// <summary>
@@ -107,6 +111,7 @@ namespace VectSharp
         /// <param name="previousPoint">The point from which the <see cref="Segment"/> starts (i.e. the endpoint of the previous <see cref="Segment"/>).</param>
         /// <param name="flatness">The maximum deviation from the original path.</param>
         /// <returns>A collection of <see cref="Segment"/>s composed only of linear segments that approximates the current <see cref="Segment"/>.</returns>
+        [Pure]
         public abstract IEnumerable<Segment> Flatten(Point? previousPoint, double flatness);
 
         /// <summary>

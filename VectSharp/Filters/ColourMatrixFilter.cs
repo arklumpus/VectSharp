@@ -16,6 +16,7 @@
 */
 
 using System;
+using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 
 namespace VectSharp.Filters
@@ -418,6 +419,7 @@ namespace VectSharp.Filters
         /// </summary>
         /// <param name="alpha">The value that will be used to multiply all the alpha coefficients of the <see cref="ColourMatrix"/>.</param>
         /// <returns>A new <see cref="ColourMatrix"/> whose alpha coefficients have been multiplied by the specified value.</returns>
+        [Pure]
         public ColourMatrix WithAlpha(double alpha)
         {
             return new ColourMatrix(new double[,] { { R1, R2, R3, R4, R5 }, { G1, G2, G3, G4, G5 }, { B1, B2, B3, B4, B5 }, { A1 * alpha, A2 * alpha, A3 * alpha, A4 * alpha, A5 * alpha }, { 0, 0, 0, 0, 1 } });
@@ -467,6 +469,7 @@ namespace VectSharp.Filters
         /// </summary>
         /// <param name="colour">The <see cref="Colour"/> to which the <see cref="ColourMatrix"/> should be applied.</param>
         /// <returns>The result of applying the <see cref="ColourMatrix"/> to the specified colour.</returns>
+        [Pure]
         public Colour Apply(Colour colour)
         {
             double[] col = new double[] { colour.R, colour.G, colour.B, colour.A, 1 };
@@ -587,6 +590,7 @@ namespace VectSharp.Filters
         }
 
         /// <inheritdoc/>
+        [Pure]
         public RasterImage Filter(RasterImage image, double scale)
         {
             IntPtr tbrData = System.Runtime.InteropServices.Marshal.AllocHGlobal(image.Width * image.Height * (image.HasAlpha ? 4 : 3));

@@ -16,6 +16,7 @@
 */
 
 using System;
+using System.Diagnostics.Contracts;
 
 namespace VectSharp.Filters
 {
@@ -46,6 +47,7 @@ namespace VectSharp.Filters
         /// <param name="image">The <see cref="RasterImage"/> to which the filter will be applied.</param>
         /// <param name="scale">The scale of the image with respect to the filter.</param>
         /// <returns>A new <see cref="RasterImage"/> containing the filtered image. The source <paramref name="image"/> is left unaltered.</returns>
+        [Pure]
         RasterImage Filter(RasterImage image, double scale);
     }
 
@@ -61,6 +63,7 @@ namespace VectSharp.Filters
         /// <param name="bounds">The region on the graphics surface where the image will be drawn.</param>
         /// <param name="scale">The scale of the image with respect to the filter.</param>
         /// <returns>A new <see cref="RasterImage"/> containing the filtered image. The source <paramref name="image"/> is left unaltered.</returns>
+        [Pure]
         RasterImage Filter(RasterImage image, Rectangle bounds, double scale);
     }
 

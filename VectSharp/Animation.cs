@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using VectSharp.Filters;
 
@@ -1224,6 +1225,7 @@ namespace VectSharp
         /// </summary>
         /// <param name="value">The transition offset (ranging from 0 to 1).</param>
         /// <returns>The eased transition offset value.</returns>
+        [Pure]
         double Ease(double value);
     }
 
@@ -1298,6 +1300,7 @@ namespace VectSharp
         }
 
         /// <inheritdoc/>
+        [Pure]
         public double Ease(double value)
         {
             if (value <= 0)
@@ -1332,6 +1335,7 @@ namespace VectSharp
         }
 
         /// <inheritdoc/>
+        [Pure]
         public double Ease(double value) => value;
     }
 

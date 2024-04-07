@@ -18,6 +18,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace VectSharp
@@ -84,6 +85,7 @@ namespace VectSharp
         /// Normalises a <see cref="Point"/>.
         /// </summary>
         /// <returns>The normalised <see cref="Point"/>.</returns>
+        [Pure]
         public Point Normalize()
         {
             double mod = Modulus();

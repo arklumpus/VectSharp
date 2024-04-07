@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace VectSharp
@@ -1906,6 +1907,7 @@ namespace VectSharp
         /// </summary>
         /// <param name="resolution">The absolute length between successive samples in curve segments.</param>
         /// <returns>A <see cref="GraphicsPath"/> composed only of linear segments that approximates the current <see cref="GraphicsPath"/>.</returns>
+        [Pure]
         public GraphicsPath Linearise(double resolution)
         {
             if (!(resolution > 0))
@@ -1960,6 +1962,7 @@ namespace VectSharp
         /// </summary>
         /// <param name="resolution">The maximum length (in absolute units) of line segments in the resulting <see cref="GraphicsPath"/>.</param>
         /// <returns>A <see cref="GraphicsPath"/> composed only of linear segments that are shorter than <paramref name="resolution"/> and approximate the current <see cref="GraphicsPath"/>.</returns>
+        [Pure]
         public GraphicsPath Discretise(double resolution)
         {
             if (!(resolution > 0))
@@ -1990,6 +1993,7 @@ namespace VectSharp
         /// </summary>
         /// <param name="flatness">The maximum deviation from the original path.</param>
         /// <returns>A <see cref="GraphicsPath"/> composed only of linear segments that approximates the current <see cref="GraphicsPath"/>.</returns>
+        [Pure]
         public GraphicsPath Flatten(double flatness)
         {
             if (!(flatness > 0))
@@ -2222,6 +2226,7 @@ namespace VectSharp
         /// <param name="resolution">The resolution that will be used to linearise curve segments in the <see cref="GraphicsPath"/>.</param>
         /// <param name="clockwise">If this is <see langword="true"/>, the triangles will have their vertices in a clockwise order, otherwise they will be in anticlockwise order.</param>
         /// <returns>A collection of distinct <see cref="GraphicsPath"/>s, each representing one triangle.</returns>
+        [Pure]
         public IEnumerable<GraphicsPath> Triangulate(double resolution, bool clockwise)
         {
             double shiftAmount = 0.01 * resolution;
@@ -3009,6 +3014,7 @@ namespace VectSharp
         /// </summary>
         /// <param name="transformationFunction">An arbitrary transformation function.</param>
         /// <returns>A new <see cref="GraphicsPath"/> in which all points have been replaced using the <paramref name="transformationFunction"/>.</returns>
+        [Pure]
         public GraphicsPath Transform(Func<Point, Point> transformationFunction)
         {
             GraphicsPath tbr = new GraphicsPath();
@@ -3325,6 +3331,7 @@ namespace VectSharp
         /// Reverses the <see cref="GraphicsPath"/>.
         /// </summary>
         /// <returns>The reversed <see cref="GraphicsPath"/>.</returns>
+        [Pure]
         public GraphicsPath Reverse()
         {
             GraphicsPath tbr = new GraphicsPath();
@@ -3434,6 +3441,7 @@ namespace VectSharp
         /// <param name="lineCap">The line cap used in the stroke.</param>
         /// <param name="lineJoin">The line join used in the stroke.</param>
         /// <returns>A <see cref="GraphicsPath"/> representing the stroke of the current <see cref="GraphicsPath"/>.</returns>
+        [Pure]
         public GraphicsPath GetStroke(double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter)
         {
             double flatness = lineWidth * 0.0001;

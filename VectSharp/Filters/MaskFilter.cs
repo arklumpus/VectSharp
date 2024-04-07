@@ -16,6 +16,7 @@
 */
 
 using System;
+using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 
 namespace VectSharp.Filters
@@ -42,6 +43,7 @@ namespace VectSharp.Filters
         public MaskFilter(Graphics mask) : base(mask) { }
 
         /// <inheritdoc/>
+        [Pure]
         public RasterImage Filter(RasterImage image, Rectangle bounds, double scale)
         {
             RasterImage mask = this.GetCachedRasterisation(scale);

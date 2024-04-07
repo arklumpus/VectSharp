@@ -19,8 +19,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Text;
 
 namespace VectSharp
 {
@@ -36,6 +36,7 @@ namespace VectSharp
         /// </summary>
         /// <param name="opacity">The value that will be used to multiply the opacity of the brush.</param>
         /// <returns>A brush corresponding the current instance, with the specified <paramref name="opacity"/> multiplication applied.</returns>
+        [Pure]
         public abstract Brush MultiplyOpacity(double opacity);
 
         /// <summary>
@@ -134,6 +135,7 @@ namespace VectSharp
         /// </summary>
         /// <param name="opacity">The value that will be used to multiply the colour's opacity.</param>
         /// <returns>A <see cref="GradientStop"/> corresponding to the current instance, whose colour's opacity has been multiplied by the specified value.</returns>
+        [Pure]
         public GradientStop MultiplyOpacity(double opacity)
         {
             return new GradientStop(this.Colour.WithAlpha(this.Colour.A * opacity), this.Offset);
@@ -344,6 +346,7 @@ namespace VectSharp
         /// <param name="referenceGraphics">The <see cref="Graphics"/> whose original reference frame is to be used.</param>
         /// <returns>A <see cref="LinearGradientBrush"/> with the same gradient stops as the current instance, whose start and end point correspond to the points of the current instance in the
         /// original reference frame of the <paramref name="referenceGraphics"/>.</returns>
+        [Pure]
         public LinearGradientBrush RelativeTo(Graphics referenceGraphics)
         {
             Stack<double[,]> transformMatrix = new Stack<double[,]>();

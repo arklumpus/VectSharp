@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using VectSharp.Filters;
 
 namespace VectSharp
@@ -1067,6 +1068,7 @@ namespace VectSharp
         /// <param name="transformationFunction">An arbitrary transformation function.</param>
         /// <param name="linearisationResolution">The resolution that will be used to linearise curve segments.</param>
         /// <returns>A new <see cref="Graphics"/> object in which all graphics actions have been linearised and transformed using the <paramref name="transformationFunction"/>.</returns>
+        [Pure]
         public Graphics Transform(Func<Point, Point> transformationFunction, double linearisationResolution)
         {
             Graphics destinationGraphics = new Graphics();
@@ -1265,6 +1267,7 @@ namespace VectSharp
         /// <param name="linearisationResolution">The resolution that will be used to linearise curve segments.</param>
         /// <param name="maxSegmentLength">The maximum length of line segments.</param>
         /// <returns>A new <see cref="Graphics"/> object in which all graphics actions have been linearised and transformed using the <paramref name="transformationFunction"/>.</returns>
+        [Pure]
         public Graphics Transform(Func<Point, Point> transformationFunction, double linearisationResolution, double maxSegmentLength)
         {
             Graphics destinationGraphics = new Graphics();
@@ -1394,6 +1397,7 @@ namespace VectSharp
         /// </summary>
         /// <param name="resolution">The resolution that will be used to linearise curve segments.</param>
         /// <returns>A new <see cref="Graphics"/> object containing the linearised elements.</returns>
+        [Pure]
         public Graphics Linearise(double resolution)
         {
             Graphics destinationGraphics = new Graphics();
@@ -1450,6 +1454,7 @@ namespace VectSharp
         /// Computes the rectangular bounds of the region affected by the drawing operations performed on the <see cref="Graphics"/> object.
         /// </summary>
         /// <returns>The smallest rectangle that contains all the elements drawn on the <see cref="Graphics"/>.</returns>
+        [Pure]
         public Rectangle GetBounds()
         {
             Rectangle tbr = Rectangle.NaN;

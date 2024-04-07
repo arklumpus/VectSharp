@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -692,7 +693,8 @@ namespace VectSharp
         /// <param name="charactersToInclude">A string containing the characters for which the glyphs should be included.</param>
         /// <param name="consolidateAt32">If true, the character map is rearranged so that the included glyphs start at the unicode U+0032 control point.</param>
         /// <param name="outputEncoding">If <paramref name="consolidateAt32"/> is true, entries will be added to this dictionary mapping the original characters to the new map (that starts at U+0033).</param>
-        /// <returns></returns>
+        /// <returns>The subsetted TrueType file.</returns>
+        [Pure]
         public TrueTypeFile SubsetFont(string charactersToInclude, bool consolidateAt32 = false, Dictionary<char, char> outputEncoding = null)
         {
             if (!this.HasCmap4Table())

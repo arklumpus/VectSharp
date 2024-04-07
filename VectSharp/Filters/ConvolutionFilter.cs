@@ -16,6 +16,7 @@
 */
 
 using System;
+using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 
 namespace VectSharp.Filters
@@ -85,6 +86,7 @@ namespace VectSharp.Filters
         }
 
         /// <inheritdoc/>
+        [Pure]
         public virtual RasterImage Filter(RasterImage image, double scale)
         {
             IntPtr tbrData = System.Runtime.InteropServices.Marshal.AllocHGlobal(image.Width * image.Height * (image.HasAlpha ? 4 : 3));

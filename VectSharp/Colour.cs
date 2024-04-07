@@ -16,6 +16,7 @@
 */
 
 using System;
+using System.Diagnostics.Contracts;
 
 namespace VectSharp
 {
@@ -355,6 +356,7 @@ namespace VectSharp
         /// </summary>
         /// <param name="alpha">The alpha component of the new <see cref="Colour"/>.</param>
         /// <returns>A <see cref="Colour"/> struct with the same RGB components as the current <see cref="Colour"/> and the specified <paramref name="alpha"/>.</returns>
+        [Pure]
         public Colour WithAlpha(double alpha)
         {
             return Colour.FromRgba(this.R, this.G, this.B, alpha);
@@ -365,6 +367,7 @@ namespace VectSharp
         /// </summary>
         /// <param name="alpha">The alpha component of the new <see cref="Colour"/>.</param>
         /// <returns>A <see cref="Colour"/> struct with the same RGB components as the current <see cref="Colour"/> and the specified <paramref name="alpha"/>.</returns>
+        [Pure]
         public Colour WithAlpha(byte alpha)
         {
             return Colour.FromRgba(this.R, this.G, this.B, (double)alpha / 255.0);

@@ -16,6 +16,7 @@
 */
 
 using System;
+using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 
 namespace VectSharp.Filters
@@ -47,6 +48,7 @@ namespace VectSharp.Filters
         }
 
         /// <inheritdoc/>
+        [Pure]
         public RasterImage Filter(RasterImage image, double scale)
         {
             return BoxBlurSRGB(image, (int)Math.Round(this.BoxRadius * scale));

@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.Contracts;
 
 namespace VectSharp.Filters
 {
@@ -88,6 +89,7 @@ namespace VectSharp.Filters
         }
 
         /// <inheritdoc/>
+        [Pure]
         public RasterImage Filter(RasterImage image, double scale)
         {
             RasterImage currImage = image;
