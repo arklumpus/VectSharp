@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace VectSharp.Plots
 {
@@ -300,7 +301,7 @@ namespace VectSharp.Plots
         /// <inheritdoc/>
         public double[] GetAround(IReadOnlyList<double> point, IReadOnlyList<double> direction)
         {
-            return new double[] { point[0] + direction[0] * this.Resolution[0], point[1] + direction[1] * this.Resolution[1] };
+            return new double[] { point[0] + direction[0] * this.Resolution.Min(), point[1] + direction[1] * this.Resolution.Min() };
         }
     }
 
