@@ -70,7 +70,14 @@ Colour blue = Colour.FromRgb(0, 0, 1.0, 0.5);
 
 The rectangle could also be filled using a more complex "brush", e.g. a gradient. This will be the topic of a different tutorial.
 
-Finally, now that you have drawn the rectangle on the page, you can export the page as an SVG file:
+By default, the image will have a transparent background. You can change the background colour through the `Background` property of the `Page` object:
+
+{% highlight CSharp %}
+// Set the page background to a light grey.
+page.Background = Colour.FromRgb(200, 200, 200);
+{% endhighlight %}
+
+Finally, now that you have drawn the rectangle on the page and changed its background, you can export the page as an SVG file:
 
 {% highlight CSharp %}
 // Output file name.
@@ -116,6 +123,9 @@ Colour fillColour = Colours.Green;
 
 // Draw the rectangle.
 graphics.FillRectangle(rectangleX, rectangleY, rectangleWidth, rectangleHeight, fillColour);
+
+// Set the page background to a light grey.
+page.Background = Colour.FromRgb(200, 200, 200);
 
 // Output file name.
 string outputFile = "Rectangle.svg";

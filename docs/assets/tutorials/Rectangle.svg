@@ -2,6 +2,7 @@
 <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" version="1.1" style="font-synthesis: none;" xmlns="http://www.w3.org/2000/svg">
   <style></style>
   <defs />
-  <path d="M 0 0 L 100 0 L 100 100 L 0 100 Z " stroke="none" fill="#FFFFFF" fill-opacity="0" transform="matrix(1,0,0,1,0,0)" />
-  <path d="M 10 10 L 90 10 L 90 90 L 10 90 Z " stroke="none" fill="#008000" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <style>	</style>
+  <path d="M 0 0 L 100 0 L 100 100 L 0 100 Z " stroke="none" fill-rule="nonzero" fill="#C8C8C8" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
+  <path d="M 10 10 L 90 10 L 90 90 L 10 90 Z " stroke="none" fill-rule="evenodd" fill="#008000" fill-opacity="1" transform="matrix(1,0,0,1,0,0)" />
 </svg>
