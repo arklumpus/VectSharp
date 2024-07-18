@@ -776,7 +776,7 @@ namespace VectSharp.PDF
 
             Dictionary<string, (FontFamily, HashSet<char>)> fontFamilies = new Dictionary<string, (FontFamily, HashSet<char>)>();
             Dictionary<string, RasterImage> allImages = new Dictionary<string, RasterImage>();
-            HashSet<double> allAlphas = new HashSet<double>();
+            HashSet<double> allAlphas = new HashSet<double>() { 0, 1 };
             Dictionary<string, OptionalContentGroupExpression> allVisibilityExpressions = new Dictionary<string, OptionalContentGroupExpression>();
 
             for (int i = 0; i < document.Pages.Count; i++)
