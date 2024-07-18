@@ -449,11 +449,25 @@ namespace VectSharp
 
                             if (i > 0)
                             {
-                                FillText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
+                                if (txt.Spacing == TextSpacing.Default)
+                                {
+                                    FillText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
+                                }
+                                else
+                                {
+                                    FillTextWithSpacing(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? fillColour, txt.Spacing, TextBaselines.Baseline, spanTag);
+                                }
                             }
                             else
                             {
-                                FillText(baselineOrigin, txt.Text, txt.Font, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
+                                if (txt.Spacing == TextSpacing.Default)
+                                {
+                                    FillText(baselineOrigin, txt.Text, txt.Font, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
+                                }
+                                else
+                                {
+                                    FillTextWithSpacing(baselineOrigin.X, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? fillColour, txt.Spacing, TextBaselines.Baseline, spanTag);
+                                }
                             }
 
                             if (i > 0)
@@ -478,11 +492,25 @@ namespace VectSharp
 
                             if (txt.Script == Script.Subscript)
                             {
-                                FillText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + txt.Font.FontSize * 0.14, txt.Text, newFont, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
+                                if (txt.Spacing == TextSpacing.Default)
+                                {
+                                    FillText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + txt.Font.FontSize * 0.14, txt.Text, newFont, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
+                                }
+                                else
+                                {
+                                    FillTextWithSpacing(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + txt.Font.FontSize * 0.14, txt.Text, newFont, txt.Brush ?? fillColour, txt.Spacing, TextBaselines.Baseline, spanTag);
+                                }
                             }
                             else if (txt.Script == Script.Superscript)
                             {
-                                FillText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y - txt.Font.FontSize * 0.33, txt.Text, newFont, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
+                                if (txt.Spacing == TextSpacing.Default)
+                                {
+                                    FillText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y - txt.Font.FontSize * 0.33, txt.Text, newFont, txt.Brush ?? fillColour, TextBaselines.Baseline, spanTag);
+                                }
+                                else
+                                {
+                                    FillTextWithSpacing(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y - txt.Font.FontSize * 0.33, txt.Text, newFont, txt.Brush ?? fillColour, txt.Spacing, TextBaselines.Baseline, spanTag);
+                                }
                             }
 
 
@@ -566,11 +594,25 @@ namespace VectSharp
 
                             if (i > 0)
                             {
-                                StrokeText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
+                                if (txt.Spacing == TextSpacing.Default)
+                                {
+                                    StrokeText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
+                                }
+                                else
+                                {
+                                    StrokeTextWithSpacing(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? strokeColour, txt.Spacing, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
+                                }
                             }
                             else
                             {
-                                StrokeText(baselineOrigin, txt.Text, txt.Font, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
+                                if (txt.Spacing == TextSpacing.Default)
+                                {
+                                    StrokeText(baselineOrigin, txt.Text, txt.Font, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
+                                }
+                                else
+                                {
+                                    StrokeTextWithSpacing(baselineOrigin.X, baselineOrigin.Y, txt.Text, txt.Font, txt.Brush ?? strokeColour, txt.Spacing, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
+                                }
                             }
 
                             if (i > 0)
@@ -595,11 +637,25 @@ namespace VectSharp
 
                             if (txt.Script == Script.Subscript)
                             {
-                                StrokeText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + txt.Font.FontSize * 0.14, txt.Text, newFont, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
+                                if (txt.Spacing == TextSpacing.Default)
+                                {
+                                    StrokeText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + txt.Font.FontSize * 0.14, txt.Text, newFont, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
+                                }
+                                else
+                                {
+                                    StrokeTextWithSpacing(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y + txt.Font.FontSize * 0.14, txt.Text, newFont, txt.Brush ?? strokeColour, txt.Spacing, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
+                                }
                             }
                             else if (txt.Script == Script.Superscript)
                             {
-                                StrokeText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y - txt.Font.FontSize * 0.33, txt.Text, newFont, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
+                                if (txt.Spacing == TextSpacing.Default)
+                                {
+                                    StrokeText(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y - txt.Font.FontSize * 0.33, txt.Text, newFont, txt.Brush ?? strokeColour, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
+                                }
+                                else
+                                {
+                                    StrokeTextWithSpacing(baselineOrigin.X + metrics.LeftSideBearing, baselineOrigin.Y - txt.Font.FontSize * 0.33, txt.Text, newFont, txt.Brush ?? strokeColour, txt.Spacing, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, spanTag);
+                                }
                             }
 
 
@@ -980,5 +1036,111 @@ namespace VectSharp
                 }
             }
         }
+
+
+        private static Font.DetailedFontMetrics TextWithSpacingBase(double x, double y, string text, Font font, TextBaselines textBaseline, TextSpacing spacing, Action<double, double, char> printAction)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return new Font.DetailedFontMetrics(0, 0, 0, 0, 0, 0, 0);
+            }
+
+            Font.DetailedFontMetrics metrics = font.MeasureTextAdvanced(text);
+
+            Point baselineOrigin = new Point(x, y);
+
+            switch (textBaseline)
+            {
+                case TextBaselines.Baseline:
+                    baselineOrigin = new Point(x - metrics.LeftSideBearing, y);
+                    break;
+                case TextBaselines.Top:
+                    baselineOrigin = new Point(x - metrics.LeftSideBearing, y + metrics.Top);
+                    break;
+                case TextBaselines.Bottom:
+                    baselineOrigin = new Point(x - metrics.LeftSideBearing, y + metrics.Bottom);
+                    break;
+                case TextBaselines.Middle:
+                    baselineOrigin = new Point(x - metrics.LeftSideBearing,
+                        y + (metrics.Top - metrics.Bottom) * 0.5 + metrics.Bottom);
+                    break;
+            }
+
+            Point currentGlyphPlacementDelta = new Point();
+            Point currentGlyphAdvanceDelta = new Point();
+            Point nextGlyphPlacementDelta = new Point();
+            Point nextGlyphAdvanceDelta = new Point();
+            double scale = 1;
+            double increment = 0;
+            char c = '\0';
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                c = text[i];
+
+                if (Font.EnableKerning && i < text.Length - 1)
+                {
+                    currentGlyphPlacementDelta = nextGlyphPlacementDelta;
+                    currentGlyphAdvanceDelta = nextGlyphAdvanceDelta;
+                    nextGlyphAdvanceDelta = new Point();
+                    nextGlyphPlacementDelta = new Point();
+
+                    TrueTypeFile.PairKerning kerning = font.FontFamily.TrueTypeFile.Get1000EmKerning(c, text[i + 1]);
+
+                    if (kerning != null)
+                    {
+                        currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X,
+                            currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
+                        currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X,
+                            currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+
+                        nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X,
+                            nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
+                        nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X,
+                            nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
+                    }
+                }
+
+                double lsb = font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).LeftSideBearing * font.FontSize / 1000;
+
+                printAction?.Invoke(baselineOrigin.X + currentGlyphPlacementDelta.X + lsb, baselineOrigin.Y + currentGlyphPlacementDelta.Y, c);
+
+                if (char.IsWhiteSpace(c))
+                {
+                    scale = spacing.WhitespaceScale;
+                    increment = spacing.WhitespaceAdd;
+                }
+                else
+                {
+                    scale = spacing.NonWhitespaceScale;
+                    increment = spacing.NonWhitespaceAdd;
+                }
+
+                baselineOrigin.X += (font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) + currentGlyphAdvanceDelta.X) * font.FontSize / 1000 * scale + increment;
+                baselineOrigin.Y += currentGlyphAdvanceDelta.Y * font.FontSize / 1000;
+            }
+
+            double width = baselineOrigin.X - x - (currentGlyphAdvanceDelta.X * font.FontSize / 1000 * scale + increment) - font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000 * (scale - 1) - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000;
+
+            return new Font.DetailedFontMetrics(width, metrics.Height, metrics.LeftSideBearing, metrics.RightSideBearing, metrics.Top, metrics.Bottom, metrics.AdvanceWidth - metrics.Width + width);
+        }
+
+
+        private void StrokeTextWithSpacing(double x, double y, string text, Font font, Brush brush, TextSpacing spacing, TextBaselines textBaseline = TextBaselines.Top, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
+        {
+            TextWithSpacingBase(x, y, text, font, textBaseline, spacing, (cx, cy, c) => this.StrokeText(cx, cy, c.ToString(), font, brush, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag));
+        }
+
+        private void FillTextWithSpacing(double x, double y, string text, Font font, Brush brush, TextSpacing spacing, TextBaselines textBaseline = TextBaselines.Top, string tag = null)
+        {
+            TextWithSpacingBase(x, y, text, font, textBaseline, spacing, (cx, cy, c) => this.FillText(cx, cy, c.ToString(), font, brush, TextBaselines.Baseline, tag));
+        }
+
+        internal static Font.DetailedFontMetrics MeasureTextWithSpacing(double x, double y, string text, Font font, Brush brush, TextSpacing spacing, TextBaselines textBaseline = TextBaselines.Top)
+        {
+            return TextWithSpacingBase(x, y, text, font, textBaseline, spacing, null);
+        }
+
+
     }
 }

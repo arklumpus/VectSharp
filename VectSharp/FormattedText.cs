@@ -70,18 +70,25 @@ namespace VectSharp
         public Brush Brush { get; }
 
         /// <summary>
+        /// Represents the text spacing parameters used to draw the text.
+        /// </summary>
+        public TextSpacing Spacing { get; }
+
+        /// <summary>
         /// Creates a new <see cref="FormattedText"/> instance with the specified <paramref name="text"/>, <paramref name="font"/>, <paramref name="script"/> position and <paramref name="brush"/>.
         /// </summary>
         /// <param name="text">The text that will be contained in the new <see cref="FormattedText"/>.</param>
         /// <param name="font">The font that will be used by the new <see cref="FormattedText"/>.</param>
         /// <param name="script">The script position of the new <see cref="FormattedText"/>.</param>
         /// <param name="brush">The brush that will be used by the new <see cref="FormattedText"/>.</param>
-        public FormattedText(string text, Font font, Script script = Script.Normal, Brush brush = null)
+        /// <param name="spacing">The text spacing parameters used to draw the text.</param>
+        public FormattedText(string text, Font font, Script script = Script.Normal, Brush brush = null, TextSpacing? spacing = null)
         {
             this.Text = text ?? "";
             this.Font = font;
             this.Script = script;
             this.Brush = brush;
+            this.Spacing = spacing ?? TextSpacing.Default;
         }
 
         /// <summary>
@@ -101,8 +108,9 @@ namespace VectSharp
         /// <param name="italicFont">The font that will be used for text that is in italics. Note that this does not necessarily have to be an italic font; this is just the font that is applied to text contained within <c>&lt;i&gt;&lt;/i&gt;</c> tags.</param>
         /// <param name="boldItalicFont">The font that will be used for text that is both in bold and in italics.</param>
         /// <param name="defaultBrush">The default <see cref="Brush"/> that will be used for text runs that do not specify a colour. If this is <see langword="null"/>, the default <see cref="Brush"/> will be the one specified in the painting call.</param>
+        /// <param name="spacing">The text spacing parameters used to draw the text.</param>
         /// <returns>A lazy collection of <see cref="FormattedText"/> objects. Note that every enumeration of this collection causes the text to be parsed again; if you need to enumerate this collection more than once, you should probably convert it e.g. to a <see cref="List{T}"/>.</returns>
-        public static IEnumerable<FormattedText> Format(string text, Font normalFont, Font boldFont, Font italicFont, Font boldItalicFont, Brush defaultBrush = null)
+        public static IEnumerable<FormattedText> Format(string text, Font normalFont, Font boldFont, Font italicFont, Font boldItalicFont, Brush defaultBrush = null, TextSpacing? spacing = null)
         {
             if (string.IsNullOrEmpty(text))
             {
@@ -143,7 +151,7 @@ namespace VectSharp
                             case Tags.BoldOpen:
                                 if (!string.IsNullOrEmpty(txt))
                                 {
-                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek(), spacing);
                                 }
                                 currentRun.Clear();
                                 boldDepth++;
@@ -153,7 +161,7 @@ namespace VectSharp
                                 {
                                     if (!string.IsNullOrEmpty(txt))
                                     {
-                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek(), spacing);
                                     }
                                     currentRun.Clear();
                                     boldDepth--;
@@ -162,7 +170,7 @@ namespace VectSharp
                             case Tags.UnderlineOpen:
                                 if (!string.IsNullOrEmpty(txt))
                                 {
-                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek(), spacing);
                                 }
                                 currentRun.Clear();
                                 underlineDepth++;
@@ -172,7 +180,7 @@ namespace VectSharp
                                 {
                                     if (!string.IsNullOrEmpty(txt))
                                     {
-                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek(), spacing);
                                     }
                                     currentRun.Clear();
                                     underlineDepth--;
@@ -182,7 +190,7 @@ namespace VectSharp
                             case Tags.ItalicsOpen:
                                 if (!string.IsNullOrEmpty(txt))
                                 {
-                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek(), spacing);
                                 }
                                 currentRun.Clear();
                                 italicsDepth++;
@@ -192,7 +200,7 @@ namespace VectSharp
                                 {
                                     if (!string.IsNullOrEmpty(txt))
                                     {
-                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek(), spacing);
                                     }
                                     currentRun.Clear();
                                     italicsDepth--;
@@ -202,7 +210,7 @@ namespace VectSharp
                             case Tags.SupOpen:
                                 if (!string.IsNullOrEmpty(txt))
                                 {
-                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek(), spacing);
                                 }
                                 currentRun.Clear();
                                 superscriptDepth++;
@@ -212,7 +220,7 @@ namespace VectSharp
                                 {
                                     if (!string.IsNullOrEmpty(txt))
                                     {
-                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek(), spacing);
                                     }
                                     currentRun.Clear();
                                     superscriptDepth--;
@@ -222,7 +230,7 @@ namespace VectSharp
                             case Tags.SubOpen:
                                 if (!string.IsNullOrEmpty(txt))
                                 {
-                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek(), spacing);
                                 }
                                 currentRun.Clear();
                                 subscriptDepth++;
@@ -232,7 +240,7 @@ namespace VectSharp
                                 {
                                     if (!string.IsNullOrEmpty(txt))
                                     {
-                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek(), spacing);
                                     }
                                     currentRun.Clear();
                                     subscriptDepth--;
@@ -241,7 +249,7 @@ namespace VectSharp
                             case Tags.ColourOpen:
                                 if (!string.IsNullOrEmpty(txt))
                                 {
-                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                    yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek(), spacing);
                                 }
                                 currentRun.Clear();
                                 brushes.Push(tagBrush);
@@ -251,7 +259,7 @@ namespace VectSharp
                                 {
                                     if (!string.IsNullOrEmpty(txt))
                                     {
-                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                                        yield return new FormattedText(txt, GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek(), spacing);
                                     }
                                     currentRun.Clear();
                                     brushes.Pop();
@@ -264,7 +272,7 @@ namespace VectSharp
 
             if (currentRun.Length > 0)
             {
-                yield return new FormattedText(currentRun.ToString(), GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek());
+                yield return new FormattedText(currentRun.ToString(), GetFont(boldDepth % 2 == 1, italicsDepth % 2 == 1, underlineDepth % 2 == 1, normalFont, boldFont, italicFont, boldItalicFont), superscriptDepth > subscriptDepth ? Script.Superscript : subscriptDepth > superscriptDepth ? Script.Subscript : Script.Normal, brushes.Peek(), spacing);
             }
         }
 
@@ -283,8 +291,9 @@ namespace VectSharp
         /// <param name="fontSize">The size of the fonts to use.</param>
         /// <param name="defaultUnderline">Determines whether text should be underlined by default. This is toggled by <c>&lt;u&gt;&lt;/u&gt;</c> tags.</param>
         /// <param name="defaultBrush">The default <see cref="Brush"/> that will be used for text runs that do not specify a colour. If this is <see langword="null"/>, the default <see cref="Brush"/> will be the one specified in the painting call.</param>
+        /// <param name="spacing">The text spacing parameters used to draw the text.</param>
         /// <returns>A lazy collection of <see cref="FormattedText"/> objects. Note that every enumeration of this collection causes the text to be parsed again; if you need to enumerate this collection more than once, you should probably convert it e.g. to a <see cref="List{T}"/>.</returns>
-        public static IEnumerable<FormattedText> Format(string text, FontFamily.StandardFontFamilies fontFamily, double fontSize, bool defaultUnderline = false, Brush defaultBrush = null)
+        public static IEnumerable<FormattedText> Format(string text, FontFamily.StandardFontFamilies fontFamily, double fontSize, bool defaultUnderline = false, Brush defaultBrush = null, TextSpacing? spacing = null)
         {
             Font normalFont = new Font(FontFamily.ResolveFontFamily(fontFamily), fontSize, defaultUnderline);
 
@@ -358,7 +367,7 @@ namespace VectSharp
                     break;
             }
 
-            return Format(text, normalFont, boldFont, italicFont, boldItalicFont, defaultBrush);
+            return Format(text, normalFont, boldFont, italicFont, boldItalicFont, defaultBrush, spacing);
         }
 
         private static Font GetFont(bool bold, bool italic, bool underlined, Font normalFont, Font boldFont, Font italicFont, Font boldItalicFont)
@@ -562,7 +571,17 @@ namespace VectSharp
 
                     if (txt.Script == Script.Normal)
                     {
-                        Font.DetailedFontMetrics metrics = txt.Font.MeasureTextAdvanced(txt.Text);
+                        Font.DetailedFontMetrics metrics;
+
+                        if (txt.Spacing == TextSpacing.Default)
+                        {
+                            metrics = txt.Font.MeasureTextAdvanced(txt.Text);
+                        }
+                        else
+                        {
+                            metrics = Graphics.MeasureTextWithSpacing(0, 0, txt.Text, txt.Font, Colours.Black, txt.Spacing);
+                        }
+
                         allMetrics?.Add(metrics);
 
                         top = Math.Max(top, metrics.Top);
@@ -585,7 +604,17 @@ namespace VectSharp
                     {
                         Font newFont = new Font(txt.Font.FontFamily, txt.Font.FontSize * 0.7);
 
-                        Font.DetailedFontMetrics metrics = newFont.MeasureTextAdvanced(txt.Text);
+                        Font.DetailedFontMetrics metrics;
+
+                        if (txt.Spacing == TextSpacing.Default)
+                        {
+                            metrics = txt.Font.MeasureTextAdvanced(txt.Text);
+                        }
+                        else
+                        {
+                            metrics = Graphics.MeasureTextWithSpacing(0, 0, txt.Text, newFont, Colours.Black, txt.Spacing);
+                        }
+
                         allMetrics?.Add(metrics);
 
                         advanceWidth += metrics.AdvanceWidth;

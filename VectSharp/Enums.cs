@@ -67,6 +67,121 @@ namespace VectSharp
     }
 
     /// <summary>
+    /// Contains information about text spacing.
+    /// </summary>
+    public struct TextSpacing : IEquatable<TextSpacing>
+    {
+        /// <summary>
+        /// Scaling factor for whitespace characters.
+        /// </summary>
+        public double WhitespaceScale { get; }
+
+        /// <summary>
+        /// Increment for whitespace characters.
+        /// </summary>
+        public double WhitespaceAdd { get; }
+
+
+        /// <summary>
+        /// Scaling factor for non-whitespace characters.
+        /// </summary>
+        public double NonWhitespaceScale { get; }
+
+        /// <summary>
+        /// Increment for non-whitespace characters.
+        /// </summary>
+        public double NonWhitespaceAdd { get; }
+
+        /// <summary>
+        /// Create a new <see cref="TextSpacing"/> with the specified spacing parameters.
+        /// </summary>
+        /// <param name="nonWhitespaceScale">Scaling factor for non-whitespace characters.</param>
+        /// <param name="nonWhitespaceAdd">Increment for non-whitespace characters.</param>
+        /// <param name="whitespaceScale">Scaling factor for whitespace characters.</param>
+        /// <param name="whitespaceAdd">Increment for whitespace characters.</param>
+        public TextSpacing(double nonWhitespaceScale, double nonWhitespaceAdd, double whitespaceScale, double whitespaceAdd)
+        {
+            this.WhitespaceScale = whitespaceScale;
+            this.WhitespaceAdd = whitespaceAdd;
+            this.NonWhitespaceScale = nonWhitespaceScale;
+            this.NonWhitespaceAdd = nonWhitespaceAdd;
+        }
+
+        /// <summary>
+        /// Create a new <see cref="TextSpacing"/> with the specified spacing parameters.
+        /// </summary>
+        /// <param name="scale">Scaling factor.</param>
+        /// <param name="add">Increment.</param>
+        public TextSpacing(double scale, double add)
+        {
+            this.WhitespaceScale = scale;
+            this.WhitespaceAdd = add;
+            this.NonWhitespaceScale = scale;
+            this.NonWhitespaceAdd = add;
+        }
+
+        /// <summary>
+        /// Default text spacing.
+        /// </summary>
+        public static TextSpacing Default { get; } = new TextSpacing(1, 0);
+
+        /// <inheritdoc/>
+        public bool Equals(TextSpacing other)
+        {
+            return this.WhitespaceScale == other.WhitespaceScale && this.WhitespaceAdd == other.WhitespaceAdd && this.NonWhitespaceScale == other.NonWhitespaceScale && this.NonWhitespaceAdd == other.NonWhitespaceAdd;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            if (obj is TextSpacing other)
+            {
+                return Equals(other);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 31 + WhitespaceScale.GetHashCode();
+                hash = hash * 31 + WhitespaceAdd.GetHashCode();
+                hash = hash * 31 + NonWhitespaceAdd.GetHashCode();
+                hash = hash * 31 + NonWhitespaceAdd.GetHashCode();
+                return hash;
+            }
+        }
+
+        /// <summary>
+        /// Compares two <see cref="TextSpacing"/> objects.
+        /// </summary>
+        /// <param name="left">The first <see cref="TextSpacing"/> object.</param>
+        /// <param name="right">The second <see cref="TextSpacing"/> object.</param>
+        /// <returns><see langword="true"/> if the two <see cref="TextSpacing"/> objects specify the same spacing parameters, <see langword="false"/> otherwise.</returns>
+        public static bool operator ==(TextSpacing left, TextSpacing right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// Compares two <see cref="TextSpacing"/> objects.
+        /// </summary>
+        /// <param name="left">The first <see cref="TextSpacing"/> object.</param>
+        /// <param name="right">The second <see cref="TextSpacing"/> object.</param>
+        /// <returns><see langword="false"/> if the two <see cref="TextSpacing"/> objects specify the same spacing parameters, <see langword="true"/> otherwise.</returns>
+        public static bool operator !=(TextSpacing left, TextSpacing right)
+        {
+            return !Equals(left, right);
+        }
+    }
+
+    /// <summary>
     /// Represents line caps.
     /// </summary>
     public enum LineCaps
