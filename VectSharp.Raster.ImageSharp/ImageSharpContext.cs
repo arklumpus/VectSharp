@@ -1356,7 +1356,7 @@ namespace VectSharp.Raster.ImageSharp
 
                     GifFrameMetadata frameMetadata = frame.Frames[0].Metadata.GetFormatMetadata(GifFormat.Instance);
                     frameMetadata.FrameDelay = gifFrameDuration;
-                    frameMetadata.DisposalMethod = GifDisposalMethod.RestoreToPrevious;
+                    frameMetadata.DisposalMethod = GifDisposalMethod.RestoreToBackground;
                     gifAnimation.Frames.AddFrame(frame.Frames[0]);
                 }
             }
