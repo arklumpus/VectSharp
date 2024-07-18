@@ -15,6 +15,8 @@
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
+using System;
+
 namespace VectSharp
 {
     /// <summary>
@@ -119,12 +121,19 @@ namespace VectSharp
         /// <summary>
         /// Length of the "on" (painted) segment.
         /// </summary>
+        [Obsolete("Please use the LineDash.DashArray instead.")]
         public double UnitsOn;
 
         /// <summary>
         /// Length of the "off" (not painted) segment.
         /// </summary>
+        [Obsolete("Please use the LineDash.DashArray instead.")]
         public double UnitsOff;
+
+        /// <summary>
+        /// An array specifying lenghts of alternating dashes and gaps.
+        /// </summary>
+        public double[] DashArray;
 
         /// <summary>
         /// Position in the dash pattern at which the line starts.
@@ -139,9 +148,48 @@ namespace VectSharp
         /// <param name="phase">The position in the dash pattern at which the line starts.</param>
         public LineDash(double unitsOn, double unitsOff, double phase)
         {
-            UnitsOn = unitsOn;
-            UnitsOff = unitsOff;
+            this.DashArray = new double[] { unitsOn, unitsOff };
             Phase = phase;
+
+            /* Deprecated */
+#pragma warning disable 618
+            this.UnitsOn = unitsOn;
+            this.UnitsOff = unitsOff;
+#pragma warning restore 618
+        }
+
+        /// <summary>
+        /// Define a new line dash pattern.
+        /// </summary>
+        /// <param name="units">The length of the dash segments and gaps.</param>
+        /// <param name="phase">The position in the dash pattern at which the line starts.</param>
+        public LineDash(double units, double phase = 0)
+        {
+            this.DashArray = new double[] { units };
+            Phase = phase;
+
+            /* Deprecated */
+#pragma warning disable 618
+            this.UnitsOn = units;
+            this.UnitsOff = units;
+#pragma warning restore 618
+        }
+
+        /// <summary>
+        /// Define a new line dash pattern.
+        /// </summary>
+        /// <param name="dashArray">An array specifying lenghts of alternating dashes and gaps.</param>
+        /// <param name="phase">The position in the dash pattern at which the line starts.</param>
+        public LineDash(double[] dashArray, double phase = 0)
+        {
+            this.DashArray = dashArray;
+            this.Phase = phase;
+
+            /* Deprecated */
+#pragma warning disable 618
+            this.UnitsOn = dashArray != null && dashArray.Length > 0 ? dashArray[0] : 0;
+            this.UnitsOff = dashArray != null && dashArray.Length > 0 ? dashArray[System.Math.Min(dashArray.Length - 1, 1)] : 0;
+#pragma warning restore 618
         }
     }
 

@@ -2661,9 +2661,9 @@ namespace VectSharp.SVG
             {
                 if (strokeDashArray != "none")
                 {
-                    double[] parsedArray = ParseListOfDoubles(strokeDashArray);
+                    double[] parsedArray = ParseListOfDoubles(strokeDashArray, diagonal);
 
-                    tbr.LineDash = new LineDash(parsedArray[0], parsedArray.Length > 1 ? parsedArray[1] : parsedArray[0], tbr.LineDash.Phase);
+                    tbr.LineDash = new LineDash(parsedArray, tbr.LineDash.Phase);
                 }
                 else
                 {
@@ -2673,7 +2673,7 @@ namespace VectSharp.SVG
 
             if (strokeDashOffset != null)
             {
-                tbr.LineDash = new LineDash(tbr.LineDash.UnitsOn, tbr.LineDash.UnitsOff, ParseLengthOrPercentage(strokeDashOffset, diagonal));
+                tbr.LineDash = new LineDash(tbr.LineDash.DashArray, ParseLengthOrPercentage(strokeDashOffset, diagonal));
             }
 
             if (paintOrder != null)
@@ -2869,7 +2869,7 @@ namespace VectSharp.SVG
             public static Regex NumberRegex = new Regex(@"^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?", RegexOptions.Compiled);
         }
 
-        private static double[] ParseListOfDoubles(string value)
+        private static double[] ParseListOfDoubles(string value, double? total = null)
         {
             if (value == null)
             {
@@ -2881,7 +2881,14 @@ namespace VectSharp.SVG
 
             for (int i = 0; i < splitValue.Length; i++)
             {
-                tbr[i] = double.Parse(splitValue[i], System.Globalization.CultureInfo.InvariantCulture);
+                if (total == null)
+                {
+                    tbr[i] = double.Parse(splitValue[i], System.Globalization.CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    tbr[i] = ParseLengthOrPercentage(splitValue[i], total.Value);
+                }
             }
 
             return tbr;

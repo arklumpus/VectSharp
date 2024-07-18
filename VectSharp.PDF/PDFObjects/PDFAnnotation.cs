@@ -15,6 +15,8 @@
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
+using System.Linq;
+
 namespace VectSharp.PDF.PDFObjects
 {
     /// <summary>
@@ -90,7 +92,7 @@ namespace VectSharp.PDF.PDFObjects
 
             if (borderDash != null)
             {
-                this.Border = new PDFArray<IPDFObject>(new PDFDouble(0), new PDFDouble(0), new PDFDouble(borderWidth), new PDFArray<PDFDouble>(new PDFDouble(borderDash.Value.UnitsOn), new PDFDouble(borderDash.Value.UnitsOff)));
+                this.Border = new PDFArray<IPDFObject>(new PDFDouble(0), new PDFDouble(0), new PDFDouble(borderWidth), new PDFArray<PDFDouble>(borderDash.Value.DashArray.Select(x => new PDFDouble(x))));
             }
             else
             {

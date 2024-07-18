@@ -977,10 +977,31 @@ namespace VectSharp.SVG
                         break;
                 }
 
-                if (_lineDash.Phase != 0 || _lineDash.UnitsOn != 0 || _lineDash.UnitsOff != 0)
+                if (_lineDash.Phase != 0 || (_lineDash.DashArray != null && _lineDash.DashArray.Any(x => x != 0)))
                 {
-                    path.SetAttribute("stroke-dasharray", _lineDash.UnitsOn.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + _lineDash.UnitsOff.ToString(System.Globalization.CultureInfo.InvariantCulture));
-                    path.SetAttribute("stroke-dashoffset", _lineDash.Phase.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    string dashArray;
+
+                    if (_lineDash.DashArray != null && _lineDash.DashArray.Length > 0)
+                    {
+                        StringBuilder dashArraySB = new StringBuilder();
+                        for (int i = 0; i < _lineDash.DashArray.Length; i++)
+                        {
+                            dashArraySB.Append(_lineDash.DashArray[i].ToString(System.Globalization.CultureInfo.InvariantCulture));
+                            dashArraySB.Append("px");
+                            if (i < _lineDash.DashArray.Length - 1)
+                            {
+                                dashArraySB.Append(" ");
+                            }
+                        }
+                        dashArray = dashArraySB.ToString();
+                    }
+                    else
+                    {
+                        dashArray = "0px 0px";
+                    }
+
+                    path.SetAttribute("stroke-dasharray", dashArray);
+                    path.SetAttribute("stroke-dashoffset", _lineDash.Phase.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px");
                 }
 
                 path.SetAttribute("fill", "none");
@@ -1035,9 +1056,30 @@ namespace VectSharp.SVG
                         break;
                 }
 
-                if (_lineDash.Phase != 0 || _lineDash.UnitsOn != 0 || _lineDash.UnitsOff != 0)
+                if (_lineDash.Phase != 0 || (_lineDash.DashArray != null && _lineDash.DashArray.Any(x => x != 0)))
                 {
-                    style.Add("stroke-dasharray", _lineDash.UnitsOn.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px " + _lineDash.UnitsOff.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px");
+                    string dashArray;
+
+                    if (_lineDash.DashArray != null && _lineDash.DashArray.Length > 0)
+                    {
+                        StringBuilder dashArraySB = new StringBuilder();
+                        for (int i = 0; i < _lineDash.DashArray.Length; i++)
+                        {
+                            dashArraySB.Append(_lineDash.DashArray[i].ToString(System.Globalization.CultureInfo.InvariantCulture));
+                            dashArraySB.Append("px");
+                            if (i < _lineDash.DashArray.Length - 1)
+                            {
+                                dashArraySB.Append(" ");
+                            }
+                        }
+                        dashArray = dashArraySB.ToString();
+                    }
+                    else
+                    {
+                        dashArray = "0px 0px";
+                    }
+
+                    style.Add("stroke-dasharray", dashArray);
                     style.Add("stroke-dashoffset", _lineDash.Phase.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px");
                 }
 
@@ -1132,7 +1174,7 @@ namespace VectSharp.SVG
                 {
                     textElement = Document.CreateElement("g", SVGNamespace);
                 }
-                
+
 
                 string gradientName = null;
 
@@ -1219,7 +1261,7 @@ namespace VectSharp.SVG
                     {
                         textElement.SetAttribute("stroke-width", (LineWidth * Font.FontFamily.TrueTypeFile.GetUnitsPerEm() / Font.FontSize).ToString(System.Globalization.CultureInfo.InvariantCulture));
                     }
-                    
+
 
                     switch (LineCap)
                     {
@@ -1247,10 +1289,31 @@ namespace VectSharp.SVG
                             break;
                     }
 
-                    if (_lineDash.Phase != 0 || _lineDash.UnitsOn != 0 || _lineDash.UnitsOff != 0)
+                    if (_lineDash.Phase != 0 || (_lineDash.DashArray != null && _lineDash.DashArray.Any(v => v != 0)))
                     {
-                        textElement.SetAttribute("stroke-dasharray", _lineDash.UnitsOn.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + _lineDash.UnitsOff.ToString(System.Globalization.CultureInfo.InvariantCulture));
-                        textElement.SetAttribute("stroke-dashoffset", _lineDash.Phase.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                        string dashArray;
+
+                        if (_lineDash.DashArray != null && _lineDash.DashArray.Length > 0)
+                        {
+                            StringBuilder dashArraySB = new StringBuilder();
+                            for (int i = 0; i < _lineDash.DashArray.Length; i++)
+                            {
+                                dashArraySB.Append(_lineDash.DashArray[i].ToString(System.Globalization.CultureInfo.InvariantCulture));
+                                dashArraySB.Append("px");
+                                if (i < _lineDash.DashArray.Length - 1)
+                                {
+                                    dashArraySB.Append(" ");
+                                }
+                            }
+                            dashArray = dashArraySB.ToString();
+                        }
+                        else
+                        {
+                            dashArray = "0px 0px";
+                        }
+
+                        textElement.SetAttribute("stroke-dasharray", dashArray);
+                        textElement.SetAttribute("stroke-dashoffset", _lineDash.Phase.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px");
                     }
                     textElement.SetAttribute("fill", "none");
 
@@ -1326,9 +1389,30 @@ namespace VectSharp.SVG
                             break;
                     }
 
-                    if (_lineDash.Phase != 0 || _lineDash.UnitsOn != 0 || _lineDash.UnitsOff != 0)
+                    if (_lineDash.Phase != 0 || (_lineDash.DashArray != null && _lineDash.DashArray.Any(v => v != 0)))
                     {
-                        style.Add("stroke-dasharray", _lineDash.UnitsOn.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px " + _lineDash.UnitsOff.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px");
+                        string dashArray;
+
+                        if (_lineDash.DashArray != null && _lineDash.DashArray.Length > 0)
+                        {
+                            StringBuilder dashArraySB = new StringBuilder();
+                            for (int i = 0; i < _lineDash.DashArray.Length; i++)
+                            {
+                                dashArraySB.Append(_lineDash.DashArray[i].ToString(System.Globalization.CultureInfo.InvariantCulture));
+                                dashArraySB.Append("px");
+                                if (i < _lineDash.DashArray.Length - 1)
+                                {
+                                    dashArraySB.Append(" ");
+                                }
+                            }
+                            dashArray = dashArraySB.ToString();
+                        }
+                        else
+                        {
+                            dashArray = "0px 0px";
+                        }
+
+                        style.Add("stroke-dasharray", dashArray);
                         style.Add("stroke-dashoffset", _lineDash.Phase.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px");
                     }
                     style.Add("fill", "none");
@@ -1524,10 +1608,31 @@ namespace VectSharp.SVG
                     break;
             }
 
-            if (_lineDash.Phase != 0 || _lineDash.UnitsOn != 0 || _lineDash.UnitsOff != 0)
+            if (_lineDash.Phase != 0 || (_lineDash.DashArray != null && _lineDash.DashArray.Any(x => x != 0)))
             {
-                path.SetAttribute("stroke-dasharray", _lineDash.UnitsOn.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + _lineDash.UnitsOff.ToString(System.Globalization.CultureInfo.InvariantCulture));
-                path.SetAttribute("stroke-dashoffset", _lineDash.Phase.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                string dashArray;
+
+                if (_lineDash.DashArray != null && _lineDash.DashArray.Length > 0)
+                {
+                    StringBuilder dashArraySB = new StringBuilder();
+                    for (int i = 0; i < _lineDash.DashArray.Length; i++)
+                    {
+                        dashArraySB.Append(_lineDash.DashArray[i].ToString(System.Globalization.CultureInfo.InvariantCulture));
+                        dashArraySB.Append("px");
+                        if (i < _lineDash.DashArray.Length - 1)
+                        {
+                            dashArraySB.Append(" ");
+                        }
+                    }
+                    dashArray = dashArraySB.ToString();
+                }
+                else
+                {
+                    dashArray = "0px 0px";
+                }
+
+                path.SetAttribute("stroke-dasharray", dashArray);
+                path.SetAttribute("stroke-dashoffset", _lineDash.Phase.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px");
             }
 
             path.SetAttribute("fill", "none");
@@ -1747,7 +1852,7 @@ namespace VectSharp.SVG
                 }
 
                 tSpans.Add((text[i].ToString(), new Point(currX, currY)));
-                
+
                 double advanceWidth = Font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(text[i]) * Font.FontSize / 1000;
                 currX += advanceWidth + currentGlyphPlacementDelta.X * Font.FontSize / 1000 + (currentGlyphAdvanceDelta.X - currentGlyphPlacementDelta.X) * Font.FontSize / 1000;
                 currY += currentGlyphPlacementDelta.Y * Font.FontSize / 1000 + (currentGlyphAdvanceDelta.Y - currentGlyphPlacementDelta.Y) * Font.FontSize / 1000;
@@ -1763,7 +1868,7 @@ namespace VectSharp.SVG
             {
                 XmlElement useElement = Document.CreateElement("use", SVGNamespace);
                 useElement.SetAttribute("href", "#" + Font.FontFamily.FileName + "-" + tSpans[i].Item1);
-                
+
                 useElement.SetAttribute("transform", "translate(" + (tSpans[i].Item2.X / scale).ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + (tSpans[i].Item2.Y / scale).ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
                 parent.AppendChild(useElement);
             }

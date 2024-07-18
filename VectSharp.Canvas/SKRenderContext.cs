@@ -723,7 +723,7 @@ namespace VectSharp.Canvas
                     stroke.Shader = radialGradient.ToSKShader();
                 }
 
-                stroke.PathEffect = SKPathEffect.CreateDash(new float[] { (float)LineDash[0], (float)LineDash[1] }, (float)LineDash[2]);
+                stroke.PathEffect = SKPathEffect.CreateDash(LineDash.DashArray.Select(x => (float)x).ToArray(), (float)LineDash.Phase);
 
                 switch (LineCap)
                 {
@@ -1092,11 +1092,11 @@ namespace VectSharp.Canvas
             }
         }
 
-        private double[] LineDash;
+        private LineDash LineDash;
 
         public void SetLineDash(LineDash dash)
         {
-            LineDash = new double[] { dash.UnitsOn, dash.UnitsOff, dash.Phase };
+            LineDash = new LineDash(dash.DashArray, dash.Phase);
         }
 
         public void Rotate(double angle)
@@ -1256,7 +1256,7 @@ namespace VectSharp.Canvas
                 stroke.Shader = radialGradient.ToSKShader();
             }
 
-            stroke.PathEffect = SKPathEffect.CreateDash(new float[] { (float)LineDash[0], (float)LineDash[1] }, (float)LineDash[2]);
+            stroke.PathEffect = SKPathEffect.CreateDash(LineDash.DashArray.Select(x => (float)x).ToArray(), (float)LineDash.Phase);
 
             switch (LineCap)
             {

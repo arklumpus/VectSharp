@@ -518,11 +518,11 @@ namespace VectSharp.Canvas
             }
         }
 
-        private double[] LineDash;
+        private LineDash LineDash;
 
         public void SetLineDash(LineDash dash)
         {
-            LineDash = new double[] { dash.UnitsOn, dash.UnitsOff, dash.Phase };
+            LineDash = new LineDash(dash.DashArray, dash.Phase);
         }
 
         public void Rotate(double angle)
@@ -727,8 +727,7 @@ namespace VectSharp.Canvas
                 stroke = radialGradient.ToRadialGradientBrush(currentPath.Bounds.Width);
             }
 
-
-            Path pth = new Path() { Fill = null, Stroke = stroke, StrokeThickness = LineWidth, StrokeDashArray = new Avalonia.Collections.AvaloniaList<double> { (LineDash[0] + (LineCap == LineCaps.Butt ? 0 : LineWidth)) / LineWidth, (LineDash[1] - (LineCap == LineCaps.Butt ? 0 : LineWidth)) / LineWidth }, StrokeDashOffset = LineDash[2] / LineWidth };
+            Path pth = new Path() { Fill = null, Stroke = stroke, StrokeThickness = LineWidth, StrokeDashArray = new Avalonia.Collections.AvaloniaList<double>(LineDash.DashArray.Select(x => (x + (LineCap == LineCaps.Butt ? 0 : LineWidth)) / LineWidth)), StrokeDashOffset = LineDash.Phase/ LineWidth };
 
             switch (LineCap)
             {
@@ -2053,11 +2052,11 @@ namespace VectSharp.Canvas
             }
         }
 
-        private double[] LineDash;
+        private LineDash LineDash;
 
         public void SetLineDash(LineDash dash)
         {
-            LineDash = new double[] { dash.UnitsOn, dash.UnitsOff, dash.Phase };
+            LineDash = new LineDash(dash.DashArray, dash.Phase);
         }
 
         public void Rotate(double angle)
@@ -2252,7 +2251,7 @@ namespace VectSharp.Canvas
 
             Pen pen = new Pen(stroke,
                     LineWidth,
-                    new DashStyle(new double[] { (LineDash[0] + (LineCap == LineCaps.Butt ? 0 : LineWidth)) / LineWidth, (LineDash[1] - (LineCap == LineCaps.Butt ? 0 : LineWidth)) / LineWidth }, LineDash[2] / LineWidth));
+                    new DashStyle(LineDash.DashArray.Select(x => (x + (LineCap == LineCaps.Butt ? 0 : LineWidth)) / LineWidth), LineDash.Phase / LineWidth));
 
             switch (LineCap)
             {

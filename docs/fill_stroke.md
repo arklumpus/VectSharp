@@ -47,6 +47,8 @@ The `StrokeRectangle` method takes a number of optional arguments that are not u
     
     A `LineDash` where the units on and off are both 0 corresponds to a solid line.
 
+    Additional overloads of the `LineDash` struct accept a `double[]` parameter, which can be used to specify complex dash patterns.
+
 The following code strokes a rectangle with a thick outline, rounded corners, and a dashed line.
 
 <div class="code-example">
@@ -80,8 +82,30 @@ graphics.StrokeRectangle(10, 10, 80, 80, Colours.Black, lineWidth: lineWidth, li
 page.SaveAsSVG("StrokedRectangle2.svg");
 {% endhighlight %}
 
-If you wish to both fill and stroke a rectangle, you will have to call both `FillRectangle` and `StrokeRectangle`. This also gives you the flexibility to choose whether the stroke is applied on top or below the fill.
+More complex dash patterns can be created by using one of the `LineDash` constructors that accept a `double[]` parameter. For example:
 
+<div class="code-example">
+    <p style="text-align: center">
+        <img src="assets/tutorials/ComplexDash.svg" style="height: 5em" />
+    </p>
+</div>
+{% highlight CSharp %}
+using VectSharp;
+using VectSharp.SVG;
+
+Page page = new Page(100, 100);
+Graphics graphics = page.Graphics;
+
+// Dashed line pattern.
+LineDash lineDash = new LineDash(new double[] { 10, 2, 5, 2, 2, 2 });
+
+// Draw the rectangle.
+graphics.StrokeRectangle(10, 10, 80, 80, Colours.Black, lineDash: lineDash);
+
+page.SaveAsSVG("ComplexDash.svg");
+{% endhighlight %}
+
+If you wish to both fill and stroke a rectangle, you will have to call both `FillRectangle` and `StrokeRectangle`. This also gives you the flexibility to choose whether the stroke is applied on top or below the fill.
 
 <div class="code-example">
     <p style="text-align: center">

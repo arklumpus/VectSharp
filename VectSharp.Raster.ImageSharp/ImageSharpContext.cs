@@ -26,6 +26,7 @@ using System.IO;
 using VectSharp.Filters;
 using SixLabors.ImageSharp.Formats.Gif;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace VectSharp.Raster.ImageSharp
 {
@@ -866,13 +867,9 @@ namespace VectSharp.Raster.ImageSharp
 
         public static float[] ToImageSharpDash(this LineDash dash, double lineThickness)
         {
-            if (dash.UnitsOn > 0 || dash.UnitsOff > 0)
+            if (dash.DashArray != null && dash.DashArray.Any(x => x != 0))
             {
-                return new float[]
-                {
-                   (float)(dash.UnitsOn / lineThickness),
-                    (float)(dash.UnitsOff / lineThickness)
-                };
+                return dash.DashArray.Select(x => (float)(x /  lineThickness)).ToArray();
             }
             else
             {

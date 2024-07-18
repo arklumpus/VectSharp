@@ -135,6 +135,31 @@ namespace VectSharp
                     InterpolateDouble(start.A, end.A, position));
         }
 
+        public static LineDash InterpolateLineDash(LineDash start, LineDash end, double position)
+        {
+            int targetLength;
+
+            if (Math.Max(start.DashArray.Length, end.DashArray.Length) % Math.Min(start.DashArray.Length, end.DashArray.Length) == 0)
+            {
+                targetLength = Math.Max(start.DashArray.Length, end.DashArray.Length);
+            }
+            else
+            {
+                targetLength = start.DashArray.Length * end.DashArray.Length;
+            }
+
+            double[] targetArray = new double[targetLength];
+
+            for (int i = 0; i < targetLength; i++)
+            {
+                double startI = start.DashArray[i % start.DashArray.Length];
+                double endI = end.DashArray[i % end.DashArray.Length];
+                targetArray[i] = InterpolateDouble(startI, endI, position);
+            }
+
+            return new LineDash(targetArray, InterpolateDouble(start.Phase, end.Phase, position));
+        }
+
         private static HashSet<double> GetAnchors(Brush start, Brush end)
         {
             HashSet<double> anchors = new HashSet<double>();
@@ -488,9 +513,7 @@ namespace VectSharp
             double lineWidth = InterpolationUtils.InterpolateDouble(this.StartValue.LineWidth, this.EndValue.LineWidth, position);
             LineJoins lineJoin = position < 0.5 ? this.StartValue.LineJoin : this.EndValue.LineJoin;
             LineCaps lineCap = position < 0.5 ? this.StartValue.LineCap : this.EndValue.LineCap;
-            LineDash lineDash = new LineDash(InterpolationUtils.InterpolateDouble(this.StartValue.LineDash.UnitsOn, this.EndValue.LineDash.UnitsOn, position),
-                InterpolationUtils.InterpolateDouble(this.StartValue.LineDash.UnitsOff, this.EndValue.LineDash.UnitsOff, position),
-                InterpolationUtils.InterpolateDouble(this.StartValue.LineDash.Phase, this.EndValue.LineDash.Phase, position));
+            LineDash lineDash = InterpolationUtils.InterpolateLineDash(this.StartValue.LineDash, this.EndValue.LineDash, position);
 
             Brush stroke = null;
 

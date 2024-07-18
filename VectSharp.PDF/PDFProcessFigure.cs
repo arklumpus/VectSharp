@@ -358,9 +358,17 @@ namespace VectSharp.PDF
                 sw.Write(figure.LineWidth.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " w\n");
                 sw.Write(((int)figure.LineCap).ToString() + " J\n");
                 sw.Write(((int)figure.LineJoin).ToString() + " j\n");
-                if (figure.LineDash.UnitsOff != 0 || figure.LineDash.UnitsOn != 0)
+                if (figure.LineDash.DashArray != null && figure.LineDash.DashArray.Any(x => x != 0))
                 {
-                    sw.Write("[ " + figure.LineDash.UnitsOn.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " " + figure.LineDash.UnitsOff.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " ] " + figure.LineDash.Phase.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " d\n");
+                    sw.Write("[ ");
+
+                    for (int i = 0; i < figure.LineDash.DashArray.Length; i++)
+                    {
+                        sw.Write(figure.LineDash.DashArray[i].ToString("0.################", System.Globalization.CultureInfo.InvariantCulture));
+                        sw.Write(" ");
+                    }
+
+                    sw.Write("] " + figure.LineDash.Phase.ToString("0.################", System.Globalization.CultureInfo.InvariantCulture) + " d\n");
                 }
                 else
                 {
