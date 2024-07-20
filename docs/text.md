@@ -506,6 +506,56 @@ page.SaveAsSVG("FormattedText.svg");
 
 [Back to top](#){: .btn }
 
+## Text spacing
+
+The `FormattedText` constructor, the `FormattedText.Format` method, and some overloads of the `FillText`/`StrokeText` methods can take an optional `spacing` parameter, which is `TextSpacing` instance that specifies the amount of spacing between consecutive characters or words. The constructor for the `TextSpacing` struct takes up to four `double` parameters, i.e. `nonWhitespaceScale`, `nonWhitespaceAdd`, `whitespaceScale`, `whitespaceAdd`; these are used to specify a linear transformation for the advance width of each glyph.
+
+The parameters with `nonWhitespace` in the name are applied to non-whitespace characters (i.e., the ones for which `char.IsWhitespace` returns `false`), while the parameters with `whitespace` in the name are only applied to whitespace characters (if you use the constructor that only takes two parameters, these are used for both whitespace and non-whitespace characters). In this way you can independently change the spacing between and within words.
+
+If the "normal" advance width of a glyph is $w$, the final advance width is computed as $w' = w * s + a$, where $s$ is the `Scale` parameter and $a$ is the `Add` parameter. By changing the value of $s$, you can increase or decrease the spacing proportionally to each glyph's width, while changing $a$ allows you to alter it by a fixed amount. Naturally, the default value for the `Scale` parameters is `1`, while for the `Add` parameters it is `0`.
+
+The following example shows the effect of changing the value of these parameters:
+
+<div class="code-example">
+    <iframe src="Blazor?textSpacing" style="width: 100%; height: 18em; border: 0px solid black"></iframe>
+</div>
+{% highlight CSharp %}
+using VectSharp;
+using VectSharp.SVG;
+
+// Create a new page and access its graphics object.
+Page page = new Page(500, 30);
+Graphics graphics = page.Graphics;
+
+// Text to draw.
+string text = "VectSharp text spacing";
+
+// Parameters for the TextSpacing object.
+double nonWhitespaceScale = 1; // Default value.
+double nonWhitespaceAdd = 1; // Increase the advance width of each non-whitespace glyph by 1 graphics unit.
+double whitespaceScale = 1; // Default value.
+double whitespaceAdd = 1; // Increase the advance width of each whitespace glyph by 1 graphics unit.
+
+// Create the TextSpacing object.
+TextSpacing spacing = new TextSpacing(nonWhitespaceScale, nonWhitespaceAdd, whitespaceScale, whitespaceAdd);
+
+// Font.
+Font fnt = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBold), 24);
+
+// Draw the text with the default spacing for reference.
+graphics.FillText(page.Width * 0.5 - fnt.MeasureText(text).Width * 0.5, 15, text, fnt, Colour.FromRgb(200, 200, 200), TextBaselines.Middle);
+
+// To measure the text with the custom spacing, we need to use a FormattedText object.
+double textWidth = new FormattedText[] { new FormattedText(text, fnt, spacing: spacing) }.Measure().Width;
+
+// Draw the text with custom spacing.
+graphics.FillText(page.Width * 0.5 - textWidth * 0.5, 15, text, fnt, Colours.Black, spacing, TextBaselines.Middle);
+
+page.SaveAsSVG("TextSpacing.svg");
+{% endhighlight %}
+
+[Back to top](#){: .btn }
+
 ## Adding text to a `GraphicsPath`
 
 Finally, in addition to directly drawing the text on the `Graphics` object, you may also want to add it to a `GraphicsPath` instead. To do this, you can use the `AddText`, `AddTextOnPath` and `AddTextUnderline` methods of the `GraphicsPath` object. These work in the same way as the `FillText`, `FillTextOnPath` and `FillTextUnderline` methods, and take the same arguments (of course, they do not require parameters to determine the fill or stroke colour or the stroke options).
@@ -561,7 +611,7 @@ For the `PaintToSKCanvas` method, converting the text is only necessary on Linux
 
 In addition to using the 14 standard fonts, you may also want to create text using your own custom fonts. As explained above, this can be achieved by providing the `FontFamily.ResolveFontFamily` method with the path to a TTF file; alternatively, you can also create a `FontFamily` from a TTF file that has been loaded in a `Stream`. This is useful, for example, if you wish to include your font as an embedded resource, or if you want to force the PDF exporter to embed one of the standard font files.
 
-> **Note**: always make sure that the font files you are using are in TTF format and do not use any OpenType features that are not available in TrueType (except for kerning information in the `GPOS` table). If you download a variable font file from Google Fonts, use the "static" font files instead (there are available in the `static` subfolder when you download the font family).
+> **Note**: always make sure that the font files you are using are in TTF format and do not use any OpenType features that are not available in TrueType (except for kerning information in the `GPOS` table). If you download a variable font file from Google Fonts, use the "static" font files instead (these are available in the `static` subfolder when you download the font family).
 >
 > It is also a good idea to try opening the files you created on a system where the fonts you used are not installed, before publishing them.
 >

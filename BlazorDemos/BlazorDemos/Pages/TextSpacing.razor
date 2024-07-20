@@ -1,0 +1,179 @@
+﻿@page "/textSpacing"
+@using VectSharp;
+@using VectSharp.SVG;
+
+<style>
+    table {
+        table-layout: fixed;
+    }
+
+    td {
+        width: 200px;
+        padding: 10px;
+    }
+</style>
+
+<div style="width: 100vw; height: 100vh; position: relative;">
+    <table style="width: 100%">
+        <tr>
+            <td colspan="2" style="width: 100%; text-align: center">
+                <img src="@imgSource" style="max-width: 100%; max-height: 100%" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="width: 100%; padding-top: 0">
+                <MatTextField style="width: 100%" @bind-Value="@text" OnInput="(e) => text = e.Value.ToString()" Label="Text"></MatTextField>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <MatNumericUpDownField Label="Non-whitespace scaling"
+                                       @bind-Value=@nonWhitespaceScaling
+                                       Minimum="-10"
+                                       Maximum="10"
+                                       Step="0.1"
+                                       DecimalPlaces=2>
+                </MatNumericUpDownField>
+            </td>
+            <td>
+                <MatNumericUpDownField Label="Non-whitespace increment"
+                                       @bind-Value=@nonWhitespaceIncrement
+                                       Minimum="-20"
+                                       Maximum="20"
+                                       Step="1"
+                                       DecimalPlaces=1>
+                </MatNumericUpDownField>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <MatNumericUpDownField Label="Whitespace scaling"
+                                       @bind-Value=@whitespaceScaling
+                                       Minimum="-10"
+                                       Maximum="10"
+                                       Step="0.1"
+                                       DecimalPlaces=2>
+                </MatNumericUpDownField>
+            </td>
+            <td>
+                <MatNumericUpDownField Label="Whitespace increment"
+                                       @bind-Value=@whitespaceIncrement
+                                       Minimum="-20"
+                                       Maximum="20"
+                                       Step="1"
+                                       DecimalPlaces=1>
+                </MatNumericUpDownField>
+            </td>
+        </tr>
+    </table>
+</div>
+
+@code {
+
+    private double _nonWhitespaceScaling = 1;
+    private double nonWhitespaceScaling
+    {
+        get
+        {
+            return _nonWhitespaceScaling;
+        }
+        set
+        {
+            _nonWhitespaceScaling = value;
+            Render();
+        }
+    }
+
+    private double _nonWhitespaceIncrement = 1;
+    private double nonWhitespaceIncrement
+    {
+        get
+        {
+            return _nonWhitespaceIncrement;
+        }
+        set
+        {
+            _nonWhitespaceIncrement = value;
+            Render();
+        }
+    }
+
+    private double _whitespaceScaling = 1;
+    private double whitespaceScaling
+    {
+        get
+        {
+            return _whitespaceScaling;
+        }
+        set
+        {
+            _whitespaceScaling = value;
+            Render();
+        }
+    }
+
+    private double _whitespaceIncrement = 1;
+    private double whitespaceIncrement
+    {
+        get
+        {
+            return _whitespaceIncrement;
+        }
+        set
+        {
+            _whitespaceIncrement = value;
+            Render();
+        }
+    }
+
+
+
+
+    private string _text = "VectSharp text spacing";
+    private string text
+    {
+        get
+        {
+            return _text;
+        }
+        set
+        {
+            _text = value;
+            Render();
+        }
+    }
+
+
+    private string imgSource = "";
+
+    protected override Task OnInitializedAsync()
+    {
+        Render();
+        return Task.CompletedTask;
+    }
+
+
+    public void Render()
+    {
+        Page page = new Page(500, 30);
+        Graphics graphics = page.Graphics;
+
+        Font fnt = new Font(FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBold), 24);
+
+        VectSharp.TextSpacing spacing = new VectSharp.TextSpacing(nonWhitespaceScaling, nonWhitespaceIncrement, whitespaceScaling, whitespaceIncrement);
+
+        graphics.FillText(page.Width * 0.5 - fnt.MeasureText(text).Width * 0.5, 15, text, fnt, Colour.FromRgb(200, 200, 200), TextBaselines.Middle);
+        graphics.FillText(page.Width * 0.5 - new FormattedText[] { new FormattedText(text, fnt, spacing: spacing) }.Measure().Width * 0.5, 15, text, fnt, Colours.Black, spacing, TextBaselines.Middle);
+
+        using (MemoryStream ms = new MemoryStream())
+        {
+            page.SaveAsSVG(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+
+            using (StreamReader sr = new StreamReader(ms))
+            {
+                this.imgSource = "data:image/svg+xml;base64," + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(sr.ReadToEnd()));
+            }
+        }
+    }
+}
