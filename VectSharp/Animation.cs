@@ -137,23 +137,26 @@ namespace VectSharp
 
         public static LineDash InterpolateLineDash(LineDash start, LineDash end, double position)
         {
+            double[] startDashArray = start.DashArray != null && start.DashArray.Length > 0 ? start.DashArray : new double[] { 0, 0 };
+            double[] endDashArray = end.DashArray != null && end.DashArray.Length > 0 ? end.DashArray : new double[] { 0, 0 }; ;
+
             int targetLength;
 
-            if (Math.Max(start.DashArray.Length, end.DashArray.Length) % Math.Min(start.DashArray.Length, end.DashArray.Length) == 0)
+            if (Math.Max(startDashArray.Length, endDashArray.Length) % Math.Min(startDashArray.Length, endDashArray.Length) == 0)
             {
-                targetLength = Math.Max(start.DashArray.Length, end.DashArray.Length);
+                targetLength = Math.Max(startDashArray.Length, endDashArray.Length);
             }
             else
             {
-                targetLength = start.DashArray.Length * end.DashArray.Length;
+                targetLength = startDashArray.Length * endDashArray.Length;
             }
 
             double[] targetArray = new double[targetLength];
 
             for (int i = 0; i < targetLength; i++)
             {
-                double startI = start.DashArray[i % start.DashArray.Length];
-                double endI = end.DashArray[i % end.DashArray.Length];
+                double startI = startDashArray[i % startDashArray.Length];
+                double endI = endDashArray[i % endDashArray.Length];
                 targetArray[i] = InterpolateDouble(startI, endI, position);
             }
 
