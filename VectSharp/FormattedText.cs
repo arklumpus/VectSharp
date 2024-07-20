@@ -563,8 +563,12 @@ namespace VectSharp
 
             bool isFirst = true;
 
-            foreach (FormattedText txt in text)
+            FormattedText[] fText = text.ToArray();
+
+            for (int i = 0; i < fText.Length; i++)
             {
+                FormattedText txt = fText[i];
+
                 if (text != null && !string.IsNullOrEmpty(txt.Text))
                 {
                     items?.Add(txt);
@@ -579,7 +583,7 @@ namespace VectSharp
                         }
                         else
                         {
-                            metrics = Graphics.MeasureTextWithSpacing(0, 0, txt.Text, txt.Font, Colours.Black, txt.Spacing);
+                            metrics = Graphics.MeasureTextWithSpacing(0, 0, txt.Text, txt.Font, i == fText.Length - 1, txt.Spacing);
                         }
 
                         allMetrics?.Add(metrics);
@@ -608,11 +612,11 @@ namespace VectSharp
 
                         if (txt.Spacing == TextSpacing.Default)
                         {
-                            metrics = txt.Font.MeasureTextAdvanced(txt.Text);
+                            metrics = newFont.MeasureTextAdvanced(txt.Text);
                         }
                         else
                         {
-                            metrics = Graphics.MeasureTextWithSpacing(0, 0, txt.Text, newFont, Colours.Black, txt.Spacing);
+                            metrics = Graphics.MeasureTextWithSpacing(0, 0, txt.Text, newFont, i == fText.Length - 1, txt.Spacing);
                         }
 
                         allMetrics?.Add(metrics);

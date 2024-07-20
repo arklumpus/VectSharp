@@ -47,6 +47,28 @@ namespace VectSharp
         /// <summary>
         /// Fill a text string.
         /// </summary>
+        /// <param name="origin">The text origin. See <paramref name="textBaseline"/>.</param>
+        /// <param name="text">The string to draw.</param>
+        /// <param name="font">The font with which to draw the text.</param>
+        /// <param name="fillColour">The <see cref="Brush"/> to use to fill the text.</param>
+        /// <param name="spacing">Spacing parameters to use for the text.</param>
+        /// <param name="textBaseline">The text baseline (determines what the vertical component of <paramref name="origin"/> represents).</param>
+        /// <param name="tag">A tag to identify the filled text.</param>
+        public void FillText(Point origin, string text, Font font, Brush fillColour, TextSpacing spacing, TextBaselines textBaseline = TextBaselines.Top, string tag = null)
+        {
+            if (spacing == TextSpacing.Default)
+            {
+                FillText(origin, text, font, fillColour, textBaseline, tag);
+            }
+            else
+            {
+                FillText(origin, new FormattedText[] { new FormattedText(text, font, spacing: spacing) }, fillColour, textBaseline, tag);
+            }
+        }
+
+        /// <summary>
+        /// Fill a text string.
+        /// </summary>
         /// <param name="originX">The horizontal coordinate of the text origin.</param>
         /// <param name="originY">The vertical coordinate of the text origin. See <paramref name="textBaseline"/>.</param>
         /// <param name="text">The string to draw.</param>
@@ -64,6 +86,29 @@ namespace VectSharp
                 {
                     FillTextUnderline(originX, originY, text, font, fillColour, textBaseline, (!string.IsNullOrEmpty(tag) && UseUniqueTags) ? (tag + "@underline") : tag);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Fill a text string.
+        /// </summary>
+        /// <param name="originX">The horizontal coordinate of the text origin.</param>
+        /// <param name="originY">The vertical coordinate of the text origin. See <paramref name="textBaseline"/>.</param>
+        /// <param name="text">The string to draw.</param>
+        /// <param name="font">The font with which to draw the text.</param>
+        /// <param name="fillColour">The <see cref="Brush"/> to use to fill the text.</param>
+        /// <param name="spacing">Spacing parameters to use for the text.</param>
+        /// <param name="textBaseline">The text baseline (determines what <paramref name="originY"/> represents).</param>
+        /// <param name="tag">A tag to identify the filled text.</param>
+        public void FillText(double originX, double originY, string text, Font font, Brush fillColour, TextSpacing spacing, TextBaselines textBaseline = TextBaselines.Top, string tag = null)
+        {
+            if (spacing == TextSpacing.Default)
+            {
+                FillText(originX, originY, text, font, fillColour, textBaseline, tag);
+            }
+            else
+            {
+                FillText(originX, originY, new FormattedText[] { new FormattedText(text, font, spacing: spacing) }, fillColour, textBaseline, tag);
             }
         }
 
@@ -96,6 +141,32 @@ namespace VectSharp
         /// <summary>
         /// Stroke a text string.
         /// </summary>
+        /// <param name="origin">The text origin. See <paramref name="textBaseline"/>.</param>
+        /// <param name="text">The string to draw.</param>
+        /// <param name="font">The font with which to draw the text.</param>
+        /// <param name="strokeColour">The <see cref="Brush"/> with which to stroke the text.</param>
+        /// <param name="spacing">Spacing parameters to use for the text.</param>
+        /// <param name="lineWidth">The width of the line with which the text is stroked.</param>
+        /// <param name="lineCap">The line cap to use to stroke the text.</param>
+        /// <param name="lineJoin">The line join to use to stroke the text.</param>
+        /// <param name="lineDash">The line dash to use to stroke the text.</param>
+        /// <param name="textBaseline">The text baseline (determines what the vertical component of <paramref name="origin"/> represents).</param>
+        /// <param name="tag">A tag to identify the stroked text.</param>
+        public void StrokeText(Point origin, string text, Font font, Brush strokeColour, TextSpacing spacing, TextBaselines textBaseline = TextBaselines.Top, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
+        {
+            if (spacing == TextSpacing.Default)
+            {
+                StrokeText(origin, text, font, strokeColour, textBaseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+            }
+            else
+            {
+                StrokeText(origin, new FormattedText[] { new FormattedText(text, font, spacing: spacing) }, strokeColour, textBaseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+            }
+        }
+
+        /// <summary>
+        /// Stroke a text string.
+        /// </summary>
         /// <param name="originX">The horizontal coordinate of the text origin.</param>
         /// <param name="originY">The vertical coordinate of the text origin. See <paramref name="textBaseline"/>.</param>
         /// <param name="text">The string to draw.</param>
@@ -117,6 +188,33 @@ namespace VectSharp
                 {
                     StrokeTextUnderline(originX, originY, text, font, strokeColour, textBaseline, lineWidth, lineCap, lineJoin, lineDash, (!string.IsNullOrEmpty(tag) && UseUniqueTags) ? (tag + "@underline") : tag);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Stroke a text string.
+        /// </summary>
+        /// <param name="originX">The horizontal coordinate of the text origin.</param>
+        /// <param name="originY">The vertical coordinate of the text origin. See <paramref name="textBaseline"/>.</param>
+        /// <param name="text">The string to draw.</param>
+        /// <param name="font">The font with which to draw the text.</param>
+        /// <param name="strokeColour">The <see cref="Brush"/> with which to stroke the text.</param>
+        /// <param name="spacing">Spacing parameters to use for the text.</param>
+        /// <param name="lineWidth">The width of the line with which the text is stroked.</param>
+        /// <param name="lineCap">The line cap to use to stroke the text.</param>
+        /// <param name="lineJoin">The line join to use to stroke the text.</param>
+        /// <param name="lineDash">The line dash to use to stroke the text.</param>
+        /// <param name="textBaseline">The text baseline (determines what <paramref name="originY"/> represents).</param>
+        /// <param name="tag">A tag to identify the stroked text.</param>
+        public void StrokeText(double originX, double originY, string text, Font font, Brush strokeColour, TextSpacing spacing, TextBaselines textBaseline = TextBaselines.Top, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
+        {
+            if (spacing == TextSpacing.Default)
+            {
+                StrokeText(originX, originY, text, font, strokeColour, textBaseline, lineWidth, lineCap, lineJoin, lineDash, tag);
+            }
+            else
+            {
+                StrokeText(originX, originY, new FormattedText[] { new FormattedText(text, font, spacing: spacing) }, strokeColour, textBaseline, lineWidth, lineCap, lineJoin, lineDash, tag);
             }
         }
 
@@ -1038,7 +1136,7 @@ namespace VectSharp
         }
 
 
-        private static Font.DetailedFontMetrics TextWithSpacingBase(double x, double y, string text, Font font, TextBaselines textBaseline, TextSpacing spacing, Action<double, double, char> printAction)
+        private static Font.DetailedFontMetrics TextWithSpacingBase(double x, double y, string text, Font font, TextBaselines textBaseline, TextSpacing spacing, Action<double, double, char, int> printAction, bool isLast)
         {
             if (string.IsNullOrEmpty(text))
             {
@@ -1061,8 +1159,7 @@ namespace VectSharp
                     baselineOrigin = new Point(x - metrics.LeftSideBearing, y + metrics.Bottom);
                     break;
                 case TextBaselines.Middle:
-                    baselineOrigin = new Point(x - metrics.LeftSideBearing,
-                        y + (metrics.Top - metrics.Bottom) * 0.5 + metrics.Bottom);
+                    baselineOrigin = new Point(x - metrics.LeftSideBearing, y + (metrics.Top - metrics.Bottom) * 0.5 + metrics.Bottom);
                     break;
             }
 
@@ -1089,21 +1186,17 @@ namespace VectSharp
 
                     if (kerning != null)
                     {
-                        currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X,
-                            currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
-                        currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X,
-                            currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
+                        currentGlyphPlacementDelta = new Point(currentGlyphPlacementDelta.X + kerning.Glyph1Placement.X, currentGlyphPlacementDelta.Y + kerning.Glyph1Placement.Y);
+                        currentGlyphAdvanceDelta = new Point(currentGlyphAdvanceDelta.X + kerning.Glyph1Advance.X, currentGlyphAdvanceDelta.Y + kerning.Glyph1Advance.Y);
 
-                        nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X,
-                            nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
-                        nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X,
-                            nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
+                        nextGlyphPlacementDelta = new Point(nextGlyphPlacementDelta.X + kerning.Glyph2Placement.X, nextGlyphPlacementDelta.Y + kerning.Glyph2Placement.Y);
+                        nextGlyphAdvanceDelta = new Point(nextGlyphAdvanceDelta.X + kerning.Glyph2Advance.X, nextGlyphAdvanceDelta.Y + kerning.Glyph2Advance.Y);
                     }
                 }
 
                 double lsb = font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).LeftSideBearing * font.FontSize / 1000;
 
-                printAction?.Invoke(baselineOrigin.X + currentGlyphPlacementDelta.X + lsb, baselineOrigin.Y + currentGlyphPlacementDelta.Y, c);
+                printAction?.Invoke(baselineOrigin.X + currentGlyphPlacementDelta.X + lsb, baselineOrigin.Y + currentGlyphPlacementDelta.Y, c, i);
 
                 if (char.IsWhiteSpace(c))
                 {
@@ -1120,7 +1213,16 @@ namespace VectSharp
                 baselineOrigin.Y += currentGlyphAdvanceDelta.Y * font.FontSize / 1000;
             }
 
-            double width = baselineOrigin.X - x - (currentGlyphAdvanceDelta.X * font.FontSize / 1000 * scale + increment) - font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000 * (scale - 1) - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000;
+            double width;
+
+            if (isLast)
+            {
+                width = baselineOrigin.X - x - (currentGlyphAdvanceDelta.X * font.FontSize / 1000 * scale + increment) - font.FontFamily.TrueTypeFile.Get1000EmGlyphWidth(c) * font.FontSize / 1000 * (scale - 1) - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000;
+            }
+            else
+            {
+                width = baselineOrigin.X - x - (currentGlyphAdvanceDelta.X * font.FontSize / 1000 * scale + increment) - font.FontFamily.TrueTypeFile.Get1000EmGlyphBearings(c).RightSideBearing * font.FontSize / 1000;
+            }
 
             return new Font.DetailedFontMetrics(width, metrics.Height, metrics.LeftSideBearing, metrics.RightSideBearing, metrics.Top, metrics.Bottom, metrics.AdvanceWidth - metrics.Width + width);
         }
@@ -1128,17 +1230,37 @@ namespace VectSharp
 
         private void StrokeTextWithSpacing(double x, double y, string text, Font font, Brush brush, TextSpacing spacing, TextBaselines textBaseline = TextBaselines.Top, double lineWidth = 1, LineCaps lineCap = LineCaps.Butt, LineJoins lineJoin = LineJoins.Miter, LineDash? lineDash = null, string tag = null)
         {
-            TextWithSpacingBase(x, y, text, font, textBaseline, spacing, (cx, cy, c) => this.StrokeText(cx, cy, c.ToString(), font, brush, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, tag));
+            TextWithSpacingBase(x, y, text, font, textBaseline, spacing, (cx, cy, c, i) =>
+            {
+                string charTag = tag;
+
+                if (this.UseUniqueTags && tag != null)
+                {
+                    charTag = tag + "@" + i.ToString();
+                }
+
+                this.StrokeText(cx, cy, c.ToString(), font, brush, TextBaselines.Baseline, lineWidth, lineCap, lineJoin, lineDash, charTag);
+            }, true);
         }
 
         private void FillTextWithSpacing(double x, double y, string text, Font font, Brush brush, TextSpacing spacing, TextBaselines textBaseline = TextBaselines.Top, string tag = null)
         {
-            TextWithSpacingBase(x, y, text, font, textBaseline, spacing, (cx, cy, c) => this.FillText(cx, cy, c.ToString(), font, brush, TextBaselines.Baseline, tag));
+            TextWithSpacingBase(x, y, text, font, textBaseline, spacing, (cx, cy, c, i) =>
+            {
+                string charTag = tag;
+
+                if (this.UseUniqueTags && tag != null)
+                {
+                    charTag = tag + "@" + i.ToString();
+                }
+
+                this.FillText(cx, cy, c.ToString(), font, brush, TextBaselines.Baseline, charTag);
+            }, true);
         }
 
-        internal static Font.DetailedFontMetrics MeasureTextWithSpacing(double x, double y, string text, Font font, Brush brush, TextSpacing spacing, TextBaselines textBaseline = TextBaselines.Top)
+        internal static Font.DetailedFontMetrics MeasureTextWithSpacing(double x, double y, string text, Font font, bool isLast, TextSpacing spacing, TextBaselines textBaseline = TextBaselines.Top)
         {
-            return TextWithSpacingBase(x, y, text, font, textBaseline, spacing, null);
+            return TextWithSpacingBase(x, y, text, font, textBaseline, spacing, null, isLast);
         }
 
 
