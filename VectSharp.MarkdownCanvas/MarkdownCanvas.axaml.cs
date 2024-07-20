@@ -165,7 +165,7 @@ namespace VectSharp.MarkdownCanvas
                     }
                     else if (change.Property == MarkdownCanvasControl.DocumentSourceProperty)
                     {
-                        MarkdownDocument document = Markdig.Markdown.Parse(change.GetNewValue<string>(), new MarkdownPipelineBuilder().UseGridTables().UsePipeTables().UseEmphasisExtras().UseGenericAttributes().UseAutoIdentifiers().UseAutoLinks().UseTaskLists().UseListExtras().UseCitations().UseMathematics().UseSmartyPants().Build());
+                        MarkdownDocument document = Markdig.Markdown.Parse(change.GetNewValue<string>(), Renderer.MarkdownPipelineBuilder.Build());
                         this.Document = document;
                     }
                     else if (change.Property == MarkdownCanvasControl.VerticalContentAlignmentProperty)

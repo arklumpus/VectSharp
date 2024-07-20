@@ -199,6 +199,17 @@ In addition to the basic features, VectSharp.Markdown supports the following ext
 
     By replacing the value of this property with a different method, it is possible to add custom syntax highlighting for other languages. To disable syntax highlighting, set this property to a method always returning `null`.
 
+* Emojis
+    
+    Emojis are supported both as shortcodes (e.g., `:rainbow:`), or as directly embedded Unicode surrogate pairs (e.g., `🌈`). They are rendered by fetching the rendered emoji from [OpenMoji](https://openmoji.org). Here are some examples:
+
+    | Source | Rendered emoji |
+    | --- | --- |
+    | `:rainbow:` | :rainbow: |
+    | `:poodle:` | :poodle: |
+    | `😺 👩‍⚕️ 🐾` | 😺 👩‍⚕️ 🐾 |
+
+    If you wish to customise emoji rendering (e.g., by using a different service than OpenMoji), you can do so by changing the value of the `MarkdownRenderer.EmojiUriResolver`. If you want to disable emoji rendering, just set this to a method that always returns `(null, false)`.
 
 When a string containing Markdown code is passed to VectSharp.Markdown, by default the code is parsed with all these extensions enabled. If you wish to disable them (or to enable only a subset of them), you can use the overloads that take a `MarkdownDocument` and parse the document yourself:
 

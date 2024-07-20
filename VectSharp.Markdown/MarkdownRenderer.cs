@@ -227,7 +227,7 @@ namespace VectSharp.Markdown
         public Func<string, string, (string, bool)> ImageUriResolver { get; set; } = HTTPUtils.ResolveImageURI;
 
         /// <summary>
-        /// A method used to resolve emojis. The argument of the method should be an emoji uri of the form "emoji://{name}_heading:{level}", where "{name}" is the name of the emoji and "{level}" is the heading level. The method should return a tuple containing the path of a local file containing the rendered emoji and a boolean value indicating whether the file should be deleted after the program has finished using it.
+        /// A method used to resolve emojis. The argument of the method should be an emoji uri of the form "emoji://{name}_heading:{level}", where "{name}" is the name of the emoji and "{level}" is the heading level, or "unicode://{unicode}_heading:{level}", where "{unicode}" is a unicode surrogate pair. The method should return a tuple containing the path of a local file containing the rendered emoji and a boolean value indicating whether the file should be deleted after the program has finished using it.
         /// </summary>
         public Func<string, (string, bool)> EmojiUriResolver { get; set; }
 
@@ -414,7 +414,7 @@ namespace VectSharp.Markdown
         /// <summary>
         /// Markdown pipeline builder used to parse markdown source.
         /// </summary>
-        public MarkdownPipelineBuilder MarkdownPipelineBuilder { get; set; } = new MarkdownPipelineBuilder().UseGridTables().UsePipeTables().UseEmphasisExtras().UseGenericAttributes().UseAutoIdentifiers().UseAutoLinks().UseTaskLists().UseListExtras().UseCitations().UseMathematics().UseSmartyPants().UseEmojiAndSmiley(EmojiURLMapping);
+        public MarkdownPipelineBuilder MarkdownPipelineBuilder { get; set; } = new MarkdownPipelineBuilder().UseGridTables().UsePipeTables().UseEmphasisExtras().UseGenericAttributes().UseAutoIdentifiers().UseAutoLinks().UseTaskLists().UseListExtras().UseCitations().UseMathematics().UseSmartyPants().UseEmojiAndSmiley(EmojiURLMapping).UseUnicodeEmoji();
 
         /// <summary>
         /// Create a new <see cref="MarkdownRenderer"/>;
@@ -2074,7 +2074,7 @@ namespace VectSharp.Markdown
                     string imageFile;
                     bool wasDownloaded;
 
-                    if (imageSrc.StartsWith("emoji://"))
+                    if (imageSrc.StartsWith("emoji://") || imageSrc.StartsWith("unicode://"))
                     {
                         (imageFile, wasDownloaded) = this.EmojiUriResolver(imageSrc);
                     }
