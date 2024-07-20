@@ -23,7 +23,7 @@
 
 	<PackageReference Include="VectSharp" Version="2.6.0" />
 	<PackageReference Include="VectSharp.Canvas" Version="2.8.0" />
-	<PackageReference Include="VectSharp.Raster" Version="2.5.0-a2" />
+	<PackageReference Include="VectSharp.Raster" Version="2.5.0" />
 	<PackageReference Include="VectSharp.SVG" Version="1.10.0" />
 	<PackageReference Include="VectSharp.Raster.ImageSharp" Version="2.1.0" />
   </ItemGroup>
