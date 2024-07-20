@@ -17,10 +17,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.0" PrivateAssets="all" />
-    <PackageReference Include="VectSharp" Version="2.4.2" />
-    <PackageReference Include="VectSharp.Plots" Version="1.0.0" />
-    <PackageReference Include="VectSharp.Raster.ImageSharp" Version="1.2.0-beta15" />
-    <PackageReference Include="VectSharp.SVG" Version="1.8.0" />
+    <PackageReference Include="VectSharp" Version="2.6.0-a5" />
+    <PackageReference Include="VectSharp.Plots" Version="1.1.0-a1" />
+    <PackageReference Include="VectSharp.Raster.ImageSharp" Version="2.1.0-a2" />
+    <PackageReference Include="VectSharp.SVG" Version="1.10.0-a3" />
     <PackageReference Include="MatBlazor" Version="2.9.0-develop-042" />
   </ItemGroup>
 

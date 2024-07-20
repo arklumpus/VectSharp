@@ -6,11 +6,15 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Company>University of Bristol</Company>
     <Description>A library to produce vector graphics (including text) without too many dependencies. Extensible to support multiple output formats. This package adds Markdown document rendering capabilities. For more information, see https://github.com/arklumpus/VectSharp</Description>
-    <Version>1.5.0</Version>
+    <Version>1.6.0</Version>
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/arklumpus/VectSharp</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MissingCodepoint.svg" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\icon.png">
@@ -27,9 +31,9 @@
   <ItemGroup>
     <PackageReference Include="CSharpMath.Rendering" Version="0.5.1" />
     <PackageReference Include="Highlight.NoEngine" Version="9.0.1" />
-    <PackageReference Include="Markdig" Version="0.30.4" />
-    <PackageReference Include="VectSharp" Version="2.5.1" />
-    <PackageReference Include="VectSharp.SVG" Version="1.9.0" />
+    <PackageReference Include="Markdig" Version="0.37.0" />
+    <PackageReference Include="VectSharp" Version="2.6.0" />
+    <PackageReference Include="VectSharp.SVG" Version="1.10.0" />
   </ItemGroup>
 
 </Project>

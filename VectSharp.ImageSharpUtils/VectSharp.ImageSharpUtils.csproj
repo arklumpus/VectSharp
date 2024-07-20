@@ -10,7 +10,7 @@
     <Description>A library to produce vector graphics (including text) without too many dependencies. Extensible to support multiple output formats. This package provides utilities using ImageSharp to make it possible to include in VectSharp graphics images in various formats. For more information, see https://github.com/arklumpus/VectSharp</Description>
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/arklumpus/VectSharp</PackageProjectUrl>
-    <Version>2.0.0</Version>
+    <Version>2.0.1</Version>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
@@ -32,8 +32,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.0.1" />
-    <PackageReference Include="VectSharp" Version="2.5.0" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.3" />
+    <PackageReference Include="VectSharp" Version="2.6.0" />
   </ItemGroup>
 
 </Project>
