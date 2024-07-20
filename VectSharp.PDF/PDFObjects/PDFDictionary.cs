@@ -18,50 +18,18 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
 
 namespace VectSharp.PDF.PDFObjects
 {
     /// <summary>
     /// Base class for PDF dictionary objects.
     /// </summary>
-    public abstract class PDFDictionary : PDFReferenceableObject
+    public abstract partial class PDFDictionary : PDFReferenceableObject
     {
-        internal static readonly object GettersLock = new object();
-        internal static readonly Dictionary<string, Dictionary<string, Func<PDFDictionary, IPDFObject>>> Getters = new Dictionary<string, Dictionary<string, Func<PDFDictionary, IPDFObject>>>();
-
-        internal static void Initialize(Type t)
-        {
-            Dictionary<string, Func<PDFDictionary, IPDFObject>> getters = new Dictionary<string, Func<PDFDictionary, IPDFObject>>();
-
-            foreach (System.Reflection.PropertyInfo pinfo in t.GetProperties().Where(x => typeof(IPDFObject).IsAssignableFrom(x.PropertyType)))
-            {
-                ParameterExpression obj = Expression.Parameter(typeof(PDFDictionary));
-
-                Expression<Func<PDFDictionary, IPDFObject>> getterExpression = Expression.Lambda<Func<PDFDictionary, IPDFObject>>(Expression.Convert(Expression.Call(Expression.Convert(obj, t), pinfo.GetGetMethod()), typeof(IPDFObject)), obj);
-
-                getters[pinfo.Name] = getterExpression.Compile();
-            }
-
-            Getters[t.FullName] = getters;
-        }
-
         /// <inheritdoc/>
         public override void FullWrite(Stream stream, StreamWriter writer)
         {
-            string typeName = this.GetType().FullName;
-
-            Dictionary<string, Func<PDFDictionary, IPDFObject>> getters;
-
-            lock (GettersLock)
-            {
-                if (!Getters.TryGetValue(typeName, out getters))
-                {
-                    Initialize(this.GetType());
-                    getters = Getters[typeName];
-                }
-            }
+            Dictionary<string, Func<PDFDictionary, IPDFObject>> getters = Getters[this.GetType().FullName];
 
             writer.Write("<<");
             foreach (KeyValuePair<string, Func<PDFDictionary, IPDFObject>> kvp in getters)

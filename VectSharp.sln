@@ -39,6 +39,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectSharp.DemoAnimation", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectSharp.Plots", "VectSharp.Plots\VectSharp.Plots.csproj", "{55018552-87FD-423A-BC65-6F53C8CA2F72}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectSharp.PDF.SourceGeneration", "VectSharp.PDF.SourceGeneration\VectSharp.PDF.SourceGeneration.csproj", "{497923C8-E93C-40BF-83A3-E7B944C23297}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,6 +119,10 @@ Global
 		{55018552-87FD-423A-BC65-6F53C8CA2F72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55018552-87FD-423A-BC65-6F53C8CA2F72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55018552-87FD-423A-BC65-6F53C8CA2F72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{497923C8-E93C-40BF-83A3-E7B944C23297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{497923C8-E93C-40BF-83A3-E7B944C23297}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{497923C8-E93C-40BF-83A3-E7B944C23297}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{497923C8-E93C-40BF-83A3-E7B944C23297}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

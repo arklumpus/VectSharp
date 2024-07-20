@@ -116,18 +116,7 @@ namespace VectSharp.PDF.PDFObjects
         /// <inheritdoc/>
         public override void FullWrite(Stream stream, StreamWriter writer)
         {
-            string typeName = this.GetType().FullName;
-
-            Dictionary<string, Func<PDFDictionary, IPDFObject>> getters;
-
-            lock (GettersLock)
-            {
-                if (!Getters.TryGetValue(typeName, out getters))
-                {
-                    Initialize(this.GetType());
-                    getters = Getters[typeName];
-                }
-            }
+            Dictionary<string, Func<PDFDictionary, IPDFObject>> getters = Getters[this.GetType().FullName];
 
             writer.Write("<<");
             foreach (KeyValuePair<string, Func<PDFDictionary, IPDFObject>> kvp in getters)
