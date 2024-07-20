@@ -15,12 +15,14 @@
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
+using ExCSS;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
+using VectSharp.SVG;
 
 namespace VectSharp.Markdown
 {
@@ -249,6 +251,65 @@ namespace VectSharp.Markdown
         public static bool LogDownloads { get; set; } = true;
 
         /// <summary>
+        /// Uses OpenMoji (https://openmoji.org) to resolve emoji URIs of the form "emoji://{name}_heading:{level}".
+        /// </summary>
+        /// <param name="emojiUri">The emoji URI.</param>
+        /// <param name="renderer">The <see cref="MarkdownRenderer"/> on which the emoji will be drawn.</param>
+        /// <returns>A tuple containing the local path of the rendered emoji and a boolean value indicating whether the image should be deleted after the program is done with it.</returns>
+        public static (string path, bool wasDownloaded) ResolveEmojiUsingOpenMoji(string emojiUri, MarkdownRenderer renderer)
+        {
+            if (emojiUri.StartsWith("emoji://"))
+            {
+                int headingLevel = int.Parse(emojiUri.Substring(emojiUri.LastIndexOf("_heading:") + 9));
+                string emojiName = emojiUri.Substring(8, emojiUri.LastIndexOf("_heading:") - 8);
+                string emojiUnicode = Markdig.Extensions.Emoji.EmojiMapping.GetDefaultEmojiShortcodeToUnicode()[":" + emojiName + ":"];
+
+                // Adapted from OpenMoji FAQ (https://openmoji.org/faq/)
+                string emojiCode = emojiUnicode.SelectMany((x, i) => !char.IsLowSurrogate(emojiUnicode, i) ? new string[] { char.ConvertToUtf32(emojiUnicode, i).ToString("X4") } : new string[0]).Aggregate((a, b) => a + "-" + b);
+                if (emojiCode.Length == 10)
+                {
+                    emojiCode = emojiCode.Replace("-FE0F", "");
+                }
+                string url = "https://openmoji.org/data/color/svg/" + emojiCode + ".svg";
+
+                (string, bool) downloadedEmoji = renderer.ImageUriResolver(url, "");
+
+                if (string.IsNullOrEmpty(downloadedEmoji.Item1))
+                {
+                    return (null, false);
+                }
+                else
+                {
+                    Page emojiPage = VectSharp.SVG.Parser.FromFile(downloadedEmoji.Item1);
+                    double targetEmojiHeight = renderer.BaseFontSize * (headingLevel == 0 ? 1 : renderer.HeaderFontSizeMultipliers[headingLevel - 1]);
+                    Page scaledEmojiPage = new Page(emojiPage.Width * targetEmojiHeight / emojiPage.Height, targetEmojiHeight);
+                    scaledEmojiPage.Graphics.Scale(targetEmojiHeight / emojiPage.Height, targetEmojiHeight / emojiPage.Height);
+                    double y = -renderer.RegularFontFamily.TrueTypeFile.Get1000EmDescent() / 1000 * emojiPage.Height * 0.5;
+                    scaledEmojiPage.Graphics.DrawGraphics(0, y, emojiPage.Graphics);
+                    
+                    if (downloadedEmoji.Item2)
+                    {
+                        scaledEmojiPage.SaveAsSVG(downloadedEmoji.Item1);
+                        return downloadedEmoji;
+                    }
+                    else
+                    {
+                        string tempFile = Path.GetTempFileName();
+                        File.Delete(tempFile);
+                        Directory.CreateDirectory(tempFile);
+                        string fileDest = Path.Combine(tempFile, Path.GetFileNameWithoutExtension(downloadedEmoji.Item1));
+                        scaledEmojiPage.SaveAsSVG(fileDest + ".svg");
+                        return (fileDest, true);
+                    }
+                }
+            }
+            else
+            {
+                return (null, false);
+            }
+        }
+
+        /// <summary>
         /// Resolves an image Uri, by downloading the image file if necessary. It also takes care of ensuring that the file extension matches the format of the file.
         /// </summary>
         /// <param name="uri">The address of the image.</param>
@@ -317,7 +378,7 @@ namespace VectSharp.Markdown
                             Console.Error.WriteLine();
                             Console.Error.Write("Downloading {0}...", absoluteUri);
                         }
-                        
+
                         using (WebClient client = new WebClient())
                         {
                             client.DownloadFile(absoluteUri, fileDest);

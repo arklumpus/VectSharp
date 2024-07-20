@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Markdig.Extensions.Emoji;
 
 namespace VectSharp.Markdown
 {
@@ -226,6 +227,11 @@ namespace VectSharp.Markdown
         public Func<string, string, (string, bool)> ImageUriResolver { get; set; } = HTTPUtils.ResolveImageURI;
 
         /// <summary>
+        /// A method used to resolve emojis. The argument of the method should be an emoji uri of the form "emoji://{name}_heading:{level}", where "{name}" is the name of the emoji and "{level}" is the heading level. The method should return a tuple containing the path of a local file containing the rendered emoji and a boolean value indicating whether the file should be deleted after the program has finished using it.
+        /// </summary>
+        public Func<string, (string, bool)> EmojiUriResolver { get; set; }
+
+        /// <summary>
         /// The base uri for resolving links.
         /// </summary>
         public Uri BaseLinkUri { get; set; } = new Uri("about:blank");
@@ -376,7 +382,6 @@ namespace VectSharp.Markdown
             return tbr;
         })();
 
-
         /// <summary>
         /// The bullet used for checked task list items.
         /// </summary>
@@ -401,6 +406,24 @@ namespace VectSharp.Markdown
         /// </summary>
         public bool AllowPageBreak { get; set; } = true;
 
+        /// <summary>
+        /// Emoji mapping that transforms emojis (e.g. ":something:") into URLs (e.g., "emoji://something").
+        /// </summary>
+        public static EmojiMapping EmojiURLMapping { get; } = new EmojiMapping(new Dictionary<string, string>(EmojiMapping.GetDefaultEmojiShortcodeToUnicode().Select(x => new KeyValuePair<string, string>(x.Key, "emoji://" + x.Key.Trim(':')))), EmojiMapping.GetDefaultSmileyToEmojiShortcode());
+
+        /// <summary>
+        /// Markdown pipeline builder used to parse markdown source.
+        /// </summary>
+        public MarkdownPipelineBuilder MarkdownPipelineBuilder { get; set; } = new MarkdownPipelineBuilder().UseGridTables().UsePipeTables().UseEmphasisExtras().UseGenericAttributes().UseAutoIdentifiers().UseAutoLinks().UseTaskLists().UseListExtras().UseCitations().UseMathematics().UseSmartyPants().UseEmojiAndSmiley(EmojiURLMapping);
+
+        /// <summary>
+        /// Create a new <see cref="MarkdownRenderer"/>;
+        /// </summary>
+        public MarkdownRenderer()
+        {
+            this.EmojiUriResolver = x => HTTPUtils.ResolveEmojiUsingOpenMoji(x, this);
+        }
+
         internal MarkdownRenderer Clone()
         {
             return (MarkdownRenderer)this.MemberwiseClone();
@@ -418,7 +441,7 @@ namespace VectSharp.Markdown
         /// <returns>A <see cref="Page"/> containing a rendering of the supplied markdown document.</returns>
         public Page RenderSinglePage(string markdownSource, double width, out Dictionary<string, string> linkDestinations, out List<(int level, string heading, string tag)> headingTree)
         {
-            MarkdownDocument document = Markdig.Markdown.Parse(markdownSource, new MarkdownPipelineBuilder().UseGridTables().UsePipeTables().UseEmphasisExtras().UseGenericAttributes().UseAutoIdentifiers().UseAutoLinks().UseTaskLists().UseListExtras().UseCitations().UseMathematics().UseSmartyPants().Build());
+            MarkdownDocument document = Markdig.Markdown.Parse(markdownSource, this.MarkdownPipelineBuilder.Build());
 
             return this.RenderSinglePage(document, width, out linkDestinations, out headingTree);
         }
@@ -494,7 +517,7 @@ namespace VectSharp.Markdown
         /// <returns>A <see cref="Document"/> containing a rendering of the supplied markdown document, consisting of one or more pages of the size specified in the <see cref="PageSize"/> of the current instance.</returns>
         public Document Render(string markdownSource, out Dictionary<string, string> linkDestinations, out List<(int level, string heading, string tag)> headingTree)
         {
-            MarkdownDocument document = Markdig.Markdown.Parse(markdownSource, new MarkdownPipelineBuilder().UseGridTables().UsePipeTables().UseEmphasisExtras().UseGenericAttributes().UseAutoIdentifiers().UseAutoLinks().UseTaskLists().UseListExtras().UseCitations().UseMathematics().UseSmartyPants().Build());
+            MarkdownDocument document = Markdig.Markdown.Parse(markdownSource, this.MarkdownPipelineBuilder.Build());
 
             return this.Render(document, out linkDestinations, out headingTree);
         }
@@ -1062,6 +1085,23 @@ namespace VectSharp.Markdown
                 Point cursor = context.Cursor;
                 RenderHTMLBlock("<a name=\"" + attributes.Id + "\"></a>", true, ref context, ref graphics, newPageAction, false, false);
                 context.Cursor = cursor;
+            }
+
+            if (inline is EmojiInline emoji)
+            {
+                int headingLevel = 0;
+                Block currBlock = emoji.Parent?.ParentBlock;
+                while (currBlock != null)
+                {
+                    if (currBlock is HeadingBlock heading)
+                    {
+                        headingLevel = heading.Level;
+                        break;
+                    }
+                    currBlock = currBlock.Parent;
+                }
+
+                inline = new LinkInline(emoji.Content.ToString() + "_heading:" + headingLevel.ToString(), "") { IsImage = true };
             }
 
             if (inline is LeafInline)
@@ -2031,7 +2071,17 @@ namespace VectSharp.Markdown
             {
                 if (imgTag.Attributes.TryGetValue("src", out string imageSrc))
                 {
-                    (string imageFile, bool wasDownloaded) = this.ImageUriResolver(imageSrc, this.BaseImageUri);
+                    string imageFile;
+                    bool wasDownloaded;
+
+                    if (imageSrc.StartsWith("emoji://"))
+                    {
+                        (imageFile, wasDownloaded) = this.EmojiUriResolver(imageSrc);
+                    }
+                    else
+                    {
+                        (imageFile, wasDownloaded) = this.ImageUriResolver(imageSrc, this.BaseImageUri);
+                    }
 
                     Page imagePage = null;
 
