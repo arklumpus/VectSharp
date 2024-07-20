@@ -20,12 +20,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using VectSharp.Filters;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace VectSharp.SVG
 {
@@ -118,6 +116,8 @@ namespace VectSharp.SVG
         public static Page FromString(string svgSource)
         {
             XmlDocument svgDoc = new XmlDocument();
+
+
             svgDoc.LoadXml(svgSource);
 
             Dictionary<string, FontFamily> embeddedFonts = new Dictionary<string, FontFamily>();
@@ -2300,7 +2300,7 @@ namespace VectSharp.SVG
                             path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
                         }
 
-                        gpr.StrokePath(path, fillColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
+                        gpr.FillPath(path, fillColour, tag: tag);
 
                         if (transform != null)
                         {
@@ -2331,7 +2331,7 @@ namespace VectSharp.SVG
                             path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
                         }
 
-                        gpr.StrokePath(path, fillColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
+                        gpr.FillPath(path, fillColour, tag: tag);
 
                         if (transform != null)
                         {
