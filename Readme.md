@@ -6,6 +6,9 @@
 
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL_v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
 [![Version](https://img.shields.io/nuget/v/VectSharp)](https://nuget.org/packages/VectSharp)
+[![Downloads](https://img.shields.io/nuget/dt/VectSharp)](https://nuget.org/packages/VectSharp)
+
+[**Full documentation with interactive examples**](https://arklumpus.github.io/VectSharp)
 
 ## Introduction
 **VectSharp** is a library to create vector graphics (including text) in C#, without too many dependencies.
