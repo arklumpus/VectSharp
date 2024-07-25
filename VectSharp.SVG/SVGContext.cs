@@ -2892,8 +2892,8 @@ namespace VectSharp.SVG
 
                     {
                         XmlElement animate = Document.CreateElement("animate", SVGContext.SVGNamespace);
-                        animate.SetAttribute("attributeName", "display");
-                        animate.SetAttribute("values", "none;none;block;block;none;none");
+                        animate.SetAttribute("attributeName", "visibility");
+                        animate.SetAttribute("values", "hidden;hidden;visible;visible;hidden;hidden");
                         animate.SetAttribute("dur", totalDuration.ToString(System.Globalization.CultureInfo.InvariantCulture) + "ms");
                         animate.SetAttribute("repeatCount", repeatCount);
                         animate.SetAttribute("fill", "freeze");
@@ -3156,8 +3156,8 @@ namespace VectSharp.SVG
                     XmlNode clonedSVG = Document.ImportNode(frames[i].Item1.GetElementsByTagName("svg")[0], true);
 
                     XmlElement animate = Document.CreateElement("animate", SVGContext.SVGNamespace);
-                    animate.SetAttribute("attributeName", "display");
-                    animate.SetAttribute("values", "none;none;block;block;none;none");
+                    animate.SetAttribute("attributeName", "visibility");
+                    animate.SetAttribute("values", "hidden;hidden;visible;visible;hidden;hidden");
                     animate.SetAttribute("dur", totalDuration.ToString(System.Globalization.CultureInfo.InvariantCulture) + "ms");
                     animate.SetAttribute("repeatCount", repeatCount);
 
@@ -3395,8 +3395,8 @@ namespace VectSharp.SVG
                 clonedG.InnerXml = clonedSVG.InnerXml;
 
                 XmlElement animate = Document.CreateElement("animate", SVGContext.SVGNamespace);
-                animate.SetAttribute("attributeName", "display");
-                animate.SetAttribute("values", "none;none;block;block;none;none");
+                animate.SetAttribute("attributeName", "visibility");
+                animate.SetAttribute("values", "hidden;hidden;visible;visible;hidden;hidden");
                 animate.SetAttribute("dur", totalDuration.ToString(System.Globalization.CultureInfo.InvariantCulture) + "ms");
                 animate.SetAttribute("repeatCount", repeatCount);
                 animate.SetAttribute("keyTimes", "0;" + Math.Min(1, currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + Math.Min(1, currentTime / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + Math.Min(1, (currentTime + frames[i].Item2) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + Math.Min(1, (currentTime + frames[i].Item2) / totalDuration).ToString(System.Globalization.CultureInfo.InvariantCulture) + ";1");
