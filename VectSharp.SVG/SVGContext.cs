@@ -15,16 +15,14 @@
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using ExCSS;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Transactions;
 using System.Xml;
 using VectSharp.Filters;
 
@@ -2740,7 +2738,7 @@ namespace VectSharp.SVG
                                 previous = (newName, kvp.Value, new HashSet<char>());
                                 usedFonts[fName] = previous;
                             }
-                            else if (previous.family != kvp.Value)
+                            else if (previous.family.TrueTypeFile != kvp.Value.TrueTypeFile)
                             {
                                 string transferredName = Guid.NewGuid().ToString();
                                 usedFonts[transferredName] = usedFonts[fName];
@@ -3767,20 +3765,63 @@ namespace VectSharp.SVG
             }
         }
 
+        private static readonly Regex SimpleMatrixTransform = new Regex("\\s*matrix\\([^\\)]+\\)\\s*$", RegexOptions.Compiled);
+        private static readonly Regex MatrixAndScaleTransform = new Regex("\\s*matrix\\([^\\)]+\\)\\s*,\\s*scale\\([^\\)]+\\)\\s*$", RegexOptions.Compiled);
+
+
         // Adapted from https://math.stackexchange.com/a/2888105
         private static (Point, double, Size, Size) DecomposeMatrix(string transformMatrix)
         {
-            transformMatrix = transformMatrix.Trim().Substring(7);
-            transformMatrix = transformMatrix.Substring(0, transformMatrix.Length - 1);
+            double a, b, c, d, e, f;
 
-            double[] matrixElements = (from el in transformMatrix.Split(',') select double.Parse(el, System.Globalization.CultureInfo.InvariantCulture)).ToArray();
+            if (SimpleMatrixTransform.IsMatch(transformMatrix))
+            {
+                transformMatrix = transformMatrix.Trim().Substring(7);
+                transformMatrix = transformMatrix.Substring(0, transformMatrix.Length - 1);
 
-            double a = matrixElements[0];
-            double b = matrixElements[1];
-            double c = matrixElements[2];
-            double d = matrixElements[3];
-            double e = matrixElements[4];
-            double f = matrixElements[5];
+                double[] matrixElements = (from el in transformMatrix.Split(',') select double.Parse(el, System.Globalization.CultureInfo.InvariantCulture)).ToArray();
+
+                a = matrixElements[0];
+                b = matrixElements[1];
+                c = matrixElements[2];
+                d = matrixElements[3];
+                e = matrixElements[4];
+                f = matrixElements[5];
+            }
+            else if (MatrixAndScaleTransform.IsMatch(transformMatrix))
+            {
+                string fullMatrix = transformMatrix;
+
+                transformMatrix = transformMatrix.Trim().Substring(7);
+                transformMatrix = transformMatrix.Substring(0, transformMatrix.IndexOf(")"));
+
+                double[] matrixElements = (from el in transformMatrix.Split(',') select double.Parse(el, System.Globalization.CultureInfo.InvariantCulture)).ToArray();
+
+                a = matrixElements[0];
+                b = matrixElements[1];
+                c = matrixElements[2];
+                d = matrixElements[3];
+                e = matrixElements[4];
+                f = matrixElements[5];
+
+                string scaleString = fullMatrix.Substring(fullMatrix.IndexOf("scale(") + 6).Trim();
+                scaleString = scaleString.Substring(0, scaleString.Length - 1);
+
+                double[] scaleElements = (from el in scaleString.Split(',') select double.Parse(el, System.Globalization.CultureInfo.InvariantCulture)).ToArray();
+
+                double scaleX = scaleElements[0];
+                double scaleY = scaleElements.Length > 1 ? scaleElements[1] : scaleX;
+
+                a = a * scaleX;
+                b = b * scaleX;
+                c = c * scaleY;
+                d = d * scaleY;
+            }
+            else
+            {
+                throw new ArgumentException("Invalid matrix transform: " + transformMatrix);
+            }
+            
 
             double delta = a * d - b * c;
 
