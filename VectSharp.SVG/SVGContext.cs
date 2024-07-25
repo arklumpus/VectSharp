@@ -150,6 +150,7 @@ namespace VectSharp.SVG
     {
         public Dictionary<string, FontFamily> UsedFontFamilies;
         public Dictionary<string, HashSet<char>> UsedChars;
+        public Dictionary<string, RasterImage> UsedRasterImages;
 
 
         public const string SVGNamespace = "http://www.w3.org/2000/svg";
@@ -193,7 +194,7 @@ namespace VectSharp.SVG
 
         private Dictionary<string, string> linkDestinations;
 
-        XmlElement definitions;
+        public XmlElement Definitions { get; }
         Dictionary<Brush, string> gradients;
         int gradientCount = 0;
 
@@ -202,6 +203,8 @@ namespace VectSharp.SVG
         private bool UseStyles;
         internal Dictionary<string, Dictionary<string, string>> Styles;
         XmlElement StyleElement;
+
+        private object lockObject;
 
         private string GetClass(Dictionary<string, string> style)
         {
@@ -239,7 +242,7 @@ namespace VectSharp.SVG
             return tbr;
         }
 
-        public SVGContext(double width, double height, bool textToPaths, SVGContextInterpreter.TextOptions textOption, Dictionary<string, string> linkDestinations, SVGContextInterpreter.FilterOption filterOption, bool useStyles, string tagPrefix, bool reuseGradients)
+        public SVGContext(double width, double height, bool textToPaths, SVGContextInterpreter.TextOptions textOption, Dictionary<string, string> linkDestinations, SVGContextInterpreter.FilterOption filterOption, bool useStyles, string tagPrefix, bool reuseGradients, Dictionary<string, RasterImage> usedRasterImages, object lockObject)
         {
             this.linkDestinations = linkDestinations;
 
@@ -288,9 +291,9 @@ namespace VectSharp.SVG
             currentElement.SetAttribute("version", "1.1");
             Document.AppendChild(currentElement);
 
-            definitions = Document.CreateElement("defs", SVGNamespace);
+            Definitions = Document.CreateElement("defs", SVGNamespace);
             gradients = new Dictionary<Brush, string>();
-            currentElement.AppendChild(definitions);
+            currentElement.AppendChild(Definitions);
 
             this.UseStyles = useStyles;
             StyleElement = Document.CreateElement("style", SVGNamespace);
@@ -302,6 +305,8 @@ namespace VectSharp.SVG
             this.TextOption = textOption;
             this.FilterOption = filterOption;
             this.ReuseGradients = reuseGradients;
+            UsedRasterImages = usedRasterImages;
+            this.lockObject = lockObject;
         }
 
 
@@ -390,7 +395,7 @@ namespace VectSharp.SVG
                         }
 
                         XmlElement gradientElement = linearGradient.ToLinearGradient(Document, gradientName);
-                        this.definitions.AppendChild(gradientElement);
+                        this.Definitions.AppendChild(gradientElement);
 
                         if (ReuseGradients)
                         {
@@ -414,7 +419,7 @@ namespace VectSharp.SVG
                         }
 
                         XmlElement gradientElement = radialGradient.ToRadialGradient(Document, gradientName);
-                        this.definitions.AppendChild(gradientElement);
+                        this.Definitions.AppendChild(gradientElement);
 
                         if (ReuseGradients)
                         {
@@ -605,7 +610,7 @@ namespace VectSharp.SVG
                         "," + deltaTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
                         "," + deltaTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
 
-                        this.definitions.AppendChild(gradientElement);
+                        this.Definitions.AppendChild(gradientElement);
 
                         gradientCount++;
                     }
@@ -628,7 +633,7 @@ namespace VectSharp.SVG
                         "," + deltaTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
                         "," + deltaTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
 
-                        this.definitions.AppendChild(gradientElement);
+                        this.Definitions.AppendChild(gradientElement);
 
                         gradientCount++;
                     }
@@ -896,7 +901,7 @@ namespace VectSharp.SVG
                         }
 
                         XmlElement gradientElement = linearGradient.ToLinearGradient(Document, gradientName);
-                        this.definitions.AppendChild(gradientElement);
+                        this.Definitions.AppendChild(gradientElement);
 
                         if (ReuseGradients)
                         {
@@ -920,7 +925,7 @@ namespace VectSharp.SVG
                         }
 
                         XmlElement gradientElement = radialGradient.ToRadialGradient(Document, gradientName);
-                        this.definitions.AppendChild(gradientElement);
+                        this.Definitions.AppendChild(gradientElement);
 
                         if (ReuseGradients)
                         {
@@ -1198,7 +1203,7 @@ namespace VectSharp.SVG
                         "," + deltaTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
                         "," + deltaTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
 
-                        this.definitions.AppendChild(gradientElement);
+                        this.Definitions.AppendChild(gradientElement);
 
                         gradientCount++;
                     }
@@ -1221,7 +1226,7 @@ namespace VectSharp.SVG
                         "," + deltaTransform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
                         "," + deltaTransform[0, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + deltaTransform[1, 2].ToString(System.Globalization.CultureInfo.InvariantCulture) + ")");
 
-                        this.definitions.AppendChild(gradientElement);
+                        this.Definitions.AppendChild(gradientElement);
 
                         gradientCount++;
                     }
@@ -1539,7 +1544,7 @@ namespace VectSharp.SVG
                     }
 
                     XmlElement gradientElement = linearGradient.ToLinearGradient(Document, gradientName);
-                    this.definitions.AppendChild(gradientElement);
+                    this.Definitions.AppendChild(gradientElement);
 
                     if (ReuseGradients)
                     {
@@ -1567,7 +1572,7 @@ namespace VectSharp.SVG
                     }
 
                     XmlElement gradientElement = radialGradient.ToRadialGradient(Document, gradientName);
-                    this.definitions.AppendChild(gradientElement);
+                    this.Definitions.AppendChild(gradientElement);
 
                     if (ReuseGradients)
                     {
@@ -1652,6 +1657,11 @@ namespace VectSharp.SVG
 
         public void DrawRasterImage(int sourceX, int sourceY, int sourceWidth, int sourceHeight, double destinationX, double destinationY, double destinationWidth, double destinationHeight, RasterImage image)
         {
+            lock (lockObject)
+            {
+                UsedRasterImages[image.Id] = image;
+            }
+
             Save();
 
             MoveTo(destinationX, destinationY);
@@ -1684,23 +1694,9 @@ namespace VectSharp.SVG
                 currElement.AppendChild(currentElement);
             }
 
-            XmlElement img = Document.CreateElement("image", SVGNamespace);
-            img.SetAttribute("x", "0");
-            img.SetAttribute("y", "0");
+            XmlElement img = Document.CreateElement("use", SVGNamespace);
 
-            img.SetAttribute("width", "1");
-            img.SetAttribute("height", "1");
-
-            img.SetAttribute("preserveAspectRatio", "none");
-
-            if (image.Interpolate)
-            {
-                img.SetAttribute("image-rendering", "optimizeQuality");
-            }
-            else
-            {
-                img.SetAttribute("image-rendering", "pixelated");
-            }
+            img.SetAttribute("href", "#" + image.Id);
 
             img.SetAttribute("transform", "matrix(" + _transform[0, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 0].ToString(System.Globalization.CultureInfo.InvariantCulture) +
                 "," + _transform[0, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + _transform[1, 1].ToString(System.Globalization.CultureInfo.InvariantCulture) +
@@ -1710,8 +1706,6 @@ namespace VectSharp.SVG
             {
                 img.SetAttribute("id", this.TagPrefix + Tag);
             }
-
-            img.SetAttribute("href", "http://www.w3.org/1999/xlink", "data:image/png;base64," + Convert.ToBase64String(image.PNGStream.ToArray()));
 
             if (!string.IsNullOrEmpty(this.Tag) && this.linkDestinations.TryGetValue(this.Tag, out string destination) && !string.IsNullOrEmpty(destination))
             {
@@ -1952,7 +1946,7 @@ namespace VectSharp.SVG
                         maskElement.SetAttribute("width", bounds.Size.Width.ToString(System.Globalization.CultureInfo.InvariantCulture));
                         maskElement.SetAttribute("height", bounds.Size.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
-                        this.definitions.AppendChild(maskElement);
+                        this.Definitions.AppendChild(maskElement);
 
                         currentElement = maskElement;
 
@@ -2023,7 +2017,7 @@ namespace VectSharp.SVG
                         filterElement.SetAttribute("width", bounds.Size.Width.ToString(System.Globalization.CultureInfo.InvariantCulture));
                         filterElement.SetAttribute("height", bounds.Size.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
-                        this.definitions.AppendChild(filterElement);
+                        this.Definitions.AppendChild(filterElement);
 
                         XmlElement feElement = Document.CreateElement("feGaussianBlur", SVGNamespace);
                         feElement.SetAttribute("stdDeviation", gauss.StandardDeviation.ToString(System.Globalization.CultureInfo.InvariantCulture));
@@ -2095,7 +2089,7 @@ namespace VectSharp.SVG
                         filterElement.SetAttribute("width", bounds.Size.Width.ToString(System.Globalization.CultureInfo.InvariantCulture));
                         filterElement.SetAttribute("height", bounds.Size.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
-                        this.definitions.AppendChild(filterElement);
+                        this.Definitions.AppendChild(filterElement);
 
                         XmlElement feElement = Document.CreateElement("feColorMatrix", SVGNamespace);
                         feElement.SetAttribute("type", "matrix");
@@ -2196,7 +2190,7 @@ namespace VectSharp.SVG
                             filterElement.SetAttribute("width", bounds.Size.Width.ToString(System.Globalization.CultureInfo.InvariantCulture));
                             filterElement.SetAttribute("height", bounds.Size.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
-                            this.definitions.AppendChild(filterElement);
+                            this.Definitions.AppendChild(filterElement);
 
                             int index = 0;
 
@@ -2480,10 +2474,10 @@ namespace VectSharp.SVG
         /// <returns>An <see cref="XmlDocument"/> containing the rendered SVG image.</returns>
         public static XmlDocument SaveAsSVG(this Page page, TextOptions textOption = TextOptions.SubsetFonts, Dictionary<string, string> linkDestinations = null, FilterOption filterOption = default, bool useStyles = false)
         {
-            return CreateSVGDocument(page, "", textOption, linkDestinations, filterOption, useStyles, true);
+            return CreateSVGDocument(page, "", textOption, linkDestinations, filterOption, useStyles, true, new Dictionary<string, RasterImage>(), true, new object());
         }
 
-        private static XmlDocument CreateSVGDocument(this Page page, string tagPrefix, TextOptions textOption, Dictionary<string, string> linkDestinations, FilterOption filterOption, bool useStyles, bool reuseGradients)
+        private static XmlDocument CreateSVGDocument(this Page page, string tagPrefix, TextOptions textOption, Dictionary<string, string> linkDestinations, FilterOption filterOption, bool useStyles, bool reuseGradients, Dictionary<string, RasterImage> usedRasterImages, bool embedImagesHere, object lockObject)
         {
             if (linkDestinations == null)
             {
@@ -2497,7 +2491,7 @@ namespace VectSharp.SVG
 
             bool textToPaths = textOption == TextOptions.ConvertIntoPaths;
 
-            SVGContext ctx = new SVGContext(page.Width, page.Height, textToPaths, textOption, linkDestinations, filterOption, useStyles, tagPrefix, reuseGradients);
+            SVGContext ctx = new SVGContext(page.Width, page.Height, textToPaths, textOption, linkDestinations, filterOption, useStyles, tagPrefix, reuseGradients, usedRasterImages, lockObject);
 
             ctx.Rectangle(0, 0, page.Width, page.Height);
             ctx.SetFillStyle(page.Background);
@@ -2804,11 +2798,43 @@ namespace VectSharp.SVG
                 svgElement.InsertBefore(styleElement, svgElement.FirstChild);
             }
 
-
+            if (embedImagesHere && usedRasterImages.Count > 0)
+            {
+                foreach (KeyValuePair<string, RasterImage> kvp in usedRasterImages)
+                {
+                    EmbedRasterImage(ctx.Document, kvp.Key, kvp.Value, ctx.Definitions);
+                }
+            }
 
             ctx.Document.DocumentElement.SetAttribute("style", "font-synthesis: none;");
 
             return ctx.Document;
+        }
+
+        private static void EmbedRasterImage(XmlDocument document, string id, RasterImage image, XmlElement definitions)
+        {
+            XmlElement img = document.CreateElement("image", SVGContext.SVGNamespace);
+            img.SetAttribute("id", id);
+            img.SetAttribute("x", "0");
+            img.SetAttribute("y", "0");
+
+            img.SetAttribute("width", "1");
+            img.SetAttribute("height", "1");
+
+            img.SetAttribute("preserveAspectRatio", "none");
+
+            if (image.Interpolate)
+            {
+                img.SetAttribute("image-rendering", "optimizeQuality");
+            }
+            else
+            {
+                img.SetAttribute("image-rendering", "pixelated");
+            }
+
+            img.SetAttribute("href", "http://www.w3.org/1999/xlink", "data:image/png;base64," + Convert.ToBase64String(image.PNGStream.ToArray()));
+
+            definitions.AppendChild(img);
         }
 
         /// <summary>
@@ -2827,7 +2853,7 @@ namespace VectSharp.SVG
             double[] durations = new double[animation.Frames.Count];
 
             (XmlDocument, XmlDocument, Transition)[] transitions = new (XmlDocument, XmlDocument, Transition)[animation.Frames.Count - 1];
-
+            Dictionary<string, RasterImage> usedRasterImages = new Dictionary<string, RasterImage>();
 
             string repeatCount = animation.RepeatCount <= 0 ? "indefinite" : animation.RepeatCount.ToString();
 
@@ -2840,7 +2866,7 @@ namespace VectSharp.SVG
 
                 if (i > 0)
                 {
-                    frames[i] = (pag.CreateSVGDocument("frame" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, false), animation.Frames[i].Duration);
+                    frames[i] = (pag.CreateSVGDocument("frame" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, false, usedRasterImages, false, new object()), animation.Frames[i].Duration);
                     durations[i] = animation.Frames[i].Duration * durationScaling;
 
                     if (animation.Transitions[i - 1].Duration > 0)
@@ -2850,7 +2876,7 @@ namespace VectSharp.SVG
                         Page startPage = animation.GetFrameAtAbsolute(currentTime + epsilon);
                         Page endPage = animation.GetFrameAtAbsolute(currentTime + animation.Transitions[i - 1].Duration - epsilon);
 
-                        transitions[i - 1] = (startPage.CreateSVGDocument("transition" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, false), endPage.CreateSVGDocument("transition" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, false), animation.Transitions[i - 1]);
+                        transitions[i - 1] = (startPage.CreateSVGDocument("transition" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, false, usedRasterImages, false, new object()), endPage.CreateSVGDocument("transition" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, false, usedRasterImages, false, new object()), animation.Transitions[i - 1]);
                     }
                     else
                     {
@@ -2861,7 +2887,7 @@ namespace VectSharp.SVG
                 }
                 else
                 {
-                    frames[i] = (pag.CreateSVGDocument("frame" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, false), animation.Frames[i].Duration);
+                    frames[i] = (pag.CreateSVGDocument("frame" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, false, usedRasterImages, false, new object()), animation.Frames[i].Duration);
                     durations[i] = animation.Frames[i].Duration * durationScaling;
                     currentTime += animation.Frames[i].Duration;
                 }
@@ -2878,6 +2904,17 @@ namespace VectSharp.SVG
             currentElement.SetAttribute("viewBox", "0 0 " + animation.Width.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + animation.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
             currentElement.SetAttribute("version", "1.1");
             Document.AppendChild(currentElement);
+
+            XmlElement definitions = Document.CreateElement("defs", SVGContext.SVGNamespace);
+            currentElement.AppendChild(definitions);
+
+            if (usedRasterImages.Count > 0)
+            {
+                foreach (KeyValuePair<string, RasterImage> kvp in usedRasterImages)
+                {
+                    EmbedRasterImage(Document, kvp.Key, kvp.Value, definitions);
+                }
+            }
 
             currentTime = 0;
 
@@ -3360,6 +3397,8 @@ namespace VectSharp.SVG
             int frameCount = (int)Math.Ceiling(animation.Duration * frameRate * durationScaling / 1000);
 
             (XmlDocument, double)[] frames = new (XmlDocument, double)[frameCount];
+            Dictionary<string, RasterImage> usedRasterImages = new Dictionary<string, RasterImage>();
+            object lockObject = new object();
 
             Parallel.For(0, frameCount, i =>
             {
@@ -3369,7 +3408,7 @@ namespace VectSharp.SVG
 
                 Page pag = animation.GetFrameAtAbsolute(frameTime);
 
-                frames[i] = (pag.CreateSVGDocument("frame" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, true), frameDuration);
+                frames[i] = (pag.CreateSVGDocument("frame" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, true, usedRasterImages, false, lockObject), frameDuration);
             });
 
             string repeatCount = animation.RepeatCount <= 0 ? "indefinite" : animation.RepeatCount.ToString();
@@ -3385,6 +3424,17 @@ namespace VectSharp.SVG
             currentElement.SetAttribute("viewBox", "0 0 " + animation.Width.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + animation.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
             currentElement.SetAttribute("version", "1.1");
             Document.AppendChild(currentElement);
+
+            XmlElement definitions = Document.CreateElement("defs", SVGContext.SVGNamespace);
+            currentElement.AppendChild(definitions);
+
+            if (usedRasterImages.Count > 0)
+            {
+                foreach (KeyValuePair<string, RasterImage> kvp in usedRasterImages)
+                {
+                    EmbedRasterImage(Document, kvp.Key, kvp.Value, definitions);
+                }
+            }
 
             double currentTime = 0;
 
