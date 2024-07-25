@@ -2474,10 +2474,10 @@ namespace VectSharp.SVG
         /// <returns>An <see cref="XmlDocument"/> containing the rendered SVG image.</returns>
         public static XmlDocument SaveAsSVG(this Page page, TextOptions textOption = TextOptions.SubsetFonts, Dictionary<string, string> linkDestinations = null, FilterOption filterOption = default, bool useStyles = false)
         {
-            return CreateSVGDocument(page, "", textOption, linkDestinations, filterOption, useStyles, true, new Dictionary<string, RasterImage>(), true, new object());
+            return CreateSVGDocument(page, "", textOption, linkDestinations, filterOption, useStyles, true, new Dictionary<string, RasterImage>(), new Dictionary<string, (string, FontFamily, HashSet<char>)>(), true, new object());
         }
 
-        private static XmlDocument CreateSVGDocument(this Page page, string tagPrefix, TextOptions textOption, Dictionary<string, string> linkDestinations, FilterOption filterOption, bool useStyles, bool reuseGradients, Dictionary<string, RasterImage> usedRasterImages, bool embedImagesHere, object lockObject)
+        private static XmlDocument CreateSVGDocument(this Page page, string tagPrefix, TextOptions textOption, Dictionary<string, string> linkDestinations, FilterOption filterOption, bool useStyles, bool reuseGradients, Dictionary<string, RasterImage> usedRasterImages, Dictionary<string, (string, FontFamily, HashSet<char>)> usedFonts, bool embedEverythingHere, object lockObject)
         {
             if (linkDestinations == null)
             {
@@ -2504,47 +2504,87 @@ namespace VectSharp.SVG
             {
                 bool subsetFonts = textOption == TextOptions.SubsetFonts;
 
-                StringBuilder cssFonts = new StringBuilder();
-
                 Dictionary<string, string> newFontFamilies = new Dictionary<string, string>();
 
-                foreach (KeyValuePair<string, FontFamily> kvp in ctx.UsedFontFamilies)
+                if (embedEverythingHere)
                 {
-                    TrueTypeFile subsettedFont;
+                    StringBuilder cssFonts = new StringBuilder();
 
-                    if (subsetFonts)
+                    foreach (KeyValuePair<string, FontFamily> kvp in ctx.UsedFontFamilies)
                     {
-                        newFontFamilies[kvp.Key] = kvp.Value.TrueTypeFile.GetFontFamilyName() + "-" + Guid.NewGuid().ToString();
-                        subsettedFont = kvp.Value.TrueTypeFile.SubsetFont(new string(ctx.UsedChars[kvp.Key].ToArray()));
+                        TrueTypeFile subsettedFont;
+
+                        if (subsetFonts)
+                        {
+                            newFontFamilies[kvp.Key] = kvp.Value.TrueTypeFile.GetFontFamilyName() + "-" + Guid.NewGuid().ToString();
+                            subsettedFont = kvp.Value.TrueTypeFile.SubsetFont(new string(ctx.UsedChars[kvp.Key].ToArray()));
+                        }
+                        else
+                        {
+                            newFontFamilies[kvp.Key] = kvp.Value.TrueTypeFile.GetFontName();
+                            subsettedFont = kvp.Value.TrueTypeFile;
+                        }
+
+                        byte[] fontBytes;
+
+                        using (MemoryStream fontStream = new MemoryStream((int)subsettedFont.FontStream.Length))
+                        {
+                            subsettedFont.FontStream.Seek(0, SeekOrigin.Begin);
+                            subsettedFont.FontStream.CopyTo(fontStream);
+
+                            fontBytes = fontStream.ToArray();
+                        }
+
+
+                        cssFonts.Append("\n    @font-face\n    {\n      font-family: \"" + newFontFamilies[kvp.Key] + "\";\n      src: url(\"data:font/ttf;charset=utf-8;base64,");
+                        cssFonts.Append(Convert.ToBase64String(fontBytes));
+                        cssFonts.Append("\");\n    }\n  ");
                     }
-                    else
-                    {
-                        newFontFamilies[kvp.Key] = kvp.Value.TrueTypeFile.GetFontName();
-                        subsettedFont = kvp.Value.TrueTypeFile;
-                    }
 
-                    byte[] fontBytes;
+                    XmlElement style = ctx.Document.CreateElement("style", SVGContext.SVGNamespace);
+                    style.InnerText = cssFonts.ToString();
 
-                    using (MemoryStream fontStream = new MemoryStream((int)subsettedFont.FontStream.Length))
-                    {
-                        subsettedFont.FontStream.Seek(0, SeekOrigin.Begin);
-                        subsettedFont.FontStream.CopyTo(fontStream);
+                    XmlNode svgElement = ctx.Document.GetElementsByTagName("svg")[0];
 
-                        fontBytes = fontStream.ToArray();
-                    }
-
-
-                    cssFonts.Append("\n    @font-face\n    {\n      font-family: \"" + newFontFamilies[kvp.Key] + "\";\n      src: url(\"data:font/ttf;charset=utf-8;base64,");
-                    cssFonts.Append(Convert.ToBase64String(fontBytes));
-                    cssFonts.Append("\");\n    }\n  ");
+                    svgElement.InsertBefore(style, svgElement.FirstChild);
                 }
+                else
+                {
+                    foreach (KeyValuePair<string, FontFamily> kvp in ctx.UsedFontFamilies)
+                    {
+                        string fName = kvp.Key;
 
-                XmlElement style = ctx.Document.CreateElement("style", SVGContext.SVGNamespace);
-                style.InnerText = cssFonts.ToString();
+                        lock (lockObject)
+                        {
+                            if (!usedFonts.TryGetValue(fName, out (string newName, FontFamily family, HashSet<char> usedChars) previous))
+                            {
+                                string newName = kvp.Value.TrueTypeFile.GetFontFamilyName() + "-" + Guid.NewGuid().ToString();
+                                previous = (newName, kvp.Value, new HashSet<char>());
+                                usedFonts[fName] = previous;
+                            }
+                            else if (previous.family.TrueTypeFile != kvp.Value.TrueTypeFile)
+                            {
+                                string transferredName = Guid.NewGuid().ToString();
+                                usedFonts[transferredName] = usedFonts[fName];
 
-                XmlNode svgElement = ctx.Document.GetElementsByTagName("svg")[0];
+                                string newName = kvp.Value.TrueTypeFile.GetFontFamilyName() + "-" + Guid.NewGuid().ToString();
+                                previous = (newName, kvp.Value, new HashSet<char>());
+                                usedFonts[fName] = previous;
+                            }
 
-                svgElement.InsertBefore(style, svgElement.FirstChild);
+                            previous.usedChars.UnionWith(ctx.UsedChars[fName]);
+
+                            if (subsetFonts)
+                            {
+                                newFontFamilies[fName] = previous.newName;
+                            }
+                            else
+                            {
+                                newFontFamilies[fName] = previous.family.TrueTypeFile.GetFontName();
+                            }
+                        }
+                    }
+                }
 
                 HashSet<string> updatedClasses = new HashSet<string>();
 
@@ -2632,56 +2672,87 @@ namespace VectSharp.SVG
             }
             else if (textOption == TextOptions.ConvertIntoPathsUsingGlyphs)
             {
-                foreach (KeyValuePair<string, FontFamily> kvp in ctx.UsedFontFamilies)
+                if (embedEverythingHere)
                 {
-                    string guid = Guid.NewGuid().ToString();
-
-                    XmlElement defs = ctx.Document.CreateElement("defs", SVGContext.SVGNamespace);
-                    defs.SetAttribute("id", kvp.Value.FamilyName + "-glyphs-" + guid);
-
-                    foreach (char c in ctx.UsedChars[kvp.Key])
+                    foreach (KeyValuePair<string, FontFamily> kvp in ctx.UsedFontFamilies)
                     {
-                        XmlElement charPath = ctx.Document.CreateElement("path", SVGContext.SVGNamespace);
-                        charPath.SetAttribute("id", kvp.Key + "-" + c);
+                        string guid = Guid.NewGuid().ToString();
 
-                        TrueTypeFile.TrueTypePoint[][] glyphPaths = kvp.Value.TrueTypeFile.GetGlyphPath(c, kvp.Value.TrueTypeFile.GetUnitsPerEm());
+                        XmlElement defs = ctx.Document.CreateElement("defs", SVGContext.SVGNamespace);
+                        defs.SetAttribute("id", kvp.Value.FamilyName + "-glyphs-" + guid);
 
-                        StringBuilder data = new StringBuilder();
-
-                        for (int j = 0; j < glyphPaths.Length; j++)
+                        foreach (char c in ctx.UsedChars[kvp.Key])
                         {
-                            for (int k = 0; k < glyphPaths[j].Length; k++)
+                            XmlElement charPath = ctx.Document.CreateElement("path", SVGContext.SVGNamespace);
+                            charPath.SetAttribute("id", kvp.Key + "-" + c);
+
+                            TrueTypeFile.TrueTypePoint[][] glyphPaths = kvp.Value.TrueTypeFile.GetGlyphPath(c, kvp.Value.TrueTypeFile.GetUnitsPerEm());
+
+                            StringBuilder data = new StringBuilder();
+
+                            for (int j = 0; j < glyphPaths.Length; j++)
                             {
-                                if (k == 0)
+                                for (int k = 0; k < glyphPaths[j].Length; k++)
                                 {
-                                    data.Append("M " + glyphPaths[j][k].X.ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + (-glyphPaths[j][k].Y).ToString(System.Globalization.CultureInfo.InvariantCulture) + " ");
-                                }
-                                else
-                                {
-                                    if (glyphPaths[j][k].IsOnCurve)
+                                    if (k == 0)
                                     {
-                                        data.Append("L " + glyphPaths[j][k].X.ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + (-glyphPaths[j][k].Y).ToString(System.Globalization.CultureInfo.InvariantCulture) + " ");
+                                        data.Append("M " + glyphPaths[j][k].X.ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + (-glyphPaths[j][k].Y).ToString(System.Globalization.CultureInfo.InvariantCulture) + " ");
                                     }
                                     else
                                     {
-                                        data.Append("Q " + glyphPaths[j][k].X.ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + (-glyphPaths[j][k].Y).ToString(System.Globalization.CultureInfo.InvariantCulture) + " ");
-                                        data.Append(glyphPaths[j][k + 1].X.ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + (-glyphPaths[j][k + 1].Y).ToString(System.Globalization.CultureInfo.InvariantCulture) + " ");
+                                        if (glyphPaths[j][k].IsOnCurve)
+                                        {
+                                            data.Append("L " + glyphPaths[j][k].X.ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + (-glyphPaths[j][k].Y).ToString(System.Globalization.CultureInfo.InvariantCulture) + " ");
+                                        }
+                                        else
+                                        {
+                                            data.Append("Q " + glyphPaths[j][k].X.ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + (-glyphPaths[j][k].Y).ToString(System.Globalization.CultureInfo.InvariantCulture) + " ");
+                                            data.Append(glyphPaths[j][k + 1].X.ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + (-glyphPaths[j][k + 1].Y).ToString(System.Globalization.CultureInfo.InvariantCulture) + " ");
 
-                                        k++;
+                                            k++;
+                                        }
                                     }
                                 }
+
+                                data.Append("Z");
                             }
 
-                            data.Append("Z");
+                            charPath.SetAttribute("d", data.ToString());
+
+                            defs.AppendChild(charPath);
                         }
 
-                        charPath.SetAttribute("d", data.ToString());
-
-                        defs.AppendChild(charPath);
+                        XmlNode svgElement = ctx.Document.GetElementsByTagName("svg")[0];
+                        svgElement.InsertBefore(defs, svgElement.FirstChild);
                     }
+                }
+                else
+                {
+                    foreach (KeyValuePair<string, FontFamily> kvp in ctx.UsedFontFamilies)
+                    {
+                        string fName = kvp.Key;
 
-                    XmlNode svgElement = ctx.Document.GetElementsByTagName("svg")[0];
-                    svgElement.InsertBefore(defs, svgElement.FirstChild);
+                        lock (lockObject)
+                        {
+                            if (!usedFonts.TryGetValue(fName, out (string newName, FontFamily family, HashSet<char> usedChars) previous))
+                            {
+                                string newName = kvp.Value.TrueTypeFile.GetFontFamilyName() + "-" + Guid.NewGuid().ToString();
+                                previous = (newName, kvp.Value, new HashSet<char>());
+                                usedFonts[fName] = previous;
+                            }
+                            else if (previous.family != kvp.Value)
+                            {
+                                string transferredName = Guid.NewGuid().ToString();
+                                usedFonts[transferredName] = usedFonts[fName];
+
+                                string newName = kvp.Value.TrueTypeFile.GetFontFamilyName() + "-" + Guid.NewGuid().ToString();
+                                previous = (newName, kvp.Value, new HashSet<char>());
+                                usedFonts[fName] = previous;
+                            }
+
+                            previous.usedChars.UnionWith(ctx.UsedChars[fName]);
+                        }
+                    }
                 }
             }
             else if (!textToPaths && textOption == TextOptions.DoNotEmbed)
@@ -2798,7 +2869,7 @@ namespace VectSharp.SVG
                 svgElement.InsertBefore(styleElement, svgElement.FirstChild);
             }
 
-            if (embedImagesHere && usedRasterImages.Count > 0)
+            if (embedEverythingHere && usedRasterImages.Count > 0)
             {
                 foreach (KeyValuePair<string, RasterImage> kvp in usedRasterImages)
                 {
@@ -2854,6 +2925,7 @@ namespace VectSharp.SVG
 
             (XmlDocument, XmlDocument, Transition)[] transitions = new (XmlDocument, XmlDocument, Transition)[animation.Frames.Count - 1];
             Dictionary<string, RasterImage> usedRasterImages = new Dictionary<string, RasterImage>();
+            Dictionary<string, (string, FontFamily, HashSet<char>)> usedFonts = new Dictionary<string, (string, FontFamily, HashSet<char>)>();
 
             string repeatCount = animation.RepeatCount <= 0 ? "indefinite" : animation.RepeatCount.ToString();
 
@@ -2866,7 +2938,7 @@ namespace VectSharp.SVG
 
                 if (i > 0)
                 {
-                    frames[i] = (pag.CreateSVGDocument("frame" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, false, usedRasterImages, false, new object()), animation.Frames[i].Duration);
+                    frames[i] = (pag.CreateSVGDocument("frame" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, false, usedRasterImages, usedFonts, false, new object()), animation.Frames[i].Duration);
                     durations[i] = animation.Frames[i].Duration * durationScaling;
 
                     if (animation.Transitions[i - 1].Duration > 0)
@@ -2876,7 +2948,7 @@ namespace VectSharp.SVG
                         Page startPage = animation.GetFrameAtAbsolute(currentTime + epsilon);
                         Page endPage = animation.GetFrameAtAbsolute(currentTime + animation.Transitions[i - 1].Duration - epsilon);
 
-                        transitions[i - 1] = (startPage.CreateSVGDocument("transition" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, false, usedRasterImages, false, new object()), endPage.CreateSVGDocument("transition" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, false, usedRasterImages, false, new object()), animation.Transitions[i - 1]);
+                        transitions[i - 1] = (startPage.CreateSVGDocument("transition" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, false, usedRasterImages, usedFonts, false, new object()), endPage.CreateSVGDocument("transition" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, false, usedRasterImages, usedFonts, false, new object()), animation.Transitions[i - 1]);
                     }
                     else
                     {
@@ -2887,7 +2959,7 @@ namespace VectSharp.SVG
                 }
                 else
                 {
-                    frames[i] = (pag.CreateSVGDocument("frame" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, false, usedRasterImages, false, new object()), animation.Frames[i].Duration);
+                    frames[i] = (pag.CreateSVGDocument("frame" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, false, usedRasterImages, usedFonts, false, new object()), animation.Frames[i].Duration);
                     durations[i] = animation.Frames[i].Duration * durationScaling;
                     currentTime += animation.Frames[i].Duration;
                 }
@@ -2905,11 +2977,103 @@ namespace VectSharp.SVG
             currentElement.SetAttribute("version", "1.1");
             Document.AppendChild(currentElement);
 
-            XmlElement definitions = Document.CreateElement("defs", SVGContext.SVGNamespace);
-            currentElement.AppendChild(definitions);
+            if (usedFonts.Count > 0 && (textOption == TextOptions.SubsetFonts || textOption == TextOptions.EmbedFonts))
+            {
+                StringBuilder cssFonts = new StringBuilder();
+
+                foreach (KeyValuePair<string, (string, FontFamily, HashSet<char>)> kvp in usedFonts)
+                {
+                    TrueTypeFile subsettedFont;
+
+                    if (textOption == TextOptions.SubsetFonts)
+                    {
+                        subsettedFont = kvp.Value.Item2.TrueTypeFile.SubsetFont(new string(kvp.Value.Item3.ToArray()));
+                    }
+                    else
+                    {
+                        subsettedFont = kvp.Value.Item2.TrueTypeFile;
+                    }
+
+                    byte[] fontBytes;
+
+                    using (MemoryStream fontStream = new MemoryStream((int)subsettedFont.FontStream.Length))
+                    {
+                        subsettedFont.FontStream.Seek(0, SeekOrigin.Begin);
+                        subsettedFont.FontStream.CopyTo(fontStream);
+
+                        fontBytes = fontStream.ToArray();
+                    }
+
+
+                    cssFonts.Append("\n    @font-face\n    {\n      font-family: \"" + kvp.Value.Item1 + "\";\n      src: url(\"data:font/ttf;charset=utf-8;base64,");
+                    cssFonts.Append(Convert.ToBase64String(fontBytes));
+                    cssFonts.Append("\");\n    }\n  ");
+                }
+
+                XmlElement style = Document.CreateElement("style", SVGContext.SVGNamespace);
+                style.InnerText = cssFonts.ToString();
+                currentElement.AppendChild(style);
+            }
+
+            if (usedFonts.Count > 0 && textOption == TextOptions.ConvertIntoPathsUsingGlyphs)
+            {
+                foreach (KeyValuePair<string, (string, FontFamily, HashSet<char>)> kvp in usedFonts)
+                {
+                    string guid = Guid.NewGuid().ToString();
+
+                    XmlElement defs = Document.CreateElement("defs", SVGContext.SVGNamespace);
+                    defs.SetAttribute("id", kvp.Value.Item2.FamilyName + "-glyphs-" + guid);
+
+                    foreach (char c in kvp.Value.Item3)
+                    {
+                        XmlElement charPath = Document.CreateElement("path", SVGContext.SVGNamespace);
+                        charPath.SetAttribute("id", kvp.Key + "-" + c);
+
+                        TrueTypeFile.TrueTypePoint[][] glyphPaths = kvp.Value.Item2.TrueTypeFile.GetGlyphPath(c, kvp.Value.Item2.TrueTypeFile.GetUnitsPerEm());
+
+                        StringBuilder data = new StringBuilder();
+
+                        for (int j = 0; j < glyphPaths.Length; j++)
+                        {
+                            for (int k = 0; k < glyphPaths[j].Length; k++)
+                            {
+                                if (k == 0)
+                                {
+                                    data.Append("M " + glyphPaths[j][k].X.ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + (-glyphPaths[j][k].Y).ToString(System.Globalization.CultureInfo.InvariantCulture) + " ");
+                                }
+                                else
+                                {
+                                    if (glyphPaths[j][k].IsOnCurve)
+                                    {
+                                        data.Append("L " + glyphPaths[j][k].X.ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + (-glyphPaths[j][k].Y).ToString(System.Globalization.CultureInfo.InvariantCulture) + " ");
+                                    }
+                                    else
+                                    {
+                                        data.Append("Q " + glyphPaths[j][k].X.ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + (-glyphPaths[j][k].Y).ToString(System.Globalization.CultureInfo.InvariantCulture) + " ");
+                                        data.Append(glyphPaths[j][k + 1].X.ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + (-glyphPaths[j][k + 1].Y).ToString(System.Globalization.CultureInfo.InvariantCulture) + " ");
+
+                                        k++;
+                                    }
+                                }
+                            }
+
+                            data.Append("Z");
+                        }
+
+                        charPath.SetAttribute("d", data.ToString());
+
+                        defs.AppendChild(charPath);
+                    }
+
+                    currentElement.AppendChild(defs);
+                }
+            }
 
             if (usedRasterImages.Count > 0)
             {
+                XmlElement definitions = Document.CreateElement("defs", SVGContext.SVGNamespace);
+                currentElement.AppendChild(definitions);
+
                 foreach (KeyValuePair<string, RasterImage> kvp in usedRasterImages)
                 {
                     EmbedRasterImage(Document, kvp.Key, kvp.Value, definitions);
@@ -3398,6 +3562,7 @@ namespace VectSharp.SVG
 
             (XmlDocument, double)[] frames = new (XmlDocument, double)[frameCount];
             Dictionary<string, RasterImage> usedRasterImages = new Dictionary<string, RasterImage>();
+            Dictionary<string, (string, FontFamily, HashSet<char>)> usedFonts = new Dictionary<string, (string, FontFamily, HashSet<char>)>();
             object lockObject = new object();
 
             Parallel.For(0, frameCount, i =>
@@ -3408,7 +3573,7 @@ namespace VectSharp.SVG
 
                 Page pag = animation.GetFrameAtAbsolute(frameTime);
 
-                frames[i] = (pag.CreateSVGDocument("frame" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, true, usedRasterImages, false, lockObject), frameDuration);
+                frames[i] = (pag.CreateSVGDocument("frame" + i.ToString() + "://", textOption, linkDestinations, filterOption, false, true, usedRasterImages, usedFonts, false, lockObject), frameDuration);
             });
 
             string repeatCount = animation.RepeatCount <= 0 ? "indefinite" : animation.RepeatCount.ToString();
@@ -3425,11 +3590,103 @@ namespace VectSharp.SVG
             currentElement.SetAttribute("version", "1.1");
             Document.AppendChild(currentElement);
 
-            XmlElement definitions = Document.CreateElement("defs", SVGContext.SVGNamespace);
-            currentElement.AppendChild(definitions);
+            if (usedFonts.Count > 0 && (textOption == TextOptions.SubsetFonts || textOption == TextOptions.EmbedFonts))
+            {
+                StringBuilder cssFonts = new StringBuilder();
+
+                foreach (KeyValuePair<string, (string, FontFamily, HashSet<char>)> kvp in usedFonts)
+                {
+                    TrueTypeFile subsettedFont;
+
+                    if (textOption == TextOptions.SubsetFonts)
+                    {
+                        subsettedFont = kvp.Value.Item2.TrueTypeFile.SubsetFont(new string(kvp.Value.Item3.ToArray()));
+                    }
+                    else
+                    {
+                        subsettedFont = kvp.Value.Item2.TrueTypeFile;
+                    }
+
+                    byte[] fontBytes;
+
+                    using (MemoryStream fontStream = new MemoryStream((int)subsettedFont.FontStream.Length))
+                    {
+                        subsettedFont.FontStream.Seek(0, SeekOrigin.Begin);
+                        subsettedFont.FontStream.CopyTo(fontStream);
+
+                        fontBytes = fontStream.ToArray();
+                    }
+
+
+                    cssFonts.Append("\n    @font-face\n    {\n      font-family: \"" + kvp.Value.Item1 + "\";\n      src: url(\"data:font/ttf;charset=utf-8;base64,");
+                    cssFonts.Append(Convert.ToBase64String(fontBytes));
+                    cssFonts.Append("\");\n    }\n  ");
+                }
+
+                XmlElement style = Document.CreateElement("style", SVGContext.SVGNamespace);
+                style.InnerText = cssFonts.ToString();
+                currentElement.AppendChild(style);
+            }
+
+            if (usedFonts.Count > 0 && textOption == TextOptions.ConvertIntoPathsUsingGlyphs)
+            {
+                foreach (KeyValuePair<string, (string, FontFamily, HashSet<char>)> kvp in usedFonts)
+                {
+                    string guid = Guid.NewGuid().ToString();
+
+                    XmlElement defs = Document.CreateElement("defs", SVGContext.SVGNamespace);
+                    defs.SetAttribute("id", kvp.Value.Item2.FamilyName + "-glyphs-" + guid);
+
+                    foreach (char c in kvp.Value.Item3)
+                    {
+                        XmlElement charPath = Document.CreateElement("path", SVGContext.SVGNamespace);
+                        charPath.SetAttribute("id", kvp.Key + "-" + c);
+
+                        TrueTypeFile.TrueTypePoint[][] glyphPaths = kvp.Value.Item2.TrueTypeFile.GetGlyphPath(c, kvp.Value.Item2.TrueTypeFile.GetUnitsPerEm());
+
+                        StringBuilder data = new StringBuilder();
+
+                        for (int j = 0; j < glyphPaths.Length; j++)
+                        {
+                            for (int k = 0; k < glyphPaths[j].Length; k++)
+                            {
+                                if (k == 0)
+                                {
+                                    data.Append("M " + glyphPaths[j][k].X.ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + (-glyphPaths[j][k].Y).ToString(System.Globalization.CultureInfo.InvariantCulture) + " ");
+                                }
+                                else
+                                {
+                                    if (glyphPaths[j][k].IsOnCurve)
+                                    {
+                                        data.Append("L " + glyphPaths[j][k].X.ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + (-glyphPaths[j][k].Y).ToString(System.Globalization.CultureInfo.InvariantCulture) + " ");
+                                    }
+                                    else
+                                    {
+                                        data.Append("Q " + glyphPaths[j][k].X.ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + (-glyphPaths[j][k].Y).ToString(System.Globalization.CultureInfo.InvariantCulture) + " ");
+                                        data.Append(glyphPaths[j][k + 1].X.ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + (-glyphPaths[j][k + 1].Y).ToString(System.Globalization.CultureInfo.InvariantCulture) + " ");
+
+                                        k++;
+                                    }
+                                }
+                            }
+
+                            data.Append("Z");
+                        }
+
+                        charPath.SetAttribute("d", data.ToString());
+
+                        defs.AppendChild(charPath);
+                    }
+
+                    currentElement.AppendChild(defs);
+                }
+            }
 
             if (usedRasterImages.Count > 0)
             {
+                XmlElement definitions = Document.CreateElement("defs", SVGContext.SVGNamespace);
+                currentElement.AppendChild(definitions);
+
                 foreach (KeyValuePair<string, RasterImage> kvp in usedRasterImages)
                 {
                     EmbedRasterImage(Document, kvp.Key, kvp.Value, definitions);
