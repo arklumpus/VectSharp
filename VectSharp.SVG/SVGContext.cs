@@ -3087,6 +3087,7 @@ namespace VectSharp.SVG
                     XmlNode clonedSVG = Document.ImportNode(transitions[i - 1].Item1.GetElementsByTagName("svg")[0], true);
                     XmlNode clonedG = Document.CreateElement("g", SVGContext.SVGNamespace);
                     clonedG.InnerXml = clonedSVG.InnerXml;
+                    ((XmlElement)clonedG).SetAttribute("style", "visibility: hidden");
                     clonedSVG = clonedG;
 
                     {
@@ -3353,6 +3354,31 @@ namespace VectSharp.SVG
 
                 {
                     XmlNode clonedSVG = Document.ImportNode(frames[i].Item1.GetElementsByTagName("svg")[0], true);
+
+                    string prevStyle = ((XmlElement)clonedSVG).GetAttribute("style");
+
+                    if (i == 0)
+                    {
+                        if (!string.IsNullOrEmpty(prevStyle))
+                        {
+                            ((XmlElement)clonedSVG).SetAttribute("style", prevStyle + " visibility: visible;");
+                        }
+                        else
+                        {
+                            ((XmlElement)clonedSVG).SetAttribute("style", "visibility: visible;");
+                        }
+                    }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(prevStyle))
+                        {
+                            ((XmlElement)clonedSVG).SetAttribute("style", prevStyle + " visibility: hidden;");
+                        }
+                        else
+                        {
+                            ((XmlElement)clonedSVG).SetAttribute("style", "visibility: hidden;");
+                        }
+                    }
 
                     XmlElement animate = Document.CreateElement("animate", SVGContext.SVGNamespace);
                     animate.SetAttribute("attributeName", "visibility");
@@ -3698,6 +3724,14 @@ namespace VectSharp.SVG
                 XmlNode clonedSVG = Document.ImportNode(frames[i].Item1.GetElementsByTagName("svg")[0], true);
                 XmlNode clonedG = Document.CreateElement("g", SVGContext.SVGNamespace);
                 clonedG.InnerXml = clonedSVG.InnerXml;
+                if (i == 0)
+                {
+                    ((XmlElement)clonedG).SetAttribute("style", "visibility: visible");
+                }
+                else
+                {
+                    ((XmlElement)clonedG).SetAttribute("style", "visibility: hidden");
+                }
 
                 XmlElement animate = Document.CreateElement("animate", SVGContext.SVGNamespace);
                 animate.SetAttribute("attributeName", "visibility");
