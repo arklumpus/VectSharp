@@ -45,10 +45,16 @@ namespace VectSharp.Markdown
         public abstract double GetAscent(double lineAscent);
 
         /// <summary>
-        /// Get the vertical coordinates of the bottom of the <see cref="LineFragment"/>.
+        /// Get the vertical coordinate of the bottom of the <see cref="LineFragment"/>.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The vertical coordinates of the bottom of the <see cref="LineFragment"/>.</returns>
         public abstract double GetMaxY();
+
+        /// <summary>
+        /// Get the horizontal coordinate of the right side of the <see cref="LineFragment"/>.
+        /// </summary>
+        /// <returns>The horizontal coordinate of the right side of the <see cref="LineFragment"/>.</returns>
+        public abstract double GetMaxX();
 
         /// <summary>
         /// Render the <see cref="LineFragment"/> on the specified <paramref name="graphics"/> surface.
@@ -117,6 +123,13 @@ namespace VectSharp.Markdown
         public override double GetMaxY()
         {
             return this.Position.Y - this.Font.Descent;
+        }
+
+        /// <inheritdoc/>
+        public override double GetMaxX()
+        {
+            Size size = this.Font.MeasureText(this.Text);
+            return size.Width + this.Position.X;
         }
 
         /// <inheritdoc/>
@@ -190,6 +203,12 @@ namespace VectSharp.Markdown
         }
 
         /// <inheritdoc/>
+        public override double GetMaxX()
+        {
+            return Math.Max(this.Start.X, this.End.X);
+        }
+
+        /// <inheritdoc/>
         public override Point? Render(Graphics graphics, double deltaY)
         {
             graphics.StrokePath(new GraphicsPath().MoveTo(this.Start.X, this.Start.Y + deltaY).LineTo(this.End.X, this.End.Y + deltaY), this.Colour, this.Thickness, tag: this.Tag);
@@ -248,6 +267,12 @@ namespace VectSharp.Markdown
         public override double GetMaxY()
         {
             return this.TopLeft.Y + this.Size.Height;
+        }
+
+        /// <inheritdoc/>
+        public override double GetMaxX()
+        {
+            return this.TopLeft.X + this.Size.Width;
         }
 
         /// <inheritdoc/>
@@ -310,6 +335,12 @@ namespace VectSharp.Markdown
         }
 
         /// <inheritdoc/>
+        public override double GetMaxX()
+        {
+            return this.Origin.X + this.Graphics.GetBounds().Location.X + this.Graphics.GetBounds().Size.Width;
+        }
+
+        /// <inheritdoc/>
         public override Point? Render(Graphics graphics, double deltaY)
         {
             graphics.DrawGraphics(this.Origin.X, this.Origin.Y + deltaY, this.Graphics);
@@ -342,47 +373,74 @@ namespace VectSharp.Markdown
             this.Fragments = new List<LineFragment>();
         }
 
-        internal void Render(ref Graphics graphics, ref MarkdownContext context, MarkdownRenderer.NewPageAction newPageAction, double pageMaxY)
+        internal void Render(ref Graphics graphics, ref MarkdownContext context, MarkdownRenderer.NewPageAction newPageAction, double pageMaxY, double pageMaxX, MarkdownRenderer renderer)
         {
             double deltaY = 0;
             double maxY = 0;
+            double maxX = 0;
 
             foreach (LineFragment fragment in this.Fragments)
             {
                 deltaY = Math.Max(deltaY, fragment.GetAscent(this.InitialAscent) - InitialAscent);
                 maxY = Math.Max(maxY, fragment.GetMaxY());
+                maxX = Math.Max(maxX, fragment.GetMaxX());
             }
 
             maxY += deltaY;
-            
-            if (maxY > pageMaxY)
+
+            double minY = context.Cursor.Y -(this.InitialAscent + deltaY);
+
+            Line line = this;
+
+            renderer.RaiseLineMeasured(ref context, ref graphics, ref line, pageMaxX, pageMaxY, maxX, minY, maxY, context.Cursor.Y);
+
+            if (line != null && line.Fragments.Count > 0)
             {
-                double currCursY = context.Cursor.Y;
+                deltaY = 0;
+                maxY = 0;
+                maxX = 0;
 
-                newPageAction(ref context, ref graphics);
-
-                double currDelta = deltaY;
-
-                context.Cursor = new Point(context.Cursor.X, context.Cursor.Y + this.InitialAscent + currDelta);
-
-                deltaY -= currCursY - context.Cursor.Y + currDelta;
-
-                context.Cursor = new Point(context.Cursor.X, context.Cursor.Y);
-            }
-            else
-            {
-                context.Cursor = new Point(context.Cursor.X, context.Cursor.Y + deltaY);
-            }
-            
-
-            for (int i = 0; i < this.Fragments.Count; i++)
-            {
-                Point? pt = this.Fragments[i].Render(graphics, deltaY);
-
-                if (pt != null)
+                foreach (LineFragment fragment in line.Fragments)
                 {
-                    context.BottomRight = new Point(Math.Max(context.BottomRight.X, pt.Value.X + context.Translation.X), Math.Max(context.BottomRight.Y, pt.Value.Y + context.Translation.Y));
+                    deltaY = Math.Max(deltaY, fragment.GetAscent(line.InitialAscent) - InitialAscent);
+                    maxY = Math.Max(maxY, fragment.GetMaxY());
+                    maxX = Math.Max(maxX, fragment.GetMaxX());
                 }
+
+                maxY += deltaY;
+
+                if (maxY > pageMaxY)
+                {
+                    double currCursY = context.Cursor.Y;
+
+                    newPageAction(ref context, ref graphics);
+
+                    double currDelta = deltaY;
+
+                    context.Cursor = new Point(context.Cursor.X, context.Cursor.Y + line.InitialAscent + currDelta);
+
+                    deltaY -= currCursY - context.Cursor.Y + currDelta;
+
+                    context.Cursor = new Point(context.Cursor.X, context.Cursor.Y);
+                }
+                else
+                {
+                    context.Cursor = new Point(context.Cursor.X, context.Cursor.Y + deltaY);
+                }
+
+                renderer.RaiseLineRendering(ref context, ref graphics, line, pageMaxX, pageMaxY, maxX, minY, maxY, context.Cursor.Y);
+
+                for (int i = 0; i < line.Fragments.Count; i++)
+                {
+                    Point? pt = line.Fragments[i].Render(graphics, deltaY);
+
+                    if (pt != null)
+                    {
+                        context.BottomRight = new Point(Math.Max(context.BottomRight.X, pt.Value.X + context.Translation.X), Math.Max(context.BottomRight.Y, pt.Value.Y + context.Translation.Y));
+                    }
+                }
+
+                renderer.RaiseLineRendered(ref context, ref graphics, line, pageMaxX, pageMaxY, maxX, minY, maxY, context.Cursor.Y);
             }
         }
     }

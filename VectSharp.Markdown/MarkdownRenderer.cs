@@ -90,10 +90,6 @@ namespace VectSharp.Markdown
 
             Graphics graphics = pag.Graphics;
 
-            graphics.Save();
-
-            graphics.Translate(Margins.Left, Margins.Top);
-
             static void newPageAction(ref MarkdownContext mdContext, ref Graphics pageGraphics)
             {
 
@@ -111,6 +107,12 @@ namespace VectSharp.Markdown
                 CurrentPage = pag
             };
 
+            this.OnPageStarted(ref context, ref graphics, pag);
+
+            graphics.Save();
+
+            graphics.Translate(Margins.Left, Margins.Top);
+
             int index = 0;
             foreach (Block block in markdownDocument)
             {
@@ -118,11 +120,13 @@ namespace VectSharp.Markdown
                 index++;
             }
 
-            context.CurrentLine?.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y);
+            context.CurrentLine?.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y, context.GetMaxX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X), this);
 
             graphics.Restore();
 
             pag.Crop(new Point(0, 0), new Size(width, context.BottomRight.Y + this.Margins.Bottom));
+
+            this.OnPageFinished(ref context, ref graphics, context.CurrentPage);
 
             linkDestinations = context.LinkDestinations;
             headingTree = context.Headings;
@@ -158,20 +162,20 @@ namespace VectSharp.Markdown
 
             Graphics graphics = pag.Graphics;
 
-            graphics.Translate(Margins.Left, Margins.Top);
-
             void newPageAction(ref MarkdownContext mdContext, ref Graphics pageGraphics)
             {
+                mdContext.CurrentPage.Graphics.Translate(-mdContext.Translation.X, -mdContext.Translation.Y);
+                this.OnPageFinished(ref mdContext, ref pageGraphics, mdContext.CurrentPage);
+
                 Page newPag = new Page(PageSize.Width, PageSize.Height) { Background = BackgroundColour };
                 doc.Pages.Add(newPag);
 
-                newPag.Graphics.Translate(mdContext.Translation);
-                mdContext.Cursor = new Point(0, 0);
-                mdContext.ForbiddenAreasLeft.Clear();
-                mdContext.ForbiddenAreasRight.Clear();
-
+                mdContext.StartNewPage(newPag);
                 pageGraphics = newPag.Graphics;
-                mdContext.CurrentPage = newPag;
+
+                this.OnPageStarted(ref mdContext, ref pageGraphics, newPag);
+
+                newPag.Graphics.Translate(mdContext.Translation);
             }
 
             MarkdownContext context = new MarkdownContext()
@@ -186,6 +190,10 @@ namespace VectSharp.Markdown
                 CurrentPage = pag
             };
 
+            this.OnPageStarted(ref context, ref graphics, pag);
+
+            graphics.Translate(context.Translation.X, context.Translation.Y);
+
             int index = 0;
 
             foreach (Block block in mardownDocument)
@@ -194,7 +202,10 @@ namespace VectSharp.Markdown
                 index++;
             }
 
-            context.CurrentLine?.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y);
+            context.CurrentLine?.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y, context.GetMaxX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X), this);
+
+            context.CurrentPage.Graphics.Translate(-context.Translation.X, -context.Translation.Y);
+            this.OnPageFinished(ref context, ref graphics, context.CurrentPage);
 
             linkDestinations = context.LinkDestinations;
             headingTree = context.Headings;
@@ -312,7 +323,7 @@ namespace VectSharp.Markdown
                             {
                                 if (context.CurrentLine != null)
                                 {
-                                    context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y);
+                                    context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y, context.GetMaxX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X), this);
                                     context.CurrentLine = null;
                                 }
 
@@ -347,7 +358,7 @@ namespace VectSharp.Markdown
                             {
                                 if (context.CurrentLine != null)
                                 {
-                                    context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y);
+                                    context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y, context.GetMaxX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X), this);
                                     context.CurrentLine = null;
                                 }
 
@@ -373,7 +384,7 @@ namespace VectSharp.Markdown
                             {
                                 if (context.CurrentLine != null)
                                 {
-                                    context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y);
+                                    context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y, context.GetMaxX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X), this);
                                     context.CurrentLine = null;
                                 }
 
@@ -422,7 +433,7 @@ namespace VectSharp.Markdown
 
                             if (finalX > currLineMaxX)
                             {
-                                context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y);
+                                context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y, context.GetMaxX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X), this);
 
                                 context.CurrentLine = new Line(context.Font.Ascent);
                                 context.Cursor = new Point(0, context.Cursor.Y - context.Font.Descent + SpaceAfterLine * context.Font.FontSize + context.Font.Ascent);

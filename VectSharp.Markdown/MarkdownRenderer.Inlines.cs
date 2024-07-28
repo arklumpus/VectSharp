@@ -32,137 +32,151 @@ namespace VectSharp.Markdown
     {
         private string RenderInline(Inline inline, ref MarkdownContext context, ref Graphics graphics, NewPageAction newPageAction)
         {
-            HtmlAttributes attributes = inline.TryGetAttributes();
+            this.OnInlineRendering(ref context, ref graphics, ref inline);
 
-            if (attributes != null && !string.IsNullOrEmpty(attributes.Id))
+            if (inline != null)
             {
-                Point cursor = context.Cursor;
-                RenderHTMLBlock("<a name=\"" + attributes.Id + "\"></a>", true, ref context, ref graphics, newPageAction, false, false);
-                context.Cursor = cursor;
-            }
+                string returnValue;
+                HtmlAttributes attributes = inline.TryGetAttributes();
 
-            if (inline is EmojiInline emoji)
-            {
-                int headingLevel = 0;
-                Block currBlock = emoji.Parent?.ParentBlock;
-                while (currBlock != null)
+                if (attributes != null && !string.IsNullOrEmpty(attributes.Id))
                 {
-                    if (currBlock is HeadingBlock heading)
+                    Point cursor = context.Cursor;
+                    RenderHTMLBlock("<a name=\"" + attributes.Id + "\"></a>", true, ref context, ref graphics, newPageAction, false, false);
+                    context.Cursor = cursor;
+                }
+
+                if (inline is EmojiInline emoji)
+                {
+                    int headingLevel = 0;
+                    Block currBlock = emoji.Parent?.ParentBlock;
+                    while (currBlock != null)
                     {
-                        headingLevel = heading.Level;
-                        break;
-                    }
-                    currBlock = currBlock.Parent;
-                }
-
-                inline = new LinkInline(emoji.Content.ToString() + "_heading:" + headingLevel.ToString(), "") { IsImage = true };
-            }
-
-            if (inline is LeafInline)
-            {
-                if (inline is AutolinkInline autoLink)
-                {
-                    LinkInline link = new LinkInline((autoLink.IsEmail ? "mailto:" : "") + autoLink.Url, "");
-                    link.AppendChild(new LiteralInline(autoLink.Url));
-
-                    return RenderLinkInline(link, ref context, ref graphics, newPageAction);
-                }
-                else if (inline is CodeInline code)
-                {
-                    return RenderCodeInline(code, ref context, ref graphics, newPageAction);
-                }
-                else if (inline is HtmlEntityInline htmlEntity)
-                {
-                    return RenderLiteralInline(new LiteralInline(htmlEntity.Transcoded), ref context, ref graphics, newPageAction);
-                }
-                else if (inline is HtmlInline html)
-                {
-                    RenderHTMLBlock(html.Tag, true, ref context, ref graphics, newPageAction, true, true);
-                    return "";
-                }
-                else if (inline is LineBreakInline lineBreak)
-                {
-                    RenderLineBreakInline(lineBreak.IsHard, false, ref context, ref graphics, newPageAction);
-                    return "\n";
-                }
-                else if (inline is LiteralInline literal)
-                {
-                    return RenderLiteralInline(literal, ref context, ref graphics, newPageAction);
-                }
-                else if (inline is Markdig.Extensions.Mathematics.MathInline math)
-                {
-                    byte[] svgData;
-
-                    using (MemoryStream ms = new MemoryStream())
-                    {
-                        if (math.DelimiterCount == 1)
+                        if (currBlock is HeadingBlock heading)
                         {
-                            MathPainter.LineStyle = global::CSharpMath.Atom.LineStyle.Text;
+                            headingLevel = heading.Level;
+                            break;
                         }
-                        else
-                        {
-                            MathPainter.LineStyle = global::CSharpMath.Atom.LineStyle.Display;
-                        }
-
-                        MathPainter.FontSize = (float)(context.Font.FontSize * MathFontScalingFactor / ImageMultiplier);
-
-                        MathPainter.LaTeX = math.Content.ToString();
-                        Page pag = MathPainter.DrawToPage();
-                        VectSharp.SVG.SVGContextInterpreter.SaveAsSVG(pag, ms);
-                        svgData = ms.ToArray();
+                        currBlock = currBlock.Parent;
                     }
 
-                    string imageUri = "<img src=\"data:image/svg+xml;base64," + Convert.ToBase64String(svgData) + "\">";
-                    RenderHTMLBlock(imageUri, true, ref context, ref graphics, newPageAction, true, true);
-                    return math.Content.ToString();
+                    inline = new LinkInline(emoji.Content.ToString() + "_heading:" + headingLevel.ToString(), "") { IsImage = true };
                 }
-                else if (inline is Markdig.Extensions.SmartyPants.SmartyPant smartyPant)
+
+                if (inline is LeafInline)
                 {
-                    return smartyPant.Type switch
+                    if (inline is AutolinkInline autoLink)
                     {
-                        Markdig.Extensions.SmartyPants.SmartyPantType.LeftDoubleQuote => RenderLiteralInline(new LiteralInline("“"), ref context, ref graphics, newPageAction),
-                        Markdig.Extensions.SmartyPants.SmartyPantType.RightDoubleQuote => RenderLiteralInline(new LiteralInline("”"), ref context, ref graphics, newPageAction),
-                        Markdig.Extensions.SmartyPants.SmartyPantType.LeftQuote => RenderLiteralInline(new LiteralInline("‘"), ref context, ref graphics, newPageAction),
-                        Markdig.Extensions.SmartyPants.SmartyPantType.RightQuote => RenderLiteralInline(new LiteralInline("’"), ref context, ref graphics, newPageAction),
-                        Markdig.Extensions.SmartyPants.SmartyPantType.Dash2 => RenderLiteralInline(new LiteralInline("–"), ref context, ref graphics, newPageAction),
-                        Markdig.Extensions.SmartyPants.SmartyPantType.Dash3 => RenderLiteralInline(new LiteralInline("—"), ref context, ref graphics, newPageAction),
-                        Markdig.Extensions.SmartyPants.SmartyPantType.DoubleQuote => RenderLiteralInline(new LiteralInline("\""), ref context, ref graphics, newPageAction),
-                        Markdig.Extensions.SmartyPants.SmartyPantType.Ellipsis => RenderLiteralInline(new LiteralInline("…"), ref context, ref graphics, newPageAction),
-                        Markdig.Extensions.SmartyPants.SmartyPantType.LeftAngleQuote => RenderLiteralInline(new LiteralInline("«"), ref context, ref graphics, newPageAction),
-                        Markdig.Extensions.SmartyPants.SmartyPantType.Quote => RenderLiteralInline(new LiteralInline("'"), ref context, ref graphics, newPageAction),
-                        Markdig.Extensions.SmartyPants.SmartyPantType.RightAngleQuote => RenderLiteralInline(new LiteralInline("»"), ref context, ref graphics, newPageAction),
-                        _ => "",
-                    };
+                        LinkInline link = new LinkInline((autoLink.IsEmail ? "mailto:" : "") + autoLink.Url, "");
+                        link.AppendChild(new LiteralInline(autoLink.Url));
+
+                        returnValue = RenderLinkInline(link, ref context, ref graphics, newPageAction);
+                    }
+                    else if (inline is CodeInline code)
+                    {
+                        returnValue = RenderCodeInline(code, ref context, ref graphics, newPageAction);
+                    }
+                    else if (inline is HtmlEntityInline htmlEntity)
+                    {
+                        returnValue = RenderLiteralInline(new LiteralInline(htmlEntity.Transcoded), ref context, ref graphics, newPageAction);
+                    }
+                    else if (inline is HtmlInline html)
+                    {
+                        RenderHTMLBlock(html.Tag, true, ref context, ref graphics, newPageAction, true, true);
+                        returnValue = "";
+                    }
+                    else if (inline is LineBreakInline lineBreak)
+                    {
+                        RenderLineBreakInline(lineBreak.IsHard, false, ref context, ref graphics, newPageAction);
+                        returnValue = "\n";
+                    }
+                    else if (inline is LiteralInline literal)
+                    {
+                        returnValue = RenderLiteralInline(literal, ref context, ref graphics, newPageAction);
+                    }
+                    else if (inline is Markdig.Extensions.Mathematics.MathInline math)
+                    {
+                        byte[] svgData;
+
+                        using (MemoryStream ms = new MemoryStream())
+                        {
+                            if (math.DelimiterCount == 1)
+                            {
+                                MathPainter.LineStyle = global::CSharpMath.Atom.LineStyle.Text;
+                            }
+                            else
+                            {
+                                MathPainter.LineStyle = global::CSharpMath.Atom.LineStyle.Display;
+                            }
+
+                            MathPainter.FontSize = (float)(context.Font.FontSize * MathFontScalingFactor / ImageMultiplier);
+
+                            MathPainter.LaTeX = math.Content.ToString();
+                            MathPainter.TextColor = context.Colour;
+                            Page pag = MathPainter.DrawToPage();
+                            VectSharp.SVG.SVGContextInterpreter.SaveAsSVG(pag, ms);
+                            svgData = ms.ToArray();
+                        }
+
+                        string imageUri = "<img src=\"data:image/svg+xml;base64," + Convert.ToBase64String(svgData) + "\">";
+                        RenderHTMLBlock(imageUri, true, ref context, ref graphics, newPageAction, true, true);
+                        returnValue = math.Content.ToString();
+                    }
+                    else if (inline is Markdig.Extensions.SmartyPants.SmartyPant smartyPant)
+                    {
+                        returnValue = smartyPant.Type switch
+                        {
+                            Markdig.Extensions.SmartyPants.SmartyPantType.LeftDoubleQuote => RenderLiteralInline(new LiteralInline("“"), ref context, ref graphics, newPageAction),
+                            Markdig.Extensions.SmartyPants.SmartyPantType.RightDoubleQuote => RenderLiteralInline(new LiteralInline("”"), ref context, ref graphics, newPageAction),
+                            Markdig.Extensions.SmartyPants.SmartyPantType.LeftQuote => RenderLiteralInline(new LiteralInline("‘"), ref context, ref graphics, newPageAction),
+                            Markdig.Extensions.SmartyPants.SmartyPantType.RightQuote => RenderLiteralInline(new LiteralInline("’"), ref context, ref graphics, newPageAction),
+                            Markdig.Extensions.SmartyPants.SmartyPantType.Dash2 => RenderLiteralInline(new LiteralInline("–"), ref context, ref graphics, newPageAction),
+                            Markdig.Extensions.SmartyPants.SmartyPantType.Dash3 => RenderLiteralInline(new LiteralInline("—"), ref context, ref graphics, newPageAction),
+                            Markdig.Extensions.SmartyPants.SmartyPantType.DoubleQuote => RenderLiteralInline(new LiteralInline("\""), ref context, ref graphics, newPageAction),
+                            Markdig.Extensions.SmartyPants.SmartyPantType.Ellipsis => RenderLiteralInline(new LiteralInline("…"), ref context, ref graphics, newPageAction),
+                            Markdig.Extensions.SmartyPants.SmartyPantType.LeftAngleQuote => RenderLiteralInline(new LiteralInline("«"), ref context, ref graphics, newPageAction),
+                            Markdig.Extensions.SmartyPants.SmartyPantType.Quote => RenderLiteralInline(new LiteralInline("'"), ref context, ref graphics, newPageAction),
+                            Markdig.Extensions.SmartyPants.SmartyPantType.RightAngleQuote => RenderLiteralInline(new LiteralInline("»"), ref context, ref graphics, newPageAction),
+                            _ => "",
+                        };
+                    }
+                    else if (inline is Markdig.Extensions.TaskLists.TaskList)
+                    {
+                        // Nothing to render here (the checkbox has already been rendered)
+                        returnValue = "";
+                    }
+                    else
+                    {
+                        returnValue = "";
+                    }
                 }
-                else if (inline is Markdig.Extensions.TaskLists.TaskList)
+                else if (inline is ContainerInline)
                 {
-                    // Nothing to render here (the checkbox has already been rendered)
-                    return "";
+                    if (inline is DelimiterInline)
+                    {
+                        // Nothing to render here
+                        returnValue = "";
+                    }
+                    else if (inline is EmphasisInline emphasis)
+                    {
+                        returnValue = RenderEmphasisInline(emphasis, ref context, ref graphics, newPageAction);
+                    }
+                    else if (inline is LinkInline link)
+                    {
+                        returnValue = RenderLinkInline(link, ref context, ref graphics, newPageAction);
+                    }
+                    else
+                    {
+                        returnValue = "";
+                    }
                 }
                 else
                 {
-                    return "";
+                    returnValue = "";
                 }
-            }
-            else if (inline is ContainerInline)
-            {
-                if (inline is DelimiterInline)
-                {
-                    // Nothing to render here
-                    return "";
-                }
-                else if (inline is EmphasisInline emphasis)
-                {
-                    return RenderEmphasisInline(emphasis, ref context, ref graphics, newPageAction);
-                }
-                else if (inline is LinkInline link)
-                {
-                    return RenderLinkInline(link, ref context, ref graphics, newPageAction);
-                }
-                else
-                {
-                    return "";
-                }
+
+                this.OnInlineRendered(ref context, ref graphics, inline);
+                return returnValue;
             }
             else
             {
@@ -174,7 +188,7 @@ namespace VectSharp.Markdown
         {
             if (isHard)
             {
-                context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y);
+                context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y, context.GetMaxX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X), this);
                 context.CurrentLine = new Line(context.Font.Ascent);
                 context.Cursor = new Point(0, context.Cursor.Y - context.Font.Descent + SpaceAfterLine * context.Font.FontSize + context.Font.Ascent);
 
@@ -253,7 +267,7 @@ namespace VectSharp.Markdown
                             context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), new Point(underlineEnd, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Tag));
                         }
 
-                        context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y);
+                        context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y, context.GetMaxX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X), this);
 
 
 
@@ -354,7 +368,7 @@ namespace VectSharp.Markdown
                             context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), new Point(underlineEnd, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Tag));
                         }
 
-                        context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y);
+                        context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y, context.GetMaxX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X), this);
 
                         context.CurrentLine = new Line(prevContext.Font.Ascent);
 
@@ -455,7 +469,7 @@ namespace VectSharp.Markdown
                             context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), new Point(underlineEnd, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Tag));
                         }
 
-                        context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y);
+                        context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y, context.GetMaxX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X), this);
 
                         underlineStart = 0;
                         underlineEnd = 0;

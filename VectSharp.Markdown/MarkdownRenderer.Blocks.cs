@@ -33,120 +33,127 @@ namespace VectSharp.Markdown
     {
         private void RenderBlock(Block block, ref MarkdownContext context, ref Graphics graphics, NewPageAction newPageAction, bool spaceBefore, bool spaceAfter)
         {
-            HtmlAttributes attributes = block.TryGetAttributes();
+            this.OnBlockRendering(ref context, ref graphics, ref block);
 
-            string tag = null;
-
-            if (attributes != null && !string.IsNullOrEmpty(attributes.Id))
+            if (block != null)
             {
-                Point cursor = context.Cursor;
-                
-                void reversibleNewPageAction(ref MarkdownContext currContext, ref Graphics currGraphics)
-                {
-                    newPageAction(ref currContext, ref currGraphics);
-                    cursor = currContext.Cursor;
-                }
+                HtmlAttributes attributes = block.TryGetAttributes();
 
-                RenderHTMLBlock("<a name=\"" + attributes.Id + "\"></a>", false, ref context, ref graphics, reversibleNewPageAction, spaceBefore, spaceAfter);
-                tag = context.InternalAnchors["#" + attributes.Id];
-                context.Cursor = cursor;
-            }
+                string tag = null;
 
-            if (block is LeafBlock leaf)
-            {
-                if (leaf is HeadingBlock heading)
+                if (attributes != null && !string.IsNullOrEmpty(attributes.Id))
                 {
-                    string headingText = RenderHeadingBlock(heading, ref context, ref graphics, newPageAction, spaceBefore, spaceAfter);
+                    Point cursor = context.Cursor;
 
-                    context.Headings.Add((heading.Level, headingText, tag));
-                }
-                else if (leaf is ParagraphBlock paragraph)
-                {
-                    RenderParagraphBlock(paragraph, ref context, ref graphics, newPageAction, spaceBefore, spaceAfter);
-                }
-                else if (leaf is CodeBlock code)
-                {
-                    if (block is Markdig.Extensions.Mathematics.MathBlock math)
+                    void reversibleNewPageAction(ref MarkdownContext currContext, ref Graphics currGraphics)
                     {
-                        StringBuilder mathBuilder = new StringBuilder();
-                        foreach (StringLine line in math.Lines)
-                        {
-                            mathBuilder.Append(line.ToString());
-                            mathBuilder.Append("\n");
-                        }
-
-                        byte[] svgData;
-
-                        using (MemoryStream ms = new MemoryStream())
-                        {
-                            MathPainter.LineStyle = global::CSharpMath.Atom.LineStyle.Display;
-                            MathPainter.FontSize = (float)(context.Font.FontSize * MathFontScalingFactor / ImageMultiplier);
-                            MathPainter.LaTeX = mathBuilder.ToString();
-                            Page pag = MathPainter.DrawToPage();
-                            VectSharp.SVG.SVGContextInterpreter.SaveAsSVG(pag, ms);
-                            svgData = ms.ToArray();
-                        }
-
-                        string imageUri = "<img align=\"center\" src=\"data:image/svg+xml;base64," + Convert.ToBase64String(svgData) + "\">";
-                        RenderHTMLBlock(imageUri, false, ref context, ref graphics, newPageAction, true, true);
+                        newPageAction(ref currContext, ref currGraphics);
+                        cursor = currContext.Cursor;
                     }
-                    else if (leaf is FencedCodeBlock fenced)
+
+                    RenderHTMLBlock("<a name=\"" + attributes.Id + "\"></a>", false, ref context, ref graphics, reversibleNewPageAction, spaceBefore, spaceAfter);
+                    tag = context.InternalAnchors["#" + attributes.Id];
+                    context.Cursor = cursor;
+                }
+
+                if (block is LeafBlock leaf)
+                {
+                    if (leaf is HeadingBlock heading)
                     {
-                        if (!string.IsNullOrEmpty(fenced.Info))
+                        string headingText = RenderHeadingBlock(heading, ref context, ref graphics, newPageAction, spaceBefore, spaceAfter);
+
+                        context.Headings.Add((heading.Level, headingText, tag));
+                    }
+                    else if (leaf is ParagraphBlock paragraph)
+                    {
+                        RenderParagraphBlock(paragraph, ref context, ref graphics, newPageAction, spaceBefore, spaceAfter);
+                    }
+                    else if (leaf is CodeBlock code)
+                    {
+                        if (block is Markdig.Extensions.Mathematics.MathBlock math)
                         {
-                            RenderFencedCodeBlock(fenced, ref context, ref graphics, newPageAction, spaceBefore, spaceAfter);
+                            StringBuilder mathBuilder = new StringBuilder();
+                            foreach (StringLine line in math.Lines)
+                            {
+                                mathBuilder.Append(line.ToString());
+                                mathBuilder.Append("\n");
+                            }
+
+                            byte[] svgData;
+
+                            using (MemoryStream ms = new MemoryStream())
+                            {
+                                MathPainter.LineStyle = global::CSharpMath.Atom.LineStyle.Display;
+                                MathPainter.FontSize = (float)(context.Font.FontSize * MathFontScalingFactor / ImageMultiplier);
+                                MathPainter.LaTeX = mathBuilder.ToString();
+                                Page pag = MathPainter.DrawToPage();
+                                VectSharp.SVG.SVGContextInterpreter.SaveAsSVG(pag, ms);
+                                svgData = ms.ToArray();
+                            }
+
+                            string imageUri = "<img align=\"center\" src=\"data:image/svg+xml;base64," + Convert.ToBase64String(svgData) + "\">";
+                            RenderHTMLBlock(imageUri, false, ref context, ref graphics, newPageAction, true, true);
+                        }
+                        else if (leaf is FencedCodeBlock fenced)
+                        {
+                            if (!string.IsNullOrEmpty(fenced.Info))
+                            {
+                                RenderFencedCodeBlock(fenced, ref context, ref graphics, newPageAction, spaceBefore, spaceAfter);
+                            }
+                            else
+                            {
+                                RenderCodeBlock(code, ref context, ref graphics, newPageAction, spaceBefore, spaceAfter);
+                            }
+
                         }
                         else
                         {
                             RenderCodeBlock(code, ref context, ref graphics, newPageAction, spaceBefore, spaceAfter);
                         }
-
                     }
-                    else
+                    else if (leaf is HtmlBlock html)
                     {
-                        RenderCodeBlock(code, ref context, ref graphics, newPageAction, spaceBefore, spaceAfter);
+                        RenderHTMLBlock(html.Lines.ToString(), false, ref context, ref graphics, newPageAction, spaceBefore, spaceAfter);
+                    }
+                    else if (leaf is ThematicBreakBlock thematicBreak)
+                    {
+                        RenderThematicBreakBlock(thematicBreak, ref context, ref graphics, newPageAction, spaceBefore, spaceAfter);
+                    }
+                    else if (leaf is LinkReferenceDefinition link)
+                    {
+                        // Nothing to do (the links are correctly referenced by the parser)
+                    }
+
+                }
+                else if (block is ContainerBlock)
+                {
+                    if (block is ListBlock list)
+                    {
+                        RenderListBlock(list, ref context, ref graphics, newPageAction);
+                    }
+                    else if (block is ListItemBlock listItem)
+                    {
+                        RenderListItemBlock(listItem, ref context, ref graphics, newPageAction);
+                    }
+                    else if (block is QuoteBlock quote)
+                    {
+                        RenderQuoteBlock(quote, ref context, ref graphics, newPageAction);
+                    }
+                    else if (block is LinkReferenceDefinitionGroup linkGroup)
+                    {
+                        // Nothing to render here
+                    }
+                    else if (block is Table table)
+                    {
+                        RenderTable(table, ref context, ref graphics, newPageAction);
                     }
                 }
-                else if (leaf is HtmlBlock html)
-                {
-                    RenderHTMLBlock(html.Lines.ToString(), false, ref context, ref graphics, newPageAction, spaceBefore, spaceAfter);
-                }
-                else if (leaf is ThematicBreakBlock thematicBreak)
-                {
-                    RenderThematicBreakBlock(thematicBreak, ref context, ref graphics, newPageAction, spaceBefore, spaceAfter);
-                }
-                else if (leaf is LinkReferenceDefinition link)
-                {
-                    // Nothing to do (the links are correctly referenced by the parser)
-                }
-
-            }
-            else if (block is ContainerBlock)
-            {
-                if (block is ListBlock list)
-                {
-                    RenderListBlock(list, ref context, ref graphics, newPageAction);
-                }
-                else if (block is ListItemBlock listItem)
-                {
-                    RenderListItemBlock(listItem, ref context, ref graphics, newPageAction);
-                }
-                else if (block is QuoteBlock quote)
-                {
-                    RenderQuoteBlock(quote, ref context, ref graphics, newPageAction);
-                }
-                else if (block is LinkReferenceDefinitionGroup linkGroup)
+                else if (block is BlankLineBlock)
                 {
                     // Nothing to render here
                 }
-                else if (block is Table table)
-                {
-                    RenderTable(table, ref context, ref graphics, newPageAction);
-                }
-            }
-            else if (block is BlankLineBlock)
-            {
-                // Nothing to render here
+
+                this.OnBlockRendered(ref context, ref graphics, block);
             }
         }
 
@@ -194,7 +201,7 @@ namespace VectSharp.Markdown
                 context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(minX, context.Cursor.Y + context.Font.FontSize * 0.3), new Point(context.GetMaxX(lineY, PageSize.Width - Margins.Right - context.Translation.X), lineY), this.HeaderLineColour, this.HeaderLineThicknesses[heading.Level - 1], context.Tag));
             }
 
-            context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y);
+            context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y, context.GetMaxX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X), this);
             context.CurrentLine = null;
 
             if (this.HeaderLineThicknesses[heading.Level - 1] > 0)
@@ -240,7 +247,7 @@ namespace VectSharp.Markdown
                 RenderInline(inline, ref context, ref graphics, newPageAction);
             }
 
-            context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y);
+            context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y, context.GetMaxX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X), this);
             context.CurrentLine = null;
 
             context.Cursor = new Point(0, context.Cursor.Y - context.Font.Descent + SpaceAfterLine * context.Font.FontSize);
@@ -334,7 +341,7 @@ namespace VectSharp.Markdown
 
                         context.Colour = Colours.Black;
 
-                        context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y);
+                        context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y, context.GetMaxX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X), this);
                         context.CurrentLine = null;
 
                         context.Cursor = new Point(0, context.Cursor.Y - context.Font.YMin);
@@ -400,7 +407,7 @@ namespace VectSharp.Markdown
 
                         context.Colour = Colours.Black;
 
-                        context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y);
+                        context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y, context.GetMaxX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X), this);
                         context.CurrentLine = null;
 
                         context.Cursor = new Point(0, context.Cursor.Y - context.Font.YMin);
@@ -447,7 +454,7 @@ namespace VectSharp.Markdown
 
             context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(minX, context.Cursor.Y), new Point(maxX, context.Cursor.Y), this.ThematicBreakLineColour, this.ThematicBreakThickness, context.Tag));
 
-            context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y);
+            context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y, context.GetMaxX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X), this);
             context.CurrentLine = null;
 
             if (spaceAfter)
@@ -747,7 +754,7 @@ namespace VectSharp.Markdown
             {
                 if (context.CurrentLine != null)
                 {
-                    context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y);
+                    context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y, context.GetMaxX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X), this);
                     context.CurrentLine = null;
 
                     context.Cursor = new Point(0, context.Cursor.Y - context.Font.Descent + SpaceAfterLine * context.Font.FontSize);

@@ -279,6 +279,18 @@ namespace VectSharp.Markdown
 
             return minX;
         }
+
+        /// <summary>
+        /// Start a new page in the document.
+        /// </summary>
+        /// <param name="newPag">The new page on which the rest of the document should be drawn.</param>
+        public void StartNewPage(Page newPag)
+        {
+            this.Cursor = new Point(0, 0);
+            this.ForbiddenAreasLeft.Clear();
+            this.ForbiddenAreasRight.Clear();
+            this.CurrentPage = newPag;
+        }
     }
 
     /// <summary>
