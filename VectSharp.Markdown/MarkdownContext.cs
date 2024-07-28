@@ -17,15 +17,24 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace VectSharp.Markdown
 {
-    internal class MarkdownContext
+    /// <summary>
+    /// Represents the current status of the Markdown rendering process.
+    /// </summary>
+    public class MarkdownContext
     {
+        /// <summary>
+        /// The current font.
+        /// </summary>
         public Font Font { get; set; }
 
         private Point cursor;
+        
+        /// <summary>
+        /// The current position of the cursor.
+        /// </summary>
         public Point Cursor
         {
             get
@@ -44,11 +53,26 @@ namespace VectSharp.Markdown
             }
         }
 
+        /// <summary>
+        /// The current text colour.
+        /// </summary>
         public Colour Colour { get; set; }
+        
+        /// <summary>
+        /// Whether text is currently underlined.
+        /// </summary>
         public bool Underline { get; set; }
+
+        /// <summary>
+        /// Whether text is currently struck out. 
+        /// </summary>
         public bool StrikeThrough { get; set; }
 
         private Point translation;
+        
+        /// <summary>
+        /// Translation for the current text block.
+        /// </summary>
         public Point Translation
         {
             get
@@ -67,25 +91,78 @@ namespace VectSharp.Markdown
             }
         }
 
-        public Point MarginBottomRight { get; set; }
-
-        public Line CurrentLine { get; set; }
-        public int ListDepth { get; set; }
-        public List<(double MaxX, double MinY, double MaxY)> ForbiddenAreasRight { get; set; }
-        public List<(double MinX, double MinY, double MaxY)> ForbiddenAreasLeft { get; set; }
-        public Page CurrentPage { get; set; }
+        /// <summary>
+        /// The coordinates of the bottom right corner of the last rendered text element.
+        /// </summary>
         public Point BottomRight { get; set; }
+
+        /// <summary>
+        /// The current margin on the bottom right.
+        /// </summary>
+        public Point MarginBottomRight { get; set; }
+        
+        /// <summary>
+        /// The current list depth (for bullet lists and numbered lists).
+        /// </summary>
+        public int ListDepth { get; set; }
+
+        /// <summary>
+        /// A list of areas on which text cannot be drawn (because they contain a right-aligned image).
+        /// Each element of this list specifies a maximum x value (first element) and a y range (second and third element).
+        /// Within the specified y range, text cannot extend beyond the maximum x value.
+        /// </summary>
+        public List<(double MaxX, double MinY, double MaxY)> ForbiddenAreasRight { get; set; }
+
+        /// <summary>
+        /// A list of areas on which text cannot be drawn (because they contain a left-aligned image).
+        /// Each element of this list specifies a minimum x value (first element) and a y range (second and third element).
+        /// Within the specified y range, text starts at the minimum x value.
+        /// </summary>
+        public List<(double MinX, double MinY, double MaxY)> ForbiddenAreasLeft { get; set; }
+        
+        /// <summary>
+        /// The <see cref="Page"/> on which the document is being rendered.
+        /// </summary>
+        public Page CurrentPage { get; set; }
+
+        /// <summary>
+        /// The current tag.
+        /// </summary>
         public string Tag { get; set; } = null;
+
+        /// <summary>
+        /// A dictionary used to associate graphic action tags to hyperlinks.
+        /// </summary>
         public Dictionary<string, string> LinkDestinations { get; set; } = new Dictionary<string, string>();
+        
+        /// <summary>
+        /// A dictionary used to associate internal html anchors (e.g., "#something") to graphics action tags.
+        /// </summary>
         public Dictionary<string, string> InternalAnchors { get; set; } = new Dictionary<string, string>();
 
-        public List<(int level, string heading, string tag)> Headings = new List<(int level, string heading, string tag)>();
-        public MarkdownContext()
+        /// <summary>
+        /// The list of headings defined in the document.
+        /// </summary>
+        public List<(int level, string heading, string tag)> Headings { get; private set; } = new List<(int level, string heading, string tag)>();
+
+        /// <summary>
+        /// The current line being drawn.
+        /// </summary>
+        public Line CurrentLine { get; set; }
+
+        /// <summary>
+        /// Create a new <see cref="MarkdownContext"/>.
+        /// </summary>
+        internal MarkdownContext()
         {
             this.ForbiddenAreasRight = new List<(double MaxX, double MinY, double MaxY)>();
             this.ForbiddenAreasLeft = new List<(double MinX, double MinY, double MaxY)>();
         }
 
+        /// <summary>
+        /// Create an independent copy of the current <see cref="MarkdownContext"/>.
+        /// </summary>
+        /// <returns>The copied context.</returns>
         public MarkdownContext Clone()
         {
             return new MarkdownContext()
@@ -109,9 +186,15 @@ namespace VectSharp.Markdown
             };
         }
 
+        /// <summary>
+        /// Get the maximum x value for text drawn at the specified <paramref name="y"/> position.
+        /// </summary>
+        /// <param name="y">The vertical position at which text should be drawn.</param>
+        /// <param name="pageMaxX">The overall maximum x value for the page, after taking margins into account.</param>
+        /// <returns>The maximum x value for text drawn at the specified <paramref name="y"/> position.</returns>
         public double GetMaxX(double y, double pageMaxX)
         {
-            y = y + Translation.Y;
+            y += Translation.Y;
 
             double maxX = pageMaxX;
 
@@ -126,10 +209,17 @@ namespace VectSharp.Markdown
             return maxX;
         }
 
+        /// <summary>
+        /// Get the maximum x value for text that will extend from <paramref name="y0"/> to <paramref name="y1"/>.
+        /// </summary>
+        /// <param name="y0">The vertical position of the start of the text block.</param>
+        /// <param name="y1">The vertical position of the end of the text block.</param>
+        /// <param name="pageMaxX">The overall maximum x value for the page, after taking margins into account.</param>
+        /// <returns>The maximum x value for text that will extend from <paramref name="y0"/> to <paramref name="y1"/>.</returns>
         public double GetMaxX(double y0, double y1, double pageMaxX)
         {
-            y0 = y0 + Translation.Y;
-            y1 = y1 + Translation.Y;
+            y0 += Translation.Y;
+            y1 += Translation.Y;
 
             double maxX = pageMaxX;
 
@@ -144,9 +234,14 @@ namespace VectSharp.Markdown
             return maxX;
         }
 
+        /// <summary>
+        /// Get the minimum x value at which text can start at the specified <paramref name="y"/> position.
+        /// </summary>
+        /// <param name="y">The vertical position at which text should be drawn.</param>
+        /// <returns>The minimum x value at which text can start at the specified <paramref name="y"/> position.</returns>
         public double GetMinX(double y)
         {
-            y = y + Translation.Y;
+            y += Translation.Y;
 
             double minX = 0;
 
@@ -161,11 +256,16 @@ namespace VectSharp.Markdown
             return minX;
         }
 
+        /// <summary>
+        /// Get the minimum x value for text that will extend from <paramref name="y0"/> to <paramref name="y1"/>.
+        /// </summary>
+        /// <param name="y0">The vertical position of the start of the text block.</param>
+        /// <param name="y1">The vertical position of the end of the text block.</param>
+        /// <returns>The minimum x value for text that will extend from <paramref name="y0"/> to <paramref name="y1"/>.</returns>
         public double GetMinX(double y0, double y1)
         {
-
-            y0 = y0 + Translation.Y;
-            y1 = y1 + Translation.Y;
+            y0 += Translation.Y;
+            y1 += Translation.Y;
 
             double minX = 0;
 
