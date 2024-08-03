@@ -16,6 +16,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -95,6 +96,7 @@ namespace VectSharp
     /// <summary>
     /// Represents a raster image, created from raw pixel data. Consider using the derived classes included in the NuGet package "VectSharp.MuPDFUtils" if you need to load a raster image from a file or a <see cref="Stream"/>.
     /// </summary>
+    [DebuggerDisplay("\\{ Width: {Width}, Height: {Height} \\}")]
     public class RasterImage : IDisposable
     {
         /// <summary>

@@ -18,6 +18,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
@@ -26,6 +27,7 @@ namespace VectSharp
     /// <summary>
     /// Represents a point relative to an origin in the top-left corner.
     /// </summary>
+    [DebuggerDisplay("\\{ X: {X}, Y: {Y} \\}")]
     public struct Point : IReadOnlyList<double>
     {
         /// <summary>
@@ -267,6 +269,7 @@ namespace VectSharp
     /// <summary>
     /// Represents the size of an object.
     /// </summary>
+    [DebuggerDisplay("\\{ Width: {Width}, Height: {Height} \\}")]
     public struct Size
     {
         /// <summary>
@@ -294,6 +297,7 @@ namespace VectSharp
     /// <summary>
     /// Represents a rectangle.
     /// </summary>
+    [DebuggerDisplay("\\{ Location: {Location}, Size: {Size} \\}")]
     public struct Rectangle
     {
         /// <summary>

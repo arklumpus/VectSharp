@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 namespace VectSharp
@@ -24,6 +25,7 @@ namespace VectSharp
     /// <summary>
     /// Represents a typeface with a specific size.
     /// </summary>
+    [DebuggerDisplay("\\{ FontSize: {FontSize}, FontFamily: {FontFamily} \\}")]
     public class Font
     {
         /// <summary>
@@ -417,6 +419,7 @@ namespace VectSharp
     /// <summary>
     /// Represents a typeface.
     /// </summary>
+    [DebuggerDisplay("\\{ FamilyName: {FamilyName}, IsBold: {IsBold}, IsItalic: {IsItalic}, IsOblique: {IsOblique} \\}")]
     public class FontFamily
     {
         /// <summary>

@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-using static System.Net.Mime.MediaTypeNames;
+using System.Diagnostics;
 
 namespace VectSharp
 {
@@ -47,6 +47,7 @@ namespace VectSharp
     /// <summary>
     /// Represents a run of text that should be drawn with the same style.
     /// </summary>
+    [DebuggerDisplay("{Text}")]
     public class FormattedText
     {
         /// <summary>

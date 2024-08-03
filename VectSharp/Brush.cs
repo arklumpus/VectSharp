@@ -19,6 +19,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
@@ -52,6 +53,7 @@ namespace VectSharp
     /// <summary>
     /// Represents a brush painting with a single solid colour.
     /// </summary>
+    [DebuggerDisplay("{Colour}")]
     public class SolidColourBrush : Brush
     {
         /// <summary>
@@ -107,6 +109,7 @@ namespace VectSharp
     /// <summary>
     /// Represents a colour stop in a gradient.
     /// </summary>
+    [DebuggerDisplay("\\{ Colour: {Colour}, Offset: {Offset} \\}")]
     public struct GradientStop
     {
         /// <summary>
@@ -145,6 +148,7 @@ namespace VectSharp
     /// <summary>
     /// Represents a read-only list of <see cref="GradientStop"/>s.
     /// </summary>
+    [DebuggerDisplay("\\{ {Count} stops \\}")]
     public class GradientStops : IReadOnlyList<GradientStop>
     {
         /// <summary>
@@ -269,6 +273,7 @@ namespace VectSharp
     /// <summary>
     /// Represents a brush painting with a gradient.
     /// </summary>
+    [DebuggerDisplay("\\{ GradientStops: {GradientStops} \\}")]
     public abstract class GradientBrush : Brush
     {
         /// <summary>
@@ -282,6 +287,7 @@ namespace VectSharp
     /// <summary>
     /// Represents a brush painting with a linear gradient.
     /// </summary>
+    [DebuggerDisplay("\\{ StartPoint: {StartPoint}, EndPoint: {EndPoint}, GradientStops: {GradientStops} \\}")]
     public class LinearGradientBrush : GradientBrush
     {
         /// <summary>
@@ -406,6 +412,7 @@ namespace VectSharp
     /// <summary>
     /// Represents a brush painting with a radial gradient.
     /// </summary>
+    [DebuggerDisplay("\\{ FocalPoint: {FocalPoint}, Centre: {Centre}, Radius: {Radius}, GradientStops: {GradientStops} \\}")]
     public class RadialGradientBrush : GradientBrush
     {
         /// <summary>

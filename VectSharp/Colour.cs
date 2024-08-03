@@ -16,6 +16,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 
 namespace VectSharp
@@ -23,6 +24,7 @@ namespace VectSharp
     /// <summary>
     /// Represents an RGB colour.
     /// </summary>
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public partial struct Colour : IEquatable<Colour>
     {
         /// <summary>
@@ -640,5 +642,13 @@ namespace VectSharp
             return Colour.FromRgb(r1 + m, g1 + m, b1 + m);
         }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private string DebuggerDisplay
+        {
+            get
+            {
+                return this.ToCSSString(this.A != 1);
+            }
+        }
     }
 }

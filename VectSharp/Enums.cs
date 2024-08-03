@@ -16,6 +16,8 @@
 */
 
 using System;
+using System.Diagnostics;
+using System.Linq;
 
 namespace VectSharp
 {
@@ -226,6 +228,7 @@ namespace VectSharp
     /// <summary>
     /// Represents instructions on how to paint a dashed line.
     /// </summary>
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public struct LineDash
     {
         /// <summary>
@@ -305,6 +308,22 @@ namespace VectSharp
             this.UnitsOn = dashArray != null && dashArray.Length > 0 ? dashArray[0] : 0;
             this.UnitsOff = dashArray != null && dashArray.Length > 0 ? dashArray[System.Math.Min(dashArray.Length - 1, 1)] : 0;
 #pragma warning restore 618
+        }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private string DebuggerDisplay
+        {
+            get
+            {
+                if (this.Phase == 0 && this.DashArray.All(x => x == 0))
+                {
+                    return "{ Solid line }";
+                }
+                else
+                {
+                    return string.Format("{{ Phase: {0}, DashArray: {1} }}", this.Phase, "[ " + this.DashArray.Take(Math.Min(4, this.DashArray.Length)).Select(x => x.ToString()).Aggregate((a, b) => a + ", " + b) + (this.DashArray.Length > 4 ? " ..." : "") + " ]");
+                }
+            }
         }
     }
 
