@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -4034,6 +4035,47 @@ namespace VectSharp.SVG
             using (XmlWriter writer = XmlWriter.Create(output, settings))
             {
                 WriteElement(writer, element);
+            }
+        }
+
+        /// <summary>
+        /// Given an <see cref="XmlDocument"/> that contains an SVG image, write its contents to the specified <paramref name="output"/> <see cref="Stream"/>.
+        /// </summary>
+        /// <param name="svgDocument">An <see cref="XmlDocument"/> containing an SVG image</param>
+        /// <param name="output">The <see cref="Stream"/> on which the document will be written.</param>
+        /// <remarks>Compared to the built-in methods to save XML documents, this method takes care of some quirks of the SVG format.</remarks>
+        public static void WriteSVGXML(this XmlDocument svgDocument, Stream output)
+        {
+            WriteXMLToStream(svgDocument.DocumentElement, output);
+        }
+
+        /// <summary>
+        /// Given an <see cref="XmlDocument"/> that contains an SVG image, write its contents to the specified output file.
+        /// </summary>
+        /// <param name="svgDocument">An <see cref="XmlDocument"/> containing an SVG image</param>
+        /// <param name="outputFile">The file to which the XML document will be saved.</param>
+        /// <remarks>Compared to the built-in methods to save XML documents, this method takes care of some quirks of the SVG format.</remarks>
+        public static void WriteSVGXML(this XmlDocument svgDocument, string outputFile)
+        {
+            using (FileStream fs = new FileStream(outputFile, FileMode.Create))
+            {
+                svgDocument.WriteSVGXML(fs);
+            }
+        }
+
+        /// <summary>
+        /// Given an <see cref="XmlDocument"/> that contains an SVG image, write its contents to a <see langword="string"/>.
+        /// </summary>
+        /// <param name="svgDocument">An <see cref="XmlDocument"/> containing an SVG image</param>
+        /// <remarks>Compared to the built-in methods to save XML documents, this method takes care of some quirks of the SVG format.</remarks>
+        public static string WriteSVGXML(this XmlDocument svgDocument)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                svgDocument.WriteSVGXML(ms);
+                ms.Seek(0, SeekOrigin.Begin);
+
+                return Encoding.UTF8.GetString(ms.GetBuffer(), 0, (int)ms.Length);
             }
         }
     }
