@@ -722,6 +722,15 @@ namespace VectSharp.Plots
 
                             rangeX = maxX - minX;
                         }
+                        else if (bars.Data.Count == 1)
+                        {
+                            minX = Math.Min(minX, -0.5);
+                            maxX = Math.Max(maxX, 0.5);
+                            dataMinX = minX;
+                            dataMaxX = maxX;
+
+                            rangeX = maxX - minX;
+                        }
                     }
                     else
                     {
@@ -738,6 +747,15 @@ namespace VectSharp.Plots
 
                             minY = Math.Min(minY, 1.5 * item0[1] - item1[1] * 0.5);
                             maxY = Math.Max(maxY, 1.5 * itemN[1] - itemN1[1] * 0.5);
+
+                            rangeY = maxY - minY;
+                        }
+                        else if (bars.Data.Count == 1)
+                        {
+                            minY = Math.Min(minY, -0.5);
+                            maxY = Math.Max(maxY, 0.5);
+                            dataMinY = minY;
+                            dataMaxY = maxY;
 
                             rangeY = maxY - minY;
                         }
