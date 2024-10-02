@@ -258,7 +258,14 @@ namespace VectSharp.Plots
                     Point start = inv.ToPlotCoordinates(StartPoint);
                     Point end = inv.ToPlotCoordinates(EndPoint);
 
-                    pt = inv.ToDataCoordinates(new Point(start.X * (1 - i / IntervalCount) + end.X * i / IntervalCount, start.Y * (1 - i / IntervalCount) + end.Y * i / IntervalCount));
+                    if (IntervalCount != 0)
+                    {
+                        pt = inv.ToDataCoordinates(new Point(start.X * (1 - i / IntervalCount) + end.X * i / IntervalCount, start.Y * (1 - i / IntervalCount) + end.Y * i / IntervalCount));
+                    }
+                    else
+                    {
+                        pt = inv.ToDataCoordinates(new Point(start.X * 0.5 + end.X * 0.5, start.Y * 0.5 + end.Y * 0.5));
+                    }
 				}
                 else
                 {
@@ -484,7 +491,14 @@ namespace VectSharp.Plots
 					Point start = inv.ToPlotCoordinates(StartPoint);
 					Point end = inv.ToPlotCoordinates(EndPoint);
 
-					pt = inv.ToDataCoordinates(new Point(start.X * (1 - i / IntervalCount) + end.X * i / IntervalCount, start.Y * (1 - i / IntervalCount) + end.Y * i / IntervalCount));
+                    if (IntervalCount != 0)
+                    {
+                        pt = inv.ToDataCoordinates(new Point(start.X * (1 - i / IntervalCount) + end.X * i / IntervalCount, start.Y * (1 - i / IntervalCount) + end.Y * i / IntervalCount));
+                    }
+                    else
+                    {
+                        pt = inv.ToDataCoordinates(new Point(start.X * 0.5 + end.X * 0.5, start.Y * 0.5 + end.Y * 0.5));
+                    }
 				}
 				else
 				{

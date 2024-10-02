@@ -432,7 +432,14 @@ namespace VectSharp.Plots
 
                             for (int j = 0; j < data.Count; j++)
                             {
-                                labelData[j] = new double[] { j, xAxis.StartPoint[1] * (1 - (double)j / (data.Count - 1)) + xAxis.EndPoint[1] * j / (data.Count - 1) };
+                                if (data.Count > 1)
+                                {
+                                    labelData[j] = new double[] { j, xAxis.StartPoint[1] * (1 - (double)j / (data.Count - 1)) + xAxis.EndPoint[1] * j / (data.Count - 1) };
+                                }
+                                else
+                                {
+                                    labelData[j] = new double[] { j, xAxis.StartPoint[1] * 0.5 + xAxis.EndPoint[1] * 0.5 };
+                                }
                             }
 
                             DataLabels<IReadOnlyList<double>> xLabels = new Plots.DataLabels<IReadOnlyList<double>>(labelData, barChart.GetFirst<ICoordinateSystem<IReadOnlyList<double>>>()) { Baseline = TextBaselines.Top, Margin = (a, b) => new Point(0, 10), Label = (index, _) => data[index].Item1 };
@@ -452,7 +459,14 @@ namespace VectSharp.Plots
 
                             for (int j = 0; j < data.Count; j++)
                             {
-                                labelData[j] = new double[] { yAxis.StartPoint[0] * (1 - (double)j / (data.Count - 1)) + yAxis.EndPoint[0] * j / (data.Count - 1), j };
+                                if (data.Count > 1)
+                                {
+                                    labelData[j] = new double[] { yAxis.StartPoint[0] * (1 - (double)j / (data.Count - 1)) + yAxis.EndPoint[0] * j / (data.Count - 1), j };
+                                }
+                                else
+                                {
+                                    labelData[j] = new double[] { yAxis.StartPoint[0] * 0.5 + yAxis.EndPoint[0] * 0.5, j };
+                                }
                             }
 
                             DataLabels<IReadOnlyList<double>> yLabels = new Plots.DataLabels<IReadOnlyList<double>>(labelData, barChart.GetFirst<ICoordinateSystem<IReadOnlyList<double>>>()) { Baseline = TextBaselines.Middle, Alignment = TextAnchors.Right, Margin = (a, b) => new Point(-10, 0), Label = (index, _) => data[index].Item1 };
@@ -635,6 +649,17 @@ namespace VectSharp.Plots
                             linCoords.MinX = minX;
                             linCoords.MaxX = maxX;
                         }
+                        else if (bars.Data.Count == 1)
+                        {
+                            minX = Math.Min(minX, -0.5);
+                            maxX = Math.Max(maxX, 0.5);
+                            dataMinX = minX;
+                            dataMaxX = maxX;
+
+                            rangeX = maxX - minX;
+                            linCoords.MinX = minX;
+                            linCoords.MaxX = maxX;
+                        }
                     }
                     else
                     {
@@ -656,6 +681,17 @@ namespace VectSharp.Plots
 
                             minY = Math.Min(minY, 1.5 * item0[1] - item1[1] * 0.5);
                             maxY = Math.Max(maxY, 1.5 * itemN[1] - itemN1[1] * 0.5);
+
+                            rangeY = maxY - minY;
+                            linCoords.MinY = minY;
+                            linCoords.MaxY = maxY;
+                        }
+                        else if (bars.Data.Count == 1)
+                        {
+                            minY = Math.Min(minY, -0.5);
+                            maxY = Math.Max(maxY, 0.5);
+                            dataMinY = minY;
+                            dataMaxY = maxY;
 
                             rangeY = maxY - minY;
                             linCoords.MinY = minY;
@@ -944,7 +980,14 @@ namespace VectSharp.Plots
 
                             for (int j = 0; j < data.Count; j++)
                             {
-                                labelData[j] = new double[] { j, xAxis.StartPoint[1] * (1 - (double)j / (data.Count - 1)) + xAxis.EndPoint[1] * j / (data.Count - 1) };
+                                if (data.Count > 1)
+                                {
+                                    labelData[j] = new double[] { j, xAxis.StartPoint[1] * (1 - (double)j / (data.Count - 1)) + xAxis.EndPoint[1] * j / (data.Count - 1) };
+                                }
+                                else
+                                {
+                                    labelData[j] = new double[] { j, xAxis.StartPoint[1] * 0.5 + xAxis.EndPoint[1] * 0.5 };
+                                }
                             }
 
                             DataLabels<IReadOnlyList<double>> xLabels = new Plots.DataLabels<IReadOnlyList<double>>(labelData, barChart.GetFirst<ICoordinateSystem<IReadOnlyList<double>>>()) { Baseline = TextBaselines.Top, Margin = (a, b) => new Point(0, 10), Label = (index, _) => data[index].Item1 };
@@ -963,7 +1006,14 @@ namespace VectSharp.Plots
 
                             for (int j = 0; j < data.Count; j++)
                             {
-                                labelData[j] = new double[] { yAxis.StartPoint[0] * (1 - (double)j / (data.Count - 1)) + yAxis.EndPoint[0] * j / (data.Count - 1), j };
+                                if (data.Count > 1)
+                                {
+                                    labelData[j] = new double[] { yAxis.StartPoint[0] * 0.5 + yAxis.EndPoint[0] * 0.5, j };
+                                }
+                                else
+                                {
+                                    labelData[j] = new double[] { yAxis.StartPoint[0] * 0.5 + yAxis.EndPoint[0] * 0.5, j };
+                                }
                             }
 
                             DataLabels<IReadOnlyList<double>> yLabels = new Plots.DataLabels<IReadOnlyList<double>>(labelData, barChart.GetFirst<ICoordinateSystem<IReadOnlyList<double>>>()) { Baseline = TextBaselines.Middle, Alignment = TextAnchors.Right, Margin = (a, b) => new Point(-10, 0), Label = (index, _) => data[index].Item1 };
