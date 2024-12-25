@@ -371,14 +371,14 @@ namespace VectSharp.Plots
         /// </summary>
         public ICoordinateSystem<IReadOnlyList<double>> CoordinateSystem { get; set; }
         ICoordinateSystem IPlotElement.CoordinateSystem => CoordinateSystem;
-        
+
         /// <summary>
         /// Presentation attributes for the bars. An element from this collection is used for each segment in
         /// the stack; if there are more segments than elements in this collection, the presentation attributes
         /// are wrapped.
         /// </summary>
         public IReadOnlyList<PlotElementPresentationAttributes> PresentationAttributes { get; set; } = new PlotElementPresentationAttributes[] { new PlotElementPresentationAttributes() };
-        
+
         /// <summary>
         /// A tag to identify the stacked bars in the plot.
         /// </summary>
@@ -488,6 +488,36 @@ namespace VectSharp.Plots
 
                     double t2 = (bars[i].Item2.X - nextBaselineMid.X) * perpDir.X + (bars[i].Item2.Y - nextBaselineMid.Y) * perpDir.Y;
                     Point nextTop = new Point(bars[i].Item2.X - perpDir.X * t2, bars[i].Item2.Y - perpDir.Y * t2);
+
+                    Point lastBaseLeft = prevBaselineMid;
+                    Point lastBaseRight = nextBaselineMid;
+
+                    for (int j = 0; j < ratios[i].Length; j++)
+                    {
+                        Point pTop = new Point(prevBaselineMid.X + (prevTop.X - prevBaselineMid.X) * ratios[i][j], prevBaselineMid.Y + (prevTop.Y - prevBaselineMid.Y) * ratios[i][j]);
+                        Point nTop = new Point(nextBaselineMid.X + (nextTop.X - nextBaselineMid.X) * ratios[i][j], nextBaselineMid.Y + (nextTop.Y - nextBaselineMid.Y) * ratios[i][j]);
+
+                        paths.Add(new GraphicsPath().MoveTo(lastBaseLeft).LineTo(pTop).LineTo(nTop).LineTo(lastBaseRight).Close());
+
+                        lastBaseLeft = pTop;
+                        lastBaseRight = nTop;
+                    }
+                }
+                else if (i == 0 && bars.Count == 1)
+                {
+                    Point perpDir = new Point(bars[i].Item2.Y - bars[i].Item1.Y, -(bars[i].Item2.X - bars[i].Item1.X));
+                    perpDir = perpDir.Normalize();
+
+                    Point nextPoint = CoordinateSystem.ToPlotCoordinates(Vertical ? new double[] { Data.First()[0] + 1, 0 } : new double[] { 0, Data.First()[1] + 1 });
+
+                    Point nextBaselineMid = new Point(bars[i].Item1.X * (0.5 + Margin * 0.5) + nextPoint.X * (0.5 - Margin * 0.5), bars[i].Item1.Y * (0.5 + Margin * 0.5) + nextPoint.Y * (0.5 - Margin * 0.5));
+
+                    double t2 = (bars[i].Item2.X - nextBaselineMid.X) * perpDir.X + (bars[i].Item2.Y - nextBaselineMid.Y) * perpDir.Y;
+                    Point nextTop = new Point(bars[i].Item2.X - perpDir.X * t2, bars[i].Item2.Y - perpDir.Y * t2);
+
+                    Point prevBaselineMid = new Point(2 * bars[i].Item1.X - nextBaselineMid.X, 2 * bars[i].Item1.Y - nextBaselineMid.Y);
+                    double t = -t2;
+                    Point prevTop = new Point(bars[i].Item2.X - perpDir.X * t, bars[i].Item2.Y - perpDir.Y * t);
 
                     Point lastBaseLeft = prevBaselineMid;
                     Point lastBaseRight = nextBaselineMid;
@@ -669,7 +699,7 @@ namespace VectSharp.Plots
         /// are wrapped.
         /// </summary>
         public IReadOnlyList<PlotElementPresentationAttributes> PresentationAttributes { get; set; } = new PlotElementPresentationAttributes[] { new PlotElementPresentationAttributes() };
-        
+
         /// <summary>
         /// A tag to identify the clustered bars in the plot.
         /// </summary>
@@ -766,6 +796,33 @@ namespace VectSharp.Plots
 
                         double t2 = (bars[i].Item2[j].X - nextBaselineMid.X) * perpDir.X + (bars[i].Item2[j].Y - nextBaselineMid.Y) * perpDir.Y;
                         Point nextTop = new Point(bars[i].Item2[j].X - perpDir.X * t2, bars[i].Item2[j].Y - perpDir.Y * t2);
+
+                        double start = (double)(j + IntraClusterMargin * 0.5) / bars[i].Item2.Length;
+                        double end = (double)(j + 1 - IntraClusterMargin * 0.5) / bars[i].Item2.Length;
+
+                        paths.Add(new GraphicsPath().MoveTo(new Point(prevBaselineMid.X + (nextBaselineMid.X - prevBaselineMid.X) * start, prevBaselineMid.Y + (nextBaselineMid.Y - prevBaselineMid.Y) * start))
+                            .LineTo(new Point(prevTop.X + (nextTop.X - prevTop.X) * start, prevTop.Y + (nextTop.Y - prevTop.Y) * start))
+                            .LineTo(new Point(prevTop.X + (nextTop.X - prevTop.X) * end, prevTop.Y + (nextTop.Y - prevTop.Y) * end))
+                            .LineTo(new Point(prevBaselineMid.X + (nextBaselineMid.X - prevBaselineMid.X) * end, prevBaselineMid.Y + (nextBaselineMid.Y - prevBaselineMid.Y) * end)).Close());
+                    }
+                }
+                else if (i == 0 && i == bars.Count - 1)
+                {
+                    Point nextPoint = CoordinateSystem.ToPlotCoordinates(Vertical ? new double[] { Data.First()[0] + 1, 0 } : new double[] { 0, Data.First()[1] + 1 });
+
+                    Point nextBaselineMid = new Point(bars[i].Item1.X * (0.5 + InterClusterMargin * 0.5) + nextPoint.X * (0.5 - InterClusterMargin * 0.5), bars[i].Item1.Y * (0.5 + InterClusterMargin * 0.5) + nextPoint.Y * (0.5 - InterClusterMargin * 0.5));
+
+                    for (int j = 0; j < bars[i].Item2.Length; j++)
+                    {
+                        Point perpDir = new Point(bars[i].Item2[j].Y - bars[i].Item1.Y, -(bars[i].Item2[j].X - bars[i].Item1.X));
+                        perpDir = perpDir.Normalize();
+
+                        double t2 = (bars[i].Item2[j].X - nextBaselineMid.X) * perpDir.X + (bars[i].Item2[j].Y - nextBaselineMid.Y) * perpDir.Y;
+                        Point nextTop = new Point(bars[i].Item2[j].X - perpDir.X * t2, bars[i].Item2[j].Y - perpDir.Y * t2);
+
+                        Point prevBaselineMid = new Point(2 * bars[i].Item1.X - nextBaselineMid.X, 2 * bars[i].Item1.Y - nextBaselineMid.Y);
+                        double t = -t2;
+                        Point prevTop = new Point(bars[i].Item2[j].X - perpDir.X * t, bars[i].Item2[j].Y - perpDir.Y * t);
 
                         double start = (double)(j + IntraClusterMargin * 0.5) / bars[i].Item2.Length;
                         double end = (double)(j + 1 - IntraClusterMargin * 0.5) / bars[i].Item2.Length;
