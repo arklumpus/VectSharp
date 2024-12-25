@@ -86,6 +86,11 @@ namespace VectSharp.PDF.PDFObjects
         public PDFString PageMode { get; set; }
 
         /// <summary>
+        /// Action to perform when opening the document.
+        /// </summary>
+        public PDFDestination OpenAction { get; set; }
+
+        /// <summary>
         /// Create a new <see cref="PDFCatalog"/>.
         /// </summary>
         /// <param name="pages"><see cref="PDFPages"/> object containing the pages of the document.</param>

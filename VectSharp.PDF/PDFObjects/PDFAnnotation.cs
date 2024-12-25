@@ -162,7 +162,7 @@ namespace VectSharp.PDF.PDFObjects
         /// <summary>
         /// The link destination.
         /// </summary>
-        public PDFArray<IPDFObject> Dest { get; }
+        public PDFDestination Dest { get; }
 
         /// <summary>
         /// Create a new <see cref="PDFInternalLinkAnnotation"/> linking the specified <paramref name="rect"/> to the <paramref name="destinationX"/> and <paramref name="destinationY"/> coordinates on the <paramref name="destinationPage"/>.
@@ -176,7 +176,7 @@ namespace VectSharp.PDF.PDFObjects
         /// <param name="borderColour">Colour for the annotation border.</param>
         public PDFInternalLinkAnnotation(Rectangle rect, PDFPage destinationPage, double destinationX, double destinationY, double borderWidth, LineDash? borderDash, Colour borderColour) : base(rect, borderWidth, borderDash, borderColour)
         {
-            this.Dest = new PDFArray<IPDFObject>(destinationPage, new PDFString("XYZ", PDFString.StringDelimiter.StartingForwardSlash), new PDFDouble(destinationX), new PDFDouble(destinationY), new PDFDouble(0));
+            this.Dest = PDFDestination.XYZ(destinationPage, new PDFDouble(destinationX), new PDFDouble(destinationY), new PDFDouble(0));
         }
     }
 }
