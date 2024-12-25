@@ -96,6 +96,41 @@ namespace VectSharp.PDF.PDFObjects
     }
 
     /// <summary>
+    /// Represents a PDF rectangle. Note that the (0,0) is generally the bottom-left corner.
+    /// </summary>
+    public class PDFRectangle : PDFArray<PDFDouble>
+    {
+        /// <summary>
+        /// The left coordinate of the rectangle.
+        /// </summary>
+        public PDFDouble Left => this.Values[0];
+
+        /// <summary>
+        /// The bottom coordinate of the rectangle. Note that (0,0) is generally the bottom-left corner.
+        /// </summary>
+        public PDFDouble Bottom => this.Values[1];
+
+        /// <summary>
+        /// The right coordinate of the rectangle.
+        /// </summary>
+        public PDFDouble Right => this.Values[2];
+
+        /// <summary>
+        /// The top coordinate of the rectangle. Note that (0,0) is generally the bottom-left corner.
+        /// </summary>
+        public PDFDouble Top => this.Values[3];
+
+        /// <summary>
+        /// Create a new <see cref="PDFRectangle"/> with the specified coordinates.
+        /// </summary>
+        /// <param name="left">The left coordinate of the rectangle.</param>
+        /// <param name="bottom">The bottom coordinate of the rectangle. Note that (0,0) is generally the bottom-left corner.</param>
+        /// <param name="right">The right coordinate of the rectangle.</param>
+        /// <param name="top">The top coordinate of the rectangle. Note that (0,0) is generally the bottom-left corner.</param>
+        public PDFRectangle(PDFDouble left, PDFDouble bottom, PDFDouble right, PDFDouble top) : base(left, bottom, right, top) { }
+    }
+
+    /// <summary>
     /// Represents a single PDF document page.
     /// </summary>
     public class PDFPage : PDFDictionary
@@ -113,7 +148,27 @@ namespace VectSharp.PDF.PDFObjects
         /// <summary>
         /// Bounding box for the page.
         /// </summary>
-        public PDFArray<PDFDouble> MediaBox { get; }
+        public PDFRectangle MediaBox { get; set; }
+
+        /// <summary>
+        /// Crop box for the page.
+        /// </summary>
+        public PDFRectangle CropBox { get; set; }
+
+        /// <summary>
+        /// Trim box for the page.
+        /// </summary>
+        public PDFRectangle TrimBox { get; set; }
+
+        /// <summary>
+        /// Bleed box for the page.
+        /// </summary>
+        public PDFRectangle BleedBox { get; set; }
+
+        /// <summary>
+        /// Art box for the page.
+        /// </summary>
+        public PDFRectangle ArtBox { get; set; }
 
         /// <summary>
         /// Page/document resource container.
@@ -139,7 +194,7 @@ namespace VectSharp.PDF.PDFObjects
         /// <param name="pageContents">Page content stream.</param>
         public PDFPage(double width, double height, PDFResources resources, PDFStream pageContents)
         {
-            this.MediaBox = new PDFArray<PDFDouble>(new PDFDouble(0), new PDFDouble(0), new PDFDouble(width), new PDFDouble(height));
+            this.MediaBox = new PDFRectangle(new PDFDouble(0), new PDFDouble(0), new PDFDouble(width), new PDFDouble(height));
             this.Resources = resources;
             this.Contents = pageContents;
             this.Annots = null;
