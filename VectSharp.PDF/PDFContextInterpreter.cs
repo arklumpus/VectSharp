@@ -723,7 +723,7 @@ namespace VectSharp.PDF
                 order = groupSettings.OptionalContentGroupTree.SelectMany(x => CreateOCGOrder(x, pdfOcgs));
             }
 
-            PDFOptionalContentConfiguration defaultConfiguration = new PDFOptionalContentConfiguration(ocgs.Values.Where(x => !x.DefaultState).Select(x => pdfOcgs[x.ToString()]), uas, order, radioButtonGroups?.Select(x => x.Select(y => pdfOcgs[y.ToString()])));
+            PDFOptionalContentConfiguration defaultConfiguration = new PDFOptionalContentConfiguration(ocgs.Values.Where(x => !x.DefaultState).Select(x => pdfOcgs[x.ToString()]), uas, order, radioButtonGroups?.Select(x => x.Select(y => pdfOcgs[y.ToString()])), "Default");
             pdfObjects.Add(defaultConfiguration);
 
             optionalContentProperties = new PDFOptionalContentProperties(pdfOcgs.Values, defaultConfiguration);

@@ -290,7 +290,7 @@ namespace VectSharp.PDF.PDFObjects
         /// <summary>
         /// Name of the configuration.
         /// </summary>
-        public PDFString Name { get; } = new PDFString("Default", PDFString.StringDelimiter.Brackets);
+        public PDFString Name { get; }
         
         /// <summary>
         /// Program that created this configuration.
@@ -334,8 +334,11 @@ namespace VectSharp.PDF.PDFObjects
         /// <param name="usageApplications">Usage application dictionaries.</param>
         /// <param name="order">Optional content group display tree.</param>
         /// <param name="radioButtonGroups">Radio button groups.</param>
-        public PDFOptionalContentConfiguration(IEnumerable<PDFOptionalContentGroup> off, IEnumerable<PDFUsageApplication> usageApplications, IEnumerable<IPDFObject> order, IEnumerable<IEnumerable<PDFOptionalContentGroup>> radioButtonGroups)
+        /// <param name="name">The name of the optional contennt group configuration.</param>
+        public PDFOptionalContentConfiguration(IEnumerable<PDFOptionalContentGroup> off, IEnumerable<PDFUsageApplication> usageApplications, IEnumerable<IPDFObject> order, IEnumerable<IEnumerable<PDFOptionalContentGroup>> radioButtonGroups, string name)
         {
+            this.Name = new PDFString(name, PDFString.StringDelimiter.Brackets);
+
             PDFArray<PDFOptionalContentGroup> offs = new PDFArray<PDFOptionalContentGroup>(off);
 
             if (offs.Values.Count > 0)
@@ -380,6 +383,11 @@ namespace VectSharp.PDF.PDFObjects
         public PDFOptionalContentConfiguration D { get; }
 
         /// <summary>
+        /// Alternative optional content group configurations.
+        /// </summary>
+        public PDFArray<PDFOptionalContentConfiguration> Configs { get; }
+
+        /// <summary>
         /// Create a new <see cref="PDFOptionalContentProperties"/>.
         /// </summary>
         /// <param name="ocgs">All optional content groups defined in the document.</param>
@@ -388,6 +396,20 @@ namespace VectSharp.PDF.PDFObjects
         {
             this.OCGs = new PDFArray<PDFOptionalContentGroup>(ocgs);
             this.D = defaultConfiguration;
+            this.Configs = null;
+        }
+
+        /// <summary>
+        /// Create a new <see cref="PDFOptionalContentProperties"/>.
+        /// </summary>
+        /// <param name="ocgs">All optional content groups defined in the document.</param>
+        /// <param name="defaultConfiguration">Default configuration.</param>
+        /// <param name="alternativeConfigurations">Alternative optional content group configurations.</param>
+        public PDFOptionalContentProperties(IEnumerable<PDFOptionalContentGroup> ocgs, PDFOptionalContentConfiguration defaultConfiguration, PDFOptionalContentConfiguration[] alternativeConfigurations)
+        {
+            this.OCGs = new PDFArray<PDFOptionalContentGroup>(ocgs);
+            this.D = defaultConfiguration;
+            this.Configs = new PDFArray<PDFOptionalContentConfiguration>(alternativeConfigurations);
         }
     }
 
