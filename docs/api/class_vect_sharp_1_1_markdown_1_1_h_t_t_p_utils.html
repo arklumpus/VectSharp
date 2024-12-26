@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">VectSharp<span id="projectnumber">&#160;2.5.0</span>
+   <div id="projectname">VectSharp<span id="projectnumber">&#160;2.6.1</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -106,14 +106,16 @@ $(document).ready(function(){initNavTree('class_vect_sharp_1_1_markdown_1_1_h_t_
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a01d97c079bd91ad3373ef377fd9b2d65"><td class="memItemLeft" align="right" valign="top">static string bool wasDownloaded&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html#a01d97c079bd91ad3373ef377fd9b2d65">ResolveEmojiUsingOpenMoji</a> (string emojiUri, <a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html">MarkdownRenderer</a> renderer)</td></tr>
+<tr class="separator:a01d97c079bd91ad3373ef377fd9b2d65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acbffac8c2ee7041f727166281662f297"><td class="memItemLeft" align="right" valign="top">static string bool wasDownloaded&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html#acbffac8c2ee7041f727166281662f297">ResolveImageURI</a> (string uri, string baseUriString)</td></tr>
 <tr class="separator:acbffac8c2ee7041f727166281662f297"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a98cbe747bc3733ad4710d5cacf8059fe"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html#a98cbe747bc3733ad4710d5cacf8059fe">path</a></td></tr>
-<tr class="memdesc:a98cbe747bc3733ad4710d5cacf8059fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolves an image Uri, by downloading the image file if necessary. It also takes care of ensuring that the file extension matches the format of the file.   <a href="class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html#a98cbe747bc3733ad4710d5cacf8059fe">More...</a><br /></td></tr>
-<tr class="separator:a98cbe747bc3733ad4710d5cacf8059fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39d9c545f5aad1c4de9204774523695a"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html#a39d9c545f5aad1c4de9204774523695a">path</a></td></tr>
+<tr class="memdesc:a39d9c545f5aad1c4de9204774523695a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uses OpenMoji (<a href="https://openmoji.org">https://openmoji.org</a>) to resolve emoji URIs of the form "emoji://{name}_heading:{level}" or "unicode://{unicode}_heading:{level}".   <a href="class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html#a39d9c545f5aad1c4de9204774523695a">More...</a><br /></td></tr>
+<tr class="separator:a39d9c545f5aad1c4de9204774523695a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
@@ -124,8 +126,46 @@ Properties</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Contains utilities to resolve absolute and relative URIs.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_html_tag_8cs_source.html#l00244">244</a> of file <a class="el" href="_html_tag_8cs_source.html">HtmlTag.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_html_tag_8cs_source.html#l00246">246</a> of file <a class="el" href="_html_tag_8cs_source.html">HtmlTag.cs</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a01d97c079bd91ad3373ef377fd9b2d65" name="a01d97c079bd91ad3373ef377fd9b2d65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01d97c079bd91ad3373ef377fd9b2d65">&#9670;&#160;</a></span>ResolveEmojiUsingOpenMoji()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static string bool wasDownloaded VectSharp.Markdown.HTTPUtils.ResolveEmojiUsingOpenMoji </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>emojiUri</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html">MarkdownRenderer</a>&#160;</td>
+          <td class="paramname"><em>renderer</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_html_tag_8cs_source.html#l00259">259</a> of file <a class="el" href="_html_tag_8cs_source.html">HtmlTag.cs</a>.</p>
+
+</div>
+</div>
 <a id="acbffac8c2ee7041f727166281662f297" name="acbffac8c2ee7041f727166281662f297"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acbffac8c2ee7041f727166281662f297">&#9670;&#160;</a></span>ResolveImageURI()</h2>
 
@@ -160,13 +200,13 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_html_tag_8cs_source.html#l00257">257</a> of file <a class="el" href="_html_tag_8cs_source.html">HtmlTag.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_html_tag_8cs_source.html#l00335">335</a> of file <a class="el" href="_html_tag_8cs_source.html">HtmlTag.cs</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a98cbe747bc3733ad4710d5cacf8059fe" name="a98cbe747bc3733ad4710d5cacf8059fe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a98cbe747bc3733ad4710d5cacf8059fe">&#9670;&#160;</a></span>path</h2>
+<a id="a39d9c545f5aad1c4de9204774523695a" name="a39d9c545f5aad1c4de9204774523695a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39d9c545f5aad1c4de9204774523695a">&#9670;&#160;</a></span>path</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -175,7 +215,7 @@ Properties</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">string VectSharp.Markdown.HTTPUtils.path</td>
+          <td class="memname">static string VectSharp.Markdown.HTTPUtils.path</td>
         </tr>
       </table>
   </td>
@@ -185,7 +225,16 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Resolves an image Uri, by downloading the image file if necessary. It also takes care of ensuring that the file extension matches the format of the file.  </p>
+<p>Uses OpenMoji (<a href="https://openmoji.org">https://openmoji.org</a>) to resolve emoji URIs of the form "emoji://{name}_heading:{level}" or "unicode://{unicode}_heading:{level}".  </p>
+<p >Resolves an image Uri, by downloading the image file if necessary. It also takes care of ensuring that the file extension matches the format of the file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">emojiUri</td><td>The emoji URI.</td></tr>
+    <tr><td class="paramname">renderer</td><td>The <a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html" title="Renders Markdown documents into VectSharp graphics objects.">MarkdownRenderer</a> on which the emoji will be drawn.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A tuple containing the local path of the rendered emoji and a boolean value indicating whether the image should be deleted after the program is done with it.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">uri</td><td>The address of the image.</td></tr>
@@ -195,7 +244,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A tuple containing the local path of the image file (either the original image, or a local copy of a remote file) and a boolean value indicating whether the image was fetched from a remote location and should be deleted after the program is done with it.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_html_tag_8cs_source.html#l00257">257</a> of file <a class="el" href="_html_tag_8cs_source.html">HtmlTag.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_html_tag_8cs_source.html#l00259">259</a> of file <a class="el" href="_html_tag_8cs_source.html">HtmlTag.cs</a>.</p>
 
 </div>
 </div>
@@ -222,7 +271,7 @@ Properties</h2></td></tr>
 
 <p>Determines whether every file that is downloaded should be logged to the standard error stream.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_html_tag_8cs_source.html#l00249">249</a> of file <a class="el" href="_html_tag_8cs_source.html">HtmlTag.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_html_tag_8cs_source.html#l00251">251</a> of file <a class="el" href="_html_tag_8cs_source.html">HtmlTag.cs</a>.</p>
 
 </div>
 </div>

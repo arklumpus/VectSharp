@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter_1_1_filter_option.html" title="Determines how and whether image filters are rasterised." alt="" coords="5,5,197,45"/>
+<area shape="rect" id="node1" href="$interface_vect_sharp_1_1_plots_1_1_i_coordinate_system1_d.html" title="Represents a coordinate system tranforming data points of type T &#160;into doubles." alt="" coords="5,39,191,81"/>
+<area shape="rect" id="node2" href="$class_vect_sharp_1_1_plots_1_1_categorical_coordinate_system1_d.html" title="Represents a categorical 1&#45;D coordinate system." alt="" coords="239,5,424,48"/>
+<area shape="rect" id="node3" href="$class_vect_sharp_1_1_plots_1_1_coordinate_system1_d.html" title="A coordinate system using a custom method to transform data points." alt="" coords="240,72,423,115"/>
 </map>

@@ -1,0 +1,26 @@
+var class_vect_sharp_1_1_markdown_1_1_markdown_context =
+[
+    [ "Clone", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#a59a3e0b2ba240c6b6c90022b947c7442", null ],
+    [ "GetMaxX", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#a16525fa33279486b1f06862ac4d22b98", null ],
+    [ "GetMaxX", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#a6f65ede82e690800119ade0271a5fae3", null ],
+    [ "GetMinX", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#ad5b62a92f85bb8437940c78792f55468", null ],
+    [ "GetMinX", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#a37549c1116612edecf151c56f9036b0e", null ],
+    [ "StartNewPage", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#ad5bd5c5b06580536d7ef3d4e50425460", null ],
+    [ "BottomRight", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#a9ccb263bd6a082339b84f224d4a0ae5c", null ],
+    [ "Colour", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#ab6ee4b141e4b48d533396aa6d484c6ad", null ],
+    [ "CurrentLine", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#a9ceb6fc392ba8254b89973c6c2652bd7", null ],
+    [ "CurrentPage", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#a8990d0addba5d69ba678c7ba4ab11e84", null ],
+    [ "Cursor", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#ab8ea61e856078e6817daa2ddf9971eae", null ],
+    [ "Font", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#a900c4f91c5a3d820ea907da67d76a496", null ],
+    [ "ForbiddenAreasLeft", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#a43e9d78b44bac7d00039625d9dc70255", null ],
+    [ "ForbiddenAreasRight", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#a9982dbc32c568c4bc4e7567970d2c62e", null ],
+    [ "Headings", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#a9951d4790f3ac10bb4b1d0ee5d81e554", null ],
+    [ "InternalAnchors", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#ad26395ed7998c0ea9a30bef7838206cd", null ],
+    [ "LinkDestinations", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#a690ce2f890e07f452a4d5cf31c0d9455", null ],
+    [ "ListDepth", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#a8c87b40d86f385af5b52420f970aaa6d", null ],
+    [ "MarginBottomRight", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#a8eeedf47977ee1856bbab99b1844a8d9", null ],
+    [ "StrikeThrough", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#aa24595df8a7cf4f9ea2e33928c25a598", null ],
+    [ "Tag", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#a1095a7d70b1fcca146c137b597ea9493", null ],
+    [ "Translation", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#a14c5a689d9092dc5392230d2c0e7a8eb", null ],
+    [ "Underline", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html#af356bd17ce6d3939e26e4404d711badd", null ]
+];

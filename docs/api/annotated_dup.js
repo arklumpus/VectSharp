@@ -34,22 +34,54 @@ var annotated_dup =
         [ "RasterImageStream", "class_vect_sharp_1_1_image_sharp_utils_1_1_raster_image_stream.html", "class_vect_sharp_1_1_image_sharp_utils_1_1_raster_image_stream" ]
       ] ],
       [ "Markdown", "namespace_vect_sharp_1_1_markdown.html", [
+        [ "BlockRenderedEventArgs", "class_vect_sharp_1_1_markdown_1_1_block_rendered_event_args.html", "class_vect_sharp_1_1_markdown_1_1_block_rendered_event_args" ],
+        [ "BlockRenderingEventArgs", "class_vect_sharp_1_1_markdown_1_1_block_rendering_event_args.html", "class_vect_sharp_1_1_markdown_1_1_block_rendering_event_args" ],
         [ "FormattedString", "struct_vect_sharp_1_1_markdown_1_1_formatted_string.html", "struct_vect_sharp_1_1_markdown_1_1_formatted_string" ],
         [ "HTTPUtils", "class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils.html", "class_vect_sharp_1_1_markdown_1_1_h_t_t_p_utils" ],
+        [ "InlineRenderedEventArgs", "class_vect_sharp_1_1_markdown_1_1_inline_rendered_event_args.html", "class_vect_sharp_1_1_markdown_1_1_inline_rendered_event_args" ],
+        [ "InlineRenderingEventArgs", "class_vect_sharp_1_1_markdown_1_1_inline_rendering_event_args.html", "class_vect_sharp_1_1_markdown_1_1_inline_rendering_event_args" ],
+        [ "Line", "class_vect_sharp_1_1_markdown_1_1_line.html", "class_vect_sharp_1_1_markdown_1_1_line" ],
+        [ "LineEventArgs", "class_vect_sharp_1_1_markdown_1_1_line_event_args.html", "class_vect_sharp_1_1_markdown_1_1_line_event_args" ],
+        [ "LineFragment", "class_vect_sharp_1_1_markdown_1_1_line_fragment.html", "class_vect_sharp_1_1_markdown_1_1_line_fragment" ],
+        [ "LineMeasuredEventArgs", "class_vect_sharp_1_1_markdown_1_1_line_measured_event_args.html", "class_vect_sharp_1_1_markdown_1_1_line_measured_event_args" ],
         [ "Margins", "class_vect_sharp_1_1_markdown_1_1_margins.html", "class_vect_sharp_1_1_markdown_1_1_margins" ],
+        [ "MarkdownContext", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html", "class_vect_sharp_1_1_markdown_1_1_markdown_context" ],
+        [ "MarkdownEmojiExtension", "class_vect_sharp_1_1_markdown_1_1_markdown_emoji_extension.html", "class_vect_sharp_1_1_markdown_1_1_markdown_emoji_extension" ],
         [ "MarkdownRenderer", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer" ],
-        [ "SyntaxHighlighter", "class_vect_sharp_1_1_markdown_1_1_syntax_highlighter.html", "class_vect_sharp_1_1_markdown_1_1_syntax_highlighter" ]
+        [ "PageFinishedEventArgs", "class_vect_sharp_1_1_markdown_1_1_page_finished_event_args.html", "class_vect_sharp_1_1_markdown_1_1_page_finished_event_args" ],
+        [ "PageStartedEventArgs", "class_vect_sharp_1_1_markdown_1_1_page_started_event_args.html", "class_vect_sharp_1_1_markdown_1_1_page_started_event_args" ],
+        [ "RectangleFragment", "class_vect_sharp_1_1_markdown_1_1_rectangle_fragment.html", "class_vect_sharp_1_1_markdown_1_1_rectangle_fragment" ],
+        [ "SyntaxHighlighter", "class_vect_sharp_1_1_markdown_1_1_syntax_highlighter.html", "class_vect_sharp_1_1_markdown_1_1_syntax_highlighter" ],
+        [ "TextFragment", "class_vect_sharp_1_1_markdown_1_1_text_fragment.html", "class_vect_sharp_1_1_markdown_1_1_text_fragment" ],
+        [ "UnderlineFragment", "class_vect_sharp_1_1_markdown_1_1_underline_fragment.html", "class_vect_sharp_1_1_markdown_1_1_underline_fragment" ]
       ] ],
       [ "MarkdownCanvas", "namespace_vect_sharp_1_1_markdown_canvas.html", [
         [ "MarkdownCanvasControl", "class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html", "class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control" ]
       ] ],
       [ "MuPDFUtils", "namespace_vect_sharp_1_1_mu_p_d_f_utils.html", [
         [ "ImageURIParser", "class_vect_sharp_1_1_mu_p_d_f_utils_1_1_image_u_r_i_parser.html", "class_vect_sharp_1_1_mu_p_d_f_utils_1_1_image_u_r_i_parser" ],
+        [ "PDFParser", "class_vect_sharp_1_1_mu_p_d_f_utils_1_1_p_d_f_parser.html", "class_vect_sharp_1_1_mu_p_d_f_utils_1_1_p_d_f_parser" ],
         [ "RasterImageFile", "class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_file.html", "class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_file" ],
         [ "RasterImageStream", "class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_stream.html", "class_vect_sharp_1_1_mu_p_d_f_utils_1_1_raster_image_stream" ]
       ] ],
       [ "PDF", "namespace_vect_sharp_1_1_p_d_f.html", [
-        [ "PDFContextInterpreter", "class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html", "class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter" ]
+        [ "OptionalContentGroups", "namespace_vect_sharp_1_1_p_d_f_1_1_optional_content_groups.html", [
+          [ "OptionalContentGroup", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group.html", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group" ],
+          [ "OptionalContentGroupAndExpression", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_and_expression.html", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_and_expression" ],
+          [ "OptionalContentGroupExpression", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_expression.html", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_expression" ],
+          [ "OptionalContentGroupNotExpression", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_not_expression.html", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_not_expression" ],
+          [ "OptionalContentGroupOrExpression", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_or_expression.html", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_or_expression" ],
+          [ "OptionalContentGroupSettings", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_settings.html", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_settings" ],
+          [ "OptionalContentGroupTreeLabel", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_tree_label.html", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_tree_label" ],
+          [ "OptionalContentGroupTreeNode", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_tree_node.html", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_tree_node" ]
+        ] ],
+        [ "AnnotationStyle", "class_vect_sharp_1_1_p_d_f_1_1_annotation_style.html", "class_vect_sharp_1_1_p_d_f_1_1_annotation_style" ],
+        [ "AnnotationStyleCollection", "class_vect_sharp_1_1_p_d_f_1_1_annotation_style_collection.html", "class_vect_sharp_1_1_p_d_f_1_1_annotation_style_collection" ],
+        [ "OutlineTree", "class_vect_sharp_1_1_p_d_f_1_1_outline_tree.html", "class_vect_sharp_1_1_p_d_f_1_1_outline_tree" ],
+        [ "OutlineTreeNode", "class_vect_sharp_1_1_p_d_f_1_1_outline_tree_node.html", "class_vect_sharp_1_1_p_d_f_1_1_outline_tree_node" ],
+        [ "PDFContextInterpreter", "class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html", "class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter" ],
+        [ "PDFDocument", "class_vect_sharp_1_1_p_d_f_1_1_p_d_f_document.html", "class_vect_sharp_1_1_p_d_f_1_1_p_d_f_document" ],
+        [ "PDFMetadata", "class_vect_sharp_1_1_p_d_f_1_1_p_d_f_metadata.html", "class_vect_sharp_1_1_p_d_f_1_1_p_d_f_metadata" ]
       ] ],
       [ "Plots", "namespace_vect_sharp_1_1_plots.html", [
         [ "ActionDataPointElement", "class_vect_sharp_1_1_plots_1_1_action_data_point_element.html", "class_vect_sharp_1_1_plots_1_1_action_data_point_element" ],
@@ -97,6 +129,7 @@ var annotated_dup =
         [ "PowerLawTrendLine", "class_vect_sharp_1_1_plots_1_1_power_law_trend_line.html", "class_vect_sharp_1_1_plots_1_1_power_law_trend_line" ],
         [ "ScatterPoints", "class_vect_sharp_1_1_plots_1_1_scatter_points.html", "class_vect_sharp_1_1_plots_1_1_scatter_points" ],
         [ "StackedBars", "class_vect_sharp_1_1_plots_1_1_stacked_bars.html", "class_vect_sharp_1_1_plots_1_1_stacked_bars" ],
+        [ "Swarm", "class_vect_sharp_1_1_plots_1_1_swarm.html", "class_vect_sharp_1_1_plots_1_1_swarm" ],
         [ "TextLabel", "class_vect_sharp_1_1_plots_1_1_text_label.html", "class_vect_sharp_1_1_plots_1_1_text_label" ],
         [ "Violin", "class_vect_sharp_1_1_plots_1_1_violin.html", "class_vect_sharp_1_1_plots_1_1_violin" ]
       ] ],
@@ -166,6 +199,7 @@ var annotated_dup =
       [ "Size", "struct_vect_sharp_1_1_size.html", "struct_vect_sharp_1_1_size" ],
       [ "SolidColourBrush", "class_vect_sharp_1_1_solid_colour_brush.html", "class_vect_sharp_1_1_solid_colour_brush" ],
       [ "SplineEasing", "class_vect_sharp_1_1_spline_easing.html", "class_vect_sharp_1_1_spline_easing" ],
+      [ "TextSpacing", "struct_vect_sharp_1_1_text_spacing.html", "struct_vect_sharp_1_1_text_spacing" ],
       [ "Transition", "class_vect_sharp_1_1_transition.html", "class_vect_sharp_1_1_transition" ],
       [ "TrueTypeFile", "class_vect_sharp_1_1_true_type_file.html", "class_vect_sharp_1_1_true_type_file" ],
       [ "UnbalancedStackException", "class_vect_sharp_1_1_unbalanced_stack_exception.html", null ]

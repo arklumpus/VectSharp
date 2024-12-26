@@ -14,5 +14,6 @@ var searchData=
   ['spotlightlightsource_11',['SpotlightLightSource',['../class_vect_sharp_1_1_three_d_1_1_spotlight_light_source.html',1,'VectSharp::ThreeD']]],
   ['stackedbars_12',['StackedBars',['../class_vect_sharp_1_1_plots_1_1_stacked_bars.html',1,'VectSharp::Plots']]],
   ['svgcontextinterpreter_13',['SVGContextInterpreter',['../class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html',1,'VectSharp::SVG']]],
-  ['syntaxhighlighter_14',['SyntaxHighlighter',['../class_vect_sharp_1_1_markdown_1_1_syntax_highlighter.html',1,'VectSharp::Markdown']]]
+  ['swarm_14',['Swarm',['../class_vect_sharp_1_1_plots_1_1_swarm.html',1,'VectSharp::Plots']]],
+  ['syntaxhighlighter_15',['SyntaxHighlighter',['../class_vect_sharp_1_1_markdown_1_1_syntax_highlighter.html',1,'VectSharp::Markdown']]]
 ];

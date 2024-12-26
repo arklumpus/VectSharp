@@ -1,10 +1,11 @@
 var class_vect_sharp_1_1_markdown_1_1_markdown_renderer =
 [
     [ "VerticalAlignment", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a0e91c7ffd72d8f036d5c592e0e86c4dd", null ],
-    [ "Render", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a784f71badceebcb00156a82c3dff2e8c", null ],
-    [ "Render", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#aab26ee0f943a9285283c1d7249bf9244", null ],
-    [ "RenderSinglePage", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ae1729756a1e9108f43d850e7b7d87504", null ],
-    [ "RenderSinglePage", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ac7dcb32da190e23c4419068cfb701e8f", null ],
+    [ "MarkdownRenderer", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a66570dfcb6e4c8ae2e0a8b512d39579e", null ],
+    [ "Render", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a7fda4fb2552eb30f1f7adb98a680b0da", null ],
+    [ "Render", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ab4ee29240fd80e4cc63bd1932010d5ed", null ],
+    [ "RenderSinglePage", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a66f911be47be82c89c6d75c347f8be7f", null ],
+    [ "RenderSinglePage", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a144b9d3ead6c0dbc2e32abadefc5d64a", null ],
     [ "AllowPageBreak", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a5605b0e1ff61f248139e16ed690e0b68", null ],
     [ "BackgroundColour", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a705b87a48e9440a1cdbfd0aa0ad68d17", null ],
     [ "BaseFontSize", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a526e8cc443eacebd5945764a8dee28df", null ],
@@ -21,6 +22,8 @@ var class_vect_sharp_1_1_markdown_1_1_markdown_renderer =
     [ "CodeFontItalic", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#af940dd60bb6fa8cf8259fde8af0bce8f", null ],
     [ "CodeInlineBackgroundColour", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a11d3bb7bf2b9ad2504cae0baca716b76", null ],
     [ "CodeInlineMargin", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#aeeae04cc296267e19629f44e9027546f", null ],
+    [ "EmojiUriResolver", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#acb012ba3822a732f118d006efeff4280", null ],
+    [ "EmojiURLMapping", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ad085950430a87ad808c30bd554d9f65f", null ],
     [ "ForegroundColour", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a6c4a5d7b75c3261f1af5b28e16caaedb", null ],
     [ "HeaderFontSizeMultipliers", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a54226926b7458590090f5433d6535357", null ],
     [ "HeaderLineColour", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a46621262384e4aeabe32fe48113ba5aa", null ],
@@ -36,6 +39,7 @@ var class_vect_sharp_1_1_markdown_1_1_markdown_renderer =
     [ "LinkColour", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a7a1f81289fccf9beb40f37da296ce8c9", null ],
     [ "LinkUriResolver", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a4b729ac905d1cbde014ac519cc0709da", null ],
     [ "Margins", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a79e09c80bacaf0b1bf9eef9423218684", null ],
+    [ "MarkdownPipelineBuilder", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ad727fc20aec318151df273fab032c0eb", null ],
     [ "MarkedColour", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ab8934b60d1c1a6d6e4321fffc970a0b7", null ],
     [ "MathFontScalingFactor", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a49806f8afaebc91bc2900b58d185fe3a", null ],
     [ "PageSize", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a587e062de7f7549f3a75bbeaed30c9fe", null ],
@@ -64,5 +68,14 @@ var class_vect_sharp_1_1_markdown_1_1_markdown_renderer =
     [ "TaskListUncheckedBullet", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ad6d53f3477f53ebcbe7bb8f95cb75754", null ],
     [ "ThematicBreakLineColour", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ad6b32b1b9386aff3bed7fbb66464fd5b", null ],
     [ "ThematicBreakThickness", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ad642185bf6f4ee7e95b93c683e7f4108", null ],
-    [ "UnderlineThickness", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ac91f04f799cbb3f857d1e164d711dc30", null ]
+    [ "UnderlineThickness", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ac91f04f799cbb3f857d1e164d711dc30", null ],
+    [ "BlockRendered", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a7e29506b84c63205a15396c494285a6f", null ],
+    [ "BlockRendering", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a3b92e50c918f8b9dcff944e67a350ef0", null ],
+    [ "InlineRendered", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#afef93a8f876ee8a0a2b50fa8f45fb8ff", null ],
+    [ "InlineRendering", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#aa5e1f7e9d86e5c623ae28666d2f1213b", null ],
+    [ "LineMeasured", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a49017e745d1f38ef7e79fea9615648e6", null ],
+    [ "LineRendered", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#aa29ab98aedc12ac53fe8eec68344cfba", null ],
+    [ "LineRendering", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a650efb8083c5d20e62a6f586c7410c66", null ],
+    [ "PageFinished", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a023d5d5490a085201e0dd811dc9b5e28", null ],
+    [ "PageStarted", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a248a9f0451f3a63f4c92f820ce76232f", null ]
 ];

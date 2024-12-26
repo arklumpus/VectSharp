@@ -1,5 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$interface_vect_sharp_1_1_three_d_1_1_i_material.html" title="Represents a material used to the determine the appearance of Triangle3DElement." alt="" coords="5,31,187,56"/>
-<area shape="rect" id="node2" href="$class_vect_sharp_1_1_three_d_1_1_colour_material.html" title="Represents a material that always has the same colour, regardless of light." alt="" coords="235,5,449,31"/>
-<area shape="rect" id="node3" href="$class_vect_sharp_1_1_three_d_1_1_phong_material.html" title="Represents a material that uses a Phong reflection model to determine the colour of the material base..." alt="" coords="235,55,449,80"/>
+<area shape="rect" id="node1" href="$interface_vect_sharp_1_1_plots_1_1_i_coordinate_system.html" title=" " alt="" coords="5,5,191,48"/>
+<area shape="rect" id="node2" href="$class_vect_sharp_1_1_plots_1_1_composite_coordinate_system2_d.html" title="Combines two ICoordinateSystem1D&lt;T&gt;s to produce a ICoordinateSystem&lt;T&gt;." alt="" coords="239,5,443,48"/>
 </map>

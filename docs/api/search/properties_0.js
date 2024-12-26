@@ -12,6 +12,8 @@ var searchData=
   ['allowpagebreak_9',['AllowPageBreak',['../class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a5605b0e1ff61f248139e16ed690e0b68',1,'VectSharp::Markdown::MarkdownRenderer']]],
   ['ambientreflectioncoefficient_10',['AmbientReflectionCoefficient',['../class_vect_sharp_1_1_three_d_1_1_phong_material.html#add012f278676a4ff7e8c90fc9399c61a',1,'VectSharp::ThreeD::PhongMaterial']]],
   ['angleattenuationexponent_11',['AngleAttenuationExponent',['../class_vect_sharp_1_1_three_d_1_1_spotlight_light_source.html#a85b98b5ff591baa6af3c592bde63ce30',1,'VectSharp.ThreeD.SpotlightLightSource.AngleAttenuationExponent()'],['../class_vect_sharp_1_1_three_d_1_1_masked_light_source.html#a57f148002613d253aa352aedb7bb4ab4',1,'VectSharp.ThreeD.MaskedLightSource.AngleAttenuationExponent()']]],
-  ['arrowsize_12',['ArrowSize',['../class_vect_sharp_1_1_plots_1_1_continuous_axis.html#ac65664e5e44d4f0e08a1c54a119f723e',1,'VectSharp::Plots::ContinuousAxis']]],
-  ['ascent_13',['Ascent',['../class_vect_sharp_1_1_font.html#adb29d0d9ad91f74c8b08155db52bead8',1,'VectSharp::Font']]]
+  ['arguments_12',['Arguments',['../class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_expression.html#ac27ec8e1e3386b48bcb682d116c5198a',1,'VectSharp::PDF::OptionalContentGroups::OptionalContentGroupExpression']]],
+  ['arrowsize_13',['ArrowSize',['../class_vect_sharp_1_1_plots_1_1_continuous_axis.html#ac65664e5e44d4f0e08a1c54a119f723e',1,'VectSharp::Plots::ContinuousAxis']]],
+  ['ascent_14',['Ascent',['../class_vect_sharp_1_1_font.html#adb29d0d9ad91f74c8b08155db52bead8',1,'VectSharp::Font']]],
+  ['author_15',['Author',['../class_vect_sharp_1_1_p_d_f_1_1_p_d_f_metadata.html#a70661628f97e9c14ec3e706df377728f',1,'VectSharp::PDF::PDFMetadata']]]
 ];

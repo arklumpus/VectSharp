@@ -1,0 +1,7 @@
+<map id="VectSharp.PDF.OptionalContentGroups.OptionalContentGroupExpression" name="VectSharp.PDF.OptionalContentGroups.OptionalContentGroupExpression">
+<area shape="rect" id="node1" title="Represents the result of a boolean operation on OptionalContentGroups." alt="" coords="5,105,266,148"/>
+<area shape="rect" id="node2" href="$class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group.html" title="Represents an optional content group." alt="" coords="351,5,560,48"/>
+<area shape="rect" id="node3" href="$class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_and_expression.html" title="An expression that is true when all its arguments are true." alt="" coords="314,72,597,115"/>
+<area shape="rect" id="node4" href="$class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_not_expression.html" title="An expression that is true when its argument is false." alt="" coords="315,139,596,181"/>
+<area shape="rect" id="node5" href="$class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_or_expression.html" title="An expression that is true when any of its arguments are true." alt="" coords="318,205,593,248"/>
+</map>

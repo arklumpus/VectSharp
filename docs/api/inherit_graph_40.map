@@ -1,3 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$class_vect_sharp_1_1_page.html" title="Represents a Graphics object with a width and height." alt="" coords="5,5,123,31"/>
+<area shape="rect" id="node1" href="$class_vect_sharp_1_1_markdown_1_1_line_fragment.html" title="Represents one of the fragments that make up a Line." alt="" coords="5,72,234,99"/>
+<area shape="rect" id="node2" href="$class_vect_sharp_1_1_markdown_1_1_rectangle_fragment.html" title="Represents a rectangle." alt="" coords="293,5,500,48"/>
+<area shape="rect" id="node3" href="$class_vect_sharp_1_1_markdown_1_1_text_fragment.html" title="A fragment containing text." alt="" coords="282,72,511,99"/>
+<area shape="rect" id="node4" href="$class_vect_sharp_1_1_markdown_1_1_underline_fragment.html" title="Represents a text underline." alt="" coords="295,123,498,165"/>
 </map>

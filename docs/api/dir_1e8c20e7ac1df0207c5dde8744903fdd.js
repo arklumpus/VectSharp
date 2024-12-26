@@ -17,7 +17,9 @@ var dir_1e8c20e7ac1df0207c5dde8744903fdd =
     [ "Plot.Lines.cs", "_plot_8_lines_8cs_source.html", null ],
     [ "Plot.Pie.cs", "_plot_8_pie_8cs_source.html", null ],
     [ "Plot.ScatterPlot.cs", "_plot_8_scatter_plot_8cs_source.html", null ],
+    [ "Plot.SwarmPlot.cs", "_plot_8_swarm_plot_8cs_source.html", null ],
     [ "Plot.ViolinPlot.cs", "_plot_8_violin_plot_8cs_source.html", null ],
+    [ "Swarm.cs", "_swarm_8cs_source.html", null ],
     [ "Trendlines.cs", "_trendlines_8cs_source.html", null ],
     [ "Violin.cs", "_violin_8cs_source.html", null ]
 ];

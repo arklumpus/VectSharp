@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">VectSharp<span id="projectnumber">&#160;2.5.0</span>
+   <div id="projectname">VectSharp<span id="projectnumber">&#160;2.6.1</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -118,17 +118,20 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a002e79d67570f82833bd86fbaf085e29"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html#a002e79d67570f82833bd86fbaf085e29">SaveAsPDF</a> (this <a class="el" href="class_vect_sharp_1_1_document.html">Document</a> document, string fileName, <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html#a8cd1a292b80db0cce76c229f069899fe">TextOptions</a> textOption=TextOptions.SubsetFonts, bool compressStreams=true, Dictionary&lt; string, string &gt; linkDestinations=null, <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter_1_1_filter_option.html">FilterOption</a> filterOption=default)</td></tr>
-<tr class="memdesc:a002e79d67570f82833bd86fbaf085e29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save the document to a <a class="el" href="namespace_vect_sharp_1_1_p_d_f.html">PDF</a> file.   <a href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html#a002e79d67570f82833bd86fbaf085e29">More...</a><br /></td></tr>
-<tr class="separator:a002e79d67570f82833bd86fbaf085e29"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ef5cf6eaf0992ab45cd500eacdc712b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html#a2ef5cf6eaf0992ab45cd500eacdc712b">SaveAsPDF</a> (this <a class="el" href="class_vect_sharp_1_1_document.html">Document</a> document, Stream stream, <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html#a8cd1a292b80db0cce76c229f069899fe">TextOptions</a> textOption=TextOptions.SubsetFonts, bool compressStreams=true, Dictionary&lt; string, string &gt; linkDestinations=null, <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter_1_1_filter_option.html">FilterOption</a> filterOption=default)</td></tr>
-<tr class="memdesc:a2ef5cf6eaf0992ab45cd500eacdc712b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save the document to a <a class="el" href="namespace_vect_sharp_1_1_p_d_f.html">PDF</a> stream.   <a href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html#a2ef5cf6eaf0992ab45cd500eacdc712b">More...</a><br /></td></tr>
-<tr class="separator:a2ef5cf6eaf0992ab45cd500eacdc712b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ad6cabbd1a4075d2a133034501038d0"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_document.html">PDFDocument</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html#a1ad6cabbd1a4075d2a133034501038d0">CreatePDFDocument</a> (this <a class="el" href="class_vect_sharp_1_1_document.html">Document</a> document, <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html#a8cd1a292b80db0cce76c229f069899fe">TextOptions</a> textOption=TextOptions.SubsetFonts, bool compressStreams=true, Dictionary&lt; string, string &gt; linkDestinations=null, <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_outline_tree.html">OutlineTree</a> outline=null, <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_metadata.html">PDFMetadata</a> metadata=default, <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter_1_1_filter_option.html">FilterOption</a> filterOption=default, <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_settings.html">OptionalContentGroupSettings</a> optionalContentGroupSettings=default, <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_annotation_style_collection.html">AnnotationStyleCollection</a> annotationStyles=default)</td></tr>
+<tr class="memdesc:a1ad6cabbd1a4075d2a133034501038d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert the document to a <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_document.html" title="A low-level representation of a PDF document.">PDFDocument</a> representation.   <a href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html#a1ad6cabbd1a4075d2a133034501038d0">More...</a><br /></td></tr>
+<tr class="separator:a1ad6cabbd1a4075d2a133034501038d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a512b62a7827274d4553ad7c051102a63"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html#a512b62a7827274d4553ad7c051102a63">SaveAsPDF</a> (this <a class="el" href="class_vect_sharp_1_1_document.html">Document</a> document, string fileName, <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html#a8cd1a292b80db0cce76c229f069899fe">TextOptions</a> textOption=TextOptions.SubsetFonts, bool compressStreams=true, Dictionary&lt; string, string &gt; linkDestinations=null, <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_outline_tree.html">OutlineTree</a> outline=null, <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_metadata.html">PDFMetadata</a> metadata=default, <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter_1_1_filter_option.html">FilterOption</a> filterOption=default, <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_settings.html">OptionalContentGroupSettings</a> optionalContentGroupSettings=default, <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_annotation_style_collection.html">AnnotationStyleCollection</a> annotationStyles=default)</td></tr>
+<tr class="memdesc:a512b62a7827274d4553ad7c051102a63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save the document to a <a class="el" href="namespace_vect_sharp_1_1_p_d_f.html">PDF</a> file.   <a href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html#a512b62a7827274d4553ad7c051102a63">More...</a><br /></td></tr>
+<tr class="separator:a512b62a7827274d4553ad7c051102a63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6a54546dc0b438e198327fe37ea9f31"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html#ab6a54546dc0b438e198327fe37ea9f31">SaveAsPDF</a> (this <a class="el" href="class_vect_sharp_1_1_document.html">Document</a> document, Stream stream, <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html#a8cd1a292b80db0cce76c229f069899fe">TextOptions</a> textOption=TextOptions.SubsetFonts, bool compressStreams=true, Dictionary&lt; string, string &gt; linkDestinations=null, <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_outline_tree.html">OutlineTree</a> outline=null, <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_metadata.html">PDFMetadata</a> metadata=default, <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter_1_1_filter_option.html">FilterOption</a> filterOption=default, <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_settings.html">OptionalContentGroupSettings</a> optionalContentGroupSettings=default, <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_annotation_style_collection.html">AnnotationStyleCollection</a> annotationStyles=default)</td></tr>
+<tr class="memdesc:ab6a54546dc0b438e198327fe37ea9f31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save the document to a <a class="el" href="namespace_vect_sharp_1_1_p_d_f.html">PDF</a> stream.   <a href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html#ab6a54546dc0b438e198327fe37ea9f31">More...</a><br /></td></tr>
+<tr class="separator:ab6a54546dc0b438e198327fe37ea9f31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Contains methods to render a <a class="el" href="class_vect_sharp_1_1_document.html" title="Represents a collection of pages.">Document</a> as a <a class="el" href="namespace_vect_sharp_1_1_p_d_f.html">PDF</a> document.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_d_f_context_8cs_source.html#l00831">831</a> of file <a class="el" href="_p_d_f_context_8cs_source.html">PDFContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_d_f_context_interpreter_8cs_source.html#l00086">86</a> of file <a class="el" href="_p_d_f_context_interpreter_8cs_source.html">PDFContextInterpreter.cs</a>.</p>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="a8cd1a292b80db0cce76c229f069899fe" name="a8cd1a292b80db0cce76c229f069899fe"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8cd1a292b80db0cce76c229f069899fe">&#9670;&#160;</a></span>TextOptions</h2>
@@ -144,13 +147,109 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Defines whether the used fonts should be included in the file.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_d_f_context_8cs_source.html#l01126">1126</a> of file <a class="el" href="_p_d_f_context_8cs_source.html">PDFContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_d_f_context_interpreter_8cs_source.html#l00091">91</a> of file <a class="el" href="_p_d_f_context_interpreter_8cs_source.html">PDFContextInterpreter.cs</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a2ef5cf6eaf0992ab45cd500eacdc712b" name="a2ef5cf6eaf0992ab45cd500eacdc712b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2ef5cf6eaf0992ab45cd500eacdc712b">&#9670;&#160;</a></span>SaveAsPDF() <span class="overload">[1/2]</span></h2>
+<a id="a1ad6cabbd1a4075d2a133034501038d0" name="a1ad6cabbd1a4075d2a133034501038d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ad6cabbd1a4075d2a133034501038d0">&#9670;&#160;</a></span>CreatePDFDocument()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_document.html">PDFDocument</a> VectSharp.PDF.PDFContextInterpreter.CreatePDFDocument </td>
+          <td>(</td>
+          <td class="paramtype">this <a class="el" href="class_vect_sharp_1_1_document.html">Document</a>&#160;</td>
+          <td class="paramname"><em>document</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html#a8cd1a292b80db0cce76c229f069899fe">TextOptions</a>&#160;</td>
+          <td class="paramname"><em>textOption</em> = <code>TextOptions.SubsetFonts</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>compressStreams</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dictionary&lt; string, string &gt;&#160;</td>
+          <td class="paramname"><em>linkDestinations</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_outline_tree.html">OutlineTree</a>&#160;</td>
+          <td class="paramname"><em>outline</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_metadata.html">PDFMetadata</a>&#160;</td>
+          <td class="paramname"><em>metadata</em> = <code>default</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter_1_1_filter_option.html">FilterOption</a>&#160;</td>
+          <td class="paramname"><em>filterOption</em> = <code>default</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_settings.html">OptionalContentGroupSettings</a>&#160;</td>
+          <td class="paramname"><em>optionalContentGroupSettings</em> = <code>default</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_annotation_style_collection.html">AnnotationStyleCollection</a>&#160;</td>
+          <td class="paramname"><em>annotationStyles</em> = <code>default</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Convert the document to a <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_document.html" title="A low-level representation of a PDF document.">PDFDocument</a> representation.  </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">document</td><td>The <a class="el" href="class_vect_sharp_1_1_document.html" title="Represents a collection of pages.">Document</a> to convert.</td></tr>
+    <tr><td class="paramname">textOption</td><td>Defines whether the used fonts should be included in the <a class="el" href="namespace_vect_sharp_1_1_p_d_f.html">PDF</a> document.</td></tr>
+    <tr><td class="paramname">compressStreams</td><td>Indicates whether the streams in the <a class="el" href="namespace_vect_sharp_1_1_p_d_f.html">PDF</a> document should be compressed.</td></tr>
+    <tr><td class="paramname">linkDestinations</td><td>A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</td></tr>
+    <tr><td class="paramname">outline</td><td><a class="el" href="class_vect_sharp_1_1_document.html" title="Represents a collection of pages.">Document</a> outline (table of contents).</td></tr>
+    <tr><td class="paramname">metadata</td><td><a class="el" href="class_vect_sharp_1_1_document.html" title="Represents a collection of pages.">Document</a> metadata. Use <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_metadata.html#a25f679546d9bf4a4b6df0e733ab06996" title="Returns an object that does not include any metadata in the PDF file.">PDFMetadata.NoMetadata()</a> if you do not wish to include metadata in the document.</td></tr>
+    <tr><td class="paramname">filterOption</td><td>Defines how and whether image filters should be rasterised when rendering the image.</td></tr>
+    <tr><td class="paramname">optionalContentGroupSettings</td><td>Settings for optional content groups (layers).</td></tr>
+    <tr><td class="paramname">annotationStyles</td><td>Annotation appearance styles.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="_p_d_f_context_interpreter_8cs_source.html#l00748">748</a> of file <a class="el" href="_p_d_f_context_interpreter_8cs_source.html">PDFContextInterpreter.cs</a>.</p>
+
+</div>
+</div>
+<a id="ab6a54546dc0b438e198327fe37ea9f31" name="ab6a54546dc0b438e198327fe37ea9f31"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab6a54546dc0b438e198327fe37ea9f31">&#9670;&#160;</a></span>SaveAsPDF() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -191,8 +290,32 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_outline_tree.html">OutlineTree</a>&#160;</td>
+          <td class="paramname"><em>outline</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_metadata.html">PDFMetadata</a>&#160;</td>
+          <td class="paramname"><em>metadata</em> = <code>default</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter_1_1_filter_option.html">FilterOption</a>&#160;</td>
-          <td class="paramname"><em>filterOption</em> = <code>default</code>&#160;</td>
+          <td class="paramname"><em>filterOption</em> = <code>default</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_settings.html">OptionalContentGroupSettings</a>&#160;</td>
+          <td class="paramname"><em>optionalContentGroupSettings</em> = <code>default</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_annotation_style_collection.html">AnnotationStyleCollection</a>&#160;</td>
+          <td class="paramname"><em>annotationStyles</em> = <code>default</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -215,17 +338,21 @@ Static Public Member Functions</h2></td></tr>
     <tr><td class="paramname">textOption</td><td>Defines whether the used fonts should be included in the file.</td></tr>
     <tr><td class="paramname">compressStreams</td><td>Indicates whether the streams in the <a class="el" href="namespace_vect_sharp_1_1_p_d_f.html">PDF</a> file should be compressed.</td></tr>
     <tr><td class="paramname">linkDestinations</td><td>A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</td></tr>
+    <tr><td class="paramname">outline</td><td><a class="el" href="class_vect_sharp_1_1_document.html" title="Represents a collection of pages.">Document</a> outline (table of contents).</td></tr>
+    <tr><td class="paramname">metadata</td><td><a class="el" href="class_vect_sharp_1_1_document.html" title="Represents a collection of pages.">Document</a> metadata. Use <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_metadata.html#a25f679546d9bf4a4b6df0e733ab06996" title="Returns an object that does not include any metadata in the PDF file.">PDFMetadata.NoMetadata()</a> if you do not wish to include metadata in the document.</td></tr>
     <tr><td class="paramname">filterOption</td><td>Defines how and whether image filters should be rasterised when rendering the image.</td></tr>
+    <tr><td class="paramname">optionalContentGroupSettings</td><td>Settings for optional content groups (layers).</td></tr>
+    <tr><td class="paramname">annotationStyles</td><td>Annotation appearance styles.</td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_p_d_f_context_8cs_source.html#l01210">1210</a> of file <a class="el" href="_p_d_f_context_8cs_source.html">PDFContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_d_f_context_interpreter_8cs_source.html#l00899">899</a> of file <a class="el" href="_p_d_f_context_interpreter_8cs_source.html">PDFContextInterpreter.cs</a>.</p>
 
 </div>
 </div>
-<a id="a002e79d67570f82833bd86fbaf085e29" name="a002e79d67570f82833bd86fbaf085e29"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a002e79d67570f82833bd86fbaf085e29">&#9670;&#160;</a></span>SaveAsPDF() <span class="overload">[2/2]</span></h2>
+<a id="a512b62a7827274d4553ad7c051102a63" name="a512b62a7827274d4553ad7c051102a63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a512b62a7827274d4553ad7c051102a63">&#9670;&#160;</a></span>SaveAsPDF() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -266,8 +393,32 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_outline_tree.html">OutlineTree</a>&#160;</td>
+          <td class="paramname"><em>outline</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_metadata.html">PDFMetadata</a>&#160;</td>
+          <td class="paramname"><em>metadata</em> = <code>default</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter_1_1_filter_option.html">FilterOption</a>&#160;</td>
-          <td class="paramname"><em>filterOption</em> = <code>default</code>&#160;</td>
+          <td class="paramname"><em>filterOption</em> = <code>default</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_settings.html">OptionalContentGroupSettings</a>&#160;</td>
+          <td class="paramname"><em>optionalContentGroupSettings</em> = <code>default</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_annotation_style_collection.html">AnnotationStyleCollection</a>&#160;</td>
+          <td class="paramname"><em>annotationStyles</em> = <code>default</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -290,17 +441,21 @@ Static Public Member Functions</h2></td></tr>
     <tr><td class="paramname">textOption</td><td>Defines whether the used fonts should be included in the file.</td></tr>
     <tr><td class="paramname">compressStreams</td><td>Indicates whether the streams in the <a class="el" href="namespace_vect_sharp_1_1_p_d_f.html">PDF</a> file should be compressed.</td></tr>
     <tr><td class="paramname">linkDestinations</td><td>A dictionary associating element tags to link targets. If this is provided, objects that have been drawn with a tag contained in the dictionary will become hyperlink to the destination specified in the dictionary. If the destination starts with a hash (#), it is interpreted as the tag of another object in the current document; otherwise, it is interpreted as an external URI.</td></tr>
+    <tr><td class="paramname">outline</td><td><a class="el" href="class_vect_sharp_1_1_document.html" title="Represents a collection of pages.">Document</a> outline (table of contents).</td></tr>
+    <tr><td class="paramname">metadata</td><td><a class="el" href="class_vect_sharp_1_1_document.html" title="Represents a collection of pages.">Document</a> metadata. Use <a class="el" href="class_vect_sharp_1_1_p_d_f_1_1_p_d_f_metadata.html#a25f679546d9bf4a4b6df0e733ab06996" title="Returns an object that does not include any metadata in the PDF file.">PDFMetadata.NoMetadata()</a> if you do not wish to include metadata in the document.</td></tr>
     <tr><td class="paramname">filterOption</td><td>Defines how and whether image filters should be rasterised when rendering the image.</td></tr>
+    <tr><td class="paramname">optionalContentGroupSettings</td><td>Settings for optional content groups (layers).</td></tr>
+    <tr><td class="paramname">annotationStyles</td><td>Annotation appearance styles.</td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_p_d_f_context_8cs_source.html#l01115">1115</a> of file <a class="el" href="_p_d_f_context_8cs_source.html">PDFContext.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_d_f_context_interpreter_8cs_source.html#l00878">878</a> of file <a class="el" href="_p_d_f_context_interpreter_8cs_source.html">PDFContextInterpreter.cs</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>VectSharp.PDF/<a class="el" href="_p_d_f_context_8cs_source.html">PDFContext.cs</a></li>
+<li>VectSharp.PDF/<a class="el" href="_p_d_f_context_interpreter_8cs_source.html">PDFContextInterpreter.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

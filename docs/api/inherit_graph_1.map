@@ -1,6 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,85,85,110"/>
-<area shape="rect" id="node2" href="$class_vect_sharp_1_1_font_family_creation_exception.html" title="An exception that occurs while creating a FontFamily." alt="" coords="160,5,361,45"/>
-<area shape="rect" id="node3" href="$class_vect_sharp_1_1_raster_1_1_image_sharp_1_1_image_sharp_context_interpreter_1_1_unknown_format_exception.html" title="The exception that is raised when the output file format is not specified and the file name does not ..." alt="" coords="133,70,388,125"/>
-<area shape="rect" id="node4" href="$class_vect_sharp_1_1_unbalanced_stack_exception.html" title="The exception that is thrown when an unbalanced graphics state stack occurs." alt="" coords="165,149,356,189"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,243,86,269"/>
+<area shape="rect" id="node2" href="$class_vect_sharp_1_1_markdown_1_1_block_rendered_event_args.html" title="EventArgs for the MarkdownRenderer.BlockRendered event." alt="" coords="159,5,341,48"/>
+<area shape="rect" id="node3" href="$class_vect_sharp_1_1_markdown_1_1_block_rendering_event_args.html" title="EventArgs for the MarkdownRenderer.BlockRendering event." alt="" coords="159,72,341,115"/>
+<area shape="rect" id="node4" href="$class_vect_sharp_1_1_markdown_1_1_inline_rendered_event_args.html" title="EventArgs for the MarkdownRenderer.InlineRendered event." alt="" coords="160,139,340,181"/>
+<area shape="rect" id="node5" href="$class_vect_sharp_1_1_markdown_1_1_inline_rendering_event_args.html" title="EventArgs for the MarkdownRenderer.InlineRendering event." alt="" coords="160,205,340,248"/>
+<area shape="rect" id="node6" href="$class_vect_sharp_1_1_markdown_1_1_line_event_args.html" title="EventArgs for the MarkdownRenderer.LineRendering and MarkdownRenderer.LineRendered events." alt="" coords="134,272,366,299"/>
+<area shape="rect" id="node7" href="$class_vect_sharp_1_1_markdown_1_1_line_measured_event_args.html" title="EventArgs for the MarkdownRenderer.LineMeasured event." alt="" coords="135,323,365,365"/>
+<area shape="rect" id="node8" href="$class_vect_sharp_1_1_markdown_1_1_page_finished_event_args.html" title="EventArgs for the MarkdownRenderer.PageFinished event." alt="" coords="136,389,364,432"/>
+<area shape="rect" id="node9" href="$class_vect_sharp_1_1_markdown_1_1_page_started_event_args.html" title="EventArgs for the MarkdownRenderer.PageStarted event." alt="" coords="139,456,361,499"/>
 </map>

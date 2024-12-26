@@ -1,5 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,13,137,38"/>
-<area shape="rect" id="node2" href="$interface_vect_sharp_1_1_plots_1_1_i_coordinate_system.html" title="Represents a coordinate system." alt="" coords="185,5,372,45"/>
-<area shape="rect" id="node3" href="$class_vect_sharp_1_1_plots_1_1_coordinate_system.html" title="A coordinate system using a custom method to transform data points." alt="" coords="420,5,603,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,88,85,115"/>
+<area shape="rect" id="node2" href="$class_vect_sharp_1_1_font_family_creation_exception.html" title="An exception that occurs while creating a FontFamily." alt="" coords="158,5,358,48"/>
+<area shape="rect" id="node3" href="$class_vect_sharp_1_1_raster_1_1_image_sharp_1_1_image_sharp_context_interpreter_1_1_unknown_format_exception.html" title="The exception that is raised when the output file format is not specified and the file name does not ..." alt="" coords="133,72,383,131"/>
+<area shape="rect" id="node4" href="$class_vect_sharp_1_1_unbalanced_stack_exception.html" title="The exception that is thrown when an unbalanced graphics state stack occurs." alt="" coords="164,155,352,197"/>
 </map>

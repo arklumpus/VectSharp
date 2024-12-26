@@ -19,6 +19,8 @@ var searchData=
   ['imagesharpcontextinterpreter_16',['ImageSharpContextInterpreter',['../class_vect_sharp_1_1_raster_1_1_image_sharp_1_1_image_sharp_context_interpreter.html',1,'VectSharp::Raster::ImageSharp']]],
   ['imageuriparser_17',['ImageURIParser',['../class_vect_sharp_1_1_image_sharp_utils_1_1_image_u_r_i_parser.html',1,'VectSharp.ImageSharpUtils.ImageURIParser'],['../class_vect_sharp_1_1_mu_p_d_f_utils_1_1_image_u_r_i_parser.html',1,'VectSharp.MuPDFUtils.ImageURIParser']]],
   ['imaterial_18',['IMaterial',['../interface_vect_sharp_1_1_three_d_1_1_i_material.html',1,'VectSharp::ThreeD']]],
-  ['iplotelement_19',['IPlotElement',['../interface_vect_sharp_1_1_plots_1_1_i_plot_element.html',1,'VectSharp::Plots']]],
-  ['iscene_20',['IScene',['../interface_vect_sharp_1_1_three_d_1_1_i_scene.html',1,'VectSharp::ThreeD']]]
+  ['inlinerenderedeventargs_19',['InlineRenderedEventArgs',['../class_vect_sharp_1_1_markdown_1_1_inline_rendered_event_args.html',1,'VectSharp::Markdown']]],
+  ['inlinerenderingeventargs_20',['InlineRenderingEventArgs',['../class_vect_sharp_1_1_markdown_1_1_inline_rendering_event_args.html',1,'VectSharp::Markdown']]],
+  ['iplotelement_21',['IPlotElement',['../interface_vect_sharp_1_1_plots_1_1_i_plot_element.html',1,'VectSharp::Plots']]],
+  ['iscene_22',['IScene',['../interface_vect_sharp_1_1_three_d_1_1_i_scene.html',1,'VectSharp::ThreeD']]]
 ];

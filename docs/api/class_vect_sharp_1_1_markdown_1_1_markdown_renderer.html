@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">VectSharp<span id="projectnumber">&#160;2.5.0</span>
+   <div id="projectname">VectSharp<span id="projectnumber">&#160;2.6.1</span>
    </div>
    <div id="projectbrief">A light library for C# vector graphics</div>
   </td>
@@ -96,6 +96,7 @@ $(document).ready(function(){initNavTree('class_vect_sharp_1_1_markdown_1_1_mark
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#properties">Properties</a> &#124;
+<a href="#events">Events</a> &#124;
 <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">VectSharp.Markdown.MarkdownRenderer Class Reference</div></div>
 </div><!--header-->
@@ -112,18 +113,21 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac7dcb32da190e23c4419068cfb701e8f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vect_sharp_1_1_page.html">Page</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ac7dcb32da190e23c4419068cfb701e8f">RenderSinglePage</a> (string markdownSource, double width, out Dictionary&lt; string, string &gt; linkDestinations)</td></tr>
-<tr class="memdesc:ac7dcb32da190e23c4419068cfb701e8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses the supplied <em>markdownSource</em>  using all the supported extensions and renders the resulting document. <a class="el" href="class_vect_sharp_1_1_page.html" title="Represents a Graphics object with a width and height.">Page</a> breaks are disabled, and the document is rendered as a single page with the specified <em>width</em> . The page will be cropped at the appropriate height to contain the entire document.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ac7dcb32da190e23c4419068cfb701e8f">More...</a><br /></td></tr>
-<tr class="separator:ac7dcb32da190e23c4419068cfb701e8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1729756a1e9108f43d850e7b7d87504"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vect_sharp_1_1_page.html">Page</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ae1729756a1e9108f43d850e7b7d87504">RenderSinglePage</a> (MarkdownDocument markdownDocument, double width, out Dictionary&lt; string, string &gt; linkDestinations)</td></tr>
-<tr class="memdesc:ae1729756a1e9108f43d850e7b7d87504"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders the supplied <em>markdownDocument</em> . <a class="el" href="class_vect_sharp_1_1_page.html" title="Represents a Graphics object with a width and height.">Page</a> breaks are disabled, and the document is rendered as a single page with the specified <em>width</em> . The page will be cropped at the appropriate height to contain the entire document.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ae1729756a1e9108f43d850e7b7d87504">More...</a><br /></td></tr>
-<tr class="separator:ae1729756a1e9108f43d850e7b7d87504"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab26ee0f943a9285283c1d7249bf9244"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vect_sharp_1_1_document.html">Document</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#aab26ee0f943a9285283c1d7249bf9244">Render</a> (string markdownSource, out Dictionary&lt; string, string &gt; linkDestinations)</td></tr>
-<tr class="memdesc:aab26ee0f943a9285283c1d7249bf9244"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses the supplied <em>markdownSource</em>  using all the supported extensions and renders the resulting document. The <a class="el" href="class_vect_sharp_1_1_document.html" title="Represents a collection of pages.">Document</a> produced consists of one or more pages of the size specified in the <a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a587e062de7f7549f3a75bbeaed30c9fe" title="The size of the page.">PageSize</a> of the current instance.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#aab26ee0f943a9285283c1d7249bf9244">More...</a><br /></td></tr>
-<tr class="separator:aab26ee0f943a9285283c1d7249bf9244"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a784f71badceebcb00156a82c3dff2e8c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vect_sharp_1_1_document.html">Document</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a784f71badceebcb00156a82c3dff2e8c">Render</a> (MarkdownDocument mardownDocument, out Dictionary&lt; string, string &gt; linkDestinations)</td></tr>
-<tr class="memdesc:a784f71badceebcb00156a82c3dff2e8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders the supplied <em>mardownDocument</em> . The <a class="el" href="class_vect_sharp_1_1_document.html" title="Represents a collection of pages.">Document</a> produced consists of one or more pages of the size specified in the <a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a587e062de7f7549f3a75bbeaed30c9fe" title="The size of the page.">PageSize</a> of the current instance.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a784f71badceebcb00156a82c3dff2e8c">More...</a><br /></td></tr>
-<tr class="separator:a784f71badceebcb00156a82c3dff2e8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66570dfcb6e4c8ae2e0a8b512d39579e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a66570dfcb6e4c8ae2e0a8b512d39579e">MarkdownRenderer</a> ()</td></tr>
+<tr class="memdesc:a66570dfcb6e4c8ae2e0a8b512d39579e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new <a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html" title="Renders Markdown documents into VectSharp graphics objects.">MarkdownRenderer</a>;   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a66570dfcb6e4c8ae2e0a8b512d39579e">More...</a><br /></td></tr>
+<tr class="separator:a66570dfcb6e4c8ae2e0a8b512d39579e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a144b9d3ead6c0dbc2e32abadefc5d64a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vect_sharp_1_1_page.html">Page</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a144b9d3ead6c0dbc2e32abadefc5d64a">RenderSinglePage</a> (string markdownSource, double width, out Dictionary&lt; string, string &gt; linkDestinations, out List&lt;(int level, string heading, string tag)&gt; headingTree)</td></tr>
+<tr class="memdesc:a144b9d3ead6c0dbc2e32abadefc5d64a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses the supplied <em>markdownSource</em>  using all the supported extensions and renders the resulting document. <a class="el" href="class_vect_sharp_1_1_page.html" title="Represents a Graphics object with a width and height.">Page</a> breaks are disabled, and the document is rendered as a single page with the specified <em>width</em> . The page will be cropped at the appropriate height to contain the entire document.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a144b9d3ead6c0dbc2e32abadefc5d64a">More...</a><br /></td></tr>
+<tr class="separator:a144b9d3ead6c0dbc2e32abadefc5d64a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66f911be47be82c89c6d75c347f8be7f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vect_sharp_1_1_page.html">Page</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a66f911be47be82c89c6d75c347f8be7f">RenderSinglePage</a> (MarkdownDocument markdownDocument, double width, out Dictionary&lt; string, string &gt; linkDestinations, out List&lt;(int level, string heading, string tag)&gt; headingTree)</td></tr>
+<tr class="memdesc:a66f911be47be82c89c6d75c347f8be7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders the supplied <em>markdownDocument</em> . <a class="el" href="class_vect_sharp_1_1_page.html" title="Represents a Graphics object with a width and height.">Page</a> breaks are disabled, and the document is rendered as a single page with the specified <em>width</em> . The page will be cropped at the appropriate height to contain the entire document.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a66f911be47be82c89c6d75c347f8be7f">More...</a><br /></td></tr>
+<tr class="separator:a66f911be47be82c89c6d75c347f8be7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4ee29240fd80e4cc63bd1932010d5ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vect_sharp_1_1_document.html">Document</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ab4ee29240fd80e4cc63bd1932010d5ed">Render</a> (string markdownSource, out Dictionary&lt; string, string &gt; linkDestinations, out List&lt;(int level, string heading, string tag)&gt; headingTree)</td></tr>
+<tr class="memdesc:ab4ee29240fd80e4cc63bd1932010d5ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses the supplied <em>markdownSource</em>  using all the supported extensions and renders the resulting document. The <a class="el" href="class_vect_sharp_1_1_document.html" title="Represents a collection of pages.">Document</a> produced consists of one or more pages of the size specified in the <a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a587e062de7f7549f3a75bbeaed30c9fe" title="The size of the page.">PageSize</a> of the current instance.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ab4ee29240fd80e4cc63bd1932010d5ed">More...</a><br /></td></tr>
+<tr class="separator:ab4ee29240fd80e4cc63bd1932010d5ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7fda4fb2552eb30f1f7adb98a680b0da"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vect_sharp_1_1_document.html">Document</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a7fda4fb2552eb30f1f7adb98a680b0da">Render</a> (MarkdownDocument mardownDocument, out Dictionary&lt; string, string &gt; linkDestinations, out List&lt;(int level, string heading, string tag)&gt; headingTree)</td></tr>
+<tr class="memdesc:a7fda4fb2552eb30f1f7adb98a680b0da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders the supplied <em>mardownDocument</em> . The <a class="el" href="class_vect_sharp_1_1_document.html" title="Represents a collection of pages.">Document</a> produced consists of one or more pages of the size specified in the <a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a587e062de7f7549f3a75bbeaed30c9fe" title="The size of the page.">PageSize</a> of the current instance.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a7fda4fb2552eb30f1f7adb98a680b0da">More...</a><br /></td></tr>
+<tr class="separator:a7fda4fb2552eb30f1f7adb98a680b0da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
@@ -226,6 +230,9 @@ Properties</h2></td></tr>
 <tr class="memitem:ae8df9d4f7f04c841531bc2b1aa7cbdae"><td class="memItemLeft" align="right" valign="top">Func&lt; string, string,(string, bool)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ae8df9d4f7f04c841531bc2b1aa7cbdae">ImageUriResolver</a> = HTTPUtils.ResolveImageURI<code> [get, set]</code></td></tr>
 <tr class="memdesc:ae8df9d4f7f04c841531bc2b1aa7cbdae"><td class="mdescLeft">&#160;</td><td class="mdescRight">A method used to resolve (possibly remote) image uris into local file paths. The first argument of the method should be the image uri and the second argument the base uri used to resolve relative links. The method should return a tuple containing the path of the local file and a boolean value indicating whether the file has been fetched from a remote location and should be deleted after the program has finished using it.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ae8df9d4f7f04c841531bc2b1aa7cbdae">More...</a><br /></td></tr>
 <tr class="separator:ae8df9d4f7f04c841531bc2b1aa7cbdae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb012ba3822a732f118d006efeff4280"><td class="memItemLeft" align="right" valign="top">Func&lt; string,(string, bool)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#acb012ba3822a732f118d006efeff4280">EmojiUriResolver</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:acb012ba3822a732f118d006efeff4280"><td class="mdescLeft">&#160;</td><td class="mdescRight">A method used to resolve emojis. The argument of the method should be an emoji uri of the form "emoji://{name}_heading:{level}", where "{name}" is the name of the emoji and "{level}" is the heading level, or "unicode://{unicode}_heading:{level}", where "{unicode}" is a unicode surrogate pair. The method should return a tuple containing the path of a local file containing the rendered emoji and a boolean value indicating whether the file should be deleted after the program has finished using it.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#acb012ba3822a732f118d006efeff4280">More...</a><br /></td></tr>
+<tr class="separator:acb012ba3822a732f118d006efeff4280"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7426c75d7c234a4dafb8b972e8fce7ab"><td class="memItemLeft" align="right" valign="top">Uri&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a7426c75d7c234a4dafb8b972e8fce7ab">BaseLinkUri</a> = new Uri(&quot;about:blank&quot;)<code> [get, set]</code></td></tr>
 <tr class="memdesc:a7426c75d7c234a4dafb8b972e8fce7ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">The base uri for resolving links.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a7426c75d7c234a4dafb8b972e8fce7ab">More...</a><br /></td></tr>
 <tr class="separator:a7426c75d7c234a4dafb8b972e8fce7ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -253,6 +260,12 @@ Properties</h2></td></tr>
 <tr class="memitem:a826c08ed75d817f6523b33f4b0920dfe"><td class="memItemLeft" align="right" valign="top">List&lt; Action&lt; <a class="el" href="class_vect_sharp_1_1_graphics.html">Graphics</a>, <a class="el" href="struct_vect_sharp_1_1_colour.html">Colour</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a826c08ed75d817f6523b33f4b0920dfe">Bullets</a><code> [get]</code></td></tr>
 <tr class="memdesc:a826c08ed75d817f6523b33f4b0920dfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bullet points used for unordered lists. Each element of this list corresponds to the bullet for each level of list indentation. If the list indentation is greater than the number of elements in this list, the bullet points will be reused cyclically. Each element of this list is a method taking two arguments: the first is the <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object on which the bullet point should be drawn, while the second is the colour in which it should be painted. The method should draw the bullet point centered around the origin. The size of the bullet point will be multiplied by the current font size.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a826c08ed75d817f6523b33f4b0920dfe">More...</a><br /></td></tr>
 <tr class="separator:a826c08ed75d817f6523b33f4b0920dfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6d53f3477f53ebcbe7bb8f95cb75754"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vect_sharp_1_1_graphics.html">Graphics</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ad6d53f3477f53ebcbe7bb8f95cb75754">TaskListUncheckedBullet</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:ad6d53f3477f53ebcbe7bb8f95cb75754"><td class="mdescLeft">&#160;</td><td class="mdescRight">The bullet used for unchecked task list items.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ad6d53f3477f53ebcbe7bb8f95cb75754">More...</a><br /></td></tr>
+<tr class="separator:ad6d53f3477f53ebcbe7bb8f95cb75754"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4537d229233aebbda16434bdab6d8a2b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vect_sharp_1_1_graphics.html">Graphics</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a4537d229233aebbda16434bdab6d8a2b">TaskListCheckedBullet</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a4537d229233aebbda16434bdab6d8a2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The bullet used for checked task list items.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a4537d229233aebbda16434bdab6d8a2b">More...</a><br /></td></tr>
+<tr class="separator:a4537d229233aebbda16434bdab6d8a2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6c4a5d7b75c3261f1af5b28e16caaedb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_vect_sharp_1_1_colour.html">Colour</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a6c4a5d7b75c3261f1af5b28e16caaedb">ForegroundColour</a> = <a class="el" href="class_vect_sharp_1_1_colours.html#aa296530481c943793e24959742cf510a">Colours.Black</a><code> [get, set]</code></td></tr>
 <tr class="memdesc:a6c4a5d7b75c3261f1af5b28e16caaedb"><td class="mdescLeft">&#160;</td><td class="mdescRight">The foreground colour for text elements.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a6c4a5d7b75c3261f1af5b28e16caaedb">More...</a><br /></td></tr>
 <tr class="separator:a6c4a5d7b75c3261f1af5b28e16caaedb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -266,7 +279,7 @@ Properties</h2></td></tr>
 <tr class="memdesc:ad6b32b1b9386aff3bed7fbb66464fd5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The colour for thematic break lines.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ad6b32b1b9386aff3bed7fbb66464fd5b">More...</a><br /></td></tr>
 <tr class="separator:ad6b32b1b9386aff3bed7fbb66464fd5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a1f81289fccf9beb40f37da296ce8c9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_vect_sharp_1_1_colour.html">Colour</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a7a1f81289fccf9beb40f37da296ce8c9">LinkColour</a> = <a class="el" href="struct_vect_sharp_1_1_colour.html#a80787f39829f01b38291bb429214d6ae">Colour.FromRgb</a>(25, 140, 191)<code> [get, set]</code></td></tr>
-<tr class="memdesc:a7a1f81289fccf9beb40f37da296ce8c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The colour for hypertext links-   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a7a1f81289fccf9beb40f37da296ce8c9">More...</a><br /></td></tr>
+<tr class="memdesc:a7a1f81289fccf9beb40f37da296ce8c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The colour for hypertext links.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a7a1f81289fccf9beb40f37da296ce8c9">More...</a><br /></td></tr>
 <tr class="separator:a7a1f81289fccf9beb40f37da296ce8c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a11d3bb7bf2b9ad2504cae0baca716b76"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_vect_sharp_1_1_colour.html">Colour</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a11d3bb7bf2b9ad2504cae0baca716b76">CodeInlineBackgroundColour</a> = <a class="el" href="struct_vect_sharp_1_1_colour.html#a80787f39829f01b38291bb429214d6ae">Colour.FromRgb</a>(240, 240, 240)<code> [get, set]</code></td></tr>
 <tr class="memdesc:a11d3bb7bf2b9ad2504cae0baca716b76"><td class="mdescLeft">&#160;</td><td class="mdescRight">The background colour for code inlines.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a11d3bb7bf2b9ad2504cae0baca716b76">More...</a><br /></td></tr>
@@ -298,20 +311,50 @@ Properties</h2></td></tr>
 <tr class="memitem:ad82c91ae00b2761396816493096321b7"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ad82c91ae00b2761396816493096321b7">TableHeaderSeparatorThickness</a> = 1<code> [get, set]</code></td></tr>
 <tr class="memdesc:ad82c91ae00b2761396816493096321b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">The thickness of lines separating table rows from each other.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ad82c91ae00b2761396816493096321b7">More...</a><br /></td></tr>
 <tr class="separator:ad82c91ae00b2761396816493096321b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6d53f3477f53ebcbe7bb8f95cb75754"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vect_sharp_1_1_graphics.html">Graphics</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ad6d53f3477f53ebcbe7bb8f95cb75754">TaskListUncheckedBullet</a><code> [get, set]</code></td></tr>
-<tr class="memdesc:ad6d53f3477f53ebcbe7bb8f95cb75754"><td class="mdescLeft">&#160;</td><td class="mdescRight">The bullet used for unchecked task list items.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ad6d53f3477f53ebcbe7bb8f95cb75754">More...</a><br /></td></tr>
-<tr class="separator:ad6d53f3477f53ebcbe7bb8f95cb75754"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4537d229233aebbda16434bdab6d8a2b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vect_sharp_1_1_graphics.html">Graphics</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a4537d229233aebbda16434bdab6d8a2b">TaskListCheckedBullet</a><code> [get, set]</code></td></tr>
-<tr class="memdesc:a4537d229233aebbda16434bdab6d8a2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The bullet used for checked task list items.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a4537d229233aebbda16434bdab6d8a2b">More...</a><br /></td></tr>
-<tr class="separator:a4537d229233aebbda16434bdab6d8a2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5605b0e1ff61f248139e16ed690e0b68"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a5605b0e1ff61f248139e16ed690e0b68">AllowPageBreak</a> = true<code> [get, set]</code></td></tr>
 <tr class="memdesc:a5605b0e1ff61f248139e16ed690e0b68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether page breaks should be treated as such in the source.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a5605b0e1ff61f248139e16ed690e0b68">More...</a><br /></td></tr>
 <tr class="separator:a5605b0e1ff61f248139e16ed690e0b68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad085950430a87ad808c30bd554d9f65f"><td class="memItemLeft" align="right" valign="top">static EmojiMapping&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ad085950430a87ad808c30bd554d9f65f">EmojiURLMapping</a> = new EmojiMapping(new Dictionary&lt;string, string&gt;(EmojiMapping.GetDefaultEmojiShortcodeToUnicode().Select(x =&gt; new KeyValuePair&lt;string, string&gt;(x.Key, &quot;emoji://&quot; + x.Key.Trim(':')))), EmojiMapping.GetDefaultSmileyToEmojiShortcode())<code> [get]</code></td></tr>
+<tr class="memdesc:ad085950430a87ad808c30bd554d9f65f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emoji mapping that transforms emojis (e.g. ":something:") into URLs (e.g., "emoji://something").   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ad085950430a87ad808c30bd554d9f65f">More...</a><br /></td></tr>
+<tr class="separator:ad085950430a87ad808c30bd554d9f65f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad727fc20aec318151df273fab032c0eb"><td class="memItemLeft" align="right" valign="top">MarkdownPipelineBuilder&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ad727fc20aec318151df273fab032c0eb">MarkdownPipelineBuilder</a> = new MarkdownPipelineBuilder().UseGridTables().UsePipeTables().UseEmphasisExtras().UseGenericAttributes().UseAutoIdentifiers().UseAutoLinks().UseTaskLists().UseListExtras().UseCitations().UseMathematics().UseSmartyPants().UseEmojiAndSmiley(<a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ad085950430a87ad808c30bd554d9f65f">EmojiURLMapping</a>).UseUnicodeEmoji()<code> [get, set]</code></td></tr>
+<tr class="memdesc:ad727fc20aec318151df273fab032c0eb"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="namespace_vect_sharp_1_1_markdown.html">Markdown</a> pipeline builder used to parse markdown source.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ad727fc20aec318151df273fab032c0eb">More...</a><br /></td></tr>
+<tr class="separator:ad727fc20aec318151df273fab032c0eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="events" name="events"></a>
+Events</h2></td></tr>
+<tr class="memitem:a248a9f0451f3a63f4c92f820ce76232f"><td class="memItemLeft" align="right" valign="top">EventHandler&lt; <a class="el" href="class_vect_sharp_1_1_markdown_1_1_page_started_event_args.html">PageStartedEventArgs</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a248a9f0451f3a63f4c92f820ce76232f">PageStarted</a></td></tr>
+<tr class="memdesc:a248a9f0451f3a63f4c92f820ce76232f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoked when a new page is started.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a248a9f0451f3a63f4c92f820ce76232f">More...</a><br /></td></tr>
+<tr class="separator:a248a9f0451f3a63f4c92f820ce76232f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a023d5d5490a085201e0dd811dc9b5e28"><td class="memItemLeft" align="right" valign="top">EventHandler&lt; <a class="el" href="class_vect_sharp_1_1_markdown_1_1_page_finished_event_args.html">PageFinishedEventArgs</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a023d5d5490a085201e0dd811dc9b5e28">PageFinished</a></td></tr>
+<tr class="memdesc:a023d5d5490a085201e0dd811dc9b5e28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoked when a page is finished, before starting a new page (or at the end of the document).   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a023d5d5490a085201e0dd811dc9b5e28">More...</a><br /></td></tr>
+<tr class="separator:a023d5d5490a085201e0dd811dc9b5e28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b92e50c918f8b9dcff944e67a350ef0"><td class="memItemLeft" align="right" valign="top">EventHandler&lt; <a class="el" href="class_vect_sharp_1_1_markdown_1_1_block_rendering_event_args.html">BlockRenderingEventArgs</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a3b92e50c918f8b9dcff944e67a350ef0">BlockRendering</a></td></tr>
+<tr class="memdesc:a3b92e50c918f8b9dcff944e67a350ef0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoked just before rendering a Block.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a3b92e50c918f8b9dcff944e67a350ef0">More...</a><br /></td></tr>
+<tr class="separator:a3b92e50c918f8b9dcff944e67a350ef0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e29506b84c63205a15396c494285a6f"><td class="memItemLeft" align="right" valign="top">EventHandler&lt; <a class="el" href="class_vect_sharp_1_1_markdown_1_1_block_rendered_event_args.html">BlockRenderedEventArgs</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a7e29506b84c63205a15396c494285a6f">BlockRendered</a></td></tr>
+<tr class="memdesc:a7e29506b84c63205a15396c494285a6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoked just after rendering a Block.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a7e29506b84c63205a15396c494285a6f">More...</a><br /></td></tr>
+<tr class="separator:a7e29506b84c63205a15396c494285a6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5e1f7e9d86e5c623ae28666d2f1213b"><td class="memItemLeft" align="right" valign="top">EventHandler&lt; <a class="el" href="class_vect_sharp_1_1_markdown_1_1_inline_rendering_event_args.html">InlineRenderingEventArgs</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#aa5e1f7e9d86e5c623ae28666d2f1213b">InlineRendering</a></td></tr>
+<tr class="memdesc:aa5e1f7e9d86e5c623ae28666d2f1213b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoked just before rendering an Inline.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#aa5e1f7e9d86e5c623ae28666d2f1213b">More...</a><br /></td></tr>
+<tr class="separator:aa5e1f7e9d86e5c623ae28666d2f1213b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afef93a8f876ee8a0a2b50fa8f45fb8ff"><td class="memItemLeft" align="right" valign="top">EventHandler&lt; <a class="el" href="class_vect_sharp_1_1_markdown_1_1_inline_rendered_event_args.html">InlineRenderedEventArgs</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#afef93a8f876ee8a0a2b50fa8f45fb8ff">InlineRendered</a></td></tr>
+<tr class="memdesc:afef93a8f876ee8a0a2b50fa8f45fb8ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoked just after rendering an Inline.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#afef93a8f876ee8a0a2b50fa8f45fb8ff">More...</a><br /></td></tr>
+<tr class="separator:afef93a8f876ee8a0a2b50fa8f45fb8ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49017e745d1f38ef7e79fea9615648e6"><td class="memItemLeft" align="right" valign="top">EventHandler&lt; <a class="el" href="class_vect_sharp_1_1_markdown_1_1_line_measured_event_args.html">LineMeasuredEventArgs</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a49017e745d1f38ef7e79fea9615648e6">LineMeasured</a></td></tr>
+<tr class="memdesc:a49017e745d1f38ef7e79fea9615648e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoked after content in a <a class="el" href="class_vect_sharp_1_1_markdown_1_1_line.html" title="Represents a text line.">Line</a> has been measured, but before deciding whether to render the line on the current page or on a new page.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a49017e745d1f38ef7e79fea9615648e6">More...</a><br /></td></tr>
+<tr class="separator:a49017e745d1f38ef7e79fea9615648e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a650efb8083c5d20e62a6f586c7410c66"><td class="memItemLeft" align="right" valign="top">EventHandler&lt; <a class="el" href="class_vect_sharp_1_1_markdown_1_1_line_event_args.html">LineEventArgs</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a650efb8083c5d20e62a6f586c7410c66">LineRendering</a></td></tr>
+<tr class="memdesc:a650efb8083c5d20e62a6f586c7410c66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoked just before rendering a <a class="el" href="class_vect_sharp_1_1_markdown_1_1_line.html" title="Represents a text line.">Line</a>, after a new page has been created if necessary.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a650efb8083c5d20e62a6f586c7410c66">More...</a><br /></td></tr>
+<tr class="separator:a650efb8083c5d20e62a6f586c7410c66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa29ab98aedc12ac53fe8eec68344cfba"><td class="memItemLeft" align="right" valign="top">EventHandler&lt; <a class="el" href="class_vect_sharp_1_1_markdown_1_1_line_event_args.html">LineEventArgs</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#aa29ab98aedc12ac53fe8eec68344cfba">LineRendered</a></td></tr>
+<tr class="memdesc:aa29ab98aedc12ac53fe8eec68344cfba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoked just after rendering a <a class="el" href="class_vect_sharp_1_1_markdown_1_1_line.html" title="Represents a text line.">Line</a>.   <a href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#aa29ab98aedc12ac53fe8eec68344cfba">More...</a><br /></td></tr>
+<tr class="separator:aa29ab98aedc12ac53fe8eec68344cfba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Renders <a class="el" href="namespace_vect_sharp_1_1_markdown.html">Markdown</a> documents into <a class="el" href="namespace_vect_sharp.html">VectSharp</a> graphics objects.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00037">37</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_blocks_8cs_source.html#l00032">32</a> of file <a class="el" href="_markdown_renderer_8_blocks_8cs_source.html">MarkdownRenderer.Blocks.cs</a>.</p>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="a0e91c7ffd72d8f036d5c592e0e86c4dd" name="a0e91c7ffd72d8f036d5c592e0e86c4dd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0e91c7ffd72d8f036d5c592e0e86c4dd">&#9670;&#160;</a></span>VerticalAlignment</h2>
@@ -327,13 +370,35 @@ Properties</h2></td></tr>
 
 <p>Defines the options for the vertical alignment of table cells.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00130">130</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00119">119</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a66570dfcb6e4c8ae2e0a8b512d39579e" name="a66570dfcb6e4c8ae2e0a8b512d39579e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66570dfcb6e4c8ae2e0a8b512d39579e">&#9670;&#160;</a></span>MarkdownRenderer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">VectSharp.Markdown.MarkdownRenderer.MarkdownRenderer </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create a new <a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html" title="Renders Markdown documents into VectSharp graphics objects.">MarkdownRenderer</a>;  </p>
+
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00044">44</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a784f71badceebcb00156a82c3dff2e8c" name="a784f71badceebcb00156a82c3dff2e8c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a784f71badceebcb00156a82c3dff2e8c">&#9670;&#160;</a></span>Render() <span class="overload">[1/2]</span></h2>
+<a id="a7fda4fb2552eb30f1f7adb98a680b0da" name="a7fda4fb2552eb30f1f7adb98a680b0da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7fda4fb2552eb30f1f7adb98a680b0da">&#9670;&#160;</a></span>Render() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -348,7 +413,13 @@ Properties</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">out Dictionary&lt; string, string &gt;&#160;</td>
-          <td class="paramname"><em>linkDestinations</em>&#160;</td>
+          <td class="paramname"><em>linkDestinations</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">out List&lt;(int level, string heading, string tag)&gt;&#160;</td>
+          <td class="paramname"><em>headingTree</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -362,18 +433,19 @@ Properties</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">mardownDocument</td><td>The markdown document to render.</td></tr>
-    <tr><td class="paramname">linkDestinations</td><td>When this method returns, this value will contain a dictionary used to associate graphic action tags to hyperlinks. This can be used to enable such links when rendering the <a class="el" href="class_vect_sharp_1_1_document.html" title="Represents a collection of pages.">Document</a> to a file.</td></tr>
+    <tr><td class="paramname">linkDestinations</td><td>When this method returns, this object will contain a dictionary used to associate graphic action tags to hyperlinks. This can be used to enable such links when rendering the <a class="el" href="class_vect_sharp_1_1_document.html" title="Represents a collection of pages.">Document</a> to a file.</td></tr>
+    <tr><td class="paramname">headingTree</td><td>When this method returns, this object will contain a list of the headings contained in the document and the corresponding tag. This can be used to create a document outline.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="class_vect_sharp_1_1_document.html" title="Represents a collection of pages.">Document</a> containing a rendering of the supplied markdown document, consisting of one or more pages of the size specified in the <a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a587e062de7f7549f3a75bbeaed30c9fe" title="The size of the page.">PageSize</a> of the current instance.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00504">504</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00157">157</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
 
 </div>
 </div>
-<a id="aab26ee0f943a9285283c1d7249bf9244" name="aab26ee0f943a9285283c1d7249bf9244"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aab26ee0f943a9285283c1d7249bf9244">&#9670;&#160;</a></span>Render() <span class="overload">[2/2]</span></h2>
+<a id="ab4ee29240fd80e4cc63bd1932010d5ed" name="ab4ee29240fd80e4cc63bd1932010d5ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4ee29240fd80e4cc63bd1932010d5ed">&#9670;&#160;</a></span>Render() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -388,7 +460,13 @@ Properties</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">out Dictionary&lt; string, string &gt;&#160;</td>
-          <td class="paramname"><em>linkDestinations</em>&#160;</td>
+          <td class="paramname"><em>linkDestinations</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">out List&lt;(int level, string heading, string tag)&gt;&#160;</td>
+          <td class="paramname"><em>headingTree</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -403,17 +481,18 @@ Properties</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">markdownSource</td><td>The markdown source to parse.</td></tr>
     <tr><td class="paramname">linkDestinations</td><td>When this method returns, this value will contain a dictionary used to associate graphic action tags to hyperlinks. This can be used to enable such links when rendering the <a class="el" href="class_vect_sharp_1_1_document.html" title="Represents a collection of pages.">Document</a> to a file.</td></tr>
+    <tr><td class="paramname">headingTree</td><td>When this method returns, this object will contain a list of the headings contained in the document and the corresponding tag. This can be used to create a document outline.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="class_vect_sharp_1_1_document.html" title="Represents a collection of pages.">Document</a> containing a rendering of the supplied markdown document, consisting of one or more pages of the size specified in the <a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a587e062de7f7549f3a75bbeaed30c9fe" title="The size of the page.">PageSize</a> of the current instance.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00491">491</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00143">143</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
 
 </div>
 </div>
-<a id="ae1729756a1e9108f43d850e7b7d87504" name="ae1729756a1e9108f43d850e7b7d87504"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae1729756a1e9108f43d850e7b7d87504">&#9670;&#160;</a></span>RenderSinglePage() <span class="overload">[1/2]</span></h2>
+<a id="a66f911be47be82c89c6d75c347f8be7f" name="a66f911be47be82c89c6d75c347f8be7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66f911be47be82c89c6d75c347f8be7f">&#9670;&#160;</a></span>RenderSinglePage() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -434,7 +513,13 @@ Properties</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">out Dictionary&lt; string, string &gt;&#160;</td>
-          <td class="paramname"><em>linkDestinations</em>&#160;</td>
+          <td class="paramname"><em>linkDestinations</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">out List&lt;(int level, string heading, string tag)&gt;&#160;</td>
+          <td class="paramname"><em>headingTree</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -450,17 +535,18 @@ Properties</h2></td></tr>
     <tr><td class="paramname">markdownDocument</td><td>The markdown document to render.</td></tr>
     <tr><td class="paramname">width</td><td>The width of the page.</td></tr>
     <tr><td class="paramname">linkDestinations</td><td>When this method returns, this value will contain a dictionary used to associate graphic action tags to hyperlinks. This can be used to enable such links when rendering the <a class="el" href="class_vect_sharp_1_1_page.html" title="Represents a Graphics object with a width and height.">Page</a> to a file.</td></tr>
+    <tr><td class="paramname">headingTree</td><td>When this method returns, this object will contain a list of the headings contained in the document and the corresponding tag. This can be used to create a document outline.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="class_vect_sharp_1_1_page.html" title="Represents a Graphics object with a width and height.">Page</a> containing a rendering of the supplied markdown document.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00432">432</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00081">81</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
 
 </div>
 </div>
-<a id="ac7dcb32da190e23c4419068cfb701e8f" name="ac7dcb32da190e23c4419068cfb701e8f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac7dcb32da190e23c4419068cfb701e8f">&#9670;&#160;</a></span>RenderSinglePage() <span class="overload">[2/2]</span></h2>
+<a id="a144b9d3ead6c0dbc2e32abadefc5d64a" name="a144b9d3ead6c0dbc2e32abadefc5d64a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a144b9d3ead6c0dbc2e32abadefc5d64a">&#9670;&#160;</a></span>RenderSinglePage() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -481,7 +567,13 @@ Properties</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">out Dictionary&lt; string, string &gt;&#160;</td>
-          <td class="paramname"><em>linkDestinations</em>&#160;</td>
+          <td class="paramname"><em>linkDestinations</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">out List&lt;(int level, string heading, string tag)&gt;&#160;</td>
+          <td class="paramname"><em>headingTree</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -497,12 +589,13 @@ Properties</h2></td></tr>
     <tr><td class="paramname">markdownSource</td><td>The markdown source to parse.</td></tr>
     <tr><td class="paramname">width</td><td>The width of the page.</td></tr>
     <tr><td class="paramname">linkDestinations</td><td>When this method returns, this value will contain a dictionary used to associate graphic action tags to hyperlinks. This can be used to enable such links when rendering the <a class="el" href="class_vect_sharp_1_1_page.html" title="Represents a Graphics object with a width and height.">Page</a> to a file.</td></tr>
+    <tr><td class="paramname">headingTree</td><td>When this method returns, this object will contain a list of the headings contained in the document and the corresponding tag. This can be used to create a document outline.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="class_vect_sharp_1_1_page.html" title="Represents a Graphics object with a width and height.">Page</a> containing a rendering of the supplied markdown document.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00418">418</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00066">66</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
 
 </div>
 </div>
@@ -529,7 +622,7 @@ Properties</h2></td></tr>
 
 <p>Determines whether page breaks should be treated as such in the source.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00402">402</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00395">395</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -555,7 +648,7 @@ Properties</h2></td></tr>
 
 <p>The background colour for the page.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00298">298</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00325">325</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -581,7 +674,7 @@ Properties</h2></td></tr>
 
 <p>The base font size to use when rendering the document. This will be the size of regular elements, and the size of header elements will be expressed as a multiple of this.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00042">42</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00031">31</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -607,7 +700,7 @@ Properties</h2></td></tr>
 
 <p>The base uri for resolving relative image addresses.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00221">221</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00210">210</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -633,7 +726,7 @@ Properties</h2></td></tr>
 
 <p>The base uri for resolving links.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00231">231</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00225">225</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -659,7 +752,7 @@ Properties</h2></td></tr>
 
 <p>The font family for bold text.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00075">75</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00064">64</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -685,7 +778,7 @@ Properties</h2></td></tr>
 
 <p>The font family for bold italic text.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00085">85</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00074">74</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -711,7 +804,7 @@ Properties</h2></td></tr>
 
 <p>The thickness of underlines for bold text. This value will be multiplied by the font size of the element being underlined.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00115">115</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00104">104</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -751,12 +844,12 @@ Properties</h2></td></tr>
 <div class="line">                graphics.StrokeRectangle(-0.75, -0.25, 0.5, 0.5, colour, 0.1);</div>
 <div class="line">            },</div>
 <div class="line">        }</div>
-<div class="ttc" id="aclass_vect_sharp_1_1_graphics_path_html"><div class="ttname"><a href="class_vect_sharp_1_1_graphics_path.html">VectSharp.GraphicsPath</a></div><div class="ttdoc">Represents a graphics path that can be filled or stroked.</div><div class="ttdef"><b>Definition:</b> <a href="_graphics_path_8cs_source.html#l00027">GraphicsPath.cs:28</a></div></div>
-<div class="ttc" id="aclass_vect_sharp_1_1_graphics_path_html_a7c75a37e1bbe6adffb843c5af63070d4"><div class="ttname"><a href="class_vect_sharp_1_1_graphics_path.html#a7c75a37e1bbe6adffb843c5af63070d4">VectSharp.GraphicsPath.Arc</a></div><div class="ttdeci">GraphicsPath Arc(Point center, double radius, double startAngle, double endAngle)</div><div class="ttdoc">Trace an arc segment from a circle with the specified center  and radius , starting at startAngle  an...</div><div class="ttdef"><b>Definition:</b> <a href="_graphics_path_8cs_source.html#l00102">GraphicsPath.cs:102</a></div></div>
+<div class="ttc" id="aclass_vect_sharp_1_1_graphics_path_html"><div class="ttname"><a href="class_vect_sharp_1_1_graphics_path.html">VectSharp.GraphicsPath</a></div><div class="ttdoc">Represents a graphics path that can be filled or stroked.</div><div class="ttdef"><b>Definition:</b> <a href="_graphics_path_8cs_source.html#l00028">GraphicsPath.cs:29</a></div></div>
+<div class="ttc" id="aclass_vect_sharp_1_1_graphics_path_html_a7c75a37e1bbe6adffb843c5af63070d4"><div class="ttname"><a href="class_vect_sharp_1_1_graphics_path.html#a7c75a37e1bbe6adffb843c5af63070d4">VectSharp.GraphicsPath.Arc</a></div><div class="ttdeci">GraphicsPath Arc(Point center, double radius, double startAngle, double endAngle)</div><div class="ttdoc">Trace an arc segment from a circle with the specified center  and radius , starting at startAngle  an...</div><div class="ttdef"><b>Definition:</b> <a href="_graphics_path_8cs_source.html#l00103">GraphicsPath.cs:103</a></div></div>
 </div><!-- fragment -->
 <p>Bullet points used for unordered lists. Each element of this list corresponds to the bullet for each level of list indentation. If the list indentation is greater than the number of elements in this list, the bullet points will be reused cyclically. Each element of this list is a method taking two arguments: the first is the <a class="el" href="class_vect_sharp_1_1_graphics.html" title="Represents an abstract drawing surface.">Graphics</a> object on which the bullet point should be drawn, while the second is the colour in which it should be painted. The method should draw the bullet point centered around the origin. The size of the bullet point will be multiplied by the current font size.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00272">272</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00266">266</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -782,7 +875,7 @@ Properties</h2></td></tr>
 
 <p>The background colour for code blocks.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00323">323</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00350">350</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -808,7 +901,7 @@ Properties</h2></td></tr>
 
 <p>The font family for code elements.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00090">90</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00079">79</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -834,7 +927,7 @@ Properties</h2></td></tr>
 
 <p>The font family for bold code elements.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00095">95</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00084">84</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -860,7 +953,7 @@ Properties</h2></td></tr>
 
 <p>The font family for bold italic code elements.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00105">105</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00094">94</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -886,7 +979,7 @@ Properties</h2></td></tr>
 
 <p>The font family for italic code elements.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00100">100</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00089">89</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -912,7 +1005,7 @@ Properties</h2></td></tr>
 
 <p>The background colour for code inlines.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00318">318</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00345">345</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -938,7 +1031,59 @@ Properties</h2></td></tr>
 
 <p>The margin at the left and right of code inlines. This value will be multiplied by the current font size.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00186">186</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00175">175</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
+
+</div>
+</div>
+<a id="acb012ba3822a732f118d006efeff4280" name="acb012ba3822a732f118d006efeff4280"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb012ba3822a732f118d006efeff4280">&#9670;&#160;</a></span>EmojiUriResolver</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Func&lt;string, (string, bool)&gt; VectSharp.Markdown.MarkdownRenderer.EmojiUriResolver</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A method used to resolve emojis. The argument of the method should be an emoji uri of the form "emoji://{name}_heading:{level}", where "{name}" is the name of the emoji and "{level}" is the heading level, or "unicode://{unicode}_heading:{level}", where "{unicode}" is a unicode surrogate pair. The method should return a tuple containing the path of a local file containing the rendered emoji and a boolean value indicating whether the file should be deleted after the program has finished using it.  </p>
+
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00220">220</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
+
+</div>
+</div>
+<a id="ad085950430a87ad808c30bd554d9f65f" name="ad085950430a87ad808c30bd554d9f65f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad085950430a87ad808c30bd554d9f65f">&#9670;&#160;</a></span>EmojiURLMapping</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">EmojiMapping VectSharp.Markdown.MarkdownRenderer.EmojiURLMapping = new EmojiMapping(new Dictionary&lt;string, string&gt;(EmojiMapping.GetDefaultEmojiShortcodeToUnicode().Select(x =&gt; new KeyValuePair&lt;string, string&gt;(x.Key, &quot;emoji://&quot; + x.Key.Trim(':')))), EmojiMapping.GetDefaultSmileyToEmojiShortcode())</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Emoji mapping that transforms emojis (e.g. ":something:") into URLs (e.g., "emoji://something").  </p>
+
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00400">400</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -964,7 +1109,7 @@ Properties</h2></td></tr>
 
 <p>The foreground colour for text elements.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00293">293</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00320">320</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -994,7 +1139,7 @@ Properties</h2></td></tr>
 </div><!-- fragment -->
 <p>The font size for elements at each header level. The values in this array will be multiplied by the <a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a526e8cc443eacebd5945764a8dee28df" title="The base font size to use when rendering the document. This will be the size of regular elements,...">BaseFontSize</a>.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00052">52</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00041">41</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1020,7 +1165,7 @@ Properties</h2></td></tr>
 
 <p>The colour of the line below headers.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00303">303</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00330">330</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1046,7 +1191,7 @@ Properties</h2></td></tr>
 
 <p>The thickness of the separator line after a header of each level. A value of 0 disables the line after headers of that level.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00060">60</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00049">49</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1072,7 +1217,7 @@ Properties</h2></td></tr>
 
 <p>Images will be allowed to extend into the page bottom margin area by this amount before triggering a page break. This should be smaller than the bottom margin, otherwise images risk being cut off by the page boundary.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00261">261</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00255">255</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1098,7 +1243,7 @@ Properties</h2></td></tr>
 
 <p>The size of images will be multiplied by this value to determine the actual size of the image on the page. For images that have a width or height attribute, this will be applied in addition to the <a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#adf4592b6dcf1c475adc2f5d15bde2986" title="The size of images (as defined in the image&#39;s width and height attributes) will be multiplied by this...">ImageUnitMultiplier</a>. For images without width and height, only this multiplier will be applied.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00251">251</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00245">245</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1124,7 +1269,7 @@ Properties</h2></td></tr>
 
 <p>The margin on the right of left-aligned images and on the left of right-aligned images.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00256">256</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00250">250</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1150,7 +1295,7 @@ Properties</h2></td></tr>
 
 <p>The size of images (as defined in the image's width and height attributes) will be multiplied by this value to determine the actual size of the image on the page. This has no effect on images without a width or height attribute.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00246">246</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00240">240</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1176,7 +1321,7 @@ Properties</h2></td></tr>
 
 <p>A method used to resolve (possibly remote) image uris into local file paths. The first argument of the method should be the image uri and the second argument the base uri used to resolve relative links. The method should return a tuple containing the path of the local file and a boolean value indicating whether the file has been fetched from a remote location and should be deleted after the program has finished using it.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00226">226</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00215">215</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1202,7 +1347,7 @@ Properties</h2></td></tr>
 
 <p>The indentation width used for list items.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00191">191</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00180">180</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1228,7 +1373,7 @@ Properties</h2></td></tr>
 
 <p>The colour for text that has been styled as "inserted".  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00338">338</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00365">365</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1254,7 +1399,7 @@ Properties</h2></td></tr>
 
 <p>The font family for italic text.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00080">80</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00069">69</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1278,9 +1423,9 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>The colour for hypertext links-  </p>
+<p>The colour for hypertext links.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00313">313</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00340">340</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1306,7 +1451,7 @@ Properties</h2></td></tr>
 
 <p>A method used to resolve link addresses. The argument of the method should be the absolute link, and the method should return the resolved address. This can be used to "redirect" links to a different target.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00236">236</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00230">230</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1332,7 +1477,33 @@ Properties</h2></td></tr>
 
 <p>The margins of the page.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00120">120</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00109">109</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
+
+</div>
+</div>
+<a id="ad727fc20aec318151df273fab032c0eb" name="ad727fc20aec318151df273fab032c0eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad727fc20aec318151df273fab032c0eb">&#9670;&#160;</a></span>MarkdownPipelineBuilder</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">MarkdownPipelineBuilder VectSharp.Markdown.MarkdownRenderer.MarkdownPipelineBuilder = new MarkdownPipelineBuilder().UseGridTables().UsePipeTables().UseEmphasisExtras().UseGenericAttributes().UseAutoIdentifiers().UseAutoLinks().UseTaskLists().UseListExtras().UseCitations().UseMathematics().UseSmartyPants().UseEmojiAndSmiley(<a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#ad085950430a87ad808c30bd554d9f65f">EmojiURLMapping</a>).UseUnicodeEmoji()</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="namespace_vect_sharp_1_1_markdown.html">Markdown</a> pipeline builder used to parse markdown source.  </p>
+
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00405">405</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1358,7 +1529,7 @@ Properties</h2></td></tr>
 
 <p>The colour for text that has been styled as "marked".  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00343">343</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00370">370</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1384,7 +1555,7 @@ Properties</h2></td></tr>
 
 <p>Scaling factor for the font size to use when rendering math.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00047">47</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00036">36</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1410,7 +1581,7 @@ Properties</h2></td></tr>
 
 <p>The size of the page.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00156">156</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00145">145</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1436,7 +1607,7 @@ Properties</h2></td></tr>
 
 <p>The background colour for block quotes.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00333">333</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00360">360</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1462,7 +1633,7 @@ Properties</h2></td></tr>
 
 <p>The colour for the bar to the left of block quotes.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00328">328</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00355">355</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1488,7 +1659,7 @@ Properties</h2></td></tr>
 
 <p>The thickness of the bar to the left of block quotes.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00201">201</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00190">190</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1514,7 +1685,7 @@ Properties</h2></td></tr>
 
 <p>The indentation width used for block quotes.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00196">196</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00185">185</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1540,7 +1711,7 @@ Properties</h2></td></tr>
 
 <p>A method used to a load raster image from a local file. The argument of the method should be the path of a local image file, and the method should return a <a class="el" href="class_vect_sharp_1_1_raster_image.html" title="Represents a raster image, created from raw pixel data. Consider using the derived classes included i...">RasterImage</a> representing that file. For example, this can be achieved using the <code>RasterImageFile</code> class from the <code><a class="el" href="namespace_vect_sharp_1_1_mu_p_d_f_utils.html">VectSharp.MuPDFUtils</a></code> package. If this is <code>null</code>, only <a class="el" href="namespace_vect_sharp_1_1_s_v_g.html">SVG</a> images will be included in the document.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00241">241</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00235">235</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1566,7 +1737,7 @@ Properties</h2></td></tr>
 
 <p>The font family for regular text.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00070">70</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00059">59</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1592,7 +1763,7 @@ Properties</h2></td></tr>
 
 <p>The space after each heading. This value will be multiplied by the font size of the heading.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00181">181</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00170">170</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1618,7 +1789,7 @@ Properties</h2></td></tr>
 
 <p>The space after each line of text. This value will be multiplied by the <a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a526e8cc443eacebd5945764a8dee28df" title="The base font size to use when rendering the document. This will be the size of regular elements,...">BaseFontSize</a>.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00171">171</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00160">160</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1644,7 +1815,7 @@ Properties</h2></td></tr>
 
 <p>The space after each text paragraph. This value will be multiplied by the <a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a526e8cc443eacebd5945764a8dee28df" title="The base font size to use when rendering the document. This will be the size of regular elements,...">BaseFontSize</a>.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00166">166</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00155">155</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1670,7 +1841,7 @@ Properties</h2></td></tr>
 
 <p>The space before each heading. This value will be multiplied by the font size of the heading.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00176">176</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00165">165</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1696,7 +1867,7 @@ Properties</h2></td></tr>
 
 <p>The space before each text paragraph. This value will be multiplied by the <a class="el" href="class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html#a526e8cc443eacebd5945764a8dee28df" title="The base font size to use when rendering the document. This will be the size of regular elements,...">BaseFontSize</a>.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00161">161</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00150">150</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1722,7 +1893,7 @@ Properties</h2></td></tr>
 
 <p>The downwards shift in the baseline for subscript elements. This value will be multiplied by the current font size.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00216">216</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00205">205</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1748,7 +1919,7 @@ Properties</h2></td></tr>
 
 <p>The font size for subscripts and superscripts. This value will be multiplied by the current font size.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00206">206</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00195">195</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1774,7 +1945,7 @@ Properties</h2></td></tr>
 
 <p>The upwards shift in the baseline for superscript elements. This value will be multiplied by the current font size.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00211">211</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00200">200</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1800,7 +1971,7 @@ Properties</h2></td></tr>
 
 <p>A method used for syntax highlighting. The first argument should be the source code to highlight, while the second parameter is the name of the language to use for the highlight. The method should return a list of lists of <a class="el" href="struct_vect_sharp_1_1_markdown_1_1_formatted_string.html" title="Represents a string with associated formatting information.">FormattedString</a>s, with each list of <a class="el" href="struct_vect_sharp_1_1_markdown_1_1_formatted_string.html" title="Represents a string with associated formatting information.">FormattedString</a>s representing a line. For each code block, if the method returns <code>null</code>, no syntax highlighting is used.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00266">266</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00260">260</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1826,7 +1997,7 @@ Properties</h2></td></tr>
 
 <p>The margins for table cells.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00125">125</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00114">114</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1852,7 +2023,7 @@ Properties</h2></td></tr>
 
 <p>The colour for the line separating the table header row from normal rows.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00348">348</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00375">375</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1878,7 +2049,7 @@ Properties</h2></td></tr>
 
 <p>The thickness of the line separating the table header row from normal rows.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00358">358</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00385">385</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1904,7 +2075,7 @@ Properties</h2></td></tr>
 
 <p>The thickness of lines separating table rows from each other.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00363">363</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00390">390</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1930,7 +2101,7 @@ Properties</h2></td></tr>
 
 <p>The colour for lines separating table rows from each other.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00353">353</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00380">380</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1956,7 +2127,7 @@ Properties</h2></td></tr>
 
 <p>The vertical alignment of table cells.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00151">151</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00140">140</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -1994,11 +2165,11 @@ Properties</h2></td></tr>
 <div class="line"> </div>
 <div class="line">            <span class="keywordflow">return</span> tbr;</div>
 <div class="line">        })()</div>
-<div class="ttc" id="anamespace_vect_sharp_html_a6bde58d6aab37ea51e32240503678209"><div class="ttname"><a href="namespace_vect_sharp.html#a6bde58d6aab37ea51e32240503678209">VectSharp.LineCaps</a></div><div class="ttdeci">LineCaps</div><div class="ttdoc">Represents line caps.</div><div class="ttdef"><b>Definition:</b> <a href="_enums_8cs_source.html#l00070">Enums.cs:71</a></div></div>
+<div class="ttc" id="anamespace_vect_sharp_html_a6bde58d6aab37ea51e32240503678209"><div class="ttname"><a href="namespace_vect_sharp.html#a6bde58d6aab37ea51e32240503678209">VectSharp.LineCaps</a></div><div class="ttdeci">LineCaps</div><div class="ttdoc">Represents line caps.</div><div class="ttdef"><b>Definition:</b> <a href="_enums_8cs_source.html#l00189">Enums.cs:190</a></div></div>
 </div><!-- fragment -->
 <p>The bullet used for checked task list items.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00383">383</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00301">301</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -2034,7 +2205,7 @@ Properties</h2></td></tr>
 </div><!-- fragment -->
 <p>The bullet used for unchecked task list items.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00368">368</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00287">287</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -2060,7 +2231,7 @@ Properties</h2></td></tr>
 
 <p>The colour for thematic break lines.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00308">308</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00335">335</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -2086,7 +2257,7 @@ Properties</h2></td></tr>
 
 <p>The thickness of thematic break lines.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00065">65</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00054">54</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
@@ -2112,12 +2283,180 @@ Properties</h2></td></tr>
 
 <p>The thickness of underlines. This value will be multiplied by the font size of the element being underlined.  </p>
 
-<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8cs_source.html#l00110">110</a> of file <a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_properties_8cs_source.html#l00099">99</a> of file <a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a>.</p>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<h2 class="groupheader">Event Documentation</h2>
+<a id="a7e29506b84c63205a15396c494285a6f" name="a7e29506b84c63205a15396c494285a6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e29506b84c63205a15396c494285a6f">&#9670;&#160;</a></span>BlockRendered</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">EventHandler&lt;<a class="el" href="class_vect_sharp_1_1_markdown_1_1_block_rendered_event_args.html">BlockRenderedEventArgs</a>&gt; VectSharp.Markdown.MarkdownRenderer.BlockRendered</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Invoked just after rendering a Block.  </p>
+
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_events_8cs_source.html#l00044">44</a> of file <a class="el" href="_markdown_renderer_8_events_8cs_source.html">MarkdownRenderer.Events.cs</a>.</p>
+
+</div>
+</div>
+<a id="a3b92e50c918f8b9dcff944e67a350ef0" name="a3b92e50c918f8b9dcff944e67a350ef0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b92e50c918f8b9dcff944e67a350ef0">&#9670;&#160;</a></span>BlockRendering</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">EventHandler&lt;<a class="el" href="class_vect_sharp_1_1_markdown_1_1_block_rendering_event_args.html">BlockRenderingEventArgs</a>&gt; VectSharp.Markdown.MarkdownRenderer.BlockRendering</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Invoked just before rendering a Block.  </p>
+
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_events_8cs_source.html#l00039">39</a> of file <a class="el" href="_markdown_renderer_8_events_8cs_source.html">MarkdownRenderer.Events.cs</a>.</p>
+
+</div>
+</div>
+<a id="afef93a8f876ee8a0a2b50fa8f45fb8ff" name="afef93a8f876ee8a0a2b50fa8f45fb8ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afef93a8f876ee8a0a2b50fa8f45fb8ff">&#9670;&#160;</a></span>InlineRendered</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">EventHandler&lt;<a class="el" href="class_vect_sharp_1_1_markdown_1_1_inline_rendered_event_args.html">InlineRenderedEventArgs</a>&gt; VectSharp.Markdown.MarkdownRenderer.InlineRendered</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Invoked just after rendering an Inline.  </p>
+
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_events_8cs_source.html#l00054">54</a> of file <a class="el" href="_markdown_renderer_8_events_8cs_source.html">MarkdownRenderer.Events.cs</a>.</p>
+
+</div>
+</div>
+<a id="aa5e1f7e9d86e5c623ae28666d2f1213b" name="aa5e1f7e9d86e5c623ae28666d2f1213b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5e1f7e9d86e5c623ae28666d2f1213b">&#9670;&#160;</a></span>InlineRendering</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">EventHandler&lt;<a class="el" href="class_vect_sharp_1_1_markdown_1_1_inline_rendering_event_args.html">InlineRenderingEventArgs</a>&gt; VectSharp.Markdown.MarkdownRenderer.InlineRendering</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Invoked just before rendering an Inline.  </p>
+
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_events_8cs_source.html#l00049">49</a> of file <a class="el" href="_markdown_renderer_8_events_8cs_source.html">MarkdownRenderer.Events.cs</a>.</p>
+
+</div>
+</div>
+<a id="a49017e745d1f38ef7e79fea9615648e6" name="a49017e745d1f38ef7e79fea9615648e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49017e745d1f38ef7e79fea9615648e6">&#9670;&#160;</a></span>LineMeasured</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">EventHandler&lt;<a class="el" href="class_vect_sharp_1_1_markdown_1_1_line_measured_event_args.html">LineMeasuredEventArgs</a>&gt; VectSharp.Markdown.MarkdownRenderer.LineMeasured</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Invoked after content in a <a class="el" href="class_vect_sharp_1_1_markdown_1_1_line.html" title="Represents a text line.">Line</a> has been measured, but before deciding whether to render the line on the current page or on a new page.  </p>
+
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_events_8cs_source.html#l00059">59</a> of file <a class="el" href="_markdown_renderer_8_events_8cs_source.html">MarkdownRenderer.Events.cs</a>.</p>
+
+</div>
+</div>
+<a id="aa29ab98aedc12ac53fe8eec68344cfba" name="aa29ab98aedc12ac53fe8eec68344cfba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa29ab98aedc12ac53fe8eec68344cfba">&#9670;&#160;</a></span>LineRendered</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">EventHandler&lt;<a class="el" href="class_vect_sharp_1_1_markdown_1_1_line_event_args.html">LineEventArgs</a>&gt; VectSharp.Markdown.MarkdownRenderer.LineRendered</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Invoked just after rendering a <a class="el" href="class_vect_sharp_1_1_markdown_1_1_line.html" title="Represents a text line.">Line</a>.  </p>
+
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_events_8cs_source.html#l00069">69</a> of file <a class="el" href="_markdown_renderer_8_events_8cs_source.html">MarkdownRenderer.Events.cs</a>.</p>
+
+</div>
+</div>
+<a id="a650efb8083c5d20e62a6f586c7410c66" name="a650efb8083c5d20e62a6f586c7410c66"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a650efb8083c5d20e62a6f586c7410c66">&#9670;&#160;</a></span>LineRendering</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">EventHandler&lt;<a class="el" href="class_vect_sharp_1_1_markdown_1_1_line_event_args.html">LineEventArgs</a>&gt; VectSharp.Markdown.MarkdownRenderer.LineRendering</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Invoked just before rendering a <a class="el" href="class_vect_sharp_1_1_markdown_1_1_line.html" title="Represents a text line.">Line</a>, after a new page has been created if necessary.  </p>
+
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_events_8cs_source.html#l00064">64</a> of file <a class="el" href="_markdown_renderer_8_events_8cs_source.html">MarkdownRenderer.Events.cs</a>.</p>
+
+</div>
+</div>
+<a id="a023d5d5490a085201e0dd811dc9b5e28" name="a023d5d5490a085201e0dd811dc9b5e28"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a023d5d5490a085201e0dd811dc9b5e28">&#9670;&#160;</a></span>PageFinished</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">EventHandler&lt;<a class="el" href="class_vect_sharp_1_1_markdown_1_1_page_finished_event_args.html">PageFinishedEventArgs</a>&gt; VectSharp.Markdown.MarkdownRenderer.PageFinished</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Invoked when a page is finished, before starting a new page (or at the end of the document).  </p>
+
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_events_8cs_source.html#l00034">34</a> of file <a class="el" href="_markdown_renderer_8_events_8cs_source.html">MarkdownRenderer.Events.cs</a>.</p>
+
+</div>
+</div>
+<a id="a248a9f0451f3a63f4c92f820ce76232f" name="a248a9f0451f3a63f4c92f820ce76232f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a248a9f0451f3a63f4c92f820ce76232f">&#9670;&#160;</a></span>PageStarted</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">EventHandler&lt;<a class="el" href="class_vect_sharp_1_1_markdown_1_1_page_started_event_args.html">PageStartedEventArgs</a>&gt; VectSharp.Markdown.MarkdownRenderer.PageStarted</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Invoked when a new page is started.  </p>
+
+<p class="definition">Definition at line <a class="el" href="_markdown_renderer_8_events_8cs_source.html#l00029">29</a> of file <a class="el" href="_markdown_renderer_8_events_8cs_source.html">MarkdownRenderer.Events.cs</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>VectSharp.Markdown/<a class="el" href="_markdown_renderer_8_blocks_8cs_source.html">MarkdownRenderer.Blocks.cs</a></li>
 <li>VectSharp.Markdown/<a class="el" href="_markdown_renderer_8cs_source.html">MarkdownRenderer.cs</a></li>
+<li>VectSharp.Markdown/<a class="el" href="_markdown_renderer_8_events_8cs_source.html">MarkdownRenderer.Events.cs</a></li>
+<li>VectSharp.Markdown/<a class="el" href="_markdown_renderer_8_properties_8cs_source.html">MarkdownRenderer.Properties.cs</a></li>
+<li>VectSharp.Markdown/<a class="el" href="_markdown_renderer_8_inlines_8cs_source.html">MarkdownRenderer.Inlines.cs</a></li>
+<li>VectSharp.Markdown/<a class="el" href="_markdown_renderer_8_tables_8cs_source.html">MarkdownRenderer.Tables.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

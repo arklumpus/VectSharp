@@ -1,3 +1,8 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$struct_vect_sharp_1_1_line_dash.html" title="Represents instructions on how to paint a dashed line." alt="" coords="5,5,147,31"/>
+<area shape="rect" id="node1" href="$interface_vect_sharp_1_1_i_font_library.html" title="Represents a font library with methods to create FontFamily objects from a string or from FontFamily...." alt="" coords="5,81,160,108"/>
+<area shape="rect" id="node2" href="$class_vect_sharp_1_1_font_library.html" title="Abstract class with a default implementation of font family fallbacks." alt="" coords="208,81,359,108"/>
+<area shape="rect" id="node3" href="$class_vect_sharp_1_1_default_font_library.html" title="A default font library that resolves standard families using the embedded fonts." alt="" coords="407,5,598,32"/>
+<area shape="rect" id="node4" href="$class_vect_sharp_1_1_folder_font_library.html" title="A font library that resolves fonts from a folder containing TrueType files." alt="" coords="409,56,596,83"/>
+<area shape="rect" id="node5" href="$class_vect_sharp_1_1_multi_font_library.html" title="A font library that tries to resolve fonts using other font libraries." alt="" coords="413,107,592,133"/>
+<area shape="rect" id="node6" href="$class_vect_sharp_1_1_simple_font_library.html" title="A font library that can be used to cache and resolve font family names." alt="" coords="407,157,598,184"/>
 </map>

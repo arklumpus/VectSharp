@@ -10,5 +10,8 @@ var class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter =
     [ "SaveAsAnimatedSVGWithFrames", "class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#add0cfc0ab1687b83f50a8db9fa90d8b6", null ],
     [ "SaveAsSVG", "class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#a3b4ea00f257f1456d9397a8c268f1b0d", null ],
     [ "SaveAsSVG", "class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#aa60e1ea20f6ba17c15c1eea3222a6c20", null ],
-    [ "SaveAsSVG", "class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#af7cc27999920d88c72d54fbf5d804821", null ]
+    [ "SaveAsSVG", "class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#af7cc27999920d88c72d54fbf5d804821", null ],
+    [ "WriteSVGXML", "class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#ad9849f7ad1032234bffe57d6bc95fb1e", null ],
+    [ "WriteSVGXML", "class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#a37ba3ead29730db19a5cf5ed38701f2d", null ],
+    [ "WriteSVGXML", "class_vect_sharp_1_1_s_v_g_1_1_s_v_g_context_interpreter.html#a8f62cf8dd9ebac64e2ae3f8ec8773ee0", null ]
 ];

@@ -45,6 +45,7 @@ var namespace_vect_sharp_1_1_plots =
     [ "PowerLawTrendLine", "class_vect_sharp_1_1_plots_1_1_power_law_trend_line.html", "class_vect_sharp_1_1_plots_1_1_power_law_trend_line" ],
     [ "ScatterPoints", "class_vect_sharp_1_1_plots_1_1_scatter_points.html", "class_vect_sharp_1_1_plots_1_1_scatter_points" ],
     [ "StackedBars", "class_vect_sharp_1_1_plots_1_1_stacked_bars.html", "class_vect_sharp_1_1_plots_1_1_stacked_bars" ],
+    [ "Swarm", "class_vect_sharp_1_1_plots_1_1_swarm.html", "class_vect_sharp_1_1_plots_1_1_swarm" ],
     [ "TextLabel", "class_vect_sharp_1_1_plots_1_1_text_label.html", "class_vect_sharp_1_1_plots_1_1_text_label" ],
     [ "Violin", "class_vect_sharp_1_1_plots_1_1_violin.html", "class_vect_sharp_1_1_plots_1_1_violin" ]
 ];

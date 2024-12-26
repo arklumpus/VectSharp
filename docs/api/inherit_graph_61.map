@@ -1,9 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$interface_vect_sharp_1_1_three_d_1_1_i_light_source.html" title="Represents a light source." alt="" coords="5,173,209,198"/>
-<area shape="rect" id="node2" href="$class_vect_sharp_1_1_three_d_1_1_ambient_light_source.html" title="Represents a uniform ambien light source." alt="" coords="271,5,451,45"/>
-<area shape="rect" id="node3" href="$class_vect_sharp_1_1_three_d_1_1_area_light_source.html" title="Represents a light source emitting light from a circular area." alt="" coords="267,69,454,109"/>
-<area shape="rect" id="node4" href="$class_vect_sharp_1_1_three_d_1_1_masked_light_source.html" title="Represents a point light source with a stencil in front of it." alt="" coords="257,133,464,173"/>
-<area shape="rect" id="node5" href="$class_vect_sharp_1_1_three_d_1_1_parallel_light_source.html" title="Represents a parallel light source." alt="" coords="273,197,448,237"/>
-<area shape="rect" id="node6" href="$class_vect_sharp_1_1_three_d_1_1_point_light_source.html" title="Represents a point light source." alt="" coords="265,261,456,301"/>
-<area shape="rect" id="node7" href="$class_vect_sharp_1_1_three_d_1_1_spotlight_light_source.html" title="Represents a conic spotlight." alt="" coords="269,325,452,365"/>
+<area shape="rect" id="node1" href="$interface_vect_sharp_1_1_plots_1_1_i_coordinate_system.html" title=" " alt="" coords="5,105,239,148"/>
+<area shape="rect" id="node2" href="$interface_vect_sharp_1_1_plots_1_1_i_continuous_coordinate_system.html" title="Represents a coordinate system performing continuous transformations." alt="" coords="287,105,475,148"/>
+<area shape="rect" id="node3" href="$interface_vect_sharp_1_1_plots_1_1_i_continuous_invertible_coordinate_system.html" title="Represents a coordinate system performing continuous invertible transformations." alt="" coords="523,105,711,148"/>
+<area shape="rect" id="node4" href="$class_vect_sharp_1_1_plots_1_1_lin_log_coordinate_system2_d.html" title="Represents a semi&#45;logarithmic coordinate system with a logarithmic transformation on the X axis." alt="" coords="759,5,980,48"/>
+<area shape="rect" id="node5" href="$class_vect_sharp_1_1_plots_1_1_linear_coordinate_system2_d.html" title="Represents a linear coordinate system." alt="" coords="761,72,978,115"/>
+<area shape="rect" id="node6" href="$class_vect_sharp_1_1_plots_1_1_log_lin_coordinate_system2_d.html" title="Represents a semi&#45;logarithmic coordinate system with a logarithmic transformation on the Y axis." alt="" coords="759,139,980,181"/>
+<area shape="rect" id="node7" href="$class_vect_sharp_1_1_plots_1_1_logarithmic_coordinate_system2_d.html" title="Represents a logarithmic coordinate system." alt="" coords="776,205,963,248"/>
 </map>

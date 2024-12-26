@@ -2,6 +2,7 @@ var hierarchy =
 [
     [ "VectSharp.AnimatedPNG", "class_vect_sharp_1_1_animated_p_n_g.html", null ],
     [ "VectSharp.Animation", "class_vect_sharp_1_1_animation.html", null ],
+    [ "VectSharp.PDF.AnnotationStyle", "class_vect_sharp_1_1_p_d_f_1_1_annotation_style.html", null ],
     [ "VectSharp.Canvas.AvaloniaContextInterpreter", "class_vect_sharp_1_1_canvas_1_1_avalonia_context_interpreter.html", null ],
     [ "VectSharp.Plots.Bars<(T, double)>", "class_vect_sharp_1_1_plots_1_1_bars.html", [
       [ "VectSharp.Plots.CategoricalBars< T >", "class_vect_sharp_1_1_plots_1_1_categorical_bars.html", null ]
@@ -23,6 +24,16 @@ var hierarchy =
     ] ],
     [ "VectSharp.Font.DetailedFontMetrics", "class_vect_sharp_1_1_font_1_1_detailed_font_metrics.html", null ],
     [ "VectSharp.Document", "class_vect_sharp_1_1_document.html", null ],
+    [ "EventArgs", null, [
+      [ "VectSharp.Markdown.BlockRenderedEventArgs", "class_vect_sharp_1_1_markdown_1_1_block_rendered_event_args.html", null ],
+      [ "VectSharp.Markdown.BlockRenderingEventArgs", "class_vect_sharp_1_1_markdown_1_1_block_rendering_event_args.html", null ],
+      [ "VectSharp.Markdown.InlineRenderedEventArgs", "class_vect_sharp_1_1_markdown_1_1_inline_rendered_event_args.html", null ],
+      [ "VectSharp.Markdown.InlineRenderingEventArgs", "class_vect_sharp_1_1_markdown_1_1_inline_rendering_event_args.html", null ],
+      [ "VectSharp.Markdown.LineEventArgs", "class_vect_sharp_1_1_markdown_1_1_line_event_args.html", null ],
+      [ "VectSharp.Markdown.LineMeasuredEventArgs", "class_vect_sharp_1_1_markdown_1_1_line_measured_event_args.html", null ],
+      [ "VectSharp.Markdown.PageFinishedEventArgs", "class_vect_sharp_1_1_markdown_1_1_page_finished_event_args.html", null ],
+      [ "VectSharp.Markdown.PageStartedEventArgs", "class_vect_sharp_1_1_markdown_1_1_page_started_event_args.html", null ]
+    ] ],
     [ "Exception", null, [
       [ "VectSharp.FontFamilyCreationException", "class_vect_sharp_1_1_font_family_creation_exception.html", null ],
       [ "VectSharp.Raster.ImageSharp.ImageSharpContextInterpreter.UnknownFormatException", "class_vect_sharp_1_1_raster_1_1_image_sharp_1_1_image_sharp_context_interpreter_1_1_unknown_format_exception.html", null ],
@@ -77,6 +88,9 @@ var hierarchy =
       [ "VectSharp.Plots.GraphicsDataPointElement", "class_vect_sharp_1_1_plots_1_1_graphics_data_point_element.html", null ],
       [ "VectSharp.Plots.PathDataPointElement", "class_vect_sharp_1_1_plots_1_1_path_data_point_element.html", null ]
     ] ],
+    [ "IDictionary", null, [
+      [ "VectSharp.PDF.AnnotationStyleCollection", "class_vect_sharp_1_1_p_d_f_1_1_annotation_style_collection.html", null ]
+    ] ],
     [ "IDisposable", null, [
       [ "VectSharp.AnimatedPNG.CompressedFrame", "class_vect_sharp_1_1_animated_p_n_g_1_1_compressed_frame.html", null ],
       [ "VectSharp.Canvas.SKMultiLayerRenderCanvas", "class_vect_sharp_1_1_canvas_1_1_s_k_multi_layer_render_canvas.html", null ],
@@ -97,7 +111,8 @@ var hierarchy =
       [ "VectSharp.SplineEasing", "class_vect_sharp_1_1_spline_easing.html", null ]
     ] ],
     [ "IEquatable", null, [
-      [ "VectSharp.Colour", "struct_vect_sharp_1_1_colour.html", null ]
+      [ "VectSharp.Colour", "struct_vect_sharp_1_1_colour.html", null ],
+      [ "VectSharp.TextSpacing", "struct_vect_sharp_1_1_text_spacing.html", null ]
     ] ],
     [ "VectSharp.Filters.IFilter", "interface_vect_sharp_1_1_filters_1_1_i_filter.html", [
       [ "VectSharp.Filters.IFilterWithLocation", "interface_vect_sharp_1_1_filters_1_1_i_filter_with_location.html", [
@@ -131,6 +146,11 @@ var hierarchy =
       [ "VectSharp.ThreeD.PointLightSource", "class_vect_sharp_1_1_three_d_1_1_point_light_source.html", null ],
       [ "VectSharp.ThreeD.SpotlightLightSource", "class_vect_sharp_1_1_three_d_1_1_spotlight_light_source.html", null ]
     ] ],
+    [ "IList", null, [
+      [ "VectSharp.PDF.OptionalContentGroups.OptionalContentGroupTreeNode", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_tree_node.html", null ],
+      [ "VectSharp.PDF.OutlineTree", "class_vect_sharp_1_1_p_d_f_1_1_outline_tree.html", null ],
+      [ "VectSharp.PDF.OutlineTreeNode", "class_vect_sharp_1_1_p_d_f_1_1_outline_tree_node.html", null ]
+    ] ],
     [ "VectSharp.Raster.ImageSharp.ImageSharpContextInterpreter", "class_vect_sharp_1_1_raster_1_1_image_sharp_1_1_image_sharp_context_interpreter.html", null ],
     [ "VectSharp.ImageSharpUtils.ImageURIParser", "class_vect_sharp_1_1_image_sharp_utils_1_1_image_u_r_i_parser.html", null ],
     [ "VectSharp.MuPDFUtils.ImageURIParser", "class_vect_sharp_1_1_mu_p_d_f_utils_1_1_image_u_r_i_parser.html", null ],
@@ -161,6 +181,7 @@ var hierarchy =
       [ "VectSharp.Plots.PowerLawTrendLine", "class_vect_sharp_1_1_plots_1_1_power_law_trend_line.html", null ],
       [ "VectSharp.Plots.ScatterPoints< T >", "class_vect_sharp_1_1_plots_1_1_scatter_points.html", null ],
       [ "VectSharp.Plots.StackedBars", "class_vect_sharp_1_1_plots_1_1_stacked_bars.html", null ],
+      [ "VectSharp.Plots.Swarm", "class_vect_sharp_1_1_plots_1_1_swarm.html", null ],
       [ "VectSharp.Plots.TextLabel< T >", "class_vect_sharp_1_1_plots_1_1_text_label.html", null ],
       [ "VectSharp.Plots.Violin", "class_vect_sharp_1_1_plots_1_1_violin.html", null ]
     ] ],
@@ -172,15 +193,34 @@ var hierarchy =
       [ "VectSharp.ThreeD.Scene", "class_vect_sharp_1_1_three_d_1_1_scene.html", null ]
     ] ],
     [ "VectSharp.ThreeD.LightIntensity", "struct_vect_sharp_1_1_three_d_1_1_light_intensity.html", null ],
+    [ "VectSharp.Markdown.Line", "class_vect_sharp_1_1_markdown_1_1_line.html", null ],
     [ "VectSharp.LineDash", "struct_vect_sharp_1_1_line_dash.html", null ],
+    [ "VectSharp.Markdown.LineFragment", "class_vect_sharp_1_1_markdown_1_1_line_fragment.html", [
+      [ "VectSharp.Markdown.RectangleFragment", "class_vect_sharp_1_1_markdown_1_1_rectangle_fragment.html", null ],
+      [ "VectSharp.Markdown.TextFragment", "class_vect_sharp_1_1_markdown_1_1_text_fragment.html", null ],
+      [ "VectSharp.Markdown.UnderlineFragment", "class_vect_sharp_1_1_markdown_1_1_underline_fragment.html", null ]
+    ] ],
     [ "VectSharp.Markdown.Margins", "class_vect_sharp_1_1_markdown_1_1_margins.html", null ],
+    [ "VectSharp.Markdown.MarkdownContext", "class_vect_sharp_1_1_markdown_1_1_markdown_context.html", null ],
+    [ "VectSharp.Markdown.MarkdownEmojiExtension", "class_vect_sharp_1_1_markdown_1_1_markdown_emoji_extension.html", null ],
     [ "VectSharp.Markdown.MarkdownRenderer", "class_vect_sharp_1_1_markdown_1_1_markdown_renderer.html", null ],
     [ "VectSharp.Fonts.Nimbus", "class_vect_sharp_1_1_fonts_1_1_nimbus.html", null ],
     [ "VectSharp.ThreeD.ObjectFactory", "class_vect_sharp_1_1_three_d_1_1_object_factory.html", null ],
+    [ "VectSharp.PDF.OptionalContentGroups.OptionalContentGroupExpression", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_expression.html", [
+      [ "VectSharp.PDF.OptionalContentGroups.OptionalContentGroup", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group.html", null ],
+      [ "VectSharp.PDF.OptionalContentGroups.OptionalContentGroupAndExpression", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_and_expression.html", null ],
+      [ "VectSharp.PDF.OptionalContentGroups.OptionalContentGroupNotExpression", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_not_expression.html", null ],
+      [ "VectSharp.PDF.OptionalContentGroups.OptionalContentGroupOrExpression", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_or_expression.html", null ]
+    ] ],
+    [ "VectSharp.PDF.OptionalContentGroups.OptionalContentGroupSettings", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_settings.html", null ],
+    [ "VectSharp.PDF.OptionalContentGroups.OptionalContentGroupTreeLabel", "class_vect_sharp_1_1_p_d_f_1_1_optional_content_groups_1_1_optional_content_group_tree_label.html", null ],
     [ "VectSharp.Page", "class_vect_sharp_1_1_page.html", null ],
     [ "VectSharp.TrueTypeFile.PairKerning", "class_vect_sharp_1_1_true_type_file_1_1_pair_kerning.html", null ],
     [ "VectSharp.SVG.Parser", "class_vect_sharp_1_1_s_v_g_1_1_parser.html", null ],
     [ "VectSharp.PDF.PDFContextInterpreter", "class_vect_sharp_1_1_p_d_f_1_1_p_d_f_context_interpreter.html", null ],
+    [ "VectSharp.PDF.PDFDocument", "class_vect_sharp_1_1_p_d_f_1_1_p_d_f_document.html", null ],
+    [ "VectSharp.PDF.PDFMetadata", "class_vect_sharp_1_1_p_d_f_1_1_p_d_f_metadata.html", null ],
+    [ "VectSharp.MuPDFUtils.PDFParser", "class_vect_sharp_1_1_mu_p_d_f_utils_1_1_p_d_f_parser.html", null ],
     [ "VectSharp.Plots.Plot", "class_vect_sharp_1_1_plots_1_1_plot.html", null ],
     [ "VectSharp.Plots.PlotElementPresentationAttributes", "class_vect_sharp_1_1_plots_1_1_plot_element_presentation_attributes.html", null ],
     [ "VectSharp.TrueTypeFile.CoverageTable.RangeRecord", "struct_vect_sharp_1_1_true_type_file_1_1_coverage_table_1_1_range_record.html", null ],

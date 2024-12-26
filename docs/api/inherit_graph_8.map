@@ -1,7 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$class_vect_sharp_1_1_brush.html" title="Represents a brush used to fill or stroke graphics elements. This could be a solid colour,..." alt="" coords="5,70,127,95"/>
-<area shape="rect" id="node2" href="$class_vect_sharp_1_1_gradient_brush.html" title="Represents a brush painting with a gradient." alt="" coords="183,45,353,70"/>
-<area shape="rect" id="node5" href="$class_vect_sharp_1_1_solid_colour_brush.html" title="Represents a brush painting with a single solid colour." alt="" coords="175,94,361,119"/>
-<area shape="rect" id="node3" href="$class_vect_sharp_1_1_linear_gradient_brush.html" title="Represents a brush painting with a linear gradient." alt="" coords="410,5,581,45"/>
-<area shape="rect" id="node4" href="$class_vect_sharp_1_1_radial_gradient_brush.html" title="Represents a brush painting with a radial gradient." alt="" coords="409,69,581,109"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,13,95,40"/>
+<area shape="rect" id="node2" href="$class_vect_sharp_1_1_markdown_canvas_1_1_markdown_canvas_control.html" title="A control to display a Markdown document in an Avalonia application." alt="" coords="143,5,334,48"/>
 </map>

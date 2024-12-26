@@ -52,6 +52,7 @@ var namespace_vect_sharp =
     [ "Size", "struct_vect_sharp_1_1_size.html", "struct_vect_sharp_1_1_size" ],
     [ "SolidColourBrush", "class_vect_sharp_1_1_solid_colour_brush.html", "class_vect_sharp_1_1_solid_colour_brush" ],
     [ "SplineEasing", "class_vect_sharp_1_1_spline_easing.html", "class_vect_sharp_1_1_spline_easing" ],
+    [ "TextSpacing", "struct_vect_sharp_1_1_text_spacing.html", "struct_vect_sharp_1_1_text_spacing" ],
     [ "Transition", "class_vect_sharp_1_1_transition.html", "class_vect_sharp_1_1_transition" ],
     [ "TrueTypeFile", "class_vect_sharp_1_1_true_type_file.html", "class_vect_sharp_1_1_true_type_file" ],
     [ "UnbalancedStackException", "class_vect_sharp_1_1_unbalanced_stack_exception.html", null ],
