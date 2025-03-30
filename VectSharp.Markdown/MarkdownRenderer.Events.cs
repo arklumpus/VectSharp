@@ -69,6 +69,11 @@ namespace VectSharp.Markdown
         public event EventHandler<LineEventArgs> LineRendered;
 
         /// <summary>
+        /// Invoked when a line break occurs.
+        /// </summary>
+        public event EventHandler<LineBreakEventArgs> LineBreak;
+
+        /// <summary>
         /// Raises the <see cref="PageStarted"/> event.
         /// </summary>
         /// <param name="context">The current <see cref="MarkdownContext"/>.</param>
@@ -213,6 +218,23 @@ namespace VectSharp.Markdown
             LineRendered?.Invoke(this, eventArgs);
             context = eventArgs.MarkdownContext;
             graphics = eventArgs.Graphics;
+        }
+
+        /// <summary>
+        /// Raises the <see cref="LineBreak"/> event.
+        /// </summary>
+        /// <param name="context">The current <see cref="VectSharp.Markdown.MarkdownContext"/>.</param>
+        /// <param name="line">The current line before the line break.</param>
+        /// <param name="nextWord">The word that will follow after the line break (i.e., on the following line), when <paramref name="breakPoint"/> is <c>0</c>.</param>
+        /// <param name="lineBreakContext">The context in which the line break happened.</param>
+        /// <param name="breakPoint">The position at which the line break should actually happen, which will be updated by the event handler.
+        /// If this is set to <c>0</c>, the line break happens at the automatically determined point.
+        /// If this is set to a value <c>n</c> &gt; 0, the line break happens <c>n</c> <see cref="LineFragment"/>s before this point.</param>
+        protected virtual void OnLineBreak(MarkdownContext context, Line line, Word nextWord, LineBreakEventArgs.LineBreakContext lineBreakContext, ref int breakPoint)
+        {
+            LineBreakEventArgs eventArgs = new LineBreakEventArgs(context, line, nextWord, lineBreakContext);
+            LineBreak?.Invoke(this, eventArgs);
+            breakPoint = eventArgs.BreakPoint;
         }
 
         internal void RaiseLineMeasured(ref MarkdownContext context, ref Graphics graphics, ref Line line, double pageMaxX, double pageMaxY, double contentMaxX, double contentMinY, double contentMaxY, double baseline)
@@ -584,6 +606,75 @@ namespace VectSharp.Markdown
             ContentMinY = contentMinY;
             ContentMaxY = contentMaxY;
             Baseline = baseline;
+        }
+    }
+
+    /// <summary>
+    /// <see cref="EventArgs"/> for the <see cref="MarkdownRenderer.LineBreak"/> event.
+    /// </summary>
+    public class LineBreakEventArgs : EventArgs
+    {
+        /// <summary>
+        /// The current <see cref="VectSharp.Markdown.MarkdownContext"/>.
+        /// </summary>
+        public MarkdownContext MarkdownContext { get; }
+
+        /// <summary>
+        /// The current line before the line break.
+        /// </summary>
+        public Line Line { get; }
+
+        /// <summary>
+        /// Gets or sets the position at which the line break should actually happen.
+        /// If this is set to <c>0</c>, the line break happens at the automatically determined point.
+        /// If this is set to a value <c>n</c> &gt; 0, the line break happens <c>n</c> <see cref="LineFragment"/>s before this point.
+        /// </summary>
+        public int BreakPoint { get; set; }
+
+        /// <summary>
+        /// The word that will follow after the line break (i.e., on the following line), when <see cref="BreakPoint"/> is <c>0</c>.
+        /// </summary>
+        public Word NextWord { get; }
+
+        /// <summary>
+        /// The context in which the line break happened.
+        /// </summary>
+        public LineBreakContext Context { get; }
+
+        /// <summary>
+        /// Represents contexts in which line breaks can happen.
+        /// </summary>
+        public enum LineBreakContext
+        {
+            /// <summary>
+            /// The line break happened within a text inline.
+            /// </summary>
+            LiteralInline,
+
+            /// <summary>
+            /// The line break happened within a code inline.
+            /// </summary>
+            CodeInline,
+
+            /// <summary>
+            /// The line break happened within a code block.
+            /// </summary>
+            CodeBlock
+        }
+
+        /// <summary>
+        /// Create a new <see cref="LineBreakEventArgs"/>.
+        /// </summary>
+        /// <param name="markdownContext">The current <see cref="VectSharp.Markdown.MarkdownContext"/>.</param>
+        /// <param name="line">The current line before the line break.</param>
+        /// <param name="nextWord">The word that will follow after the line break (i.e., on the following line), when <see cref="BreakPoint"/> is <c>0</c>.</param>
+        /// <param name="context">The context in which the line break happened.</param>
+        public LineBreakEventArgs(MarkdownContext markdownContext, Line line, Word nextWord, LineBreakContext context)
+        {
+            MarkdownContext = markdownContext;
+            Line = line;
+            NextWord = nextWord;
+            Context = context;
         }
     }
 }

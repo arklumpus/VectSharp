@@ -33,6 +33,11 @@ namespace VectSharp.Markdown
         public abstract void Translate(double deltaX, double deltaY);
         
         /// <summary>
+        /// Position of the cursor when this <see cref="LineFragment"/> was created.
+        /// </summary>
+        public Point CursorPosition { get; protected set; }
+
+        /// <summary>
         /// Graphics action tag for the fragment.
         /// </summary>
         public string Tag { get; protected set; }
@@ -63,6 +68,14 @@ namespace VectSharp.Markdown
         /// <param name="deltaY">Additional translation on the vertical axis.</param>
         /// <returns>If a text element has been drawn, this method should return the bottom-right corner of the drawn text element, otherwise <see langword="null"/>. This is used to update the <see cref="MarkdownContext.BottomRight"/> property.</returns>
         public abstract Point? Render(Graphics graphics, double deltaY);
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        protected LineFragment()
+        {
+
+        }
     }
 
     /// <summary>
@@ -97,20 +110,23 @@ namespace VectSharp.Markdown
         /// <param name="text">The text contained in the fragment.</param>
         /// <param name="font">The font used to draw the text.</param>
         /// <param name="colour">The colour used to draw the text.</param>
+        /// <param name="cursorPosition">The position of the cursor at the time this fragment was generated.</param>
         /// <param name="tag">Graphics action tag for the text.</param>
-        public TextFragment(Point position, string text, Font font, Colour colour, string tag)
+        public TextFragment(Point position, string text, Font font, Colour colour, Point cursorPosition, string tag)
         {
             this.Position = position;
             this.Text = text;
             this.Font = font;
             this.Colour = colour;
             this.Tag = tag;
+            this.CursorPosition = cursorPosition;
         }
 
         /// <inheritdoc/>
         public override void Translate(double deltaX, double deltaY)
         {
             this.Position = new Point(this.Position.X + deltaX, this.Position.Y + deltaY);
+            this.CursorPosition = new Point(this.CursorPosition.X + deltaX, this.CursorPosition.Y + deltaY);
         }
 
         /// <inheritdoc/>
@@ -173,14 +189,16 @@ namespace VectSharp.Markdown
         /// <param name="end">The end position of the underline.</param>
         /// <param name="colour">The colour of the underline.</param>
         /// <param name="thickness">The thickness of the underline.</param>
+        /// <param name="cursorPosition">The position of the cursor at the time this fragment was generated.</param>
         /// <param name="tag">Graphics action tag for the underline.</param>
-        public UnderlineFragment(Point start, Point end, Colour colour, double thickness, string tag)
+        public UnderlineFragment(Point start, Point end, Colour colour, double thickness, Point cursorPosition, string tag)
         {
             this.Start = start;
             this.End = end;
             this.Colour = colour;
             this.Thickness = thickness;
             this.Tag = tag;
+            this.CursorPosition = cursorPosition;
         }
 
         /// <inheritdoc/>
@@ -188,6 +206,7 @@ namespace VectSharp.Markdown
         {
             this.Start = new Point(this.Start.X + deltaX, this.Start.Y + deltaY);
             this.End = new Point(this.End.X + deltaX, this.End.Y + deltaY);
+            this.CursorPosition = new Point(this.CursorPosition.X + deltaX, this.CursorPosition.Y + deltaY);
         }
 
         /// <inheritdoc/>
@@ -242,19 +261,22 @@ namespace VectSharp.Markdown
         /// <param name="topLeft">The top-left corner of the rectangle.</param>
         /// <param name="size">The size of the rectangle.</param>
         /// <param name="colour">The colour used to draw the rectangle.</param>
+        /// <param name="cursorPosition">The position of the cursor at the time this fragment was generated.</param>
         /// <param name="tag">Graphics action tag for the rectangle.</param>
-        public RectangleFragment(Point topLeft, Size size, Colour colour, string tag)
+        public RectangleFragment(Point topLeft, Size size, Colour colour, Point cursorPosition, string tag)
         {
             this.TopLeft = topLeft;
             this.Size = size;
             this.Colour = colour;
             this.Tag = tag;
+            this.CursorPosition = cursorPosition;
         }
 
         /// <inheritdoc/>
         public override void Translate(double deltaX, double deltaY)
         {
             this.TopLeft = new Point(this.TopLeft.X + deltaX, this.TopLeft.Y + deltaY);
+            this.CursorPosition = new Point(this.CursorPosition.X + deltaX, this.CursorPosition.Y + deltaY);
         }
 
         /// <inheritdoc/>
@@ -286,7 +308,7 @@ namespace VectSharp.Markdown
     /// <summary>
     /// Represents a <see cref="LineFragment"/> that draws something.
     /// </summary>
-    internal class GraphicsFragment : LineFragment
+    public class GraphicsFragment : LineFragment
     {
         /// <summary>
         /// The origin of the graphics fragment being drawn, relative to the cursor at the start of the line.
@@ -309,17 +331,20 @@ namespace VectSharp.Markdown
         /// <param name="origin">The origin of the graphics fragment being drawn.</param>
         /// <param name="graphics">The <see cref="Graphics"/> to draw.</param>
         /// <param name="ascent">The ascent for the graphics.</param>
-        public GraphicsFragment(Point origin, Graphics graphics, double ascent)
+        /// <param name="cursorPosition">The position of the cursor at the time this fragment was generated.</param>
+        public GraphicsFragment(Point origin, Graphics graphics, double ascent, Point cursorPosition)
         {
             this.Origin = origin;
             this.Graphics = graphics;
             this.Ascent = ascent;
+            this.CursorPosition = cursorPosition;
         }
 
         /// <inheritdoc/>
         public override void Translate(double deltaX, double deltaY)
         {
             this.Origin = new Point(this.Origin.X + deltaX, this.Origin.Y + deltaY);
+            this.CursorPosition = new Point(this.CursorPosition.X + deltaX, this.CursorPosition.Y + deltaY);
         }
 
         /// <inheritdoc/>

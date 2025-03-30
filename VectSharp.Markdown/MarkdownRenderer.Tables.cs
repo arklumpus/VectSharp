@@ -186,7 +186,7 @@ namespace VectSharp.Markdown
                 double prevMaxHeight = maxHeight;
                 maxHeight = Math.Max(maxHeight, cellPage.Height);
 
-                context.CurrentLine.Fragments.Add(new GraphicsFragment(new Point(context.Cursor.X, context.Cursor.Y - cellPage.Height), cellPage.Graphics, cellPage.Height));
+                context.CurrentLine.Fragments.Add(new GraphicsFragment(new Point(context.Cursor.X, context.Cursor.Y - cellPage.Height), cellPage.Graphics, cellPage.Height, context.Cursor));
 
                 context.Cursor = new Point(context.Cursor.X + cellWidth, context.Cursor.Y);
             }
@@ -206,7 +206,7 @@ namespace VectSharp.Markdown
                 }
             }
 
-            context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(startX, context.Cursor.Y), new Point(columnWidths.Sum() + startX, context.Cursor.Y), row.IsHeader ? this.TableHeaderRowSeparatorColour : this.TableRowSeparatorColour, row.IsHeader ? this.TableHeaderRowSeparatorThickness : this.TableHeaderSeparatorThickness, context.Tag));
+            context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(startX, context.Cursor.Y), new Point(columnWidths.Sum() + startX, context.Cursor.Y), row.IsHeader ? this.TableHeaderRowSeparatorColour : this.TableRowSeparatorColour, row.IsHeader ? this.TableHeaderRowSeparatorThickness : this.TableHeaderSeparatorThickness, context.Cursor, context.Tag));
 
             context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y, context.GetMaxX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X), this);
             context.CurrentLine = null;

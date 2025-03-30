@@ -246,7 +246,7 @@ namespace VectSharp.Markdown
 
                     if (finalX <= currLineMaxX || broken)
                     {
-                        context.CurrentLine.Fragments.Add(new TextFragment(new Point(context.Cursor.X + wordMetrics.LeftSideBearing, context.Cursor.Y), w.Text, context.Font, context.Colour, context.Tag));
+                        context.CurrentLine.Fragments.Add(new TextFragment(new Point(context.Cursor.X + wordMetrics.LeftSideBearing, context.Cursor.Y), w.Text, context.Font, context.Colour, context.Cursor, context.Tag));
                         context.Cursor = new Point(context.Cursor.X + wordMetrics.Width + wordMetrics.RightSideBearing + wordMetrics.LeftSideBearing, context.Cursor.Y);
 
                         broken = false;
@@ -260,16 +260,31 @@ namespace VectSharp.Markdown
                     {
                         if (context.Underline && underlineStart != underlineEnd)
                         {
-                            context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y + context.Font.FontSize * 0.2), new Point(underlineEnd, context.Cursor.Y + context.Font.FontSize * 0.2), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Tag));
+                            context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y + context.Font.FontSize * 0.2), new Point(underlineEnd, context.Cursor.Y + context.Font.FontSize * 0.2), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Cursor, context.Tag));
                         }
                         else if (context.StrikeThrough && underlineStart != underlineEnd)
                         {
-                            context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), new Point(underlineEnd, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Tag));
+                            context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), new Point(underlineEnd, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Cursor, context.Tag));
+                        }
+
+                        Point cursorBeforeLineBreak = context.Cursor;
+
+                        int breakpoint = 0;
+                        this.OnLineBreak(context, context.CurrentLine, w, LineBreakEventArgs.LineBreakContext.LiteralInline, ref breakpoint);
+
+                        LineFragment[] removedFragments = new LineFragment[0];
+
+                        if (breakpoint > 0 && breakpoint < context.CurrentLine.Fragments.Count)
+                        {
+                            removedFragments = new LineFragment[breakpoint];
+                            for (int j = 0; j < breakpoint; j++)
+                            {
+                                removedFragments[j] = context.CurrentLine.Fragments[context.CurrentLine.Fragments.Count - breakpoint + j];
+                            }
+                            context.CurrentLine.Fragments.RemoveRange(context.CurrentLine.Fragments.Count - breakpoint, breakpoint);
                         }
 
                         context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y, context.GetMaxX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X), this);
-
-
 
                         context.CurrentLine = new Line(context.Font.Ascent);
                         context.Cursor = new Point(0, context.Cursor.Y - context.Font.Descent + SpaceAfterLine * context.Font.FontSize + context.Font.Ascent);
@@ -278,13 +293,38 @@ namespace VectSharp.Markdown
                         double minX = context.GetMinX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent);
 
                         context.Cursor = new Point(minX, context.Cursor.Y);
-
-                        underlineStart = minX;
-                        underlineEnd = minX;
-
+                        
                         i--;
-                        ignoreNextWhitespace = true;
-                        broken = true;
+
+                        for (int j = 0; j < removedFragments.Length; j++)
+                        {
+                            double dx, dy;
+
+                            if (j < removedFragments.Length - 1)
+                            {
+                                dx = removedFragments[j + 1].CursorPosition.X - removedFragments[j].CursorPosition.X;
+                                dy = removedFragments[j + 1].CursorPosition.Y - removedFragments[j].CursorPosition.Y;
+                            }
+                            else
+                            {
+                                dx = cursorBeforeLineBreak.X - removedFragments[j].CursorPosition.X;
+                                dy = cursorBeforeLineBreak.Y - removedFragments[j].CursorPosition.Y;
+                            }
+
+                            removedFragments[j].Translate(-removedFragments[j].CursorPosition.X + context.Cursor.X, -removedFragments[j].CursorPosition.Y + context.Cursor.Y);
+                            context.CurrentLine.Fragments.Add(removedFragments[j]);
+
+                            context.Cursor = new Point(context.Cursor.X + dx, context.Cursor.Y + dy);
+                        }
+
+                        underlineStart = context.Cursor.X;
+                        underlineEnd = context.Cursor.X;
+
+                        if (removedFragments.Length == 0)
+                        {
+                            ignoreNextWhitespace = true;
+                            broken = true;
+                        }
                     }
                 }
                 else
@@ -295,11 +335,11 @@ namespace VectSharp.Markdown
 
             if (context.Underline && underlineStart != underlineEnd)
             {
-                context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y + context.Font.FontSize * 0.2), new Point(underlineEnd, context.Cursor.Y + context.Font.FontSize * 0.2), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Tag));
+                context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y + context.Font.FontSize * 0.2), new Point(underlineEnd, context.Cursor.Y + context.Font.FontSize * 0.2), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Cursor, context.Tag));
             }
             else if (context.StrikeThrough && underlineStart != underlineEnd)
             {
-                context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), new Point(underlineEnd, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Tag));
+                context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), new Point(underlineEnd, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Cursor, context.Tag));
             }
 
             return text;
@@ -342,12 +382,12 @@ namespace VectSharp.Markdown
                     {
                         if (i == 0)
                         {
-                            context.CurrentLine.Fragments.Add(new RectangleFragment(new Point(context.Cursor.X - this.CodeInlineMargin * context.Font.FontSize, context.Cursor.Y - context.Font.YMax), new Size(this.CodeInlineMargin * context.Font.FontSize, context.Font.YMax - context.Font.YMin), CodeInlineBackgroundColour, context.Tag));
+                            context.CurrentLine.Fragments.Add(new RectangleFragment(new Point(context.Cursor.X - this.CodeInlineMargin * context.Font.FontSize, context.Cursor.Y - context.Font.YMax), new Size(this.CodeInlineMargin * context.Font.FontSize, context.Font.YMax - context.Font.YMin), CodeInlineBackgroundColour, context.Cursor, context.Tag));
                         }
 
-                        context.CurrentLine.Fragments.Add(new RectangleFragment(new Point(context.Cursor.X - spaceWidth * w.WhitespaceCount * (w.PrecedingWhitespace == '\t' ? 4 : 1), context.Cursor.Y - context.Font.YMax), new Size(wordMetrics.Width + wordMetrics.LeftSideBearing * 2 + wordMetrics.RightSideBearing + spaceWidth * w.WhitespaceCount * (w.PrecedingWhitespace == '\t' ? 4 : 1), context.Font.YMax - context.Font.YMin), CodeInlineBackgroundColour, context.Tag));
+                        context.CurrentLine.Fragments.Add(new RectangleFragment(new Point(context.Cursor.X - spaceWidth * w.WhitespaceCount * (w.PrecedingWhitespace == '\t' ? 4 : 1), context.Cursor.Y - context.Font.YMax), new Size(wordMetrics.Width + wordMetrics.LeftSideBearing * 2 + wordMetrics.RightSideBearing + spaceWidth * w.WhitespaceCount * (w.PrecedingWhitespace == '\t' ? 4 : 1), context.Font.YMax - context.Font.YMin), CodeInlineBackgroundColour, context.Cursor, context.Tag));
 
-                        context.CurrentLine.Fragments.Add(new TextFragment(new Point(context.Cursor.X + wordMetrics.LeftSideBearing, context.Cursor.Y), w.Text, context.Font, context.Colour, context.Tag));
+                        context.CurrentLine.Fragments.Add(new TextFragment(new Point(context.Cursor.X + wordMetrics.LeftSideBearing, context.Cursor.Y), w.Text, context.Font, context.Colour, context.Cursor, context.Tag));
                         context.Cursor = new Point(context.Cursor.X + wordMetrics.Width + wordMetrics.RightSideBearing + wordMetrics.LeftSideBearing, context.Cursor.Y);
 
                         broken = false;
@@ -361,11 +401,28 @@ namespace VectSharp.Markdown
                     {
                         if (context.Underline && underlineStart != underlineEnd)
                         {
-                            context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y + context.Font.FontSize * 0.2), new Point(underlineEnd, context.Cursor.Y + context.Font.FontSize * 0.2), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Tag));
+                            context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y + context.Font.FontSize * 0.2), new Point(underlineEnd, context.Cursor.Y + context.Font.FontSize * 0.2), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Cursor, context.Tag));
                         }
                         else if (context.StrikeThrough && underlineStart != underlineEnd)
                         {
-                            context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), new Point(underlineEnd, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Tag));
+                            context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), new Point(underlineEnd, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Cursor, context.Tag));
+                        }
+
+                        Point cursorBeforeLineBreak = context.Cursor;
+
+                        int breakpoint = 0;
+                        this.OnLineBreak(context, context.CurrentLine, w, LineBreakEventArgs.LineBreakContext.CodeInline, ref breakpoint);
+
+                        LineFragment[] removedFragments = new LineFragment[0];
+
+                        if (breakpoint > 0 && breakpoint < context.CurrentLine.Fragments.Count)
+                        {
+                            removedFragments = new LineFragment[breakpoint];
+                            for (int j = 0; j < breakpoint; j++)
+                            {
+                                removedFragments[j] = context.CurrentLine.Fragments[context.CurrentLine.Fragments.Count - breakpoint + j];
+                            }
+                            context.CurrentLine.Fragments.RemoveRange(context.CurrentLine.Fragments.Count - breakpoint, breakpoint);
                         }
 
                         context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y, context.GetMaxX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X), this);
@@ -379,16 +436,41 @@ namespace VectSharp.Markdown
 
                         context.Cursor = new Point(minX, context.Cursor.Y);
 
+                        i--;
+
+                        for (int j = 0; j < removedFragments.Length; j++)
+                        {
+                            double dx, dy;
+
+                            if (j < removedFragments.Length - 1)
+                            {
+                                dx = removedFragments[j + 1].CursorPosition.X - removedFragments[j].CursorPosition.X;
+                                dy = removedFragments[j + 1].CursorPosition.Y - removedFragments[j].CursorPosition.Y;
+                            }
+                            else
+                            {
+                                dx = cursorBeforeLineBreak.X - removedFragments[j].CursorPosition.X;
+                                dy = cursorBeforeLineBreak.Y - removedFragments[j].CursorPosition.Y;
+                            }
+
+                            removedFragments[j].Translate(-removedFragments[j].CursorPosition.X + context.Cursor.X, -removedFragments[j].CursorPosition.Y + context.Cursor.Y);
+                            context.CurrentLine.Fragments.Add(removedFragments[j]);
+
+                            context.Cursor = new Point(context.Cursor.X + dx, context.Cursor.Y + dy);
+                        }
+
+                        underlineStart = context.Cursor.X;
+                        underlineEnd = context.Cursor.X;
+
                         if (i == 0)
                         {
                             context.Cursor = new Point(context.Cursor.X + this.CodeInlineMargin * context.Font.FontSize, context.Cursor.Y);
                         }
 
-                        underlineStart = minX;
-                        underlineEnd = minX;
-
-                        i--;
-                        broken = true;
+                        if (removedFragments.Length == 0)
+                        {
+                            broken = true;
+                        }
                     }
                 }
             }
@@ -396,14 +478,14 @@ namespace VectSharp.Markdown
 
             if (context.Underline && underlineStart != underlineEnd)
             {
-                context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y + context.Font.FontSize * 0.2), new Point(underlineEnd, context.Cursor.Y + context.Font.FontSize * 0.2), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Tag));
+                context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y + context.Font.FontSize * 0.2), new Point(underlineEnd, context.Cursor.Y + context.Font.FontSize * 0.2), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Cursor, context.Tag));
             }
             else if (context.StrikeThrough && underlineStart != underlineEnd)
             {
-                context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), new Point(underlineEnd, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Tag));
+                context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), new Point(underlineEnd, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Cursor, context.Tag));
             }
 
-            context.CurrentLine.Fragments.Add(new RectangleFragment(new Point(context.Cursor.X, context.Cursor.Y - context.Font.YMax), new Size(this.CodeInlineMargin * context.Font.FontSize, context.Font.YMax - context.Font.YMin), CodeInlineBackgroundColour, context.Tag));
+            context.CurrentLine.Fragments.Add(new RectangleFragment(new Point(context.Cursor.X, context.Cursor.Y - context.Font.YMax), new Size(this.CodeInlineMargin * context.Font.FontSize, context.Font.YMax - context.Font.YMin), CodeInlineBackgroundColour, context.Cursor, context.Tag));
 
             context.Cursor = new Point(context.Cursor.X + this.CodeInlineMargin * context.Font.FontSize, context.Cursor.Y);
 
@@ -436,10 +518,10 @@ namespace VectSharp.Markdown
                 Word w = words[i];
                 if (!string.IsNullOrEmpty(w.Text))
                 {
-                    context.Cursor = new Point(context.Cursor.X + spaceWidth * w.WhitespaceCount * (w.PrecedingWhitespace == '\t' ? 4 : 1), context.Cursor.Y);
+                    
                     Font.DetailedFontMetrics wordMetrics = w.Metrics;
 
-                    double finalX = context.Cursor.X + wordMetrics.Width + wordMetrics.RightSideBearing + wordMetrics.LeftSideBearing;
+                    double finalX = context.Cursor.X + spaceWidth * w.WhitespaceCount * (w.PrecedingWhitespace == '\t' ? 4 : 1) + wordMetrics.Width + wordMetrics.RightSideBearing + wordMetrics.LeftSideBearing;
 
                     double effW = wordMetrics.Width + wordMetrics.RightSideBearing + wordMetrics.LeftSideBearing;
 
@@ -447,8 +529,10 @@ namespace VectSharp.Markdown
 
                     if (finalX <= currLineMaxX || broken)
                     {
+                        context.Cursor = new Point(context.Cursor.X + spaceWidth * w.WhitespaceCount * (w.PrecedingWhitespace == '\t' ? 4 : 1), context.Cursor.Y);
+
                         broken = false;
-                        context.CurrentLine.Fragments.Add(new TextFragment(new Point(context.Cursor.X + wordMetrics.LeftSideBearing, context.Cursor.Y), w.Text, context.Font, context.Colour, context.Tag));
+                        context.CurrentLine.Fragments.Add(new TextFragment(new Point(context.Cursor.X + wordMetrics.LeftSideBearing, context.Cursor.Y), w.Text, context.Font, context.Colour, context.Cursor, context.Tag));
                         context.Cursor = new Point(context.Cursor.X + wordMetrics.Width + wordMetrics.RightSideBearing + wordMetrics.LeftSideBearing, context.Cursor.Y);
 
                         if (context.Underline || context.StrikeThrough)
@@ -458,21 +542,35 @@ namespace VectSharp.Markdown
                     }
                     else
                     {
-                        context.CurrentLine.Fragments.Insert(0, new RectangleFragment(new Point(minX, context.Cursor.Y - context.Font.YMax), new Size(currLineMaxX + context.Font.FontSize - minX, context.Font.YMax - context.Font.YMin + this.SpaceAfterLine * context.Font.FontSize), CodeBlockBackgroundColour, context.Tag));
+                        context.CurrentLine.Fragments.Insert(0, new RectangleFragment(new Point(minX, context.Cursor.Y - context.Font.YMax), new Size(currLineMaxX + context.Font.FontSize - minX, context.Font.YMax - context.Font.YMin + this.SpaceAfterLine * context.Font.FontSize), CodeBlockBackgroundColour, context.Cursor, context.Tag));
 
                         if (context.Underline && underlineStart != underlineEnd)
                         {
-                            context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y + context.Font.FontSize * 0.2), new Point(underlineEnd, context.Cursor.Y + context.Font.FontSize * 0.2), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Tag));
+                            context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y + context.Font.FontSize * 0.2), new Point(underlineEnd, context.Cursor.Y + context.Font.FontSize * 0.2), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Cursor, context.Tag));
                         }
                         else if (context.StrikeThrough && underlineStart != underlineEnd)
                         {
-                            context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), new Point(underlineEnd, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Tag));
+                            context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), new Point(underlineEnd, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Cursor, context.Tag));
+                        }
+
+                        Point cursorBeforeLineBreak = context.Cursor;
+
+                        int breakpoint = 0;
+                        this.OnLineBreak(context, context.CurrentLine, w, LineBreakEventArgs.LineBreakContext.CodeBlock, ref breakpoint);
+
+                        LineFragment[] removedFragments = new LineFragment[0];
+
+                        if (breakpoint > 0 && breakpoint < context.CurrentLine.Fragments.Count)
+                        {
+                            removedFragments = new LineFragment[breakpoint];
+                            for (int j = 0; j < breakpoint; j++)
+                            {
+                                removedFragments[j] = context.CurrentLine.Fragments[context.CurrentLine.Fragments.Count - breakpoint + j];
+                            }
+                            context.CurrentLine.Fragments.RemoveRange(context.CurrentLine.Fragments.Count - breakpoint, breakpoint);
                         }
 
                         context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y, context.GetMaxX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X), this);
-
-                        underlineStart = 0;
-                        underlineEnd = 0;
 
                         context.CurrentLine = new Line(context.Font.Ascent);
 
@@ -485,7 +583,35 @@ namespace VectSharp.Markdown
                         context.Cursor = new Point(minX + context.Font.FontSize, context.Cursor.Y);
 
                         i--;
-                        broken = true;
+
+                        for (int j = 0; j < removedFragments.Length; j++)
+                        {
+                            double dx, dy;
+
+                            if (j < removedFragments.Length - 1)
+                            {
+                                dx = removedFragments[j + 1].CursorPosition.X - removedFragments[j].CursorPosition.X;
+                                dy = removedFragments[j + 1].CursorPosition.Y - removedFragments[j].CursorPosition.Y;
+                            }
+                            else
+                            {
+                                dx = cursorBeforeLineBreak.X - removedFragments[j].CursorPosition.X;
+                                dy = cursorBeforeLineBreak.Y - removedFragments[j].CursorPosition.Y;
+                            }
+
+                            removedFragments[j].Translate(-removedFragments[j].CursorPosition.X + context.Cursor.X, -removedFragments[j].CursorPosition.Y + context.Cursor.Y);
+                            context.CurrentLine.Fragments.Add(removedFragments[j]);
+
+                            context.Cursor = new Point(context.Cursor.X + dx, context.Cursor.Y + dy);
+                        }
+
+                        underlineStart = context.Cursor.X;
+                        underlineEnd = context.Cursor.X;
+
+                        if (removedFragments.Length == 0)
+                        {
+                            broken = true;
+                        }
                     }
                 }
                 else
@@ -496,14 +622,14 @@ namespace VectSharp.Markdown
 
             if (context.Underline && underlineStart != underlineEnd)
             {
-                context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y + context.Font.FontSize * 0.2), new Point(underlineEnd, context.Cursor.Y + context.Font.FontSize * 0.2), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Tag));
+                context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y + context.Font.FontSize * 0.2), new Point(underlineEnd, context.Cursor.Y + context.Font.FontSize * 0.2), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Cursor, context.Tag));
             }
             else if (context.StrikeThrough && underlineStart != underlineEnd)
             {
-                context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), new Point(underlineEnd, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Tag));
+                context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(underlineStart, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), new Point(underlineEnd, context.Cursor.Y - context.Font.Ascent * 0.5 - context.Font.Descent * 0.5), context.Colour, context.Font.FontSize * (context.Font.FontFamily.IsBold ? this.BoldUnderlineThickness : this.UnderlineThickness), context.Cursor, context.Tag));
             }
 
-            context.CurrentLine.Fragments.Insert(0, new RectangleFragment(new Point(minX, context.Cursor.Y - context.Font.YMax), new Size(currLineMaxX + context.Font.FontSize - minX, context.Font.YMax - context.Font.YMin + this.SpaceAfterLine * context.Font.FontSize), CodeBlockBackgroundColour, context.Tag));
+            context.CurrentLine.Fragments.Insert(0, new RectangleFragment(new Point(minX, context.Cursor.Y - context.Font.YMax), new Size(currLineMaxX + context.Font.FontSize - minX, context.Font.YMax - context.Font.YMin + this.SpaceAfterLine * context.Font.FontSize), CodeBlockBackgroundColour, context.Cursor, context.Tag));
         }
 
         private string RenderEmphasisInline(EmphasisInline emphasis, ref MarkdownContext context, ref Graphics graphics, NewPageAction newPageAction)

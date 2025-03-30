@@ -15,18 +15,34 @@
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace VectSharp.Markdown
 {
-    internal class Word
+    /// <summary>
+    /// Represents a single word in a line.
+    /// </summary>
+    public class Word
     {
+        /// <summary>
+        /// The whitespace character that precedes this word.
+        /// </summary>
         public char PrecedingWhitespace { get; }
+        
+        /// <summary>
+        /// The number of whitespace characters that precede this word.
+        /// </summary>
         public int WhitespaceCount { get; }
-        public string Text { get; }
 
+        /// <summary>
+        /// The text of the word.
+        /// </summary>
+        public string Text { get; }
+        
+        /// <summary>
+        /// The metrics of the word.
+        /// </summary>
         public Font.DetailedFontMetrics Metrics { get; }
 
         private Word(char precedingWhitespace, int whitespaceCount, string text, Font font)
@@ -92,7 +108,7 @@ namespace VectSharp.Markdown
             yield return word;
         }
 
-        public static IEnumerable<Word> GetWords(string text, Font font, double maxWidth)
+        internal static IEnumerable<Word> GetWords(string text, Font font, double maxWidth)
         {
             if (!SpaceWidths.TryGetValue(font.FontFamily, out double spaceWidth))
             {

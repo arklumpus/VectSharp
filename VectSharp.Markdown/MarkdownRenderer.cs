@@ -443,7 +443,7 @@ namespace VectSharp.Markdown
                                 context.Cursor = new Point(minX, context.Cursor.Y);
                             }
 
-                            context.CurrentLine.Fragments.Add(new GraphicsFragment(new Point(context.Cursor.X, context.Cursor.Y - scaleY * imagePage.Height), scaledImage, scaleY * imagePage.Height));
+                            context.CurrentLine.Fragments.Add(new GraphicsFragment(new Point(context.Cursor.X, context.Cursor.Y - scaleY * imagePage.Height), scaledImage, scaleY * imagePage.Height, context.Cursor));
                             context.Cursor = new Point(context.Cursor.X + scaleX * imagePage.Width, context.Cursor.Y);
                         }
                     }

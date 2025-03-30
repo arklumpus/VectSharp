@@ -198,7 +198,7 @@ namespace VectSharp.Markdown
             if (this.HeaderLineThicknesses[heading.Level - 1] > 0)
             {
                 double lineY = context.Cursor.Y + context.Font.FontSize * 0.3;
-                context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(minX, context.Cursor.Y + context.Font.FontSize * 0.3), new Point(context.GetMaxX(lineY, PageSize.Width - Margins.Right - context.Translation.X), lineY), this.HeaderLineColour, this.HeaderLineThicknesses[heading.Level - 1], context.Tag));
+                context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(minX, context.Cursor.Y + context.Font.FontSize * 0.3), new Point(context.GetMaxX(lineY, PageSize.Width - Margins.Right - context.Translation.X), lineY), this.HeaderLineColour, this.HeaderLineThicknesses[heading.Level - 1], context.Cursor, context.Tag));
             }
 
             context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y, context.GetMaxX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X), this);
@@ -311,7 +311,7 @@ namespace VectSharp.Markdown
 
                         if (index == 0)
                         {
-                            context.CurrentLine.Fragments.Insert(0, new RectangleFragment(new Point(minX, context.Cursor.Y - context.Font.YMax - this.SpaceAfterLine * context.Font.FontSize), new Size(maxX - minX, this.SpaceAfterLine * context.Font.FontSize * 2), CodeBlockBackgroundColour, context.Tag));
+                            context.CurrentLine.Fragments.Insert(0, new RectangleFragment(new Point(minX, context.Cursor.Y - context.Font.YMax - this.SpaceAfterLine * context.Font.FontSize), new Size(maxX - minX, this.SpaceAfterLine * context.Font.FontSize * 2), CodeBlockBackgroundColour, context.Cursor, context.Tag));
                         }
 
                         foreach (FormattedString item in line)
@@ -398,7 +398,7 @@ namespace VectSharp.Markdown
 
                         if (index == 0)
                         {
-                            context.CurrentLine.Fragments.Insert(0, new RectangleFragment(new Point(minX, context.Cursor.Y - context.Font.YMax - this.SpaceAfterLine * context.Font.FontSize), new Size(maxX - minX, this.SpaceAfterLine * context.Font.FontSize * 2), CodeBlockBackgroundColour, context.Tag));
+                            context.CurrentLine.Fragments.Insert(0, new RectangleFragment(new Point(minX, context.Cursor.Y - context.Font.YMax - this.SpaceAfterLine * context.Font.FontSize), new Size(maxX - minX, this.SpaceAfterLine * context.Font.FontSize * 2), CodeBlockBackgroundColour, context.Cursor, context.Tag));
                         }
 
 
@@ -452,7 +452,7 @@ namespace VectSharp.Markdown
             double maxX = context.GetMaxX(context.Cursor.Y, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X);
             double minX = context.GetMinX(context.Cursor.Y);
 
-            context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(minX, context.Cursor.Y), new Point(maxX, context.Cursor.Y), this.ThematicBreakLineColour, this.ThematicBreakThickness, context.Tag));
+            context.CurrentLine.Fragments.Add(new UnderlineFragment(new Point(minX, context.Cursor.Y), new Point(maxX, context.Cursor.Y), this.ThematicBreakLineColour, this.ThematicBreakThickness, context.Cursor, context.Tag));
 
             context.CurrentLine.Render(ref graphics, ref context, newPageAction, this.PageSize.Height - this.Margins.Bottom - context.Translation.Y - context.MarginBottomRight.Y, context.GetMaxX(context.Cursor.Y - context.Font.Ascent, context.Cursor.Y - context.Font.Descent, this.PageSize.Width - this.Margins.Right - context.Translation.X - context.MarginBottomRight.X), this);
             context.CurrentLine = null;
@@ -634,12 +634,12 @@ namespace VectSharp.Markdown
                     if (list.IsLoose)
                     {
                         isLoose = true;
-                        context.CurrentLine.Fragments.Add(new TextFragment(new Point(context.Cursor.X - context.Font.MeasureText(bullet).Width - this.IndentWidth * 0.15, context.Cursor.Y + context.Font.Ascent + SpaceBeforeParagaph * context.Font.FontSize), bullet, context.Font, context.Colour, context.Tag));
+                        context.CurrentLine.Fragments.Add(new TextFragment(new Point(context.Cursor.X - context.Font.MeasureText(bullet).Width - this.IndentWidth * 0.15, context.Cursor.Y + context.Font.Ascent + SpaceBeforeParagaph * context.Font.FontSize), bullet, context.Font, context.Colour, context.Cursor, context.Tag));
                     }
                     else
                     {
                         isLoose = false;
-                        context.CurrentLine.Fragments.Add(new TextFragment(new Point(context.Cursor.X - context.Font.MeasureText(bullet).Width - this.IndentWidth * 0.15, context.Cursor.Y + context.Font.Ascent), bullet, context.Font, context.Colour, context.Tag));
+                        context.CurrentLine.Fragments.Add(new TextFragment(new Point(context.Cursor.X - context.Font.MeasureText(bullet).Width - this.IndentWidth * 0.15, context.Cursor.Y + context.Font.Ascent), bullet, context.Font, context.Colour, context.Cursor, context.Tag));
                     }
                 }
                 else
@@ -663,12 +663,12 @@ namespace VectSharp.Markdown
                         if (list.IsLoose)
                         {
                             isLoose = true;
-                            context.CurrentLine.Fragments.Add(new GraphicsFragment(new Point(context.Cursor.X - this.IndentWidth * 0.15, context.Cursor.Y + context.Font.Ascent + SpaceBeforeParagaph * context.Font.FontSize - context.Font.Descent * 0.5 - (context.Font.Ascent - context.Font.Descent) * 0.5), bullet, 0));
+                            context.CurrentLine.Fragments.Add(new GraphicsFragment(new Point(context.Cursor.X - this.IndentWidth * 0.15, context.Cursor.Y + context.Font.Ascent + SpaceBeforeParagaph * context.Font.FontSize - context.Font.Descent * 0.5 - (context.Font.Ascent - context.Font.Descent) * 0.5), bullet, 0, context.Cursor));
                         }
                         else
                         {
                             isLoose = false;
-                            context.CurrentLine.Fragments.Add(new GraphicsFragment(new Point(context.Cursor.X - this.IndentWidth * 0.15, context.Cursor.Y + context.Font.Ascent - context.Font.Descent * 0.5 - (context.Font.Ascent - context.Font.Descent) * 0.5), bullet, 0));
+                            context.CurrentLine.Fragments.Add(new GraphicsFragment(new Point(context.Cursor.X - this.IndentWidth * 0.15, context.Cursor.Y + context.Font.Ascent - context.Font.Descent * 0.5 - (context.Font.Ascent - context.Font.Descent) * 0.5), bullet, 0, context.Cursor));
                         }
                     }
                     else
@@ -682,12 +682,12 @@ namespace VectSharp.Markdown
                         if (list.IsLoose)
                         {
                             isLoose = true;
-                            context.CurrentLine.Fragments.Add(new GraphicsFragment(new Point(context.Cursor.X - this.IndentWidth * 0.15, context.Cursor.Y + context.Font.Ascent + SpaceBeforeParagaph * context.Font.FontSize - context.Font.Descent * 0.5 - (context.Font.Ascent - context.Font.Descent) * 0.5), bullet, 0));
+                            context.CurrentLine.Fragments.Add(new GraphicsFragment(new Point(context.Cursor.X - this.IndentWidth * 0.15, context.Cursor.Y + context.Font.Ascent + SpaceBeforeParagaph * context.Font.FontSize - context.Font.Descent * 0.5 - (context.Font.Ascent - context.Font.Descent) * 0.5), bullet, 0, context.Cursor));
                         }
                         else
                         {
                             isLoose = false;
-                            context.CurrentLine.Fragments.Add(new GraphicsFragment(new Point(context.Cursor.X - this.IndentWidth * 0.15, context.Cursor.Y + context.Font.Ascent - context.Font.Descent * 0.5 - (context.Font.Ascent - context.Font.Descent) * 0.5), bullet, 0));
+                            context.CurrentLine.Fragments.Add(new GraphicsFragment(new Point(context.Cursor.X - this.IndentWidth * 0.15, context.Cursor.Y + context.Font.Ascent - context.Font.Descent * 0.5 - (context.Font.Ascent - context.Font.Descent) * 0.5), bullet, 0, context.Cursor));
                         }
                     }
                 }
@@ -741,7 +741,7 @@ namespace VectSharp.Markdown
 
                         double anchorHeight = this.BaseFontSize * Math.Max(1, this.HeaderFontSizeMultipliers.Max());
 
-                        context.CurrentLine.Fragments.Add(new RectangleFragment(new Point(context.Cursor.X, context.Cursor.Y - anchorHeight), new Size(10, anchorHeight), Colour.FromRgba(0, 0, 0, 0), anchor));
+                        context.CurrentLine.Fragments.Add(new RectangleFragment(new Point(context.Cursor.X, context.Cursor.Y - anchorHeight), new Size(10, anchorHeight), Colour.FromRgba(0, 0, 0, 0), context.Cursor, anchor));
                     }
                 }
                 else
