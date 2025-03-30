@@ -485,10 +485,23 @@ namespace VectSharp.ThreeD
         /// <inheritdoc/>
         public virtual Triangle3DElement Parent { get; set; } = null;
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Creates a new <see cref="Triangle3DElement"/> instance, representing a flat triangle.
+        /// </summary>
+        /// <param name="point1">The first vertex of the triangle.</param>
+        /// <param name="point2">The second vertex of the triangle.</param>
+        /// <param name="point3">The third vertex of the triangle.</param>
         public VectorRendererTriangle3DElement(Point3D point1, Point3D point2, Point3D point3) : base(point1, point2, point3) { }
-        
-        /// <inheritdoc/>
+
+        /// <summary>
+        /// Creates a new <see cref="Triangle3DElement"/> instance, representing a triangle with the specified vertex normals.
+        /// </summary>
+        /// <param name="point1">The first vertex of the triangle.</param>
+        /// <param name="point2">The second vertex of the triangle.</param>
+        /// <param name="point3">The third vertex of the triangle.</param>
+        /// <param name="point1Normal">The normal at the first vertex of the triangle.</param>
+        /// <param name="point2Normal">The normal at the second vertex of the triangle.</param>
+        /// <param name="point3Normal">The normal at the third vertex of the triangle.</param>
         public VectorRendererTriangle3DElement(Point3D point1, Point3D point2, Point3D point3, NormalizedVector3D point1Normal, NormalizedVector3D point2Normal, NormalizedVector3D point3Normal) : base(point1, point2, point3, point1Normal, point2Normal, point3Normal) { }
 
         /// <summary>

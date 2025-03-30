@@ -18,7 +18,7 @@ namespace VectSharp.Fonts
     /// <summary>
     /// Contains an <see cref="IFontLibrary"/> providing access to the Nimbus family of standard fonts (used e.g. by MuPDF).
     /// </summary>
-    public class Nimbus
+    public static class Nimbus
     {
         /// <summary>
         /// The font library.

@@ -53,6 +53,14 @@ namespace VectSharp.ThreeD
         public abstract Point3D ViewPoint { get; }
 
         /// <summary>
+        /// Default constructor.
+        /// </summary>
+        protected Camera()
+        {
+
+        }
+
+        /// <summary>
         /// Projects a <see cref="Point3D"/> into a <see cref="Point"/> on the camera plane, in 2D units.
         /// </summary>
         /// <param name="point">The 3D point to project.</param>
@@ -63,17 +71,17 @@ namespace VectSharp.ThreeD
         /// Projects a <see cref="Point"/> in 2D units to obtain the corresponding <see cref="Point3D"/> on the specified element.
         /// </summary>
         /// <param name="point">The <see cref="Point"/> to project.</param>
-        /// <param name="element">The <see cref="Line3DElement"/> on which the point should be projected.</param>
-        /// <returns>A <see cref="Point3D"/> corresponding to the point on <paramref name="element"/> that, when projected with the current camera, corresponds to <paramref name="point"/>.</returns>
-        public abstract Point3D Deproject(Point point, Line3DElement element);
+        /// <param name="line">The <see cref="Line3DElement"/> on which the point should be projected.</param>
+        /// <returns>A <see cref="Point3D"/> corresponding to the point on <paramref name="line"/> that, when projected with the current camera, corresponds to <paramref name="point"/>.</returns>
+        public abstract Point3D Deproject(Point point, Line3DElement line);
 
         /// <summary>
         /// Projects a <see cref="Point"/> in 2D units to obtain the corresponding <see cref="Point3D"/> on the specified element.
         /// </summary>
         /// <param name="point">The <see cref="Point"/> to project.</param>
-        /// <param name="element">The <see cref="Triangle3DElement"/> on which the point should be projected.</param>
-        /// <returns>A <see cref="Point3D"/> corresponding to the point on <paramref name="element"/> that, when projected with the current camera, corresponds to <paramref name="point"/>.</returns>
-        public abstract Point3D Deproject(Point point, Triangle3DElement element);
+        /// <param name="triangle">The <see cref="Triangle3DElement"/> on which the point should be projected.</param>
+        /// <returns>A <see cref="Point3D"/> corresponding to the point on <paramref name="triangle"/> that, when projected with the current camera, corresponds to <paramref name="point"/>.</returns>
+        public abstract Point3D Deproject(Point point, Triangle3DElement triangle);
 
         /// <summary>
         /// Compares two <see cref="Element3D"/>s to determine which one lies on top of the other when viewed with the current camera.
@@ -445,6 +453,14 @@ namespace VectSharp.ThreeD
     /// </summary>
     public abstract class CameraWithControls : Camera, ICameraWithControls
     {
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        protected CameraWithControls()
+        {
+
+        }
+
         /// <summary>
         /// Increases or decreases the field of view of the camera.
         /// </summary>

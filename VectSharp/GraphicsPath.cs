@@ -34,6 +34,14 @@ namespace VectSharp
 
 
         /// <summary>
+        /// Create a new empty <see cref="GraphicsPath"/>.
+        /// </summary>
+        public GraphicsPath()
+        {
+
+        }
+
+        /// <summary>
         /// Move the current point without tracing a segment from the previous point.
         /// </summary>
         /// <param name="p">The new point.</param>
@@ -138,7 +146,7 @@ namespace VectSharp
         /// <param name="largeArc">Determines whether the large or the small arc is drawn.</param>
         /// <param name="sweepClockwise">Determines whether the clockwise or anticlockwise arc is drawn.</param>
         /// <param name="endPoint">The end point of the arc.</param>
-        /// <returns></returns>
+        /// <returns>The <see cref="GraphicsPath"/>, to allow for chained calls.</returns>
         public GraphicsPath EllipticalArc(double radiusX, double radiusY, double axisAngle, bool largeArc, bool sweepClockwise, Point endPoint)
         {
             if (radiusX == 0 || radiusY == 0)

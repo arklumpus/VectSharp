@@ -180,6 +180,7 @@ namespace VectSharp
         /// Implicit conversion to a tuple.
         /// </summary>
         /// <param name="point">The point to convert.</param>
+        /// <returns>A <see cref="ValueTuple"/> containing the point's coordinates.</returns>
         public static implicit operator (double X, double Y)(Point point)
         {
             return (point.X, point.Y);
@@ -189,24 +190,27 @@ namespace VectSharp
         /// Implicit conversion to an array.
         /// </summary>
         /// <param name="point">The point to convert</param>
+        /// <returns>A <see cref="double"/> array containing the point's coordinates.</returns>
         public static implicit operator double[](Point point)
         {
             return new double[] { point.X, point.Y };
         }
 
         /// <summary>
-        /// Implicit conversion from a tuple.
+        /// Implicit conversion from a <paramref name="tuple"/>.
         /// </summary>
         /// <param name="tuple">The tuple to convert.</param>
+        /// <returns>A <see cref="Point"/> constructed using the coordinates in the <paramref name="tuple"/>.</returns>
         public static implicit operator Point((double X, double Y) tuple)
         {
             return new Point(tuple.X, tuple.Y);
         }
 
         /// <summary>
-        /// Explicit conversion from an array (will throw an exception if the array does not contain exactly two elements). 
+        /// Explicit conversion from an <paramref name="array"/> (will throw an exception if the array does not contain exactly two elements). 
         /// </summary>
         /// <param name="array">The array to convert. It must contain exactly two elements.</param>
+        /// <returns>A <see cref="Point"/> constructed using the coordinates in the <paramref name="array"/>.</returns>
         public static explicit operator Point(double[] array)
         {
             if (array == null)

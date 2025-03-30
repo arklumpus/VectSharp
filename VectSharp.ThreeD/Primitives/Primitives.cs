@@ -489,6 +489,7 @@ namespace VectSharp.ThreeD
         /// Converts the <see cref="Point3D"/> into a <see cref="Vector3D"/>.
         /// </summary>
         /// <param name="point">The <see cref="Point3D"/> to convert.</param>
+        /// <returns>A <see cref="Vector3D"/> with the same components as the specified <paramref name="point"/>.</returns>
         public static implicit operator Vector3D(Point3D point)
         {
             return new Vector3D(point.X, point.Y, point.Z);
@@ -675,6 +676,7 @@ namespace VectSharp.ThreeD
         /// Converts a <see cref="Vector3D"/> into a <see cref="Point3D"/>.
         /// </summary>
         /// <param name="vector">The <see cref="Vector3D"/> to convert.</param>
+        /// <returns>A <see cref="Point3D"/> with the same components as the specified <paramref name="vector"/>.</returns>
         public static explicit operator Point3D(Vector3D vector)
         {
             return new Point3D(vector.X, vector.Y, vector.Z);
@@ -823,6 +825,7 @@ namespace VectSharp.ThreeD
         /// Converts a <see cref="NormalizedVector3D"/> to a <see cref="Vector3D"/>.
         /// </summary>
         /// <param name="vector">The <see cref="NormalizedVector3D"/> to convert.</param>
+        /// <returns>A <see cref="Vector3D"/> with the same components as the specified <paramref name="vector"/>.</returns>
         public static implicit operator Vector3D(NormalizedVector3D vector)
         {
             return new Vector3D(vector.X, vector.Y, vector.Z);

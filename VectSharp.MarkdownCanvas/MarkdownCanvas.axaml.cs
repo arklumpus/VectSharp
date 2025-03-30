@@ -139,7 +139,7 @@ namespace VectSharp.MarkdownCanvas
             ImageCache.SetExitEventHandler();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="AvaloniaObject.OnPropertyChanged(AvaloniaPropertyChangedEventArgs)"/>
         protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
         {            
             if (change.Property != ContentProperty || !initialized)

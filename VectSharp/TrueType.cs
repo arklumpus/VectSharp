@@ -2462,7 +2462,7 @@ namespace VectSharp
         /// <summary>
         /// Computes the italic angle for the current font, in counter-clockwise degrees from the vertical. This is negative for text that leans forwards.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The italic angle for the current font (in degrees).</returns>
         public double GetItalicAngle()
         {
             if (this.Tables.TryGetValue("post", out ITrueTypeTable table) && table is TrueTypePostTable post)

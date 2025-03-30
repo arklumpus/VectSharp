@@ -49,6 +49,14 @@ namespace VectSharp.PDF.PDFObjects
             writer.Write(" >>");
             writer.Flush();
         }
+
+        /// <summary>
+        /// Default constructor for the <see cref="PDFDictionary"/> class.
+        /// </summary>
+        protected PDFDictionary()
+        {
+
+        }
     }
 
     /// <summary>
@@ -77,6 +85,14 @@ namespace VectSharp.PDF.PDFObjects
 
             writer.Write(" >>");
             writer.Flush();
+        }
+
+        /// <summary>
+        /// Default constructor for the <see cref="PDFRawDictionary"/> class.
+        /// </summary>
+        public PDFRawDictionary()
+        {
+
         }
     }
 }

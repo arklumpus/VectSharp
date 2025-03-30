@@ -118,6 +118,7 @@ namespace VectSharp.Plots
             /// <param name="gridPresentationAttributes">Presentation attributes for the grid.</param>
             /// <param name="dataPresentationAttributes">Presentation attributes for the plotted data.</param>
             /// <param name="coordinateSystem">The coordinate system used to transform the points from data space to plot space.</param>
+            /// <typeparam name="T">The label type (e.g., <see langword="string"/>).</typeparam>
             /// <returns>A <see cref="Plot"/> containing the bar chart.</returns>
             public static Plot BarChart<T>(IReadOnlyList<(T, double)> data, bool vertical = true, double margin = 0.25, double width = 350, double height = 250,
                 PlotElementPresentationAttributes axisPresentationAttributes = null,
@@ -353,6 +354,7 @@ namespace VectSharp.Plots
             /// <param name="gridPresentationAttributes">Presentation attributes for the grid.</param>
             /// <param name="dataPresentationAttributes">Presentation attributes for the plotted data.</param>
             /// <param name="coordinateSystem">The coordinate system used to transform the points from data space to plot space.</param>
+            /// <typeparam name="T">The label type (e.g., <see langword="string"/>).</typeparam>
             /// <returns>A <see cref="Plot"/> containing the stacked bar chart.</returns>
             public static Plot StackedBarChart<T>(IReadOnlyList<(T, IReadOnlyList<double>)> data, bool vertical = true, double margin = 0.25, double width = 350, double height = 250,
                PlotElementPresentationAttributes axisPresentationAttributes = null,
@@ -919,6 +921,7 @@ namespace VectSharp.Plots
             /// <param name="gridPresentationAttributes">Presentation attributes for the grid.</param>
             /// <param name="dataPresentationAttributes">Presentation attributes for the plotted data.</param>
             /// <param name="coordinateSystem">The coordinate system used to transform the points from data space to plot space.</param>
+            /// <typeparam name="T">The label type (e.g., <see langword="string"/>).</typeparam>
             /// <returns>A <see cref="Plot"/> containing the bar chart.</returns>
             public static Plot ClusteredBarChart<T>(IReadOnlyList<(T, IReadOnlyList<double>)> data, bool vertical = true, double interClusterMargin = 0.25, double intraClusterMargin = 0, double width = 350, double height = 250,
               PlotElementPresentationAttributes axisPresentationAttributes = null,

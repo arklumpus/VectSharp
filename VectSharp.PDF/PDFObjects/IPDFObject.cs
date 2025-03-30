@@ -46,6 +46,15 @@ namespace VectSharp.PDF.PDFObjects
     {
         /// <inheritdoc/>
         public abstract void Write(Stream stream, StreamWriter writer);
+
+
+        /// <summary>
+        /// Default constructor for the <see cref="PDFValueObject"/> class.
+        /// </summary>
+        protected PDFValueObject()
+        {
+
+        }
     }
 
     /// <summary>
@@ -86,6 +95,14 @@ namespace VectSharp.PDF.PDFObjects
             {
                 FullWrite(stream, writer);
             }
+        }
+
+        /// <summary>
+        /// Default constructor for the <see cref="PDFReferenceableObject"/> class.
+        /// </summary>
+        protected PDFReferenceableObject()
+        {
+
         }
     }
 

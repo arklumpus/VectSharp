@@ -122,6 +122,14 @@ namespace VectSharp
         /// <param name="flatness">The maximum deviation from the original path.</param>
         /// <returns>A collection of tuples where the first element is a <see cref="Point"/> representing the end-point of a linear segment, and the second element is a <see cref="Point"/> containing the value of the tangent to the original <see cref="Segment"/> at that point.</returns>
         public abstract IEnumerable<(Point point, Point tangent)> FlattenForOffsetAndGetTangents(Point? previousPoint, double offset, double flatness);
+
+        /// <summary>
+        /// Default constructor for the <see cref="Segment"/> class.
+        /// </summary>
+        protected Segment()
+        {
+
+        }
     }
 
     internal class MoveSegment : Segment

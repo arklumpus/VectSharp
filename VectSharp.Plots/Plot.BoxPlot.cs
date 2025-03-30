@@ -77,6 +77,7 @@ namespace VectSharp.Plots
             /// <param name="outlierPointElement">The symbol drawn at outlier points.</param>
             /// <param name="outlierPresentationAttributes">Presentation attributes for the outlier points.</param>
             /// <param name="coordinateSystem">The coordinate system used to transform the points from data space to plot space.</param>
+            /// <typeparam name="T">The label type (e.g., <see langword="string"/>).</typeparam>
             /// <returns>A <see cref="Plot"/> containing the box plot.</returns>
             public static Plot BoxPlot<T>(IReadOnlyList<(T, IReadOnlyList<double>)> data, WhiskerType whiskerType = WhiskerType.IQR_1_5, bool useNotches = true, bool proportionalWidth = false, bool showOutliers = true, double boxWidth = 10, double spacing = 0.1, double? dataRangeMin = null, double? dataRangeMax = null, bool vertical = true, double width = 350, double height = 250,
                 PlotElementPresentationAttributes axisPresentationAttributes = null,

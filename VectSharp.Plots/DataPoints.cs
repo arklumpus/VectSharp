@@ -84,6 +84,7 @@ namespace VectSharp.Plots
         /// <summary>
         /// Create a new <see cref="PathDataPointElement"/> instance with the specified <paramref name="path"/>.
         /// </summary>
+        /// <param name="path">The <see cref="GraphicsPath"/> represented by the <see cref="PathDataPointElement"/>.</param>
         public PathDataPointElement(GraphicsPath path)
         {
             this.Path = path;

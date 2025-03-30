@@ -68,7 +68,7 @@ namespace VectSharp.ThreeD
         /// Computes the light intensity at the specified point, without taking into account any obstructions.
         /// </summary>
         /// <param name="point">The <see cref="Point3DElement"/> at which the light intensity should be computed.</param>
-        /// <returns></returns>
+        /// <returns>The light intensity at the specified point.</returns>
         LightIntensity GetLightAt(Point3D point);
 
         /// <summary>

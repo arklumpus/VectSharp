@@ -32,7 +32,7 @@ namespace VectSharp.ThreeD
         /// <param name="scene">The scene to render.</param>
         /// <param name="lights">The lights to use for the rendering.</param>
         /// <param name="camera">The camera to use for the rendering.</param>
-        /// <returns></returns>
+        /// <returns>A 2D rendering of the 3D scene.</returns>
         Page Render(IScene scene, IEnumerable<ILightSource> lights, Camera camera);
     }
 }

@@ -69,7 +69,8 @@ namespace VectSharp
 
         private bool disposedValue;
 
-        ///<inheritdoc/>
+        /// <inheritdoc cref="Dispose()"/>
+        /// <param name="disposing"><see langword="true"/> if this method is invoked by managed code.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -79,7 +80,9 @@ namespace VectSharp
             }
         }
 
-        ///<inheritdoc/>
+        /// <summary>
+        /// Destructor for <see cref="DisposableIntPtr"/> class.
+        /// </summary>
         ~DisposableIntPtr()
         {
             Dispose(disposing: false);
@@ -268,7 +271,8 @@ namespace VectSharp
 
         private bool disposedValue;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="Dispose()"/>
+        /// <param name="disposing"><see langword="true"/> if this method is invoked by managed code.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -287,7 +291,9 @@ namespace VectSharp
             }
         }
 
-        ///<inheritdoc/>
+        /// <summary>
+        /// Destructor for <see cref="RasterImage"/> class.
+        /// </summary>
         ~RasterImage()
         {
             Dispose(disposing: false);

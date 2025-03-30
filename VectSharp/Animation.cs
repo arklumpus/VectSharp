@@ -1325,7 +1325,7 @@ namespace VectSharp
             this.SampledEasings = sampledEasings;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         [Pure]
         public double Ease(double value)
         {

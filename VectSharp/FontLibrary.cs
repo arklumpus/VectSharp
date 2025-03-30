@@ -177,6 +177,14 @@ namespace VectSharp
 
             return ResolveFontFamily(finalFallback);
         }
+    
+        /// <summary>
+        /// Default constructor for the <see cref="FontLibrary"/> class.
+        /// </summary>
+        protected FontLibrary()
+        {
+
+        }
     }
 
     /// <summary>
@@ -436,7 +444,7 @@ namespace VectSharp
     }
 
     /// <summary>
-    /// An exception that occurs while creating a <see cref="FontFamily"/>.
+    /// An exception that occurs while creating a <see cref="VectSharp.FontFamily"/>.
     /// </summary>
     public class FontFamilyCreationException : Exception
     {
@@ -546,6 +554,14 @@ namespace VectSharp
 
                 return tbr;
             }
+        }
+
+        /// <summary>
+        /// Default constructor for the <see cref="DefaultFontLibrary"/> class.
+        /// </summary>
+        public DefaultFontLibrary()
+        {
+
         }
     }
 

@@ -36,6 +36,14 @@ namespace VectSharp.PDF.PDFObjects
         /// Interpolation function domain.
         /// </summary>
         public virtual PDFArray<PDFDouble> Domain { get; } = new PDFArray<PDFDouble>(new PDFDouble(0), new PDFDouble(1));
+
+        /// <summary>
+        /// Default constructor for the <see cref="PDFInterpolationFunction"/> class.
+        /// </summary>
+        protected PDFInterpolationFunction()
+        {
+
+        }
     }
 
     /// <summary>
@@ -133,6 +141,14 @@ namespace VectSharp.PDF.PDFObjects
         /// Gradient shading.
         /// </summary>
         public PDFShading Shading { get; protected set; }
+
+        /// <summary>
+        /// Default constructor for the <see cref="PDFGradient"/> class.
+        /// </summary>
+        protected PDFGradient()
+        {
+
+        }
     }
 
     /// <summary>
@@ -268,6 +284,14 @@ namespace VectSharp.PDF.PDFObjects
         /// Colour space.
         /// </summary>
         public PDFString CS { get; } = new PDFString("DeviceRGB", PDFString.StringDelimiter.StartingForwardSlash);
+
+        /// <summary>
+        /// Default constructor for the <see cref="PDFTransparencyGroup"/> class.
+        /// </summary>
+        public PDFTransparencyGroup()
+        {
+
+        }
     }
 
     /// <summary>

@@ -158,7 +158,7 @@ namespace VectSharp
         /// <summary>
         /// Create a new colour from RGBA (red, green, blue and alpha) values.
         /// </summary>
-        /// <param name="colour">A <see cref="ValueTuple{Int32, Int32, Int32, Double}"/> containing component information for the colour. For r, g, and b, range: [0, 255]; for a, range: [0, 1].</param>
+        /// <param name="colour">A tuple containing component information for the colour. For r, g, and b, range: [0, 255]; for a, range: [0, 1].</param>
         /// <returns>A <see cref="Colour"/> struct with the specified components.</returns>
         public static Colour FromRgba((int r, int g, int b, double a) colour)
         {
@@ -178,19 +178,33 @@ namespace VectSharp
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Compares the current <see cref="Colour"/> with another <see cref="Colour"/>.
+        /// </summary>
+        /// <param name="col">The <see cref="Colour"/> to compare with the current instance.</param>
+        /// <returns><see langword="true"/> if the current instance and <paramref name="col"/> represent the same colour, <see langword="false"/> otherwise.</returns>
         public bool Equals(Colour col)
         {
             return col.R == this.R && col.G == this.G && col.B == this.B && col.A == this.A;
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Compares two <see cref="Colour"/>s.
+        /// </summary>
+        /// <param name="col1">The first <see cref="Colour"/> to compare.</param>
+        /// <param name="col2">The second <see cref="Colour"/> to compare.</param>
+        /// <returns><see langword="true"/> if <paramref name="col1"/> and <paramref name="col2"/> represent the same colour, <see langword="false"/> otherwise.</returns>
         public static bool operator ==(Colour col1, Colour col2)
         {
             return col1.R == col2.R && col1.G == col2.G && col1.B == col2.B && col1.A == col2.A;
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Compares two <see cref="Colour"/>s.
+        /// </summary>
+        /// <param name="col1">The first <see cref="Colour"/> to compare.</param>
+        /// <param name="col2">The second <see cref="Colour"/> to compare.</param>
+        /// <returns><see langword="false"/> if <paramref name="col1"/> and <paramref name="col2"/> represent the same colour, <see langword="true"/> otherwise.</returns>
         public static bool operator !=(Colour col1, Colour col2)
         {
             return col1.R != col2.R || col1.G != col2.G || col1.B != col2.B || col1.A != col2.A;
@@ -224,7 +238,7 @@ namespace VectSharp
         /// Convert a CSS colour string into a <see cref="Colour"/> object.
         /// </summary>
         /// <param name="cssString">The CSS colour string. In addition to 148 standard colour names (case-insensitive), #RGB, #RGBA, #RRGGBB and #RRGGBBAA hex strings and rgb(r, g, b) and rgba(r, g, b, a) functional colour notations are supported.</param>
-        /// <returns></returns>
+        /// <returns>The parsed <see cref="Colour" />, or <see langword="null"/> if the <paramref name="cssString"/> does not correspond to a valid colour.</returns>
         public static Colour? FromCSSString(string cssString)
         {
             if (cssString.StartsWith("#"))
@@ -378,7 +392,7 @@ namespace VectSharp
         /// <summary>
         /// Converts a <see cref="Colour"/> to the CIE XYZ colour space.
         /// </summary>
-        /// <returns>A <see cref="ValueTuple"/> containing the X, Y and Z components of the <see cref="Colour"/>.</returns>
+        /// <returns>A tuple containing the X, Y and Z components of the <see cref="Colour"/>.</returns>
         public (double X, double Y, double Z) ToXYZ()
         {
             double r, g, b;
@@ -467,7 +481,7 @@ namespace VectSharp
         /// <summary>
         /// Converts a <see cref="Colour"/> to the CIE Lab colour space (under Illuminant D65).
         /// </summary>
-        /// <returns>A <see cref="ValueType"/> containing the L*, a* and b* components of the <see cref="Colour"/>.</returns>
+        /// <returns>A tuple containing the L*, a* and b* components of the <see cref="Colour"/>.</returns>
         public (double L, double a, double b) ToLab()
         {
             double f(double t)
@@ -536,7 +550,7 @@ namespace VectSharp
         /// <summary>
         /// Converts a <see cref="Colour"/> to the HSL colour space.
         /// </summary>
-        /// <returns>A <see cref="ValueType"/> containing the H, S and L components of the <see cref="Colour"/>. Each component has range [0, 1].</returns>
+        /// <returns>A tuple containing the H, S and L components of the <see cref="Colour"/>. Each component has range [0, 1].</returns>
         public (double H, double S, double L) ToHSL()
         {
             double xMax = Math.Max(Math.Max(R, G), B);

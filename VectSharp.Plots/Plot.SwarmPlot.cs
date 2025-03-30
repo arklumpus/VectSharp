@@ -57,6 +57,7 @@ namespace VectSharp.Plots
 			/// <param name="medianPresentationAttributes">Presentation attributes for the symbol drawn at the medians.</param>
             /// <param name="medianSymbol">The symbol drawn at the medians.</param>
             /// <param name="coordinateSystem">The coordinate system used to transform the points from data space to plot space.</param>
+            /// <typeparam name="T">The label type (e.g., <see langword="string"/>).</typeparam>
             /// <returns>A <see cref="Plot"/> containing the swarm plot.</returns>
             public static Plot SwarmPlot<T>(IReadOnlyList<(T, IReadOnlyList<double>)> data, bool showBoxPlots = true, double boxWidth = 0.04, double spacing = 10, double? dataRangeMin = null, double? dataRangeMax = null, bool vertical = true, double width = 350, double height = 250,
                 PlotElementPresentationAttributes axisPresentationAttributes = null,

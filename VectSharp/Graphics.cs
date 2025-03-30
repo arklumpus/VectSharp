@@ -1717,5 +1717,13 @@ namespace VectSharp
                 }
             }
         }
+
+        /// <summary>
+        /// Create a new empty graphics surface.
+        /// </summary>
+        public Graphics()
+        {
+
+        }
     }
 }

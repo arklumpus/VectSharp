@@ -745,6 +745,7 @@ namespace VectSharp.PDF
         /// <param name="filterOption">Defines how and whether image filters should be rasterised when rendering the image.</param>
         /// <param name="optionalContentGroupSettings">Settings for optional content groups (layers).</param>
         /// <param name="annotationStyles">Annotation appearance styles.</param>
+        /// <returns>A <see cref="PDFDocument"/> representation of the current <paramref name="document"/>.</returns>
         public static PDFDocument CreatePDFDocument(this Document document, TextOptions textOption = TextOptions.SubsetFonts, bool compressStreams = true, Dictionary<string, string> linkDestinations = null, OutlineTree outline = null, PDFMetadata metadata = default, FilterOption filterOption = default, OptionalContentGroupSettings optionalContentGroupSettings = default, AnnotationStyleCollection annotationStyles = default)
         {
             if (linkDestinations == null)

@@ -97,13 +97,33 @@ namespace VectSharp
         /// </summary>
         /// <param name="text">
         /// The string containing formatting information. Format information is specified using HTML-like tags:
-        /// <list type="bullet">
-        /// <item><c>&lt;b&gt;&lt;/b&gt;</c> or <c>&lt;strong&gt;&lt;/strong&gt;</c> are used for bold text;</item>
-        /// <item><c>&lt;i&gt;&lt;/i&gt;</c> or <c>&lt;em&gt;&lt;/em&gt;</c> are used for text in italics;</item>
-        /// <item><c>&lt;u&gt;&lt;/u&gt;</c></item> are used for underlined text;
-        /// <item><c>&lt;sup&gt;&lt;/sup&gt;</c> and <c>&lt;sub&gt;&lt;/sub&gt;</c> are used, respectively, for superscript and subscript text;</item>
-        /// <item><c>&lt;#COLOUR&gt;&lt;/#&gt;</c> is used to specify the colour of the text, where <c>COLOUR</c> is a CSS colour string (e.g. <c>&lt;#red&gt;</c>, <c>&lt;#0080FF&gt;</c>, or <c>&lt;#rgba(128, 80, 52, 0.5)&gt;</c>).</item>
-        /// </list></param>
+        /// <list type="table">
+        ///   <listheader>
+        ///     <term><b>Tag</b></term>
+        ///     <description><b>Description</b></description>
+        /// </listheader>
+        /// <item>
+        ///   <term><c>&lt;b&gt;&lt;/b&gt;</c><br/><c>&lt;strong&gt;&lt;/strong&gt;</c></term>
+        ///   <description>Bold text.<br/><em>Example:</em><br/><c>This text is &lt;b&gt;bold&lt;/b&gt;</c> - This text is <b>bold</b>.</description>
+        /// </item>
+        /// <item>
+        ///   <term><c>&lt;i&gt;&lt;/i&gt;</c><br/><c>&lt;em&gt;&lt;/em&gt;</c></term>
+        ///   <description>Italic text.<br/><em>Example:</em><br/><c>This text is in &lt;i&gt;italics&lt;/i&gt;</c> - This text is in <i>italics</i>.</description>
+        /// </item>
+        /// <item>
+        ///   <term><c>&lt;u&gt;&lt;/u&gt;</c></term>
+        ///   <description>Underlined text.<br/><em>Example:</em><br/><c>This text is &lt;u&gt;underlined&lt;/u&gt;</c> - This text is <u>underlined</u>.</description>
+        /// </item>
+        /// <item>
+        ///   <term><c>&lt;sup&gt;&lt;/sup&gt;</c><br/><c>&lt;sub&gt;&lt;/sub&gt;</c></term>
+        ///   <description>Superscript and subscript text.<br/><em>Example:</em><br/><c>This text is &lt;sup&gt;super-&lt;/sup&gt; or &lt;sub&gt;sub-&lt;/sub&gt;script</c> - This text is <sup>super-</sup> or <sub>sub-</sub>script.</description>
+        /// </item>
+        /// <item>
+        ///   <term><c>&lt;#COLOUR&gt;&lt;/#&gt;</c></term>
+        ///   <description>Specify the text colour. <c>COLOUR</c> should be a CSS colour string (e.g. <c>&lt;#red&gt;</c>, <c>&lt;#0080FF&gt;</c>, or <c>&lt;#rgba(128, 80, 52, 0.5)&gt;</c>).<br/><em>Example:</em><br/><c>This text is in &lt;#FF0000&gt;red&lt;/#&gt;</c> - This text is in <CFF0000>red</CFF0000>.</description>
+        /// </item>
+        /// </list>
+        /// </param>
         /// <param name="normalFont">The font that will be used for text that is neither bold nor italic.</param>
         /// <param name="boldFont">The font that will be used for text that is bold. Note that this does not necessarily have to be a bold font; this is just the font that is applied to text contained within <c>&lt;b&gt;&lt;/b&gt;</c> tags.</param>
         /// <param name="italicFont">The font that will be used for text that is in italics. Note that this does not necessarily have to be an italic font; this is just the font that is applied to text contained within <c>&lt;i&gt;&lt;/i&gt;</c> tags.</param>
@@ -281,13 +301,33 @@ namespace VectSharp
         /// Parse the formatting information contained in a text string into a collection of <see cref="FormattedText"/> objects, using fonts from a standard font family.
         /// </summary>
         /// <param name="text">The string containing formatting information. Format information is specified using HTML-like tags:
-        /// <list type="bullet">
-        /// <item><c>&lt;b&gt;&lt;/b&gt;</c> or <c>&lt;strong&gt;&lt;/strong&gt;</c> are used for bold text;</item>
-        /// <item><c>&lt;i&gt;&lt;/i&gt;</c> or <c>&lt;em&gt;&lt;/em&gt;</c> are used for text in italics;</item>
-        /// <item><c>&lt;u&gt;&lt;/u&gt;</c></item> are used for underlined text;
-        /// <item><c>&lt;sup&gt;&lt;/sup&gt;</c> and <c>&lt;sub&gt;&lt;/sub&gt;</c> are used, respectively, for superscript and subscript text;</item>
-        /// <item><c>&lt;#COLOUR&gt;&lt;/#&gt;</c> is used to specify the colour of the text, where <c>COLOUR</c> is a CSS colour string (e.g. <c>&lt;#red&gt;</c>, <c>&lt;#0080FF&gt;</c>, or <c>&lt;#rgba(128, 80, 52, 0.5)&gt;</c>).</item>
-        /// </list></param>
+        /// <list type="table">
+        ///   <listheader>
+        ///     <term><b>Tag</b></term>
+        ///     <description><b>Description</b></description>
+        /// </listheader>
+        /// <item>
+        ///   <term><c>&lt;b&gt;&lt;/b&gt;</c><br/><c>&lt;strong&gt;&lt;/strong&gt;</c></term>
+        ///   <description>Bold text.<br/><em>Example:</em><br/><c>This text is &lt;b&gt;bold&lt;/b&gt;</c> - This text is <b>bold</b>.</description>
+        /// </item>
+        /// <item>
+        ///   <term><c>&lt;i&gt;&lt;/i&gt;</c><br/><c>&lt;em&gt;&lt;/em&gt;</c></term>
+        ///   <description>Italic text.<br/><em>Example:</em><br/><c>This text is in &lt;i&gt;italics&lt;/i&gt;</c> - This text is in <i>italics</i>.</description>
+        /// </item>
+        /// <item>
+        ///   <term><c>&lt;u&gt;&lt;/u&gt;</c></term>
+        ///   <description>Underlined text.<br/><em>Example:</em><br/><c>This text is &lt;u&gt;underlined&lt;/u&gt;</c> - This text is <u>underlined</u>.</description>
+        /// </item>
+        /// <item>
+        ///   <term><c>&lt;sup&gt;&lt;/sup&gt;</c><br/><c>&lt;sub&gt;&lt;/sub&gt;</c></term>
+        ///   <description>Superscript and subscript text.<br/><em>Example:</em><br/><c>This text is &lt;sup&gt;super-&lt;/sup&gt; or &lt;sub&gt;sub-&lt;/sub&gt;script</c> - This text is <sup>super-</sup> or <sub>sub-</sub>script.</description>
+        /// </item>
+        /// <item>
+        ///   <term><c>&lt;#COLOUR&gt;&lt;/#&gt;</c></term>
+        ///   <description>Specify the text colour. <c>COLOUR</c> should be a CSS colour string (e.g. <c>&lt;#red&gt;</c>, <c>&lt;#0080FF&gt;</c>, or <c>&lt;#rgba(128, 80, 52, 0.5)&gt;</c>).<br/><em>Example:</em><br/><c>This text is in &lt;#FF0000&gt;red&lt;/#&gt;</c> - This text is in <CFF0000>red</CFF0000>.</description>
+        /// </item>
+        /// </list>
+        /// </param>
         /// <param name="fontFamily">The font family from which the fonts will be created. If this is a regular font family, the bold, italic and bold-italic versions of the font will be used for the formatted text. Otherwise, the relevant font styles will be toggled (e.g. if the supplied font family is bold, then regular text in the formatted string will be displayed as bold, while bold text in the formatted string will be displayed as regular text).</param>
         /// <param name="fontSize">The size of the fonts to use.</param>
         /// <param name="defaultUnderline">Determines whether text should be underlined by default. This is toggled by <c>&lt;u&gt;&lt;/u&gt;</c> tags.</param>

@@ -77,6 +77,7 @@ namespace VectSharp.PDF.OptionalContentGroups
         /// Negates an <see cref="OptionalContentGroupExpression"/>.
         /// </summary>
         /// <param name="ocge">The <see cref="OptionalContentGroupExpression"/> to be negated.</param>
+        /// <returns>An <see cref="OptionalContentGroupExpression"/> that represents the negation of <paramref name="ocge"/>.</returns>
         public static OptionalContentGroupNotExpression operator !(OptionalContentGroupExpression ocge)
         {
             return new OptionalContentGroupNotExpression(ocge);
@@ -412,6 +413,7 @@ namespace VectSharp.PDF.OptionalContentGroups
         /// Convert a <see langword="string"/> into an <see cref="OptionalContentGroupTreeLabel"/>.
         /// </summary>
         /// <param name="label">The <see langword="string"/> to convert.</param>
+        /// <returns>An <see cref="OptionalContentGroupTreeLabel"/> with the specified <paramref name="label"/>.</returns>
         public static implicit operator OptionalContentGroupTreeLabel(string label) => new OptionalContentGroupTreeLabel(label);
 
 
@@ -419,6 +421,7 @@ namespace VectSharp.PDF.OptionalContentGroups
         /// Convert a <see cref="OptionalContentGroup"/> into an <see cref="OptionalContentGroupTreeLabel"/>.
         /// </summary>
         /// <param name="label">The <see cref="OptionalContentGroup"/> to convert.</param>
+        /// <returns>An <see cref="OptionalContentGroupTreeLabel"/> with the specified <paramref name="label"/>.</returns>
         public static implicit operator OptionalContentGroupTreeLabel(OptionalContentGroup label) => new OptionalContentGroupTreeLabel(label);
     }
 
@@ -455,22 +458,26 @@ namespace VectSharp.PDF.OptionalContentGroups
             this.Label = label;
             this.Children = new List<OptionalContentGroupTreeNode>();
         }
+
         /// <summary>
         /// Convert an <see cref="OptionalContentGroupTreeLabel"/> into a <see cref="OptionalContentGroupTreeNode"/>.
         /// </summary>
         /// <param name="label">The node label. This can be a text string or an <see cref="OptionalContentGroup"/>.</param>
+        /// <returns>An <see cref="OptionalContentGroupTreeNode"/> with the specified <paramref name="label"/>.</returns>
         public static implicit operator OptionalContentGroupTreeNode(OptionalContentGroupTreeLabel label) => new OptionalContentGroupTreeNode(label);
 
         /// <summary>
         /// Convert a <see langword="string"/> into a <see cref="OptionalContentGroupTreeNode"/>.
         /// </summary>
         /// <param name="label">The node label.</param>
+        /// <returns>An <see cref="OptionalContentGroupTreeNode"/> with the specified <paramref name="label"/>.</returns>
         public static implicit operator OptionalContentGroupTreeNode(string label) => new OptionalContentGroupTreeLabel(label);
 
         /// <summary>
         /// Convert an <see cref="OptionalContentGroup"/> into a <see cref="OptionalContentGroupTreeNode"/>.
         /// </summary>
         /// <param name="label">The node label.</param>
+        /// <returns>An <see cref="OptionalContentGroupTreeNode"/> with the specified <paramref name="label"/>.</returns>
         public static implicit operator OptionalContentGroupTreeNode(OptionalContentGroup label) => new OptionalContentGroupTreeLabel(label);
 
         /// <inheritdoc/>

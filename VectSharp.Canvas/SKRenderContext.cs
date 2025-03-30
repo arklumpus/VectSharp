@@ -460,6 +460,9 @@ namespace VectSharp.Canvas
         /// <summary>
         /// Create a new <see cref="SKRenderAction"/> that draws some graphics with a filter.
         /// </summary>
+        /// <param name="graphics">The graphics that will be drawn with the specified <paramref name="filter"/>.</param>
+        /// <param name="filter">The <see cref="IFilter"/> that will be used to draw the specified <paramref name="graphics"/>.</param>
+        /// <param name="tag">A tag to access the <see cref="SKRenderAction"/>.</param>
         /// <returns>A new <see cref="SKRenderAction"/> that draws some graphics with a filter.</returns>
         public static SKRenderAction DrawFilteredGraphicsAction(SKRenderContext graphics, IFilter filter, string tag = null)
         {
@@ -472,7 +475,8 @@ namespace VectSharp.Canvas
             };
         }
 
-        /// <inheritdoc cref="IDisposable.Dispose"/>
+        /// <inheritdoc cref="Dispose()"/>
+        /// <param name="disposing"><see langword="true"/> if this method is invoked by managed code.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -490,7 +494,7 @@ namespace VectSharp.Canvas
             }
         }
 
-        /// <inheritdoc cref="IDisposable.Dispose"/>
+        /// <inheritdoc/>
         public void Dispose()
         {
             Dispose(disposing: true);
@@ -543,10 +547,18 @@ namespace VectSharp.Canvas
     /// <summary>
     /// Represents a page that has been prepared for fast rendering using the SkiaSharp renderer.
     /// </summary>
-    public class SKRenderContext
+    public abstract class SKRenderContext
     {
         internal virtual Dictionary<string, (SKBitmap, bool)> Images { get; set; }
         internal virtual List<SKRenderAction> SKRenderActions { get; set; }
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        protected SKRenderContext()
+        {
+
+        }
     }
 
 

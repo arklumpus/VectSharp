@@ -172,7 +172,8 @@ namespace VectSharp.Filters
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="Dispose()"/>
+        /// <param name="disposing"><see langword="true"/> if this method is invoked by managed code.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)

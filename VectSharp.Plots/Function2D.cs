@@ -312,12 +312,12 @@ namespace VectSharp.Plots
         /// <summary>
         /// Converts a hexagonal grid into a rectangular grid.
         /// </summary>
-        /// <returns>If <see cref="Type"/> is <see cref="GridType.Rectangular"/>, this method returns the current instance. <br/>
-        /// If <see cref="Type"/> is <see cref="GridType.HexagonHorizontal"/> or <see cref="GridType.HexagonVertical"/>, a 
+        /// <returns><list type="bullet"><item>If <see cref="Type"/> is <see cref="GridType.Rectangular"/>, this method returns the current instance. </item>
+        /// <item>If <see cref="Type"/> is <see cref="GridType.HexagonHorizontal"/> or <see cref="GridType.HexagonVertical"/>, a 
         /// new <see cref="Function2DGrid"/> with <see cref="Type"/> equal to <see cref="GridType.Rectangular"/> is returned.
         /// The sampled points in this grid are obtained by performing a bilinear interpolation on the sampled points from
-        /// this grid. The returned grid will always be "denser" than the current instance.<br/>
-        /// If <see cref="Type"/> is <see cref="GridType.Irregular"/>, an <see cref="InvalidOperationException"/> is thrown.</returns>
+        /// this grid. The returned grid will always be "denser" than the current instance.</item>
+        /// <item>If <see cref="Type"/> is <see cref="GridType.Irregular"/>, an <see cref="InvalidOperationException"/> is thrown.</item></list></returns>
         /// <exception cref="InvalidOperationException">Thrown if <see cref="Type"/> is <see cref="GridType.Irregular"/>.</exception>
         public Function2DGrid ToRectangular()
         {

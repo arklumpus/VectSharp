@@ -318,6 +318,14 @@ namespace VectSharp.PDF.PDFObjects
         /// CID supplement.
         /// </summary>
         public PDFInt Supplement { get; } = new PDFInt(0);
+
+        /// <summary>
+        /// Create a new identity <see cref="PDFCIDSystemInfo"/>.
+        /// </summary>
+        public PDFCIDSystemInfo()
+        {
+
+        }
     }
 
     /// <summary>

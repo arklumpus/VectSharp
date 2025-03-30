@@ -44,6 +44,7 @@ namespace VectSharp
         /// Implicitly converts a <see cref="Colour"/> into a <see cref="SolidColourBrush"/>.
         /// </summary>
         /// <param name="colour">The <see cref="Colour"/> to use for the brush.</param>
+        /// <returns>A <see cref="SolidColourBrush"/> that paints using the specified <paramref name="colour"/>.</returns>
         public static implicit operator Brush(Colour colour)
         {
             return new SolidColourBrush(colour);
@@ -97,9 +98,10 @@ namespace VectSharp
         }
 
         /// <summary>
-        /// Implicitly converts a <see cref="Colour"/> into a <see cref="SolidColourBrush"/>.
+        /// Implicitly converts a <see cref="VectSharp.Colour"/> into a <see cref="SolidColourBrush"/>.
         /// </summary>
-        /// <param name="colour">The <see cref="Colour"/> to use for the brush.</param>
+        /// <param name="colour">The <see cref="VectSharp.Colour"/> to use for the brush.</param>
+        /// <returns>A <see cref="SolidColourBrush"/> that paints using the specified <paramref name="colour"/>.</returns>
         public static implicit operator SolidColourBrush(Colour colour)
         {
             return new SolidColourBrush(colour);
@@ -267,6 +269,7 @@ namespace VectSharp
         /// Convert a <see cref="GradientStops"/> object to a function that assigns a colour to values between 0 and 1.
         /// </summary>
         /// <param name="stops">The <see cref="GradientStops"/> to convert.</param>
+        /// <returns>A <see cref="Func{Double,Colour}"/> that assigns a colour to values between 0 and 1.</returns>
         public static implicit operator Func<double, Colour>(GradientStops stops) => stops.GetColourAt;
     }
 

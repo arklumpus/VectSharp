@@ -44,6 +44,9 @@ namespace VectSharp.PDF
         /// <summary>
         /// Create a new <see cref="AnnotationStyle"/>.
         /// </summary>
+        /// <param name="borderWidth">The annotation border thickness.</param>
+        /// <param name="borderDash">The annotation border dash style.</param>
+        /// <param name="borderColour">The annotation border colour.</param>
         public AnnotationStyle(double borderWidth = 1, LineDash? borderDash = null, Colour? borderColour = default)
         {
             BorderWidth = borderWidth;

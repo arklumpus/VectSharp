@@ -4068,6 +4068,7 @@ namespace VectSharp.SVG
         /// </summary>
         /// <param name="svgDocument">An <see cref="XmlDocument"/> containing an SVG image</param>
         /// <remarks>Compared to the built-in methods to save XML documents, this method takes care of some quirks of the SVG format.</remarks>
+        /// <returns>A <see langword="string"/> containing the SVG image.</returns>
         public static string WriteSVGXML(this XmlDocument svgDocument)
         {
             using (MemoryStream ms = new MemoryStream())

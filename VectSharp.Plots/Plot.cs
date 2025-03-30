@@ -222,7 +222,7 @@ namespace VectSharp.Plots
         /// </summary>
         /// <typeparam name="T">The type of plot element or coordinate system to get.</typeparam>
         /// <returns>All <see cref="IPlotElement"/>s of the specified type, or all <see cref="ICoordinateSystem"/>s of the specified type.</returns>
-        public IEnumerable<T> GetAll<T>() where T : class, IPlotElement
+        public IEnumerable<T> GetAll<T>() where T : class
         {
             foreach (IPlotElement e in this.PlotElements)
             {
