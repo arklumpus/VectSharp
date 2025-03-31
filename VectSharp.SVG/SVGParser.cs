@@ -1843,6 +1843,8 @@ namespace VectSharp.SVG
 
                                     path.EllipticalArc(radii.X, radii.Y, angle, largeArcFlag, sweepFlag, lastPoint);
                                 }
+
+                                lastCommand = 'A';
                             }
 
                             break;
