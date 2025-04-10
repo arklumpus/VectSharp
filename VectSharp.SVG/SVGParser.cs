@@ -954,6 +954,29 @@ namespace VectSharp.SVG
             return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica);
         }
 
+        private static bool ParseUrlID(string urlID, out string id)
+        {
+            if (!string.IsNullOrEmpty(urlID))
+            {
+                urlID = urlID.Trim();
+
+                if (urlID.StartsWith("url(") && urlID.EndsWith(")"))
+                {
+                    string argument = urlID.Substring(4, urlID.Length - 5);
+                    argument = argument.Trim('"', '\'');
+
+                    if (argument.StartsWith("#"))
+                    {
+                        id = argument.Substring(1);
+                        return true;
+                    }
+                }
+            }
+
+            id = null;
+            return false;
+        }
+
         private static void InterpretGObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, (bool, Brush)> gradients, Dictionary<string, IFilter> filters)
         {
             PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr, styleSheets, gradients);
@@ -962,9 +985,9 @@ namespace VectSharp.SVG
 
             string filter = currObject.Attributes?["filter"]?.Value ?? currObject.Attributes?["mask"]?.Value;
 
-            if (!string.IsNullOrEmpty(filter) && filter.StartsWith("url(#"))
+            if (ParseUrlID(filter, out string filterId))
             {
-                filter = filter.Substring(5, filter.Length - 6);
+                filter = filterId;
             }
 
             if (!string.IsNullOrEmpty(filter) && filters.ContainsKey(filter))
@@ -1043,13 +1066,10 @@ namespace VectSharp.SVG
 
         private static bool ApplyClipPath(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, (bool, Brush)> gradients)
         {
-            string id = currObject.Attributes?["clip-path"]?.Value;
+            string urlId = currObject.Attributes?["clip-path"]?.Value;
 
-            if (id != null && id.StartsWith("url(#"))
+            if (ParseUrlID(urlId, out string id))
             {
-                id = id.Substring(5);
-                id = id.Substring(0, id.Length - 1);
-
                 XmlNode element = currObject.OwnerDocument.SelectSingleNode(string.Format("//*[@id='{0}']", id));
 
                 if (element != null && element.ChildNodes.Count == 1 && element.ChildNodes[0].Name.Equals("path", StringComparison.OrdinalIgnoreCase))
@@ -2540,28 +2560,13 @@ namespace VectSharp.SVG
 
             if (stroke != null)
             {
-                if (stroke.Trim().StartsWith("url("))
+                if (ParseUrlID(stroke, out string url))
                 {
-                    string url = stroke.Trim().Substring(4);
-                    if (url.EndsWith(")"))
+                    url = url.Substring(1);
+                    if (gradients.TryGetValue(url, out (bool, Brush) brush))
                     {
-                        url = url.Substring(0, url.Length - 1);
-                    }
-
-                    url = url.Trim();
-
-                    if (url.StartsWith("#"))
-                    {
-                        url = url.Substring(1);
-                        if (gradients.TryGetValue(url, out (bool, Brush) brush))
-                        {
-                            tbr.Stroke = brush.Item2;
-                            tbr.StrokeGradientNeedsTransform = !brush.Item1;
-                        }
-                    }
-                    else
-                    {
-                        tbr.Stroke = null;
+                        tbr.Stroke = brush.Item2;
+                        tbr.StrokeGradientNeedsTransform = !brush.Item1;
                     }
                 }
                 else
@@ -2577,28 +2582,12 @@ namespace VectSharp.SVG
 
             if (fill != null)
             {
-                if (fill.Trim().StartsWith("url("))
+                if (ParseUrlID(fill, out string url))
                 {
-                    string url = fill.Trim().Substring(4);
-                    if (url.EndsWith(")"))
+                    if (gradients.TryGetValue(url, out (bool, Brush) brush))
                     {
-                        url = url.Substring(0, url.Length - 1);
-                    }
-
-                    url = url.Trim();
-
-                    if (url.StartsWith("#"))
-                    {
-                        url = url.Substring(1);
-                        if (gradients.TryGetValue(url, out (bool, Brush) brush))
-                        {
-                            tbr.Fill = brush.Item2;
-                            tbr.FillGradientNeedsTransform = !brush.Item1;
-                        }
-                    }
-                    else
-                    {
-                        tbr.Fill = null;
+                        tbr.Fill = brush.Item2;
+                        tbr.FillGradientNeedsTransform = !brush.Item1;
                     }
                 }
                 else
