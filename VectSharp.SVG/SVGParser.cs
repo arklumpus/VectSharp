@@ -116,6 +116,8 @@ namespace VectSharp.SVG
         public static Page FromString(string svgSource)
         {
             XmlDocument svgDoc = new XmlDocument();
+
+
             svgDoc.LoadXml(svgSource);
 
             Dictionary<string, FontFamily> embeddedFonts = new Dictionary<string, FontFamily>();
@@ -139,13 +141,29 @@ namespace VectSharp.SVG
                 catch { }
             }
 
-            Dictionary<string, Brush> gradients = new Dictionary<string, Brush>();
+            Dictionary<string, (bool, Brush)> gradients = new Dictionary<string, (bool, Brush)>();
             Dictionary<string, IFilter> filters = new Dictionary<string, IFilter>();
             Dictionary<string, XmlNode> masks = new Dictionary<string, XmlNode>();
 
+
+            foreach (KeyValuePair<string, (bool, Brush)> fnt in GetGradients(svgDoc.GetElementsByTagName("svg")[0], styleSheets))
+            {
+                gradients.Add(fnt.Key, fnt.Value);
+            }
+
+            foreach (KeyValuePair<string, IFilter> filt in GetFilters(svgDoc.GetElementsByTagName("svg")[0], styleSheets))
+            {
+                filters.Add(filt.Key, filt.Value);
+            }
+
+            foreach (KeyValuePair<string, XmlNode> mask in GetMasks(svgDoc.GetElementsByTagName("svg")[0], styleSheets))
+            {
+                masks.Add(mask.Key, mask.Value);
+            }
+
             foreach (XmlNode definitionsNode in svgDoc.GetElementsByTagName("defs"))
             {
-                foreach (KeyValuePair<string, Brush> fnt in GetGradients(definitionsNode, styleSheets))
+                foreach (KeyValuePair<string, (bool, Brush)> fnt in GetGradients(definitionsNode, styleSheets))
                 {
                     gradients.Add(fnt.Key, fnt.Value);
                 }
@@ -160,6 +178,8 @@ namespace VectSharp.SVG
                     masks.Add(mask.Key, mask.Value);
                 }
             }
+
+
 
             Graphics gpr = new Graphics();
 
@@ -195,17 +215,17 @@ namespace VectSharp.SVG
             }
         }
 
-        private static Size InterpretSVGObject(XmlNode svgObject, Graphics gpr, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients, Dictionary<string, IFilter> filters, Dictionary<string, XmlNode> masks)
+        private static Size InterpretSVGObject(XmlNode svgObject, Graphics gpr, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, (bool, Brush)> gradients, Dictionary<string, IFilter> filters, Dictionary<string, XmlNode> masks)
         {
             double[] viewBox = ParseListOfDoubles(svgObject.Attributes?["viewBox"]?.Value);
 
             double width, height, x, y;
 
-            string widthAttribute = svgObject.Attributes?["width"]?.Value?.Replace("px", "");
+            string widthAttribute = svgObject.Attributes?["width"]?.Value?.Replace("px", "")?.Replace("pt", "")?.Replace("mm", "")?.Replace("in", "")?.Replace("cm", "");
 
             if (!double.TryParse(widthAttribute, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out width)) { width = double.NaN; }
 
-            string heightAttribute = svgObject.Attributes?["height"]?.Value?.Replace("px", "");
+            string heightAttribute = svgObject.Attributes?["height"]?.Value?.Replace("px", "")?.Replace("pt", "")?.Replace("mm", "")?.Replace("in", "")?.Replace("cm", "");
             if (!double.TryParse(heightAttribute, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out height)) { height = double.NaN; }
 
             string xAttribute = svgObject.Attributes?["x"]?.Value;
@@ -289,7 +309,7 @@ namespace VectSharp.SVG
             return tbrSize;
         }
 
-        private static void InterpretSVGChildren(XmlNode svgObject, Graphics gpr, PresentationAttributes attributes, double width, double height, double diagonal, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients, Dictionary<string, IFilter> filters)
+        private static void InterpretSVGChildren(XmlNode svgObject, Graphics gpr, PresentationAttributes attributes, double width, double height, double diagonal, IEnumerable<Stylesheet> styleSheets, Dictionary<string, (bool, Brush)> gradients, Dictionary<string, IFilter> filters)
         {
             foreach (XmlNode child in svgObject.ChildNodes)
             {
@@ -297,7 +317,7 @@ namespace VectSharp.SVG
             }
         }
 
-        private static void InterpretSVGElement(XmlNode currObject, Graphics gpr, PresentationAttributes attributes, double width, double height, double diagonal, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients, Dictionary<string, IFilter> filters)
+        private static void InterpretSVGElement(XmlNode currObject, Graphics gpr, PresentationAttributes attributes, double width, double height, double diagonal, IEnumerable<Stylesheet> styleSheets, Dictionary<string, (bool, Brush)> gradients, Dictionary<string, IFilter> filters)
         {
             if (currObject.NodeType == XmlNodeType.EntityReference)
             {
@@ -356,7 +376,7 @@ namespace VectSharp.SVG
             }
         }
 
-        private static void InterpretImageObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients)
+        private static void InterpretImageObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, (bool, Brush)> gradients)
         {
             PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr, styleSheets, gradients);
 
@@ -414,7 +434,28 @@ namespace VectSharp.SVG
             }
         }
 
-        private static void InterpretTextObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients, ref double x, ref double y, double fontSize = double.NaN, string fontFamily = null, string textAlign = null)
+        private static string GetFirstAttributeValueIncludingAncestors(XmlNode currObject, string attribute)
+        {
+            string tbr = currObject.Attributes?[attribute]?.Value;
+
+            if (tbr != null)
+            {
+                return tbr;
+            }
+            else
+            {
+                if (currObject.ParentNode != null && !currObject.ParentNode.Name.Equals("svg", StringComparison.OrdinalIgnoreCase))
+                {
+                    return GetFirstAttributeValueIncludingAncestors(currObject.ParentNode, attribute);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        private static void InterpretTextObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, (bool, Brush)> gradients, ref double x, ref double y, double fontSize = double.NaN, string fontFamily = null, string textAlign = null)
         {
             PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr, styleSheets, gradients);
 
@@ -427,9 +468,21 @@ namespace VectSharp.SVG
             x += dx;
             y += dy;
 
-            fontFamily = currObject.Attributes?["font-family"]?.Value ?? fontFamily;
-            fontSize = ParseLengthOrPercentage(currObject.Attributes?["font-size"]?.Value, width, fontSize);
-            textAlign = currObject.Attributes?["text-align"]?.Value ?? textAlign;
+            fontFamily = GetFirstAttributeValueIncludingAncestors(currObject, "font-family") ?? fontFamily;
+            fontSize = ParseLengthOrPercentage(GetFirstAttributeValueIncludingAncestors(currObject, "font-size"), width, fontSize);
+            textAlign = GetFirstAttributeValueIncludingAncestors(currObject, "text-align") ?? GetFirstAttributeValueIncludingAncestors(currObject, "text-anchor") ?? textAlign;
+            if (textAlign == "start")
+            {
+                textAlign = "left";
+            }
+            else if (textAlign == "middle")
+            {
+                textAlign = "center";
+            }
+            else if (textAlign == "end")
+            {
+                textAlign = "right";
+            }
 
             bool hadClippingPath = ApplyClipPath(currObject, gpr, width, height, diagonal, attributes, styleSheets, gradients);
 
@@ -461,18 +514,35 @@ namespace VectSharp.SVG
                     text = text.Replace("\u00A0", " ");
 
                     FontFamily parsedFontFamily = ParseFontFamily(fontFamily, currAttributes.EmbeddedFonts);
-                    string fontWeight = currObject.Attributes?["font-weight"]?.Value;
-                    string fontStyle = currObject.Attributes?["font-style"]?.Value;
+                    string fontWeight = GetFirstAttributeValueIncludingAncestors(currObject, "font-weight");
+                    string fontStyle = GetFirstAttributeValueIncludingAncestors(currObject, "font-style");
+
+                    bool isBold = false;
+                    bool isItalic = false;
 
                     if (fontWeight != null && (fontWeight.Equals("bold", StringComparison.OrdinalIgnoreCase) || fontWeight.Equals("bolder", StringComparison.OrdinalIgnoreCase) || (int.TryParse(fontWeight, out int weight) && weight >= 500)))
                     {
-                        parsedFontFamily = GetBoldFontFamily(parsedFontFamily);
+                        isBold = true;
                     }
 
                     if (fontStyle != null && (fontStyle.Equals("italic", StringComparison.OrdinalIgnoreCase) || fontStyle.Equals("oblique", StringComparison.OrdinalIgnoreCase)))
                     {
+                        isItalic = true;
+                    }
+
+                    if (isBold && !isItalic)
+                    {
+                        parsedFontFamily = GetBoldFontFamily(parsedFontFamily);
+                    }
+                    else if (isItalic && !isBold)
+                    {
                         parsedFontFamily = GetItalicFontFamily(parsedFontFamily);
                     }
+                    else if (isItalic && isBold)
+                    {
+                        parsedFontFamily = GetBoldItalicFontFamily(parsedFontFamily);
+                    }
+
 
                     Font fnt = new Font(parsedFontFamily, fontSize);
 
@@ -485,11 +555,11 @@ namespace VectSharp.SVG
 
                         if (!string.IsNullOrEmpty(textAlign) && (textAlign.Equals("right", StringComparison.OrdinalIgnoreCase) || textAlign.Equals("end", StringComparison.OrdinalIgnoreCase)))
                         {
-                            x -= metrics.Width + metrics.LeftSideBearing;
+                            x -= metrics.AdvanceWidth;
                         }
                         else if (!string.IsNullOrEmpty(textAlign) && textAlign.Equals("center", StringComparison.OrdinalIgnoreCase))
                         {
-                            x -= metrics.Width * 0.5;
+                            x -= metrics.AdvanceWidth * 0.5;
                         }
 
                         endX += metrics.AdvanceWidth;
@@ -497,7 +567,7 @@ namespace VectSharp.SVG
 
                     TextBaselines baseline = TextBaselines.Baseline;
 
-                    string textBaseline = currObject.Attributes?["alignment-baseline"]?.Value;
+                    string textBaseline = GetFirstAttributeValueIncludingAncestors(currObject, "alignment-baseline");
 
                     if (textBaseline != null)
                     {
@@ -520,13 +590,55 @@ namespace VectSharp.SVG
                         if (currAttributes.Stroke != null)
                         {
                             Brush strokeColour = currAttributes.Stroke.MultiplyOpacity(currAttributes.Opacity * currAttributes.StrokeOpacity);
-                            gpr.StrokeText(x, y, text, fnt, strokeColour, baseline, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
+
+                            double[,] transform = null;
+
+                            if (currAttributes.StrokeGradientNeedsTransform)
+                            {
+                                (strokeColour, transform) = TransformBrush(strokeColour, new GraphicsPath().AddText(x, y, text, fnt, baseline).GetBounds());
+                            }
+
+                            if (transform != null)
+                            {
+                                GraphicsPath pth = new GraphicsPath().AddText(x, y, text, fnt, baseline);
+                                pth = pth.Transform(MatrixUtils.GetInverseTransformation(transform));
+
+                                gpr.Save();
+                                gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                                gpr.StrokePath(pth, strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
+                                gpr.Restore();
+                            }
+                            else
+                            {
+                                gpr.StrokeText(x, y, text, fnt, strokeColour, baseline, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
+                            }
                         }
 
                         if (currAttributes.Fill != null)
                         {
                             Brush fillColour = currAttributes.Fill.MultiplyOpacity(currAttributes.Opacity * currAttributes.FillOpacity);
-                            gpr.FillText(x, y, text, fnt, fillColour, baseline, tag: tag);
+
+                            double[,] transform = null;
+
+                            if (currAttributes.FillGradientNeedsTransform)
+                            {
+                                (fillColour, transform) = TransformBrush(fillColour, new GraphicsPath().AddText(x, y, text, fnt, baseline).GetBounds());
+                            }
+
+                            if (transform != null)
+                            {
+                                GraphicsPath pth = new GraphicsPath().AddText(x, y, text, fnt, baseline);
+                                pth = pth.Transform(MatrixUtils.GetInverseTransformation(transform));
+
+                                gpr.Save();
+                                gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                                gpr.FillPath(pth, fillColour, tag: tag);
+                                gpr.Restore();
+                            }
+                            else
+                            {
+                                gpr.FillText(x, y, text, fnt, fillColour, baseline, tag: tag);
+                            }
                         }
                     }
                     else
@@ -534,13 +646,54 @@ namespace VectSharp.SVG
                         if (currAttributes.Fill != null)
                         {
                             Brush fillColour = currAttributes.Fill.MultiplyOpacity(currAttributes.Opacity * currAttributes.FillOpacity);
-                            gpr.FillText(x, y, text, fnt, fillColour, baseline, tag: tag);
+
+                            double[,] transform = null;
+
+                            if (currAttributes.FillGradientNeedsTransform)
+                            {
+                                (fillColour, transform) = TransformBrush(fillColour, new GraphicsPath().AddText(x, y, text, fnt, baseline).GetBounds());
+                            }
+
+                            if (transform != null)
+                            {
+                                GraphicsPath pth = new GraphicsPath().AddText(x, y, text, fnt, baseline);
+                                pth = pth.Transform(MatrixUtils.GetInverseTransformation(transform));
+
+                                gpr.Save();
+                                gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                                gpr.FillPath(pth, fillColour, tag: tag);
+                                gpr.Restore();
+                            }
+                            else
+                            {
+                                gpr.FillText(x, y, text, fnt, fillColour, baseline, tag: tag);
+                            }
                         }
 
                         if (currAttributes.Stroke != null)
                         {
                             Brush strokeColour = currAttributes.Stroke.MultiplyOpacity(currAttributes.Opacity * currAttributes.StrokeOpacity);
-                            gpr.StrokeText(x, y, text, fnt, strokeColour, baseline, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
+                            double[,] transform = null;
+
+                            if (currAttributes.StrokeGradientNeedsTransform)
+                            {
+                                (strokeColour, transform) = TransformBrush(strokeColour, new GraphicsPath().AddText(x, y, text, fnt, baseline).GetBounds());
+                            }
+
+                            if (transform != null)
+                            {
+                                GraphicsPath pth = new GraphicsPath().AddText(x, y, text, fnt, baseline);
+                                pth = pth.Transform(MatrixUtils.GetInverseTransformation(transform));
+
+                                gpr.Save();
+                                gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                                gpr.StrokePath(pth, strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
+                                gpr.Restore();
+                            }
+                            else
+                            {
+                                gpr.StrokeText(x, y, text, fnt, strokeColour, baseline, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
+                            }
                         }
                     }
 
@@ -558,6 +711,46 @@ namespace VectSharp.SVG
                 }
             }
         }
+
+        private static (Brush, double[,]) TransformBrush(Brush brush, Rectangle boundingBox)
+        {
+            if (brush is SolidColourBrush)
+            {
+                return (brush, null);
+            }
+            else if (brush is LinearGradientBrush linear)
+            {
+                double[,] transformMatrix = MatrixUtils.Identity;
+                transformMatrix = MatrixUtils.Translate(transformMatrix, boundingBox.Location.X, boundingBox.Location.Y);
+                transformMatrix = MatrixUtils.Scale(transformMatrix, boundingBox.Size.Width, boundingBox.Size.Height);
+
+                //LinearGradientBrush tbr = new LinearGradientBrush(MatrixUtils.Multiply(transformMatrix, linear.StartPoint), MatrixUtils.Multiply(transformMatrix, linear.EndPoint), linear.GradientStops);
+                return (brush, transformMatrix);
+            }
+            else if (brush is RadialGradientBrush radial)
+            {
+                double[,] transformMatrix = MatrixUtils.Identity;
+                transformMatrix = MatrixUtils.Translate(transformMatrix, boundingBox.Location.X, boundingBox.Location.Y);
+                transformMatrix = MatrixUtils.Scale(transformMatrix, boundingBox.Size.Width, boundingBox.Size.Height);
+
+                double determinant = transformMatrix[0, 0] * (transformMatrix[1, 1] * transformMatrix[2, 2] - transformMatrix[1, 2] * transformMatrix[2, 1]) -
+                            transformMatrix[0, 1] * (transformMatrix[1, 0] * transformMatrix[2, 2] - transformMatrix[1, 2] * transformMatrix[2, 0]) +
+                            transformMatrix[0, 2] * (transformMatrix[1, 0] * transformMatrix[2, 1] - transformMatrix[1, 1] * transformMatrix[2, 0]);
+
+                //RadialGradientBrush tbr = new RadialGradientBrush(MatrixUtils.Multiply(transformMatrix, radial.FocalPoint), MatrixUtils.Multiply(transformMatrix, radial.Centre), radial.Radius * Math.Sqrt(determinant), radial.GradientStops);
+
+                return (brush, transformMatrix);
+            }
+            else
+            {
+                return (brush, null);
+            }
+
+        }
+
+        private static string[] BoldPredicates = new string[] { "-Bold", "-bold", " Bold", " bold" };
+        private static string[] ItalicPredicates = new string[] { "-Italic", "-italic", " Italic", " italic", "-Oblique", "-oblique", " Oblique", " oblique" };
+        private static string[] BoldItalicPredicates = new string[] { "-BoldItalic", "-bolditalic", " BoldItalic", " bolditalic", " Bold Italic", " bold italic", "-BoldOblique", "-boldoblique", " BoldOblique", " boldoblique", " Bold Oblique", " bold oblique" };
 
         private static FontFamily GetBoldFontFamily(FontFamily fontFamily)
         {
@@ -582,6 +775,19 @@ namespace VectSharp.SVG
                 case "Courier-BoldOblique":
                     return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique);
                 default:
+                    foreach (string sr in BoldPredicates)
+                    {
+                        FontFamily attempt = FontFamily.ResolveFontFamily(fontFamily.FamilyName + sr);
+                        if (attempt != null && attempt.TrueTypeFile != null)
+                        {
+                            return attempt;
+                        }
+                        attempt = FontFamily.ResolveFontFamily(fontFamily.FileName + sr);
+                        if (attempt != null && attempt.TrueTypeFile != null)
+                        {
+                            return attempt;
+                        }
+                    }
                     return fontFamily;
             }
         }
@@ -609,6 +815,59 @@ namespace VectSharp.SVG
                 case "Courier-BoldOblique":
                     return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique);
                 default:
+                    foreach (string sr in ItalicPredicates)
+                    {
+                        FontFamily attempt = FontFamily.ResolveFontFamily(fontFamily.FamilyName + sr);
+                        if (attempt != null && attempt.TrueTypeFile != null)
+                        {
+                            return attempt;
+                        }
+                        attempt = FontFamily.ResolveFontFamily(fontFamily.FileName + sr);
+                        if (attempt != null && attempt.TrueTypeFile != null)
+                        {
+                            return attempt;
+                        }
+                    }
+                    return fontFamily;
+            }
+        }
+
+        private static FontFamily GetBoldItalicFontFamily(FontFamily fontFamily)
+        {
+            switch (fontFamily.FileName)
+            {
+                case "Times-Roman":
+                case "Times-Italic":
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesItalic);
+                case "Times-Bold":
+                case "Times-BoldItalic":
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.TimesBoldItalic);
+                case "Helvetica":
+                case "Helvetica-Oblique":
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaOblique);
+                case "Helvetica-Bold":
+                case "Helvetica-BoldOblique":
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.HelveticaBoldOblique);
+                case "Courier":
+                case "Courier-Oblique":
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierOblique);
+                case "Courier-Bold":
+                case "Courier-BoldOblique":
+                    return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.CourierBoldOblique);
+                default:
+                    foreach (string sr in BoldItalicPredicates)
+                    {
+                        FontFamily attempt = FontFamily.ResolveFontFamily(fontFamily.FamilyName + sr);
+                        if (attempt != null && attempt.TrueTypeFile != null)
+                        {
+                            return attempt;
+                        }
+                        attempt = FontFamily.ResolveFontFamily(fontFamily.FileName + sr);
+                        if (attempt != null && attempt.TrueTypeFile != null)
+                        {
+                            return attempt;
+                        }
+                    }
                     return fontFamily;
             }
         }
@@ -683,6 +942,13 @@ namespace VectSharp.SVG
                         return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.ZapfDingbats);
                     }
                 }
+
+                FontFamily parsedFamily = FontFamily.ResolveFontFamily(family);
+
+                if (parsedFamily != null && parsedFamily.TrueTypeFile != null)
+                {
+                    return parsedFamily;
+                }
             }
 
             return FontFamily.ResolveFontFamily(FontFamily.StandardFontFamilies.Helvetica);
@@ -711,7 +977,7 @@ namespace VectSharp.SVG
             return false;
         }
 
-        private static void InterpretGObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients, Dictionary<string, IFilter> filters)
+        private static void InterpretGObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, (bool, Brush)> gradients, Dictionary<string, IFilter> filters)
         {
             PresentationAttributes currAttributes = InterpretPresentationAttributes(currObject, attributes, width, height, diagonal, gpr, styleSheets, gradients);
 
@@ -747,7 +1013,7 @@ namespace VectSharp.SVG
             }
         }
 
-        private static void InterpretUseObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients, Dictionary<string, IFilter> filters)
+        private static void InterpretUseObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, (bool, Brush)> gradients, Dictionary<string, IFilter> filters)
         {
             double x, y, w, h;
 
@@ -798,7 +1064,7 @@ namespace VectSharp.SVG
             }
         }
 
-        private static bool ApplyClipPath(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients)
+        private static bool ApplyClipPath(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, (bool, Brush)> gradients)
         {
             string urlId = currObject.Attributes?["clip-path"]?.Value;
 
@@ -825,6 +1091,25 @@ namespace VectSharp.SVG
 
                     return true;
                 }
+                else if (element != null && element.ChildNodes.Count == 1 && element.ChildNodes[0].Name.Equals("rect", StringComparison.OrdinalIgnoreCase))
+                {
+                    bool hasParentClipPath = ApplyClipPath(element, gpr, width, height, diagonal, attributes, styleSheets, gradients);
+
+                    Graphics pathGraphics = new Graphics();
+                    InterpretRectObject(element.ChildNodes[0], pathGraphics, width, height, diagonal, attributes, styleSheets, gradients);
+
+                    PathTransformerGraphicsContext ptgc = new PathTransformerGraphicsContext();
+                    pathGraphics.CopyToIGraphicsContext(ptgc);
+
+                    if (!hasParentClipPath)
+                    {
+                        gpr.Save();
+                    }
+
+                    gpr.SetClippingPath(ptgc.CurrentPath);
+
+                    return true;
+                }
 
                 return false;
             }
@@ -834,7 +1119,7 @@ namespace VectSharp.SVG
             }
         }
 
-        private static void InterpretRectObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients)
+        private static void InterpretRectObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, (bool, Brush)> gradients)
         {
             double x, y, w, h, rx, ry;
 
@@ -913,13 +1198,57 @@ namespace VectSharp.SVG
                     if (currAttributes.Stroke != null)
                     {
                         Brush strokeColour = currAttributes.Stroke.MultiplyOpacity(currAttributes.Opacity * currAttributes.StrokeOpacity);
+
+                        GraphicsPath oldPath = path;
+                        double[,] transform = null;
+
+                        if (currAttributes.StrokeGradientNeedsTransform)
+                        {
+                            (strokeColour, transform) = TransformBrush(strokeColour, path.GetBounds());
+                        }
+
+                        if (transform != null)
+                        {
+                            gpr.Save();
+                            gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                            path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
+                        }
+
                         gpr.StrokePath(path, strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
+
+                        if (transform != null)
+                        {
+                            gpr.Restore();
+                            path = oldPath;
+                        }
                     }
 
                     if (currAttributes.Fill != null)
                     {
                         Brush fillColour = currAttributes.Fill.MultiplyOpacity(currAttributes.Opacity * currAttributes.FillOpacity);
+
+                        GraphicsPath oldPath = path;
+                        double[,] transform = null;
+
+                        if (currAttributes.FillGradientNeedsTransform)
+                        {
+                            (fillColour, transform) = TransformBrush(fillColour, path.GetBounds());
+                        }
+
+                        if (transform != null)
+                        {
+                            gpr.Save();
+                            gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                            path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
+                        }
+
                         gpr.FillPath(path, fillColour, tag: tag);
+
+                        if (transform != null)
+                        {
+                            gpr.Restore();
+                            path = oldPath;
+                        }
                     }
                 }
                 else
@@ -927,13 +1256,57 @@ namespace VectSharp.SVG
                     if (currAttributes.Fill != null)
                     {
                         Brush fillColour = currAttributes.Fill.MultiplyOpacity(currAttributes.Opacity * currAttributes.FillOpacity);
+
+                        GraphicsPath oldPath = path;
+                        double[,] transform = null;
+
+                        if (currAttributes.FillGradientNeedsTransform)
+                        {
+                            (fillColour, transform) = TransformBrush(fillColour, path.GetBounds());
+                        }
+
+                        if (transform != null)
+                        {
+                            gpr.Save();
+                            gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                            path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
+                        }
+
                         gpr.FillPath(path, fillColour, tag: tag);
+
+                        if (transform != null)
+                        {
+                            gpr.Restore();
+                            path = oldPath;
+                        }
                     }
 
                     if (currAttributes.Stroke != null)
                     {
                         Brush strokeColour = currAttributes.Stroke.MultiplyOpacity(currAttributes.Opacity * currAttributes.StrokeOpacity);
+
+                        GraphicsPath oldPath = path;
+                        double[,] transform = null;
+
+                        if (currAttributes.StrokeGradientNeedsTransform)
+                        {
+                            (strokeColour, transform) = TransformBrush(strokeColour, path.GetBounds());
+                        }
+
+                        if (transform != null)
+                        {
+                            gpr.Save();
+                            gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                            path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
+                        }
+
                         gpr.StrokePath(path, strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
+
+                        if (transform != null)
+                        {
+                            gpr.Restore();
+                            path = oldPath;
+                        }
                     }
                 }
 
@@ -949,7 +1322,7 @@ namespace VectSharp.SVG
             }
         }
 
-        private static void InterpretPolyLineObject(XmlNode currObject, bool isPolygon, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients)
+        private static void InterpretPolyLineObject(XmlNode currObject, bool isPolygon, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, (bool, Brush)> gradients)
         {
             string points = currObject.Attributes?["points"]?.Value;
 
@@ -980,13 +1353,57 @@ namespace VectSharp.SVG
                     if (currAttributes.Stroke != null)
                     {
                         Brush strokeColour = currAttributes.Stroke.MultiplyOpacity(currAttributes.Opacity * currAttributes.StrokeOpacity);
+
+                        GraphicsPath oldPath = path;
+                        double[,] transform = null;
+
+                        if (currAttributes.StrokeGradientNeedsTransform)
+                        {
+                            (strokeColour, transform) = TransformBrush(strokeColour, path.GetBounds());
+                        }
+
+                        if (transform != null)
+                        {
+                            gpr.Save();
+                            gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                            path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
+                        }
+
                         gpr.StrokePath(path, strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
+
+                        if (transform != null)
+                        {
+                            gpr.Restore();
+                            path = oldPath;
+                        }
                     }
 
                     if (currAttributes.Fill != null)
                     {
                         Brush fillColour = currAttributes.Fill.MultiplyOpacity(currAttributes.Opacity * currAttributes.FillOpacity);
+
+                        GraphicsPath oldPath = path;
+                        double[,] transform = null;
+
+                        if (currAttributes.FillGradientNeedsTransform)
+                        {
+                            (fillColour, transform) = TransformBrush(fillColour, path.GetBounds());
+                        }
+
+                        if (transform != null)
+                        {
+                            gpr.Save();
+                            gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                            path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
+                        }
+
                         gpr.FillPath(path, fillColour, tag: tag);
+
+                        if (transform != null)
+                        {
+                            gpr.Restore();
+                            path = oldPath;
+                        }
                     }
                 }
                 else
@@ -994,13 +1411,57 @@ namespace VectSharp.SVG
                     if (currAttributes.Fill != null)
                     {
                         Brush fillColour = currAttributes.Fill.MultiplyOpacity(currAttributes.Opacity * currAttributes.FillOpacity);
+
+                        GraphicsPath oldPath = path;
+                        double[,] transform = null;
+
+                        if (currAttributes.FillGradientNeedsTransform)
+                        {
+                            (fillColour, transform) = TransformBrush(fillColour, path.GetBounds());
+                        }
+
+                        if (transform != null)
+                        {
+                            gpr.Save();
+                            gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                            path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
+                        }
+
                         gpr.FillPath(path, fillColour, tag: tag);
+
+                        if (transform != null)
+                        {
+                            gpr.Restore();
+                            path = oldPath;
+                        }
                     }
 
                     if (currAttributes.Stroke != null)
                     {
                         Brush strokeColour = currAttributes.Stroke.MultiplyOpacity(currAttributes.Opacity * currAttributes.StrokeOpacity);
+
+                        GraphicsPath oldPath = path;
+                        double[,] transform = null;
+
+                        if (currAttributes.StrokeGradientNeedsTransform)
+                        {
+                            (strokeColour, transform) = TransformBrush(strokeColour, path.GetBounds());
+                        }
+
+                        if (transform != null)
+                        {
+                            gpr.Save();
+                            gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                            path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
+                        }
+
                         gpr.StrokePath(path, strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
+
+                        if (transform != null)
+                        {
+                            gpr.Restore();
+                            path = oldPath;
+                        }
                     }
                 }
 
@@ -1016,7 +1477,7 @@ namespace VectSharp.SVG
             }
         }
 
-        private static void InterpretPathObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients)
+        private static void InterpretPathObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, (bool, Brush)> gradients)
         {
             string d = currObject.Attributes?["d"]?.Value;
 
@@ -1402,6 +1863,8 @@ namespace VectSharp.SVG
 
                                     path.EllipticalArc(radii.X, radii.Y, angle, largeArcFlag, sweepFlag, lastPoint);
                                 }
+
+                                lastCommand = 'A';
                             }
 
                             break;
@@ -1426,13 +1889,57 @@ namespace VectSharp.SVG
                     if (currAttributes.Stroke != null)
                     {
                         Brush strokeColour = currAttributes.Stroke.MultiplyOpacity(currAttributes.Opacity * currAttributes.StrokeOpacity);
+
+                        GraphicsPath oldPath = path;
+                        double[,] transform = null;
+
+                        if (currAttributes.StrokeGradientNeedsTransform)
+                        {
+                            (strokeColour, transform) = TransformBrush(strokeColour, path.GetBounds());
+                        }
+
+                        if (transform != null)
+                        {
+                            gpr.Save();
+                            gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                            path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
+                        }
+
                         gpr.StrokePath(path, strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
+
+                        if (transform != null)
+                        {
+                            gpr.Restore();
+                            path = oldPath;
+                        }
                     }
 
                     if (currAttributes.Fill != null)
                     {
                         Brush fillColour = currAttributes.Fill.MultiplyOpacity(currAttributes.Opacity * currAttributes.FillOpacity);
+
+                        GraphicsPath oldPath = path;
+                        double[,] transform = null;
+
+                        if (currAttributes.FillGradientNeedsTransform)
+                        {
+                            (fillColour, transform) = TransformBrush(fillColour, path.GetBounds());
+                        }
+
+                        if (transform != null)
+                        {
+                            gpr.Save();
+                            gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                            path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
+                        }
+
                         gpr.FillPath(path, fillColour, tag: tag);
+
+                        if (transform != null)
+                        {
+                            gpr.Restore();
+                            path = oldPath;
+                        }
                     }
                 }
                 else
@@ -1440,13 +1947,56 @@ namespace VectSharp.SVG
                     if (currAttributes.Fill != null)
                     {
                         Brush fillColour = currAttributes.Fill.MultiplyOpacity(currAttributes.Opacity * currAttributes.FillOpacity);
+
+                        GraphicsPath oldPath = path;
+                        double[,] transform = null;
+
+                        if (currAttributes.FillGradientNeedsTransform)
+                        {
+                            (fillColour, transform) = TransformBrush(fillColour, path.GetBounds());
+                        }
+
+                        if (transform != null)
+                        {
+                            gpr.Save();
+                            gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                            path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
+                        }
+
                         gpr.FillPath(path, fillColour, tag: tag);
+
+                        if (transform != null)
+                        {
+                            gpr.Restore();
+                            path = oldPath;
+                        }
                     }
 
                     if (currAttributes.Stroke != null)
                     {
                         Brush strokeColour = currAttributes.Stroke.MultiplyOpacity(currAttributes.Opacity * currAttributes.StrokeOpacity);
+                        GraphicsPath oldPath = path;
+                        double[,] transform = null;
+
+                        if (currAttributes.StrokeGradientNeedsTransform)
+                        {
+                            (strokeColour, transform) = TransformBrush(strokeColour, path.GetBounds());
+                        }
+
+                        if (transform != null)
+                        {
+                            gpr.Save();
+                            gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                            path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
+                        }
+
                         gpr.StrokePath(path, strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
+
+                        if (transform != null)
+                        {
+                            gpr.Restore();
+                            path = oldPath;
+                        }
                     }
                 }
 
@@ -1473,9 +2023,24 @@ namespace VectSharp.SVG
             {
                 char c = d[i];
 
-                if (c >= '0' && c <= '9' || c == '.' || c == 'e' || c == 'E')
+                if (c >= '0' && c <= '9' || c == 'e' || c == 'E')
                 {
                     currToken += c;
+                }
+                else if (c == '.')
+                {
+                    if (!currToken.Contains('.'))
+                    {
+                        currToken += c;
+                    }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(currToken))
+                        {
+                            tbr.Add(currToken);
+                        }
+                        currToken = "" + c;
+                    }
                 }
                 else if (c == '-' || c == '+')
                 {
@@ -1529,7 +2094,7 @@ namespace VectSharp.SVG
             return tbr;
         }
 
-        private static void InterpretCircleObject(XmlNode circleObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients)
+        private static void InterpretCircleObject(XmlNode circleObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, (bool, Brush)> gradients)
         {
             double cx, cy, r;
 
@@ -1548,13 +2113,59 @@ namespace VectSharp.SVG
                 if (circleAttributes.Stroke != null)
                 {
                     Brush strokeColour = circleAttributes.Stroke.MultiplyOpacity(circleAttributes.Opacity * circleAttributes.StrokeOpacity);
-                    gpr.StrokePath(new GraphicsPath().Arc(cx, cy, r, 0, 2 * Math.PI).Close(), strokeColour, circleAttributes.StrokeThickness, circleAttributes.LineCap, circleAttributes.LineJoin, circleAttributes.LineDash, tag: tag);
+
+                    GraphicsPath path = new GraphicsPath().Arc(cx, cy, r, 0, 2 * Math.PI).Close();
+                    GraphicsPath oldPath = path;
+                    double[,] transform = null;
+
+                    if (circleAttributes.StrokeGradientNeedsTransform)
+                    {
+                        (strokeColour, transform) = TransformBrush(strokeColour, new Rectangle(cx - r, cy - r, r * 2, r * 2));
+                    }
+
+                    if (transform != null)
+                    {
+                        gpr.Save();
+                        gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                        path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
+                    }
+
+                    gpr.StrokePath(path, strokeColour, circleAttributes.StrokeThickness, circleAttributes.LineCap, circleAttributes.LineJoin, circleAttributes.LineDash, tag: tag);
+
+                    if (transform != null)
+                    {
+                        gpr.Restore();
+                        path = oldPath;
+                    }
                 }
 
                 if (circleAttributes.Fill != null)
                 {
                     Brush fillColour = circleAttributes.Fill.MultiplyOpacity(circleAttributes.Opacity * circleAttributes.FillOpacity);
-                    gpr.FillPath(new GraphicsPath().Arc(cx, cy, r, 0, 2 * Math.PI).Close(), fillColour, tag: tag);
+
+                    GraphicsPath path = new GraphicsPath().Arc(cx, cy, r, 0, 2 * Math.PI).Close();
+                    GraphicsPath oldPath = path;
+                    double[,] transform = null;
+
+                    if (circleAttributes.FillGradientNeedsTransform)
+                    {
+                        (fillColour, transform) = TransformBrush(fillColour, new Rectangle(cx - r, cy - r, r * 2, r * 2));
+                    }
+
+                    if (transform != null)
+                    {
+                        gpr.Save();
+                        gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                        path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
+                    }
+
+                    gpr.FillPath(path, fillColour, tag: tag);
+
+                    if (transform != null)
+                    {
+                        gpr.Restore();
+                        path = oldPath;
+                    }
                 }
             }
             else
@@ -1562,13 +2173,57 @@ namespace VectSharp.SVG
                 if (circleAttributes.Fill != null)
                 {
                     Brush fillColour = circleAttributes.Fill.MultiplyOpacity(circleAttributes.Opacity * circleAttributes.FillOpacity);
-                    gpr.FillPath(new GraphicsPath().Arc(cx, cy, r, 0, 2 * Math.PI).Close(), fillColour, tag: tag);
+                    GraphicsPath path = new GraphicsPath().Arc(cx, cy, r, 0, 2 * Math.PI).Close();
+                    GraphicsPath oldPath = path;
+                    double[,] transform = null;
+
+                    if (circleAttributes.FillGradientNeedsTransform)
+                    {
+                        (fillColour, transform) = TransformBrush(fillColour, new Rectangle(cx - r, cy - r, r * 2, r * 2));
+                    }
+
+                    if (transform != null)
+                    {
+                        gpr.Save();
+                        gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                        path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
+                    }
+
+                    gpr.FillPath(path, fillColour, tag: tag);
+
+                    if (transform != null)
+                    {
+                        gpr.Restore();
+                        path = oldPath;
+                    }
                 }
 
                 if (circleAttributes.Stroke != null)
                 {
                     Brush strokeColour = circleAttributes.Stroke.MultiplyOpacity(circleAttributes.Opacity * circleAttributes.StrokeOpacity);
-                    gpr.StrokePath(new GraphicsPath().Arc(cx, cy, r, 0, 2 * Math.PI).Close(), strokeColour, circleAttributes.StrokeThickness, circleAttributes.LineCap, circleAttributes.LineJoin, circleAttributes.LineDash, tag: tag);
+                    GraphicsPath path = new GraphicsPath().Arc(cx, cy, r, 0, 2 * Math.PI).Close();
+                    GraphicsPath oldPath = path;
+                    double[,] transform = null;
+
+                    if (circleAttributes.StrokeGradientNeedsTransform)
+                    {
+                        (strokeColour, transform) = TransformBrush(strokeColour, new Rectangle(cx - r, cy - r, r * 2, r * 2));
+                    }
+
+                    if (transform != null)
+                    {
+                        gpr.Save();
+                        gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                        path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
+                    }
+
+                    gpr.StrokePath(path, strokeColour, circleAttributes.StrokeThickness, circleAttributes.LineCap, circleAttributes.LineJoin, circleAttributes.LineDash, tag: tag);
+
+                    if (transform != null)
+                    {
+                        gpr.Restore();
+                        path = oldPath;
+                    }
                 }
             }
 
@@ -1583,7 +2238,7 @@ namespace VectSharp.SVG
             }
         }
 
-        private static void InterpretEllipseObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients)
+        private static void InterpretEllipseObject(XmlNode currObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, (bool, Brush)> gradients)
         {
             double cx, cy, rx, ry;
 
@@ -1621,13 +2276,59 @@ namespace VectSharp.SVG
                     if (currAttributes.Stroke != null)
                     {
                         Brush strokeColour = currAttributes.Stroke.MultiplyOpacity(currAttributes.Opacity * currAttributes.StrokeOpacity);
-                        gpr.StrokePath(new GraphicsPath().Arc(0, 0, r, 0, 2 * Math.PI).Close(), strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
+
+                        GraphicsPath path = new GraphicsPath().Arc(0, 0, r, 0, 2 * Math.PI).Close();
+                        GraphicsPath oldPath = path;
+                        double[,] transform = null;
+
+                        if (currAttributes.StrokeGradientNeedsTransform)
+                        {
+                            (strokeColour, transform) = TransformBrush(strokeColour, new Rectangle(0, 0, r * 2, r * 2));
+                        }
+
+                        if (transform != null)
+                        {
+                            gpr.Save();
+                            gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                            path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
+                        }
+
+                        gpr.StrokePath(path, strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
+
+                        if (transform != null)
+                        {
+                            gpr.Restore();
+                            path = oldPath;
+                        }
                     }
 
                     if (currAttributes.Fill != null)
                     {
                         Brush fillColour = currAttributes.Fill.MultiplyOpacity(currAttributes.Opacity * currAttributes.FillOpacity);
-                        gpr.FillPath(new GraphicsPath().Arc(0, 0, r, 0, 2 * Math.PI).Close(), fillColour, tag: tag);
+
+                        GraphicsPath path = new GraphicsPath().Arc(0, 0, r, 0, 2 * Math.PI).Close();
+                        GraphicsPath oldPath = path;
+                        double[,] transform = null;
+
+                        if (currAttributes.FillGradientNeedsTransform)
+                        {
+                            (fillColour, transform) = TransformBrush(fillColour, new Rectangle(0, 0, r * 2, r * 2));
+                        }
+
+                        if (transform != null)
+                        {
+                            gpr.Save();
+                            gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                            path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
+                        }
+
+                        gpr.FillPath(path, fillColour, tag: tag);
+
+                        if (transform != null)
+                        {
+                            gpr.Restore();
+                            path = oldPath;
+                        }
                     }
                 }
                 else
@@ -1635,13 +2336,58 @@ namespace VectSharp.SVG
                     if (currAttributes.Fill != null)
                     {
                         Brush fillColour = currAttributes.Fill.MultiplyOpacity(currAttributes.Opacity * currAttributes.FillOpacity);
-                        gpr.FillPath(new GraphicsPath().Arc(0, 0, r, 0, 2 * Math.PI).Close(), fillColour, tag: tag);
+
+                        GraphicsPath path = new GraphicsPath().Arc(0, 0, r, 0, 2 * Math.PI).Close();
+                        GraphicsPath oldPath = path;
+                        double[,] transform = null;
+
+                        if (currAttributes.FillGradientNeedsTransform)
+                        {
+                            (fillColour, transform) = TransformBrush(fillColour, new Rectangle(0, 0, r * 2, r * 2));
+                        }
+
+                        if (transform != null)
+                        {
+                            gpr.Save();
+                            gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                            path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
+                        }
+
+                        gpr.FillPath(path, fillColour, tag: tag);
+
+                        if (transform != null)
+                        {
+                            gpr.Restore();
+                            path = oldPath;
+                        }
                     }
 
                     if (currAttributes.Stroke != null)
                     {
                         Brush strokeColour = currAttributes.Stroke.MultiplyOpacity(currAttributes.Opacity * currAttributes.StrokeOpacity);
-                        gpr.StrokePath(new GraphicsPath().Arc(0, 0, r, 0, 2 * Math.PI).Close(), strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
+                        GraphicsPath path = new GraphicsPath().Arc(0, 0, r, 0, 2 * Math.PI).Close();
+                        GraphicsPath oldPath = path;
+                        double[,] transform = null;
+
+                        if (currAttributes.StrokeGradientNeedsTransform)
+                        {
+                            (strokeColour, transform) = TransformBrush(strokeColour, new Rectangle(0, 0, r * 2, r * 2));
+                        }
+
+                        if (transform != null)
+                        {
+                            gpr.Save();
+                            gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                            path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
+                        }
+
+                        gpr.StrokePath(path, strokeColour, currAttributes.StrokeThickness, currAttributes.LineCap, currAttributes.LineJoin, currAttributes.LineDash, tag: tag);
+
+                        if (transform != null)
+                        {
+                            gpr.Restore();
+                            path = oldPath;
+                        }
                     }
                 }
 
@@ -1659,7 +2405,7 @@ namespace VectSharp.SVG
             }
         }
 
-        private static void InterpretLineObject(XmlNode lineObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients)
+        private static void InterpretLineObject(XmlNode lineObject, Graphics gpr, double width, double height, double diagonal, PresentationAttributes attributes, IEnumerable<Stylesheet> styleSheets, Dictionary<string, (bool, Brush)> gradients)
         {
             double x1, x2, y1, y2;
 
@@ -1677,7 +2423,30 @@ namespace VectSharp.SVG
             if (lineAttributes.Stroke != null)
             {
                 Brush strokeColour = lineAttributes.Stroke.MultiplyOpacity(lineAttributes.Opacity * lineAttributes.StrokeOpacity);
-                gpr.StrokePath(new GraphicsPath().MoveTo(x1, y1).LineTo(x2, y2), strokeColour, lineAttributes.StrokeThickness, lineAttributes.LineCap, lineAttributes.LineJoin, lineAttributes.LineDash, tag: tag);
+
+                GraphicsPath path = new GraphicsPath().MoveTo(x1, y1).LineTo(x2, y2);
+                GraphicsPath oldPath = path;
+                double[,] transform = null;
+
+                if (lineAttributes.StrokeGradientNeedsTransform)
+                {
+                    (strokeColour, transform) = TransformBrush(strokeColour, new Rectangle(x1, y1, x2 - x1, y2 - y1));
+                }
+
+                if (transform != null)
+                {
+                    gpr.Save();
+                    gpr.Transform(transform[0, 0], transform[1, 0], transform[0, 1], transform[1, 1], transform[0, 2], transform[1, 2]);
+                    path = path.Transform(MatrixUtils.GetInverseTransformation(transform));
+                }
+
+                gpr.StrokePath(path, strokeColour, lineAttributes.StrokeThickness, lineAttributes.LineCap, lineAttributes.LineJoin, lineAttributes.LineDash, tag: tag);
+
+                if (transform != null)
+                {
+                    gpr.Restore();
+                    path = oldPath;
+                }
             }
 
             if (hadClippingPath)
@@ -1742,7 +2511,7 @@ namespace VectSharp.SVG
             }
         }
 
-        internal static PresentationAttributes InterpretPresentationAttributes(XmlNode obj, PresentationAttributes parentPresentationAttributes, double width, double height, double diagonal, Graphics gpr, IEnumerable<Stylesheet> styleSheets, Dictionary<string, Brush> gradients)
+        internal static PresentationAttributes InterpretPresentationAttributes(XmlNode obj, PresentationAttributes parentPresentationAttributes, double width, double height, double diagonal, Graphics gpr, IEnumerable<Stylesheet> styleSheets, Dictionary<string, (bool, Brush)> gradients)
         {
             SetStyleAttributes(obj, styleSheets);
 
@@ -1760,6 +2529,7 @@ namespace VectSharp.SVG
             string strokeDashArray = obj.Attributes?["stroke-dasharray"]?.Value;
             string strokeDashOffset = obj.Attributes?["stroke-dashoffset"]?.Value;
             string paintOrder = obj.Attributes?["paint-order"]?.Value;
+
 
             string xA = obj.Attributes?["x"]?.Value;
             string yA = obj.Attributes?["y"]?.Value;
@@ -1792,9 +2562,10 @@ namespace VectSharp.SVG
             {
                 if (ParseUrlID(stroke, out string url))
                 {
-                    if (gradients.TryGetValue(url, out Brush brush))
+                    if (gradients.TryGetValue(url, out (bool, Brush) brush))
                     {
-                        tbr.Stroke = brush;
+                        tbr.Stroke = brush.Item2;
+                        tbr.StrokeGradientNeedsTransform = !brush.Item1;
                     }
                 }
                 else
@@ -1812,9 +2583,10 @@ namespace VectSharp.SVG
             {
                 if (ParseUrlID(fill, out string url))
                 {
-                    if (gradients.TryGetValue(url, out Brush brush))
+                    if (gradients.TryGetValue(url, out (bool, Brush) brush))
                     {
-                        tbr.Fill = brush;
+                        tbr.Fill = brush.Item2;
+                        tbr.FillGradientNeedsTransform = !brush.Item1;
                     }
                 }
                 else
@@ -1879,7 +2651,7 @@ namespace VectSharp.SVG
             {
                 if (strokeDashArray != "none")
                 {
-                    double[] parsedArray = ParseListOfDoubles(strokeDashArray);
+                    double[] parsedArray = ParseListOfDoubles(strokeDashArray, diagonal);
 
                     tbr.LineDash = new LineDash(parsedArray[0], parsedArray.Length > 1 ? parsedArray[1] : parsedArray[0], tbr.LineDash.Phase);
                 }
@@ -2052,6 +2824,8 @@ namespace VectSharp.SVG
             public double Y;
             public double Width;
             public double Height;
+            public bool StrokeGradientNeedsTransform = false;
+            public bool FillGradientNeedsTransform = false;
 
             public PresentationAttributes Clone()
             {
@@ -2085,7 +2859,7 @@ namespace VectSharp.SVG
             public static Regex NumberRegex = new Regex(@"^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?", RegexOptions.Compiled);
         }
 
-        private static double[] ParseListOfDoubles(string value)
+        private static double[] ParseListOfDoubles(string value, double? total = null)
         {
             if (value == null)
             {
@@ -2097,7 +2871,14 @@ namespace VectSharp.SVG
 
             for (int i = 0; i < splitValue.Length; i++)
             {
-                tbr[i] = double.Parse(splitValue[i], System.Globalization.CultureInfo.InvariantCulture);
+                if (total == null)
+                {
+                    tbr[i] = double.Parse(splitValue[i], System.Globalization.CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    tbr[i] = ParseLengthOrPercentage(splitValue[i], total.Value);
+                }
             }
 
             return tbr;
@@ -2180,7 +2961,7 @@ namespace VectSharp.SVG
                             if (type.Equals("matrix", StringComparison.OrdinalIgnoreCase))
                             {
                                 string values = actualFilter.GetAttribute("values");
-                                double[] parsedValues = (from el in System.Text.RegularExpressions.Regex.Split(values, "\\s") select double.Parse(el.Trim())).ToArray();
+                                double[] parsedValues = (from el in System.Text.RegularExpressions.Regex.Split(values, "\\s") select double.Parse(el.Trim(), System.Globalization.CultureInfo.InvariantCulture)).ToArray();
 
                                 if (parsedValues.Length == 20)
                                 {
@@ -2237,9 +3018,9 @@ namespace VectSharp.SVG
             return tbr;
         }
 
-        private static IEnumerable<KeyValuePair<string, Brush>> GetGradients(XmlNode definitionsNode, List<Stylesheet> styleSheets)
+        private static IEnumerable<KeyValuePair<string, (bool, Brush)>> GetGradients(XmlNode definitionsNode, List<Stylesheet> styleSheets)
         {
-            Dictionary<string, Brush> tbr = new Dictionary<string, Brush>();
+            Dictionary<string, (bool, Brush)> tbr = new Dictionary<string, (bool, Brush)>();
             Dictionary<string, XmlNodeList> stopLists = new Dictionary<string, XmlNodeList>();
 
             foreach (XmlNode definition in definitionsNode.ChildNodes)
@@ -2250,27 +3031,29 @@ namespace VectSharp.SVG
 
                     string id = gradient.GetAttribute("id");
 
+                    bool userSpaceOnUse = gradient.GetAttribute("gradientUnits") == "userSpaceOnUse";
+
                     double x1;
                     double y1;
                     double x2;
                     double y2;
 
-                    if (!(gradient.HasAttribute("x1") && double.TryParse(gradient.GetAttribute("x1"), out x1)))
+                    if (!(gradient.HasAttribute("x1") && double.TryParse(gradient.GetAttribute("x1"), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out x1)))
                     {
                         x1 = 0;
                     }
 
-                    if (!(gradient.HasAttribute("y1") && double.TryParse(gradient.GetAttribute("y1"), out y1)))
+                    if (!(gradient.HasAttribute("y1") && double.TryParse(gradient.GetAttribute("y1"), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out y1)))
                     {
                         y1 = 0;
                     }
 
-                    if (!(gradient.HasAttribute("x2") && double.TryParse(gradient.GetAttribute("x2"), out x2)))
+                    if (!(gradient.HasAttribute("x2") && double.TryParse(gradient.GetAttribute("x2"), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out x2)))
                     {
                         x2 = 0;
                     }
 
-                    if (!(gradient.HasAttribute("y2") && double.TryParse(gradient.GetAttribute("y2"), out y2)))
+                    if (!(gradient.HasAttribute("y2") && double.TryParse(gradient.GetAttribute("y2"), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out y2)))
                     {
                         y2 = 0;
                     }
@@ -2436,7 +3219,7 @@ namespace VectSharp.SVG
                         y2 = end[1];
                     }
 
-                    tbr.Add(id, new LinearGradientBrush(new Point(x1, y1), new Point(x2, y2), gradientStops));
+                    tbr.Add(id, (userSpaceOnUse, new LinearGradientBrush(new Point(x1, y1), new Point(x2, y2), gradientStops)));
                 }
                 else if (definition.Name.Equals("radialGradient", StringComparison.OrdinalIgnoreCase))
                 {
@@ -2444,21 +3227,23 @@ namespace VectSharp.SVG
 
                     string id = gradient.GetAttribute("id");
 
+                    bool userSpaceOnUse = gradient.GetAttribute("gradientUnits") == "userSpaceOnUse";
+
                     double cx;
                     double cy;
                     double r;
 
-                    if (!(gradient.HasAttribute("cx") && double.TryParse(gradient.GetAttribute("cx"), out cx)))
+                    if (!(gradient.HasAttribute("cx") && double.TryParse(gradient.GetAttribute("cx"), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out cx)))
                     {
                         cx = 0;
                     }
 
-                    if (!(gradient.HasAttribute("cy") && double.TryParse(gradient.GetAttribute("cy"), out cy)))
+                    if (!(gradient.HasAttribute("cy") && double.TryParse(gradient.GetAttribute("cy"), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out cy)))
                     {
                         cy = 0;
                     }
 
-                    if (!(gradient.HasAttribute("r") && double.TryParse(gradient.GetAttribute("r"), out r)))
+                    if (!(gradient.HasAttribute("r") && double.TryParse(gradient.GetAttribute("r"), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out r)))
                     {
                         r = 0;
                     }
@@ -2466,12 +3251,12 @@ namespace VectSharp.SVG
                     double fx;
                     double fy;
 
-                    if (!(gradient.HasAttribute("fx") && double.TryParse(gradient.GetAttribute("fx"), out fx)))
+                    if (!(gradient.HasAttribute("fx") && double.TryParse(gradient.GetAttribute("fx"), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out fx)))
                     {
                         fx = cx;
                     }
 
-                    if (!(gradient.HasAttribute("fy") && double.TryParse(gradient.GetAttribute("fy"), out fy)))
+                    if (!(gradient.HasAttribute("fy") && double.TryParse(gradient.GetAttribute("fy"), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out fy)))
                     {
                         fy = cy;
                     }
@@ -2642,7 +3427,7 @@ namespace VectSharp.SVG
                         r = r * Math.Sqrt(determinant);
                     }
 
-                    tbr.Add(id, new RadialGradientBrush(new Point(fx, fy), new Point(cx, cy), r, gradientStops));
+                    tbr.Add(id, (userSpaceOnUse, new RadialGradientBrush(new Point(fx, fy), new Point(cx, cy), r, gradientStops)));
                 }
             }
 
