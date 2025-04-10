@@ -2562,7 +2562,6 @@ namespace VectSharp.SVG
             {
                 if (ParseUrlID(stroke, out string url))
                 {
-                    url = url.Substring(1);
                     if (gradients.TryGetValue(url, out (bool, Brush) brush))
                     {
                         tbr.Stroke = brush.Item2;
