@@ -2795,7 +2795,14 @@ namespace VectSharp.SVG
                 else
                 {
                     string cleanedNumber = Regexes.NumberRegex.Match(value).Value;
-                    return double.Parse(cleanedNumber, System.Globalization.CultureInfo.InvariantCulture);
+                    if (double.TryParse(cleanedNumber, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out result))
+                    {
+                        return result;
+                    }
+                    else
+                    {
+                        return double.NaN;
+                    }
                 }
             }
             else
