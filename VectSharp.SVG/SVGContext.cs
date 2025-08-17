@@ -1786,6 +1786,16 @@ namespace VectSharp.SVG
                     tSpans.Add((currentRun.ToString(), currentKerning));
                 }
 
+                for (int i = 1; i < tSpans.Count; i++)
+                {
+                    if (tSpans[i].Item2.X == 0 && tSpans[i].Item2.Y == 0)
+                    {
+                        tSpans[i - 1] = (tSpans[i - 1].Item1 + tSpans[i].Item1, tSpans[i - 1].Item2);
+                        tSpans.RemoveAt(i);
+                        i--;
+                    }
+                }
+
                 for (int i = 0; i < tSpans.Count; i++)
                 {
                     XmlElement tspanElement = Document.CreateElement("tspan", SVGNamespace);
@@ -3856,7 +3866,7 @@ namespace VectSharp.SVG
             {
                 throw new ArgumentException("Invalid matrix transform: " + transformMatrix);
             }
-            
+
 
             double delta = a * d - b * c;
 
