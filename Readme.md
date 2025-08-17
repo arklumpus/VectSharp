@@ -33,7 +33,7 @@ Furthermore:
 
 * **VectSharp.ImageSharpUtils** adds the same capabilities as VectSharp.MuPDFUtils, using ImageSharp instead of MuPDFCore; as a result, it is released under a more permissive LGPLv3 licence.
 
-* **VectSharp.Fonts.Nimbus** is a package released under a GPLv3 license, which contains the standard fonts that were used in VectSharp before version 2.0.0. Since these fonts are released under a GPL license, they had to be replaced when the VectSharp license changed to LGPL. See the [Font libraries](section) below for information on how to re-enable these fonts.
+* **VectSharp.Fonts.Nimbus** is a package released under a GPLv3 license, which contains the standard fonts that were used in VectSharp before version 2.0.0. Since these fonts are released under a GPL license, they had to be replaced when the VectSharp license changed to LGPL. See the [section](#font-libraries) below for information on how to re-enable these fonts.
 
 * The **Animation** class (provided in the base VectSharp package) can be used to create animations that can be saved as animated GIFs (using VectSharp.Raster.ImageSharp), SVGs (using VectSharp.SVG) and PNGs (using VectSharp.Raster or VectSharp.Raster.ImageSharp).
 
@@ -127,6 +127,8 @@ document.SaveAsPDF(@"Links.pdf", linkDestinations: links);
 This code produces a document with three rectangles: the grey one at the top links to the GitHub home page, while the red one in the middle is a hyperlink to the blue one at the bottom. Links in PDF documents can refer to objects that are in a different page than the one containing the link.
 
 The public classes and methods are [fully documented](https://arklumpus.github.io/VectSharp) (with interactive examples created using Blazor), and you can find a (much) more detailed code example in [MainWindow.xaml.cs](https://github.com/arklumpus/VectSharp/blob/master/VectSharp.Demo/MainWindow.xaml.cs). A detailed guide about 3D graphics in VectSharp.ThreeD is available in the [`VectSharp.ThreeD`](https://github.com/arklumpus/VectSharp/tree/master/VectSharp.ThreeD) folder. Further example code for animations is available in the [DemoAnimation project](https://github.com/arklumpus/VectSharp/blob/master/VectSharp.DemoAnimation/MainWindow.axaml.cs).
+
+<br type="page" />
 
 ## Font libraries
 
