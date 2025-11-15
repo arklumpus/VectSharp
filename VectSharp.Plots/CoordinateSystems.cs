@@ -129,38 +129,83 @@ namespace VectSharp.Plots
     }
 
     /// <summary>
-    /// Represents a linear coordinate system.
+    /// Represents a coordinate system that uses scaling to map data space coordinates into plot space coordinates.
     /// </summary>
-    public class LinearCoordinateSystem2D : IContinuousInvertibleCoordinateSystem
+    public interface IScalingCoordinateSystem2D : ICoordinateSystem
     {
         /// <summary>
         /// The minimum X value.
         /// </summary>
-        public double MinX { get; set; }
+        double MinX { get; set; }
 
         /// <summary>
         /// The maximum X value.
         /// </summary>
-        public double MaxX { get; set; }
+        double MaxX { get; set; }
 
         /// <summary>
         /// The minimum Y value.
         /// </summary>
-        public double MinY { get; set; }
+        double MinY { get; set; }
 
         /// <summary>
         /// The maximum Y value.
         /// </summary>
-        public double MaxY { get; set; }
+        double MaxY { get; set; }
 
         /// <summary>
         /// The X scale.
         /// </summary>
-        public double ScaleX { get; set; }
+        double ScaleX { get; set; }
 
         /// <summary>
         /// The y scale.
         /// </summary>
+        double ScaleY { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a coordinate system that uses scaling to map data space coordinates into plot space coordinates.
+    /// </summary>
+    public interface IScalingCoordinateSystem1D : ICoordinateSystem
+    {
+        /// <summary>
+        /// The minimum value.
+        /// </summary>
+        double Min { get; set; }
+
+        /// <summary>
+        /// The maximum value.
+        /// </summary>
+        double Max { get; set; }
+
+        /// <summary>
+        /// The scale.
+        /// </summary>
+        double Scale { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a linear coordinate system.
+    /// </summary>
+    public class LinearCoordinateSystem2D : IContinuousInvertibleCoordinateSystem, IScalingCoordinateSystem2D
+    {
+        /// <inheritdoc/>
+        public double MinX { get; set; }
+
+        /// <inheritdoc/>
+        public double MaxX { get; set; }
+
+        /// <inheritdoc/>
+        public double MinY { get; set; }
+
+        /// <inheritdoc/>
+        public double MaxY { get; set; }
+
+        /// <inheritdoc/>
+        public double ScaleX { get; set; }
+
+        /// <inheritdoc/>
         public double ScaleY { get; set; }
         
         /// <inheritdoc/>
@@ -315,7 +360,7 @@ namespace VectSharp.Plots
     /// <summary>
     /// Represents a logarithmic coordinate system.
     /// </summary>
-    public class LogarithmicCoordinateSystem2D : IContinuousInvertibleCoordinateSystem
+    public class LogarithmicCoordinateSystem2D : IContinuousInvertibleCoordinateSystem, IScalingCoordinateSystem2D
     {
         /// <summary>
         /// The minimum X value (in logarithmic scale).
@@ -337,14 +382,10 @@ namespace VectSharp.Plots
         /// </summary>
         public double MaxY { get; set; }
 
-        /// <summary>
-        /// The X scale.
-        /// </summary>
+        /// <inheritdoc/>
         public double ScaleX { get; set; }
 
-        /// <summary>
-        /// The y scale.
-        /// </summary>
+        /// <inheritdoc/>
         public double ScaleY { get; set; }
 
         /// <inheritdoc/>
@@ -520,16 +561,12 @@ namespace VectSharp.Plots
     /// <summary>
     /// Represents a semi-logarithmic coordinate system with a logarithmic transformation on the Y axis.
     /// </summary>
-    public class LogLinCoordinateSystem2D : IContinuousInvertibleCoordinateSystem
+    public class LogLinCoordinateSystem2D : IContinuousInvertibleCoordinateSystem, IScalingCoordinateSystem2D
     {
-        /// <summary>
-        /// The minimum X value.
-        /// </summary>
+        /// <inheritdoc/>
         public double MinX { get; set; }
 
-        /// <summary>
-        /// The maximum X value.
-        /// </summary>
+        /// <inheritdoc/>
         public double MaxX { get; set; }
 
         /// <summary>
@@ -542,14 +579,10 @@ namespace VectSharp.Plots
         /// </summary>
         public double MaxY { get; set; }
 
-        /// <summary>
-        /// The X scale.
-        /// </summary>
+        /// <inheritdoc/>
         public double ScaleX { get; set; }
 
-        /// <summary>
-        /// The y scale.
-        /// </summary>
+        /// <inheritdoc/>
         public double ScaleY { get; set; }
 
         /// <inheritdoc/>
@@ -724,36 +757,28 @@ namespace VectSharp.Plots
     /// <summary>
     /// Represents a semi-logarithmic coordinate system with a logarithmic transformation on the X axis.
     /// </summary>
-    public class LinLogCoordinateSystem2D : IContinuousInvertibleCoordinateSystem
+    public class LinLogCoordinateSystem2D : IContinuousInvertibleCoordinateSystem, IScalingCoordinateSystem2D
     {
         /// <summary>
-        /// The minimum X value.
+        /// The minimum X value (in logarithmic scale).
         /// </summary>
         public double MinX { get; set; }
 
         /// <summary>
-        /// The maximum X value.
+        /// The maximum X value (in logarithmic scale).
         /// </summary>
         public double MaxX { get; set; }
 
-        /// <summary>
-        /// The minimum Y value (in logarithmic scale).
-        /// </summary>
+        /// <inheritdoc/>
         public double MinY { get; set; }
 
-        /// <summary>
-        /// The maximum Y value (in logarithmic scale).
-        /// </summary>
+        /// <inheritdoc/>
         public double MaxY { get; set; }
 
-        /// <summary>
-        /// The X scale.
-        /// </summary>
+        /// <inheritdoc/>
         public double ScaleX { get; set; }
 
-        /// <summary>
-        /// The y scale.
-        /// </summary>
+        /// <inheritdoc/>
         public double ScaleY { get; set; }
 
         /// <inheritdoc/>
@@ -928,21 +953,15 @@ namespace VectSharp.Plots
     /// <summary>
     /// Represents a 1-D linear coordinate system.
     /// </summary>
-    public class LinearCoordinateSystem1D : ICoordinateSystem1D<double>
+    public class LinearCoordinateSystem1D : ICoordinateSystem1D<double>, IScalingCoordinateSystem1D
     {
-        /// <summary>
-        /// The minimum value.
-        /// </summary>
+        /// <inheritdoc/>
         public double Min { get; set; }
 
-        /// <summary>
-        /// The maximum value.
-        /// </summary>
+        /// <inheritdoc/>
         public double Max { get; set; }
 
-        /// <summary>
-        /// The scale factor.
-        /// </summary>
+        /// <inheritdoc/>
         public double Scale { get; set; }
 
         /// <summary>
@@ -992,7 +1011,7 @@ namespace VectSharp.Plots
     /// <summary>
     /// Represents a 1-D logarithmic coordinate system.
     /// </summary>
-    public class LogarithmicCoordinateSystem1D : ICoordinateSystem1D<double>
+    public class LogarithmicCoordinateSystem1D : ICoordinateSystem1D<double>, IScalingCoordinateSystem1D
     {
         /// <summary>
         /// The minimum value (in logarithmic scale).
@@ -1004,9 +1023,7 @@ namespace VectSharp.Plots
         /// </summary>
         public double Max { get; set; }
 
-        /// <summary>
-        /// The scale factor.
-        /// </summary>
+        /// <inheritdoc/>
         public double Scale { get; set; }
 
         /// <summary>
