@@ -176,7 +176,14 @@ namespace VectSharp.Plots
         {
             get
             {
-                return new double[] { (MaxX - MinX) * 0.01, (MaxY - MinY) * 0.01 };
+                if (resolution == null)
+                {
+                    return new double[] { (MaxX - MinX) * 0.01, (MaxY - MinY) * 0.01 };
+                }
+                else
+                {
+                    return resolution;
+                }
             }
 
             set
