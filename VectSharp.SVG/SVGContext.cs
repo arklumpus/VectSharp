@@ -675,7 +675,7 @@ namespace VectSharp.SVG
                     }
                     else
                     {
-                        textElement.SetAttribute("font-weight", "regular");
+                        textElement.SetAttribute("font-weight", "normal");
                     }
 
                     if (Font.FontFamily.IsItalic)
@@ -721,7 +721,7 @@ namespace VectSharp.SVG
                     }
                     else
                     {
-                        style.Add("font-weight", "regular");
+                        style.Add("font-weight", "normal");
                     }
 
                     if (Font.FontFamily.IsItalic)
@@ -1330,7 +1330,7 @@ namespace VectSharp.SVG
                     }
                     else
                     {
-                        textElement.SetAttribute("font-weight", "regular");
+                        textElement.SetAttribute("font-weight", "normal");
                     }
 
                     if (Font.FontFamily.IsItalic)
@@ -1430,7 +1430,7 @@ namespace VectSharp.SVG
                     }
                     else
                     {
-                        style.Add("font-weight", "regular");
+                        style.Add("font-weight", "normal");
                     }
 
                     if (Font.FontFamily.IsItalic)
